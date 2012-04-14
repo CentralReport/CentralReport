@@ -8,7 +8,6 @@ import time
 
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
-# All Rights reserved
 
 # Mac OS Wrapper
 
