@@ -45,3 +45,27 @@ class MacCollector:
 
         return { 'cpu_user' : dict_iostat['us'], 'cpu_system' : dict_iostat['sy'], 'cpu_idle' : dict_iostat['id']}
 
+
+    # Obtenir les stats LoadAverage
+    def getLoadAverage(self):
+
+        dict_iostat = self.getIOStat()
+
+        return {'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
+
+
+    # Obtenir le dictionnaire IOStat
+    def getIOStat(self):
+
+        # iostat - entrees / sorties
+        iostat = subprocess.Popen(['iostat','-c','2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        # Formatage de iostat
+        iostat_split = iostat.splitlines()
+        headers = iostat_split[1].split()
+        values = iostat_split[3].split()
+
+        # Dictionnaire de valeur
+        dict_iostat = dict(zip(headers,values))
+
+        return dict_iostat
