@@ -1,8 +1,29 @@
 import subprocess
+from utils.config import ConfigGetter
 
 __author__ = 'che'
 
 class MacCollector:
+
+
+    # Obtenir les infos sur la machine actuelle.
+    def getInfos(self):
+        hostname = subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        #print(cpu)
+
+        uname = subprocess.Popen(['uname','-a'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        #print(cpu)
+
+        kernel = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        machine = subprocess.Popen(['sysctl','-n','hw.model'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        ncpu = subprocess.Popen(['sysctl','-n','hw.ncpu'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        architecture = subprocess.Popen(['sysctl','-n','hw.machine'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        return {'machine' : machine, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
+
 
     # Obtenir les stats memoires
     # Retourne un dictionnaire de donnees.
@@ -43,7 +64,7 @@ class MacCollector:
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return { 'cpu_user' : dict_iostat['us'], 'cpu_system' : dict_iostat['sy'], 'cpu_idle' : dict_iostat['id']}
+        return { 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
 
 
     # Obtenir les stats LoadAverage

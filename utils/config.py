@@ -41,7 +41,7 @@ class ConfigGetter:
             config.set('Network', 'enable_check_cpu', True)
             config.set('Network', 'enable_check_memory', True)
             config.set('Network', 'enable_check_loadaverage', True)
-            config.set("Network", 'server_addr', 'www.charles-emmanuel.me')
+            config.set("Network", 'server_addr', 'localhost:8888')
             config.write(open(ConfigGetter.chemin +'centralreport.cfg','w'))
 
         # Lecture du fichier de utils
