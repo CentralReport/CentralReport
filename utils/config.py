@@ -18,9 +18,9 @@ def configGetter():
         chemin = "/etc/cr/"
 
 
-    # Fichier de config existe ?
+    # Fichier de utils existe ?
     config = ConfigParser.ConfigParser()
-    if os.path.isfile(chemin +'config.cfg'):
+    if os.path.isfile(chemin +'utils.cfg'):
         print('Fichier de conf : Existant. Lecture.')
     else:
         print('Fichier de conf : Inexistant. Creation.')
@@ -33,7 +33,7 @@ def configGetter():
         config.set('Network', 'enable_check_memory', True)
         config.set('Network', 'enable_check_loadaverage', True)
         config.set("Network", 'server_addr', 'www.charles-emmanuel.me')
-        config.write(open(chemin +'config.cfg','w'))
+        config.write(open(chemin +'utils.cfg','w'))
 
-    # Lecture du fichier de config
-    config.read('config.cfg')
+    # Lecture du fichier de utils
+    config.read('utils.cfg')
