@@ -14,14 +14,17 @@ class CentralReport:
         utils.log.CRLog.writeLog("CentralReport -- RUN")
 
         # Ce constructeur va permettre de lancer l'ensemble des outils necessaires
-        # Premiere chose : la configuration via le fichier de conf.
+        #Premiere chose : regarde l'OS actuel
+        Collector.getCurrentHost()
+
+        # Deuxieme chose : la configuration via le fichier de conf.
         configuration = ConfigGetter()
 
         #idMachine = utils.config.configGetter.config.get("General","id")
         #utils.log.CRLog.writeLog("UUID : "+ str(idMachine))
 
         # Quel thread doit-on lancer ?
-        if Collector.isMac(self):
+        if Collector.isMac():
             # C'est un mac ! Bon gars :)
             print("Mac detected. Start ThreadMac")
             threading.Thread(None,ThreadMac())

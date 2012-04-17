@@ -8,7 +8,7 @@ import time
 class ThreadMac:
 
     def __init__(self):
-        print ("Thread ready")
+        print ("Thread MacOS is ready")
         # On definit notre collecteur de donnees pour mac
         self.MyCollector = MacCollector()
 

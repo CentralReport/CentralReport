@@ -17,14 +17,14 @@ class ConfigGetter:
 
     def __init__(self):
 
-        if Collector.isMac(self):
+        if Collector.isMac():
             # On est sur Mac. C'est provisoire, on laisse le fichier de config dans le repertoire courant.
             ConfigGetter.chemin = "/etc/"
-            print("test")
+            print("Mac config")
         else:
             # On est sur un systeme unix
             ConfigGetter.chemin = "/etc/cr/"
-            print("test2")
+            print("Linux config")
 
 
         # Fichier de utils existe ?
