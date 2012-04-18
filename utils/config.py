@@ -18,11 +18,19 @@ class ConfigGetter:
     def __init__(self):
 
         if Collector.isMac():
-            # On est sur Mac. C'est provisoire, on laisse le fichier de config dans le repertoire courant.
-            ConfigGetter.chemin = "/etc/"
+            # On est sur Mac. Test du repertoire
+            if os.path.isdir("/etc/cr") != True:
+                # Creation du dossier
+                os.mkdir("/etc/cr")
+
+            ConfigGetter.chemin = "/etc/cr/"
             print("Mac config")
         else:
-            # On est sur un systeme unix
+            # On est sur un systeme Linux
+
+            if os.path.isdir("/etc/cr") != True:
+                # Creation du dossier
+                os.mkdir("/etc/cr")
             ConfigGetter.chemin = "/etc/cr/"
             print("Linux config")
 
