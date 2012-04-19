@@ -1,11 +1,35 @@
-import collectors.MacCollector
-import collectors.Collector
+#!/usr/bin/env python
 
-__author__ = 'che'
+# CentralReport - Indev version
+# Project by Charles-Emmanuel CAMUS - Avril 2012
 
-if collectors.Collector.isMac():
-    # C est un mac. Oh yeah !
-    collector = collectors.MacCollector()
+import sys, time, syslog
+from deamon import Daemon
+import centralreport
 
+__author__ = "che"
 
+class MyDaemon(Daemon):
+    def run(self):
+        cr = centralreport.CentralReport()
+        while True:
+            time.sleep(1)
 
+if __name__ == "__main__":
+    daemon = MyDaemon('/tmp/daemon-centralreport.pid')
+    if len(sys.argv) == 2:
+        if 'start' == sys.argv[1]:
+            print("CentralReport -- Start")
+            daemon.start()
+        elif 'stop' == sys.argv[1]:
+            daemon.stop()
+            print("CentralReport -- Stopped")
+        elif 'restart' == sys.argv[1]:
+            daemon.restart()
+        else:
+            print "Unknown command"
+            sys.exit(2)
+        sys.exit(0)
+    else:
+        print "usage: %s start|stop|restart" % sys.argv[0]
+        sys.exit(2)

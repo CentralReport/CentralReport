@@ -1,8 +1,30 @@
 import subprocess
+from utils.config import ConfigGetter
+from collectors.Collector import Collector
 
 __author__ = 'che'
 
 class MacCollector:
+
+
+    # Obtenir les infos sur la machine actuelle.
+    def getInfos(self):
+        hostname = subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        #print(cpu)
+
+        uname = subprocess.Popen(['uname','-a'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        #print(cpu)
+
+        kernel = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        model = subprocess.Popen(['sysctl','-n','hw.model'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        ncpu = subprocess.Popen(['sysctl','-n','hw.ncpu'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        architecture = subprocess.Popen(['sysctl','-n','hw.machine'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
+
 
     # Obtenir les stats memoires
     # Retourne un dictionnaire de donnees.
@@ -43,5 +65,29 @@ class MacCollector:
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return { 'cpu_user' : dict_iostat['us'], 'cpu_system' : dict_iostat['sy'], 'cpu_idle' : dict_iostat['id']}
+        return { 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
 
+
+    # Obtenir les stats LoadAverage
+    def getLoadAverage(self):
+
+        dict_iostat = self.getIOStat()
+
+        return {'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
+
+
+    # Obtenir le dictionnaire IOStat
+    def getIOStat(self):
+
+        # iostat - entrees / sorties
+        iostat = subprocess.Popen(['iostat','-c','2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        # Formatage de iostat
+        iostat_split = iostat.splitlines()
+        headers = iostat_split[1].split()
+        values = iostat_split[3].split()
+
+        # Dictionnaire de valeur
+        dict_iostat = dict(zip(headers,values))
+
+        return dict_iostat

@@ -8,16 +8,15 @@ import time
 
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
-# All Rights reserved
 
 # Mac OS Wrapper
 
 print('CentralReport - Indev Version - Script test')
 print('Mac OS Version')
 
-# Fichier de config existe ?
+# Fichier de utils existe ?
 config = ConfigParser.ConfigParser()
-if os.path.isfile('config.cfg'):
+if os.path.isfile('utils.cfg'):
     print('Fichier de conf : Existant. Lecture.')
 else:
     print('Fichier de conf : Inexistant. Creation.')
@@ -30,10 +29,10 @@ else:
     config.set('Network', 'enable_check_memory', True)
     config.set('Network', 'enable_check_loadaverage', True)
     config.set("Network", 'server_addr', 'www.charles-emmanuel.me')
-    config.write(open('config.cfg','w'))
+    config.write(open('utils.cfg','w'))
 
-# Test fichier de config
-config.read('config.cfg')	
+# Test fichier de utils
+config.read('utils.cfg')
 ident = config.get('General', 'id')
 config_enable_check_memory = config.getboolean("Network","enable_check_memory")
 config_enable_check_cpu = config.getboolean("Network","enable_check_cpu")
