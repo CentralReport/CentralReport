@@ -1,6 +1,7 @@
 import subprocess
 from utils.config import ConfigGetter
 from collectors.Collector import Collector
+from utils.TextUtilities import TextUtilities
 
 __author__ = 'che'
 
@@ -8,7 +9,16 @@ class DebianCollector:
 
     # Obtenir les infos sur la machine actuelle.
     def getInfos(self):
-        return {}
+
+        # Nom de la machine
+        hostname = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
+
+        kernel = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['uname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
+        kernel_v = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['uname','-r'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
+
+
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'kernel_v' : kernel_v, 'language' : 'Python' }
+
 
     # Obtenir les stats CPU.
     # Retourne un dictionnaire de donnees

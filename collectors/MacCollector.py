@@ -1,15 +1,13 @@
 import subprocess
 from utils.config import ConfigGetter
 from collectors.Collector import Collector
-
-__author__ = 'che'
-
+from utils.TextUtilities import TextUtilities
 class MacCollector:
 
 
     # Obtenir les infos sur la machine actuelle.
     def getInfos(self):
-        hostname = subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        hostname = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
 
         #print(cpu)
 
@@ -18,12 +16,13 @@ class MacCollector:
         #print(cpu)
 
         kernel = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        kernel_v = subprocess.Popen(['uname','-r'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         model = subprocess.Popen(['sysctl','-n','hw.model'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         ncpu = subprocess.Popen(['sysctl','-n','hw.ncpu'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         architecture = subprocess.Popen(['sysctl','-n','hw.machine'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
 
 
     # Obtenir les stats memoires
