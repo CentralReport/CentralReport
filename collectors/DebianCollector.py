@@ -35,3 +35,40 @@ class DebianCollector:
         dict_iostat = dict(zip(headers,values))
 
         return { 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
+
+
+    def getMemory(self):
+        """
+        Retourne les stats de la memoire vive de notre host
+        """
+        memory_result = subprocess.Popen(['cat','/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        # On decoupe toutes les lignes
+        memory_result_split = memory_result.splitlines()
+
+        # On prepare nos deux listes qui vont servir de modele "cle-valeur"
+        list_headers = []
+        list_values = []
+
+        # On va parcourir toutes les lignes afin d'obtenir le detail
+        for current_line in memory_result_split:
+            current_line = current_line.split(":")
+
+            # Suppression des caracteres indesirables
+            current_line_values = current_line[1].replace(" ","")
+            current_line_values = current_line_values.replace("kB","")
+
+            # Ajout dans nos listes
+            list_headers.append(current_line[0])
+            list_values.append(current_line_values)
+
+        # Creation de notre dictionnaire
+        dict_memory = dict(zip(list_headers,list_values))
+
+        return { 'mem_size' : dict_memory['MemTotal'], 'mem_free' : dict_memory['MemFree'], 'mem_active' : dict_memory['Active'], 'mem_inactive' : dict_memory['Inactive'], 'swap_total' : dict_memory['SwapTotal'], 'swap_free' : dict_memory['SwapFree']  }
+
+
+
+
+
+
