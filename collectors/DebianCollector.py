@@ -70,5 +70,13 @@ class DebianCollector:
 
 
 
+    # Obtenir les stats LoadAverage
+    def getLoadAverage(self):
+
+        loadavg_result = subprocess.Popen(['cat','/proc/loadavg'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        # On va spliter en fonction des espaces
+        dict_loadavg = loadavg_result.split(" ")
 
 
+        return {'load1m' : dict_loadavg[0], 'load5m' : dict_loadavg[1], 'load15m' : dict_loadavg[2] }
