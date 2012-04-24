@@ -1,16 +1,16 @@
 __author__ = 'che'
 
-from collectors.MacCollector import MacCollector
+from collectors.DebianCollector import DebianCollector
 from network.speaker import Speaker
 from utils.config import ConfigGetter
 import time
 
-class ThreadMac:
+class ThreadDebian:
 
     def __init__(self):
-        print ("Thread MacOS is ready")
+        print ("Thread Debian is ready")
         # On definit notre collecteur de donnees pour mac
-        self.MyCollector = MacCollector()
+        self.MyCollector = DebianCollector()
 
         # Ready to go !
         # On enregistre la machine
@@ -45,4 +45,5 @@ class ThreadMac:
 
 
             # Et on attend une petite minute
+            print("NEXT PASS IN 60 SECONDS")
             time.sleep(60)

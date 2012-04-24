@@ -1,6 +1,6 @@
 __author__ = 'che'
 
-import subprocess
+import subprocess, os
 
 class Collector:
 
@@ -10,6 +10,10 @@ class Collector:
     # Constantes de configuration
     host_MacOS = "Mac OS X"
     host_Linux = "Linux"
+    host_Debian = "Debian"
+    host_Ubuntu = "Ubuntu"
+    host_RedHat = "RedHat"
+    host_Fedora = "Fedora"
 
     @staticmethod
     def getCurrentHost():
@@ -28,6 +32,34 @@ class Collector:
         elif kernel_linux.startswith("Linux"):
             # Non ? On est sur linux !
             Collector.host_current = Collector.host_Linux
+
+            # On va essayer d'affiner en fonction des distributions
+
+            # Removed : On va etre encore plus malin que ca !
+#            distrib_linux = subprocess.Popen(['cat','/etc/issue'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+#            if "Debian" in distrib_linux:
+#                # C'est une Debian
+#                Collector.host_current = Collector.host_Debian
+#            elif "Fedora" in distrib_linux:
+#                # Fedora
+#                Collector.host_current = Collector.host_Fedora
+
+            # Utilisation de la liste de Novell pour reconnaitre des distrib Linux
+            # http://www.novell.com/coolsolutions/feature/11251.html
+
+            if os.path.isfile("/etc/lsb-release"):
+                # Ubuntu !
+                Collector.host_current = Collector.host_Ubuntu
+            elif os.path.isfile("/etc/debian_version"):
+                # Une Debian pure et dure dans ce cas !
+                Collector.host_current = Collector.host_Debian
+            elif os.path.isfile("/etc/fedora-release"):
+                # Fedora !
+                Collector.host_current = Collector.host_Fedora
+            elif os.path.isfile("/etc/redhat_version"):
+                # RedHat !
+                Collector.host_current = Collector.host_RedHat
+
 
         return Collector.host_current
 
