@@ -10,6 +10,8 @@ lookup = TemplateLookup(directories=['tpl'])
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class HelloWorld:
+
+
     def index(self):
         return "Hello world!"
     index.exposed = True
@@ -22,11 +24,16 @@ class HelloWorld:
 
 
 # Added : a true config file
-cherrypy.config.update('web.conf')
-#cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': 8080})
-current_dir = os.path.dirname(os.path.abspath(__file__))
-conf = {'/statics': {'tools.staticdir.on': True,
-                     'tools.staticdir.dir': os.path.join(current_dir, 'statics')}}
+#cherrypy.config.update('web.conf')
+
+cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': 8081})
+
+conf = {'/': {'tools.staticdir.on': True,
+              'tools.staticdir.dir':os.path.join(current_dir,'')}}
+
+#conf = {'/': {'tools.staticdir.on': True,'tools.staticdir.dir':os.path.join(current_dir,'')},
+#        '/statics': {'tools.staticdir.on': True,'tools.staticdir.dir': 'statics'},
+#        '/che': {'tools.staticdir.on': True,'tools.staticdir.dir': 'che'}}
 
 cherrypy.quickstart(HelloWorld(),"/",config=conf)
 #cherrypy.quickstart(HelloWorld(),"/")
