@@ -12,7 +12,9 @@ class WebHomePages:
 
     @cherrypy.expose
     def index(self):
-        return "Welcome - It works!"
+        tmpl = self.lookup.get_template("index.tpl")
+        tmpl_vars = dict(hello="Hello, my beautiful world!")
+        return tmpl.render(**tmpl_vars)
 
     def error_page_404(status, message, traceback, version):
         return "Oups... Error %s - Well, I'm very sorry but this page doesn't really exist!" % status
@@ -20,6 +22,4 @@ class WebHomePages:
 
     @cherrypy.expose
     def test(self):
-        tmpl = self.lookup.get_template("index.tpl")
-        tmpl_vars = dict(hello="Hello, my beautiful world!")
-        return tmpl.render(**tmpl_vars)
+        return '<h1>This is a test</h1> ... and it works!'

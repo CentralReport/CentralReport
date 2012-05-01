@@ -1,12 +1,16 @@
 <html>
 <head>
-    <link rel="stylesheet" href="statics/style.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 
 <body>
-<h1>My first test</h1>
-<h2>${hello}</h2>
-<div class="test">Hey test !</div>
+    <div class="container">
+        <div class="content">
+            <h1>Test</h1>
+        </div>
+
+    </div>
 </body>
 </html>
