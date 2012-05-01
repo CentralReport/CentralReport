@@ -7,6 +7,7 @@ from utils.config import ConfigGetter
 from collectors.Collector import Collector
 from threads.ThreadMac import ThreadMac
 from threads.ThreadDebian import ThreadDebian
+from web.webserver import WebServer
 
 class CentralReport:
 
@@ -35,3 +36,10 @@ class CentralReport:
             threading.Thread(None,ThreadDebian())
         else:
             print("Sorry, but your distrib is not supported")
+
+
+        # Enable webserver ?
+        if ConfigGetter.config_webserver_enable == True:
+            # Yeah !
+            print("Enabling the webserver")
+            threading.Thread(None,WebServer())

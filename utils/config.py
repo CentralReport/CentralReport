@@ -15,6 +15,10 @@ class ConfigGetter:
     config_enable_check_loadaverage = True
     config_server_addr = ""
 
+    config_webserver_enable = True
+    config_webserver_interface = '0.0.0.0'
+    config_webserver_port = 8080
+
     def __init__(self):
 
         if Collector.isMac():
@@ -50,6 +54,12 @@ class ConfigGetter:
             config.set('Network', 'enable_check_memory', True)
             config.set('Network', 'enable_check_loadaverage', True)
             config.set("Network", 'server_addr', 'localhost:8888')
+            config.add_section('Webserver')
+            config.set("Webserver", 'enable', True)
+            config.set("Webserver", 'interface', '0.0.0.0')
+            config.set("Webserver", 'port', '8080')
+
+
             config.write(open(ConfigGetter.chemin +'centralreport.cfg','w'))
 
         # Lecture du fichier de utils
@@ -60,3 +70,6 @@ class ConfigGetter:
         ConfigGetter.config_enable_check_cpu = config.getboolean("Network","enable_check_cpu")
         ConfigGetter.config_enable_check_loadaverage = config.getboolean("Network","enable_check_loadaverage")
         ConfigGetter.config_server_addr = config.get("Network",'server_addr')
+        ConfigGetter.config_webserver_enable = config.getboolean("Webserver","enable")
+        ConfigGetter.config_webserver_interface = config.get("Webserver","interface")
+        ConfigGetter.config_webserver_port = config.getint("Webserver","port")

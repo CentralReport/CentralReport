@@ -5,6 +5,7 @@ import os, cherrypy
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from webHomePages import WebHomePages
+from utils.config import ConfigGetter
 
 class WebServer:
 
@@ -20,7 +21,7 @@ class WebServer:
         #cherrypy.tree.graft(WebHomePages(), '/')
 
         # Update the configuration...
-        cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': 8080})
+        cherrypy.config.update({'server.socket_host': ConfigGetter.config_webserver_interface, 'server.socket_port': ConfigGetter.config_webserver_port})
         cherrypy.config.update({'tools.staticdir.root' : WebServer.current_dir})
 
         # Serving static content
