@@ -24,10 +24,12 @@ class WebServer:
         cherrypy.config.update({'tools.staticdir.root' : WebServer.current_dir})
 
         # Serving static content
-        cherrypy.tree.mount(WebHomePages(self.lookup), '/', {'/statics' : {
-            'tools.staticdir.dir': 'statics',
-            'tools.staticdir.on': True,
-            }})
+        confStaticContent = {'/statics' : {'tools.staticdir.dir': 'statics','tools.staticdir.on': True},
+                             '/css' : {'tools.staticdir.dir': 'css','tools.staticdir.on': True},
+                             '/img' : {'tools.staticdir.dir': 'img','tools.staticdir.on': True},
+                             '/js' : {'tools.staticdir.dir': 'js','tools.staticdir.on': True}}
+
+        cherrypy.tree.mount(WebHomePages(self.lookup), '/',confStaticContent)
 
         # Go go go!
         cherrypy.engine.start()
