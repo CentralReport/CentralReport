@@ -1,18 +1,17 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import os, cherrypy
-from mako.template import Template
+import os, cherrypy, threading
 from mako.lookup import TemplateLookup
 from webHomePages import WebHomePages
 from utils.config import ConfigGetter
 
-class WebServer:
+class WebServer(threading.Thread):
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
     lookup = TemplateLookup(directories=[os.path.join(current_dir,'tpl')])
 
-    def __init__(self):
+    def run(self):
         """
         Manage the small webserver
         """

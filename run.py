@@ -3,17 +3,23 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import sys, time, syslog
+import sys, time
 from deamon import Daemon
-import centralreport
+import centralreport, utils.log
 
 __author__ = "che"
 
 class MyDaemon(Daemon):
     def run(self):
-        cr = centralreport.CentralReport()
+        centralreport.CentralReport()
         while True:
             time.sleep(1)
+
+    def stop(self):
+        print("blabla")
+        Daemon.stop(self)
+
+
 
 if __name__ == "__main__":
     daemon = MyDaemon('/tmp/daemon-centralreport.pid')

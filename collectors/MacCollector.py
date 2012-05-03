@@ -2,6 +2,7 @@ import subprocess
 from utils.config import ConfigGetter
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
+
 class MacCollector:
 
 
@@ -22,7 +23,7 @@ class MacCollector:
         memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         architecture = subprocess.Popen(['sysctl','-n','hw.machine'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
 
 
     # Obtenir les stats memoires
@@ -46,8 +47,10 @@ class MacCollector:
         mem_inactive = int(tabmemoire[3][1])*4096/1024/1024
         mem_resident = int(tabmemoire[5][1])*4096/1024/1024
 
+        mem_total = mem_free + mem_active + mem_inactive + mem_resident
+
         # On retourne un dictionnaire
-        return { 'mem_size' : memsize, 'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident }
+        return { 'mem_size' : memsize, 'mem_total' : mem_total ,'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident }
 
 
     # Obtenir les stats CPU.

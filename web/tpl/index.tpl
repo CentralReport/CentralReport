@@ -2,6 +2,7 @@
 <head>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
+    <title>Current Host</title>
 </head>
 
 
@@ -19,11 +20,22 @@
 
             <hr />
 
-            Last check
+            Last CPU Check<br />
+            User : ${cpu_user} %<br />
+            System : ${cpu_system} %<br />
+            Idle : ${cpu_idle} %
 
             <hr />
 
-            Test : ${hello}
+            Last Memory check :<br />
+            Total : ${mem_total} MB<br />
+            Free : ${mem_free} MB<br />
+            Active : ${mem_active} MB<br />
+            Inactive : ${mem_inactive} MB
+
+            <hr />
+
+            Load average : <strong>${load_1m}, ${load_5m}, ${load_15m}</strong>
 
 
         </div>

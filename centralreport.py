@@ -1,7 +1,6 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import threading
 import utils.log, utils.config
 from utils.config import ConfigGetter
 from collectors.Collector import Collector
@@ -13,10 +12,13 @@ class CentralReport:
 
     def __init__(self):
         # Constructeur
-        utils.log.CRLog.writeLog("CentralReport -- RUN")
+
+        # On prepare les logs
+        utils.log.CRLog.configLog()
+        utils.log.CRLog.writeInfo("CentralReport is starting...")
 
         # Ce constructeur va permettre de lancer l'ensemble des outils necessaires
-        #Premiere chose : regarde l'OS actuel
+        # Premiere chose : regarde l'OS actuel
         Collector.getCurrentHost()
 
         # Deuxieme chose : la configuration via le fichier de conf.
@@ -29,11 +31,15 @@ class CentralReport:
         if Collector.host_current == Collector.host_MacOS:
             # C'est un mac ! Bon gars :)
             print("Mac detected. Start ThreadMac")
-            threading.Thread(None,ThreadMac())
+            # Lancement thread
+            ThreadMac().start()
+
         elif Collector.host_current == Collector.host_Debian | Collector.host_current == Collector.host_Ubuntu:
             # Distrib Debian ou Ubuntu. Aller, ca reste un assez bon gars ca :)
             print(Collector.host_current +" detected. Start ThreadDebian")
-            threading.Thread(None,ThreadDebian())
+            # Lancement thread
+            ThreadDebian().start()
+
         else:
             print("Sorry, but your distrib is not supported")
 
@@ -42,4 +48,21 @@ class CentralReport:
         if ConfigGetter.config_webserver_enable == True:
             # Yeah !
             print("Enabling the webserver")
-            threading.Thread(None,WebServer())
+            WebServer().start()
+
+        else:
+            print("Webserver is disabled by configuration file")
+            utils.log.CRLog.writeInfo("Webserver is disabled by configuration file")
+
+
+
+        # End of file
+        utils.log.CRLog.writeInfo("CentralReport started!")
+
+
+    def stop(self):
+        """
+        Called when the scripts will be stopped
+        """
+
+        utils.log.CRLog.writeInfo("Stopping CentralReport")

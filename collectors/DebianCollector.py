@@ -17,7 +17,7 @@ class DebianCollector:
         kernel_v = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['uname','-r'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
 
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'kernel_v' : kernel_v, 'language' : 'Python' }
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'language' : 'Python' }
 
 
     # Obtenir les stats CPU.
