@@ -18,12 +18,26 @@ class WebHomePages:
 
         if Collector.host_current == Collector.host_MacOS:
             # It's a mac
-            tmpl_vars = dict(cpu_idle=ThreadMac.last_dict_cpu['idle'],cpu_system=ThreadMac.last_dict_cpu['system'],cpu_user=ThreadMac.last_dict_cpu['user'])
+            tmpl_vars = dict()
+
+            # Host informations
+            tmpl_vars['hostname'] = ThreadMac.dict_machine['hostname']
+
+            # CPU informations
+            last_check = ThreadMac.last_dict_cpu['date']
+            tmpl_vars['lastcheck'] = last_check.strftime("%Y-%m-%d %H:%M:%S")
+
+            tmpl_vars['cpu_idle'] = ThreadMac.last_dict_cpu['idle']
+            tmpl_vars['cpu_system'] = ThreadMac.last_dict_cpu['system']
+            tmpl_vars['cpu_user'] = ThreadMac.last_dict_cpu['user']
+
+            # Memory informations
             tmpl_vars['mem_free'] = ThreadMac.last_dict_memory['mem_free']
             tmpl_vars['mem_active'] = ThreadMac.last_dict_memory['mem_active']
             tmpl_vars['mem_inactive'] = ThreadMac.last_dict_memory['mem_inactive']
-            tmpl_vars['mem_total'] = ThreadMac.last_dict_memory['mem_total']
+            tmpl_vars['mem_total'] = ThreadMac.last_dict_memory['mem_size']
 
+            # Load average informations
             tmpl_vars['load_1m'] = ThreadMac.last_dict_loadavg['load1m']
             tmpl_vars['load_5m'] = ThreadMac.last_dict_loadavg['load5m']
             tmpl_vars['load_15m'] = ThreadMac.last_dict_loadavg['load15m']

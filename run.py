@@ -5,7 +5,7 @@
 
 import sys, time
 from deamon import Daemon
-import centralreport, utils.log
+import centralreport
 
 __author__ = "che"
 
@@ -16,7 +16,6 @@ class MyDaemon(Daemon):
             time.sleep(1)
 
     def stop(self):
-        print("blabla")
         Daemon.stop(self)
 
 
@@ -31,7 +30,9 @@ if __name__ == "__main__":
             daemon.stop()
             print("CentralReport -- Stopped")
         elif 'restart' == sys.argv[1]:
+            print ("CentralReport -- Restarting...")
             daemon.restart()
+            print ("CentralReport -- Started")
         else:
             print "Unknown command"
             sys.exit(2)

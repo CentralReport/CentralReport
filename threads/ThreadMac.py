@@ -9,6 +9,7 @@ import threading
 class ThreadMac(threading.Thread):
 
     # Last checks
+    dict_machine = []
     last_dict_cpu = []
     last_dict_memory = []
     last_dict_loadavg = []
@@ -26,9 +27,9 @@ class ThreadMac(threading.Thread):
     def run(self):
         # Ready to go !
         # On enregistre la machine
-        dict_machine = self.MyCollector.getInfos()
+        ThreadMac.dict_machine = self.MyCollector.getInfos()
 
-        Speaker.sendStats(Speaker.page_INFOS,dict_machine)
+        Speaker.sendStats(Speaker.page_INFOS,ThreadMac.dict_machine)
 
         # Et on boucle a l'infini pour envoyer nos stats
         while True:

@@ -49,6 +49,7 @@ class CentralReport:
             # Yeah !
             print("Enabling the webserver")
             WebServer().start()
+            #WebServer()
 
         else:
             print("Webserver is disabled by configuration file")

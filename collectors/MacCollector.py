@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, datetime
 from utils.config import ConfigGetter
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
@@ -50,7 +50,7 @@ class MacCollector:
         mem_total = mem_free + mem_active + mem_inactive + mem_resident
 
         # On retourne un dictionnaire
-        return { 'mem_size' : memsize, 'mem_total' : mem_total ,'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident }
+        return {'date': datetime.datetime.now(), 'mem_size' : float(memsize), 'mem_total' : mem_total ,'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident }
 
 
     # Obtenir les stats CPU.
@@ -67,7 +67,7 @@ class MacCollector:
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return { 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
+        return {'date': datetime.datetime.now() ,'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
 
 
     # Obtenir les stats LoadAverage
@@ -75,7 +75,7 @@ class MacCollector:
 
         dict_iostat = self.getIOStat()
 
-        return {'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
+        return {'date' : datetime.datetime.now() ,'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
 
 
     # Obtenir le dictionnaire IOStat
