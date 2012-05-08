@@ -57,9 +57,9 @@
                     });
 
             var memory_data = [
+                { label: "Resident", data: ${mem_resident}, color: 0},
                 { label: "Active",  data: ${mem_active}, color: 7},
-                { label: "Inactive",  data: ${mem_inactive}},
-                { label: "Resident", data: ${mem_resident}},
+                { label: "Inactive",  data: ${mem_inactive}, color:1},
                 { label: "Free",  data: ${mem_free}, color: 3}
 
             ];
