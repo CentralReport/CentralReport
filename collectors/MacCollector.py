@@ -49,7 +49,7 @@ class MacCollector:
         mem_inactive = int(tabmemoire[3][1])*4096/1024/1024
         mem_resident = int(tabmemoire[5][1])*4096/1024/1024
 
-        mem_total = mem_free + mem_active + mem_inactive + mem_resident
+        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(tabmemoire[5][1]))*4096/1024/1024
 
         # On retourne un dictionnaire
         return {'date': datetime.datetime.now(), 'mem_size' : float(memsize), 'mem_total' : mem_total ,'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident }
