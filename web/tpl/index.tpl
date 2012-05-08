@@ -161,7 +161,7 @@
                             <tbody>
                             <tr>
                                 <td>Total</td>
-                                <td>${mem_total} MB</td>
+                                <td width="120px">${mem_total} MB</td>
                             </tr>
                             <tr>
                                 <td><strong>Free</strong></td>
@@ -178,6 +178,15 @@
                             <tr>
                                 <td>Residente</td>
                                 <td>${mem_resident} MB</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>Swap</td>
+                                <td width="120px">${mem_swap} MB</td>
                             </tr>
                             </tbody>
                         </table>
