@@ -23,7 +23,9 @@ class MacCollector:
         memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         architecture = subprocess.Popen(['sysctl','-n','hw.machine'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
+        cpu_model = subprocess.Popen(['sysctl','-n','machdep.cpu.brand_string'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'modelcpu' : cpu_model, 'language' : 'Python' }
 
 
     # Obtenir les stats memoires
