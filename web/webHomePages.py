@@ -42,7 +42,7 @@ class WebHomePages:
             tmpl_vars['mem_active'] = ThreadMac.last_dict_memory['mem_active']
             tmpl_vars['mem_inactive'] = ThreadMac.last_dict_memory['mem_inactive']
             tmpl_vars['mem_resident'] = ThreadMac.last_dict_memory['mem_resident']
-            tmpl_vars['mem_total'] = ThreadMac.last_dict_memory['mem_total']
+            tmpl_vars['mem_total'] = ThreadMac.last_dict_memory['mem_size']
 
             # Load average informations
             tmpl_vars['load_date'] = ThreadMac.last_dict_loadavg['date'].strftime("%Y-%m-%d %H:%M:%S")

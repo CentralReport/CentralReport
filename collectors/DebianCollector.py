@@ -34,7 +34,7 @@ class DebianCollector:
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return { 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
+        return {'date': datetime.datetime.now(), 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
 
 
     def getMemory(self):
@@ -65,7 +65,7 @@ class DebianCollector:
         # Creation de notre dictionnaire
         dict_memory = dict(zip(list_headers,list_values))
 
-        return { 'mem_size' : dict_memory['MemTotal'], 'mem_free' : dict_memory['MemFree'], 'mem_active' : dict_memory['Active'], 'mem_inactive' : dict_memory['Inactive'], 'swap_total' : dict_memory['SwapTotal'], 'swap_free' : dict_memory['SwapFree']  }
+        return {'date': datetime.datetime.now(), 'mem_size' : dict_memory['MemTotal'], 'mem_free' : dict_memory['MemFree'], 'mem_active' : dict_memory['Active'], 'mem_inactive' : dict_memory['Inactive'], 'swap_total' : dict_memory['SwapTotal'], 'swap_free' : dict_memory['SwapFree']  }
 
 
 
@@ -79,4 +79,4 @@ class DebianCollector:
         dict_loadavg = loadavg_result.split(" ")
 
 
-        return {'load1m' : dict_loadavg[0], 'load5m' : dict_loadavg[1], 'load15m' : dict_loadavg[2] }
+        return {'date': datetime.datetime.now(), 'load1m' : dict_loadavg[0], 'load5m' : dict_loadavg[1], 'load15m' : dict_loadavg[2] }
