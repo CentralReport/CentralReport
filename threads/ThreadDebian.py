@@ -3,14 +3,20 @@ __author__ = 'che'
 from collectors.DebianCollector import DebianCollector
 from network.speaker import Speaker
 from utils.config import ConfigGetter
-import time
+import time, threading
 
-class ThreadDebian:
+class ThreadDebian(threading.Thread):
 
     def __init__(self):
+        threading.Thread.__init__(self)
+
         print ("Thread Debian is ready")
+
         # On definit notre collecteur de donnees pour mac
         self.MyCollector = DebianCollector()
+
+
+    def run(self):
 
         # Ready to go !
         # On enregistre la machine
@@ -26,21 +32,21 @@ class ThreadDebian:
                 # Oui, on procede au releve CPU
                 print("DO A CPU CHECK...")
                 dict_cpu = self.MyCollector.getCPU()
-                dict_cpu['uuid'] = ConfigGetter.ident
+                dict_cpu['uuid'] = ConfigGetter.uuid
                 Speaker.sendStats(Speaker.page_CPU,dict_cpu)
 
             # Check memoire
             if ConfigGetter.config_enable_check_memory:
                 print("DO A MEMORY CHECK")
                 dict_memory = self.MyCollector.getMemory()
-                dict_memory['uuid'] = ConfigGetter.ident
+                dict_memory['uuid'] = ConfigGetter.uuid
                 Speaker.sendStats(Speaker.page_MEMORY,dict_memory)
 
             # Check Load Average
             if ConfigGetter.config_enable_check_loadaverage:
                 print("DO A LOADAVG CHECK")
                 dict_loadavg = self.MyCollector.getLoadAverage()
-                dict_loadavg['uuid'] = ConfigGetter.ident
+                dict_loadavg['uuid'] = ConfigGetter.uuid
                 Speaker.sendStats(Speaker.page_LOADAVERAGE,dict_loadavg)
 
 

@@ -1,7 +1,8 @@
-import subprocess
+import subprocess, datetime
 from utils.config import ConfigGetter
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
+
 class MacCollector:
 
 
@@ -22,7 +23,9 @@ class MacCollector:
         memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         architecture = subprocess.Popen(['sysctl','-n','hw.machine'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.ident, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'language' : 'Python' }
+        cpu_model = subprocess.Popen(['sysctl','-n','machdep.cpu.brand_string'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'modelcpu' : cpu_model, 'language' : 'Python' }
 
 
     # Obtenir les stats memoires
@@ -34,8 +37,9 @@ class MacCollector:
 
         # On decoupe notre tableau
         tabmemoire = memoire_complet.splitlines()
-        # Puis on va le formater, de la ligne 1 a la ligne 5
-        for i in range(1,6):
+
+        # Puis on va le formater, de la ligne 1 a la ligne 11
+        for i in range(1,12):
             tabmemoire[i] = tabmemoire[i].replace(" ","")
             tabmemoire[i] = tabmemoire[i].replace(".","")
             tabmemoire[i] = tabmemoire[i].split(':')
@@ -45,9 +49,12 @@ class MacCollector:
         mem_active = int(tabmemoire[2][1])*4096/1024/1024
         mem_inactive = int(tabmemoire[3][1])*4096/1024/1024
         mem_resident = int(tabmemoire[5][1])*4096/1024/1024
+        mem_swap = int(tabmemoire[11][1])*4096/1024/1024
+
+        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(tabmemoire[5][1]))*4096/1024/1024
 
         # On retourne un dictionnaire
-        return { 'mem_size' : memsize, 'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident }
+        return {'date': datetime.datetime.now(), 'mem_size' : mem_total ,'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident, 'mem_swap' : mem_swap }
 
 
     # Obtenir les stats CPU.
@@ -64,7 +71,7 @@ class MacCollector:
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return { 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
+        return {'date': datetime.datetime.now() ,'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
 
 
     # Obtenir les stats LoadAverage
@@ -72,7 +79,7 @@ class MacCollector:
 
         dict_iostat = self.getIOStat()
 
-        return {'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
+        return {'date' : datetime.datetime.now() ,'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
 
 
     # Obtenir le dictionnaire IOStat

@@ -3,7 +3,7 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import sys, time, syslog
+import sys, time
 from deamon import Daemon
 import centralreport
 
@@ -11,9 +11,14 @@ __author__ = "che"
 
 class MyDaemon(Daemon):
     def run(self):
-        cr = centralreport.CentralReport()
+        centralreport.CentralReport()
         while True:
             time.sleep(1)
+
+    def stop(self):
+        Daemon.stop(self)
+
+
 
 if __name__ == "__main__":
     daemon = MyDaemon('/tmp/daemon-centralreport.pid')
@@ -25,7 +30,9 @@ if __name__ == "__main__":
             daemon.stop()
             print("CentralReport -- Stopped")
         elif 'restart' == sys.argv[1]:
+            print ("CentralReport -- Restarting...")
             daemon.restart()
+            print ("CentralReport -- Started")
         else:
             print "Unknown command"
             sys.exit(2)
