@@ -5,17 +5,14 @@
         <key>Disabled</key>
         <false/>
         <key>Label</key>
-        <string>centralreport</string>
+        <string>com.centralreport</string>
         <key>OnDemand</key>
-        <true/>
+        <false/>
         <key>ProgramArguments</key>
         <array>
+                <string>python</string>
                 <string>/usr/local/bin/centralreport/run.py</string>
                 <string>start</string>
         </array>
-        <key>ServiceIPC</key>
-        <false/>
-        <key>RunAtLoad</key>
-        <true/>
 </dict>
 </plist>

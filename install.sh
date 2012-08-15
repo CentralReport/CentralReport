@@ -10,6 +10,8 @@ PARENT_DIR=/usr/local/bin/
 INSTALL_DIR=/usr/local/bin/centralreport
 CONFIG_FILE=/etc/cr/centralreport.cfg
 PID_FILE=/tmp/daemon-centralreport.pid
+STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
+STARTUP_PLIST_INSTALL=lunchers/com.centralreport.plist
 
 # Temp install directories.
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
@@ -90,6 +92,13 @@ if [ ${ACTUAL_MODE} == "install" ]; then
                 echo "Done!"
             fi
 
+            echo "Checking if the startup plist already exist"
+            if [ -f ${STARTUP_PLIST} ]; then
+                echo "Remove existing startup plist"
+                sudo rm -rfv $STARTUP_PLIST
+                echo "Done!"
+            fi
+
             echo " "
             echo " ** Starting installation ** "
             echo " "
@@ -100,6 +109,11 @@ if [ ${ACTUAL_MODE} == "install" ]; then
             sudo cp -R -f -v centralreport ${PARENT_DIR}
             echo " -- "
             echo "Copy : Done !"
+
+            echo " "
+            echo "Copy startup plist in the good directory..."
+            sudo cp -f -v ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
+            echo "Done!"
 
 
             echo " "
