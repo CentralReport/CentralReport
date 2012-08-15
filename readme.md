@@ -15,4 +15,4 @@ We have many ideas to simplify server monitoring:
 
 
 ## Current status
-** Central Report is just at the beginning state. We have a lot of work to do, but we're motivated! **
+**Central Report is just at the beginning state. We have a lot of work to do, but we're motivated!**

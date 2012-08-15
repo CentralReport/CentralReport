@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plist version="1.0">
+<dict>
+        <key>Disabled</key>
+        <false/>
+        <key>Label</key>
+        <string>centralreport</string>
+        <key>OnDemand</key>
+        <true/>
+        <key>ProgramArguments</key>
+        <array>
+                <string>/usr/local/bin/centralreport/run.py</string>
+                <string>start</string>
+        </array>
+        <key>ServiceIPC</key>
+        <false/>
+        <key>RunAtLoad</key>
+        <true/>
+</dict>
+</plist>

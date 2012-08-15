@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
