@@ -11,6 +11,7 @@ PARENT_DIR=/usr/local/bin/
 INSTALL_DIR=/usr/local/bin/centralreport
 CONFIG_FILE=/etc/cr/centralreport.cfg
 PID_FILE=/tmp/daemon-centralreport.pid
+STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
 
 # Go!
 
@@ -21,7 +22,7 @@ echo "Welcome! This script will uninstall CentralReport on your host."
 echo "If you wants more details, please visit http://github.com/miniche/CentralReport"
 
 echo " "
-echo "Install"
+echo "Uninstall"
 echo "You will uninstall CentralReport. Are you sure to continue? (Yes/No)"
 read
 
@@ -31,27 +32,34 @@ if [ $REPLY == "yes" ]; then
     echo " "
 
     # Check if CentralReport is already running!
-            echo "Checking if CentralReport is already running"
-            if [ -f ${PID_FILE} ]; then
-                echo "CentralReport is already running! Trying to stop it..."
-                sudo python ${INSTALL_DIR}/run.py stop
-                echo "Done!"
-            fi
+    echo "Checking if CentralReport is already running"
+    if [ -f ${PID_FILE} ]; then
+        echo "CentralReport is already running! Trying to stop it..."
+        sudo python ${INSTALL_DIR}/run.py stop
+        echo "Done!"
+    fi
 
-            # We check if we found datas about CentralReport
-            echo "Checking if install directory already exist"
-            if [ -d ${INSTALL_DIR} ]; then
-                echo "Remove existing install directory"
-                sudo rm -rfv $INSTALL_DIR
-                echo "Done!"
-            fi
+    # We check if we found datas about CentralReport
+    echo "Checking if install directory already exist"
+    if [ -d ${INSTALL_DIR} ]; then
+        echo "Remove existing install directory"
+        sudo rm -rfv $INSTALL_DIR
+        echo "Done!"
+    fi
 
-            echo "Checking if a config file already exist"
-            if [ -f ${CONFIG_FILE} ]; then
-                echo "Remove existing config file"
-                sudo rm -fv $CONFIG_FILE
-                echo "Done!"
-            fi
+    echo "Checking if a config file already exist"
+    if [ -f ${CONFIG_FILE} ]; then
+        echo "Remove existing config file"
+        sudo rm -fv $CONFIG_FILE
+        echo "Done!"
+    fi
+
+    echo "Checking if the startup plist already exist"
+    if [ -f ${STARTUP_PLIST} ]; then
+        echo "Remove existing startup plist"
+        sudo rm -rfv $STARTUP_PLIST
+        echo "Done!"
+    fi
 
     # Ok, it's done !
     echo " "

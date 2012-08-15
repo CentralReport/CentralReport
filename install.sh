@@ -32,7 +32,10 @@ echo -e "\033[44m\033[1;37m"
 echo -e "  -------------- CentralReport installer --------------\033[0;44m"
 echo " "
 echo "  Welcome! This script will install CentralReport on your host."
-echo "  If you wants more details, please visit http://github.com/miniche/CentralReport"
+echo "  If you wants more details, please visit http://github.com/miniche/CentralReport."
+echo " "
+echo " During installation, we can ask an administrator password. It permit CentralReport "
+echo " to write in some directories and remove old CR installations."
 echo -e "\033[0m"
 
 # In the future, it will possible to have different modes.
