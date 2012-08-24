@@ -6,8 +6,13 @@
         <false/>
         <key>Label</key>
         <string>com.centralreport</string>
-        <key>OnDemand</key>
-        <false/>
+        <key>KeepAlive</key>
+        <dict>
+            <key>SuccessfulExit</key>
+            <true/>
+        </dict>
+        <key>RunAtLoad</key>
+        <true/>
         <key>ProgramArguments</key>
         <array>
                 <string>python</string>
