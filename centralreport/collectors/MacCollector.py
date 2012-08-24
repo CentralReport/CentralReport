@@ -97,3 +97,25 @@ class MacCollector:
         dict_iostat = dict(zip(headers,values))
 
         return dict_iostat
+
+
+    # Getting more information on disks (size for the moment)
+    def getDisksInfo(self):
+
+        df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        df_split = df_dict.splitlines()
+        header = df_split[0].split()
+        
+        for i in range(1,len(df_split)):
+
+            if(df_split[i].startswith("/dev/")):
+                line_split = df_split[i].split()
+                line_dict = dict(zip(header,line_split))
+
+                print df_split[i]
+                print line_dict
+
+
+
+

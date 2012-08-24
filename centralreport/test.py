@@ -1,26 +1,12 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-from collectors.Collector import Collector
-from collectors.DebianCollector import DebianCollector
-from utils.config import ConfigGetter
+import collectors.MacCollector
 
 #
 # Fichier de test - Librement modifiable
 #
 
-Collector.getCurrentHost()
-configuration = ConfigGetter()
+myCollector = collectors.MacCollector.MacCollector()
 
-myCollector = DebianCollector()
-
-host_info = DebianCollector.getInfos(myCollector)
-
-
-print(host_info)
-print("--")
-print(DebianCollector.getCPU(myCollector))
-print("--")
-print(DebianCollector.getMemory(myCollector))
-print("--")
-print(DebianCollector.getLoadAverage(myCollector))
+myCollector.getDisksInfo()
