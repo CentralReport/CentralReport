@@ -4,6 +4,9 @@
 # For CentralReport Indev version.
 # By careful! Don't use in production environment!
 
+# Importing some scripts
+source bash/common_functions.sh
+source bash/uninstall_macos.sh
 
 # Vars
 ACTUAL_MODE=install     # Modes : install, check
@@ -12,6 +15,9 @@ INSTALL_DIR=/usr/local/bin/centralreport
 CONFIG_FILE=/etc/cr/centralreport.cfg
 PID_FILE=/tmp/daemon-centralreport.pid
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
+
+# Getting current OS
+getOS
 
 # Go!
 
@@ -31,34 +37,16 @@ if [ $REPLY == "yes" ]; then
     echo "OK, continue"
     echo " "
 
-    # Check if CentralReport is already running!
-    echo "Checking if CentralReport is already running"
-    if [ -f ${PID_FILE} ]; then
-        echo "CentralReport is already running! Trying to stop it..."
-        sudo python ${INSTALL_DIR}/run.py stop
-        echo "Done!"
-    fi
+    if [ "$CURRENT_OS" != "$OS_MAC" ]; then
+        echo " "
+        echo -e "\033[1;31mERROR"
+        echo -e "\033[0;31mThe install is only design for Mac OS"
+        echo -e "Linux support coming soon! \033[0m"
 
-    # We check if we found datas about CentralReport
-    echo "Checking if install directory already exist"
-    if [ -d ${INSTALL_DIR} ]; then
-        echo "Remove existing install directory"
-        sudo rm -rfv $INSTALL_DIR
-        echo "Done!"
-    fi
+     else
+        # Remove CR from this Mac
 
-    echo "Checking if a config file already exist"
-    if [ -f ${CONFIG_FILE} ]; then
-        echo "Remove existing config file"
-        sudo rm -fv $CONFIG_FILE
-        echo "Done!"
-    fi
-
-    echo "Checking if the startup plist already exist"
-    if [ -f ${STARTUP_PLIST} ]; then
-        echo "Remove existing startup plist"
-        sudo rm -rfv $STARTUP_PLIST
-        echo "Done!"
+        uninstall_from_mac
     fi
 
     # Ok, it's done !
@@ -66,7 +54,7 @@ if [ $REPLY == "yes" ]; then
     echo "CentralReport might be deleted on your host."
     echo "It's sad, but you're welcome ! :-)"
     echo " "
-    echo "PS : You can write to developer if you found bad things in CentralReport."
+    echo "PS : You can write to developers if you found bad things in CentralReport."
     echo "You can find them at http://github.com/miniche/CentralReport"
     echo "Thanks!"
 
