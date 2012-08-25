@@ -106,16 +106,25 @@ class MacCollector:
 
         df_split = df_dict.splitlines()
         header = df_split[0].split()
-        
+
+        return_list = []
+
         for i in range(1,len(df_split)):
 
             if(df_split[i].startswith("/dev/")):
                 line_split = df_split[i].split()
                 line_dict = dict(zip(header,line_split))
 
-                print df_split[i]
-                print line_dict
+                # Getting info in MB (Mac OS count with '512 blocks' unit)
+                disk_total = int(line_dict['512-blocks'])*512/1024/1024
+                disk_used = int(line_dict['Used'])*512/1024/1024
+                disk_free = int(line_dict['Available'])*512/1024/1024
 
+                line_dict_formated=dict({'filesystem' : line_dict['Filesystem'], 'total' : disk_total,'used' : disk_used, 'free' : disk_free})
+
+                return_list.append(line_dict_formated)
+
+        return return_list
 
 
 

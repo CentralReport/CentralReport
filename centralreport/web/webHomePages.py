@@ -51,6 +51,8 @@ class WebHomePages:
             tmpl_vars['load_5m'] = ThreadMac.last_dict_loadavg['load5m']
             tmpl_vars['load_15m'] = ThreadMac.last_dict_loadavg['load15m']
 
+            tmpl_vars['disks'] = ThreadMac.last_list_disk
+
         return tmpl.render(**tmpl_vars)
 
 

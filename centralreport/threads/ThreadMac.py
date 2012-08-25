@@ -13,6 +13,7 @@ class ThreadMac(threading.Thread):
     last_dict_cpu = []
     last_dict_memory = []
     last_dict_loadavg = []
+    last_list_disk = []
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -40,21 +41,25 @@ class ThreadMac(threading.Thread):
                 print("DO A CPU CHECK...")
                 ThreadMac.last_dict_cpu = self.MyCollector.getCPU()
                 ThreadMac.last_dict_cpu['uuid'] = ConfigGetter.uuid
-                Speaker.sendStats(Speaker.page_CPU,ThreadMac.last_dict_cpu)
+                #Speaker.sendStats(Speaker.page_CPU,ThreadMac.last_dict_cpu)
 
             # Check memoire
             if ConfigGetter.config_enable_check_memory:
                 print("DO A MEMORY CHECK")
                 ThreadMac.last_dict_memory = self.MyCollector.getMemory()
                 ThreadMac.last_dict_memory['uuid'] = ConfigGetter.uuid
-                Speaker.sendStats(Speaker.page_MEMORY,ThreadMac.last_dict_memory)
+                #Speaker.sendStats(Speaker.page_MEMORY,ThreadMac.last_dict_memory)
 
             # Check Load Average
             if ConfigGetter.config_enable_check_loadaverage:
                 print("DO A LOADAVG CHECK")
                 ThreadMac.last_dict_loadavg = self.MyCollector.getLoadAverage()
                 ThreadMac.last_dict_loadavg['uuid'] = ConfigGetter.uuid
-                Speaker.sendStats(Speaker.page_LOADAVERAGE,ThreadMac.last_dict_loadavg)
+                #Speaker.sendStats(Speaker.page_LOADAVERAGE,ThreadMac.last_dict_loadavg)
+
+            #Checking disks informations
+            print("DO A DISK CHECK")
+            ThreadMac.last_list_disk = self.MyCollector.getDisksInfo()
 
 
             # Et on attend une petite minute

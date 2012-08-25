@@ -9,4 +9,5 @@ import collectors.MacCollector
 
 myCollector = collectors.MacCollector.MacCollector()
 
-myCollector.getDisksInfo()
+for disk in myCollector.getDisksInfo():
+    print str(disk['filesystem']) +' '+ str(disk['free']) +' MB available on '+ str(disk['total']) +' MB'

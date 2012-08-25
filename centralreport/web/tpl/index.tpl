@@ -233,6 +233,40 @@
                 </div>
             </div>
 
+            <hr />
+            <h3>Disks</h3>
+
+            <div class="row">
+                <div class="span6">
+
+                    <div class="custom_margin_top_plus_20">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Filesystem name</th>
+                                <th>Available</th>
+                                <th>Used</th>
+                                <th>Total</th>
+                            </thead>
+                            <tbody>
+                            % for disk in disks:
+                            <tr>
+                                <td>${disk['filesystem']|h}</td>
+                                <td>${disk['free']|h}</td>
+                                <td>${disk['used']|h}</td>
+                                <td>${disk['total']|h}</td>
+                            </tr>
+                            % endfor
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+                <div class="span6">
+                    &nbsp;
+                </div>
+            </div>
+
 
         </div>
     </div>
