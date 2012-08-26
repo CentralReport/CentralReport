@@ -7,6 +7,7 @@
 # Importing some scripts
 source bash/common_functions.sh
 source bash/uninstall_macos.sh
+source bash/uninstall_debian.sh
 
 # Vars
 ACTUAL_MODE=install     # Modes : install, check
@@ -15,6 +16,7 @@ INSTALL_DIR=/usr/local/bin/centralreport
 CONFIG_FILE=/etc/cr/centralreport.cfg
 PID_FILE=/tmp/daemon-centralreport.pid
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
+STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
 
 # Getting current OS
 getOS
@@ -37,27 +39,35 @@ if [ $REPLY == "yes" ]; then
     echo "OK, continue"
     echo " "
 
-    if [ "$CURRENT_OS" != "$OS_MAC" ]; then
+    if [ "$CURRENT_OS" != "$OS_MAC" && "$CURRENT_OS" != "$OS_DEBIAN" ]; then
         echo " "
         echo -e "\033[1;31mERROR"
-        echo -e "\033[0;31mThe install is only design for Mac OS"
-        echo -e "Linux support coming soon! \033[0m"
+        echo -e "\033[0;31mThe uninstall is only design for Mac OS and Debian"
+        echo -e "Other Linux distros support coming soon! \033[0m"
 
-     else
-        # Remove CR from this Mac
+    else
 
-        uninstall_from_mac
+        if [ "$CURRENT_OS" != "$OS_MAC" ]; then
+
+            # Remove CR from this Mac
+            uninstall_from_mac
+
+        elif [ "$CURRENT_OS" != "$OS_DEBIAN" ]; then
+
+            # Remove CR from this computer
+            uninstall_from_debian
+
+        fi
+
+        # Ok, it's done !
+        echo " "
+        echo "CentralReport might be deleted on your host."
+        echo "It's sad, but you're welcome ! :-)"
+        echo " "
+        echo "PS : You can write to developers if you found bad things in CentralReport."
+        echo "You can find them at http://github.com/miniche/CentralReport"
+        echo "Thanks!"
     fi
-
-    # Ok, it's done !
-    echo " "
-    echo "CentralReport might be deleted on your host."
-    echo "It's sad, but you're welcome ! :-)"
-    echo " "
-    echo "PS : You can write to developers if you found bad things in CentralReport."
-    echo "You can find them at http://github.com/miniche/CentralReport"
-    echo "Thanks!"
-
 fi
 
 # End of program

@@ -7,6 +7,7 @@
 # Importing scripts...
 source bash/common_functions.sh
 source bash/installer_macos.sh
+source bash/installer_debian.sh
 
 # Vars
 ACTUAL_MODE=install                         # Modes : install, check
@@ -16,6 +17,9 @@ CONFIG_FILE=/etc/cr/centralreport.cfg
 PID_FILE=/tmp/daemon-centralreport.pid
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
 STARTUP_PLIST_INSTALL=lunchers/com.centralreport.plist
+
+STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
+STARTUP_DEBIAN_INSTALL=lunchers/centralreport_debian.sh
 
 # Temp install directories.
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
@@ -50,11 +54,11 @@ if [ ${ACTUAL_MODE} == "install" ]; then
 
     # Right now, it only works on MacOS.
     # Support for Linux distrib coming soon.
-    if [ "$CURRENT_OS" != "$OS_MAC" ]; then
+    if [ "$CURRENT_OS" != "$OS_MAC" && "$CURRENT_OS" != "$OS_DEBIAN" ]; then
         echo " "
         echo -e "\033[1;31mERROR"
-        echo -e "\033[0;31mThe install is only design for Mac OS"
-        echo -e "Linux support coming soon! \033[0m"
+        echo -e "\033[0;31mThe install is only design for Mac OS and Debian"
+        echo -e "Other Linux distros support coming soon! \033[0m"
     else
 
         echo " "
@@ -71,6 +75,10 @@ if [ ${ACTUAL_MODE} == "install" ]; then
                 echo "Ok, I continue. I will install CentralReport on a mac"
 
                 install_on_macos
+            elif [ ${CURRENT_OS} == "$OS_DEBIAN" ]; then
+                echo "Ok. I continue. I will install CentralReport on Debian"
+
+                install_on_debian
             fi
 
 

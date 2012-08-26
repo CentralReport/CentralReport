@@ -12,5 +12,7 @@ function getOS(){
     # Getting actual OS (Linux distrib or Unix OS)
     if [ $(uname -s) == "Darwin" ]; then
         CURRENT_OS=${OS_MAC}
+    elif [ -f "/etc/debian_version" || -f "/etc/lsb-release" ]; then
+        CURRENT_OS=${OS_DEBIAN}
     fi
 }
