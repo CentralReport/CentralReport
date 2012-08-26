@@ -14,10 +14,27 @@ class WebHomePages:
     def index(self):
         tmpl = self.lookup.get_template("index.tpl")
 
-        tmpl_vars = []
+        tmpl_vars = dict()
+
+        if Collector.host_current == Collector.host_MacOS:
+            tmpl_vars['hostname'] = ThreadMac.dict_machine['hostname']
+
+            tmpl_vars['cpu_percent'] = 100 - int(ThreadMac.last_dict_cpu['idle'])
+            tmpl_vars['memory_percent'] = ((int(ThreadMac.last_dict_memory['mem_size']) - int(ThreadMac.last_dict_memory['mem_free']))*100)/int(ThreadMac.last_dict_memory['mem_size'])
+            tmpl_vars['loadaverage'] = ThreadMac.last_dict_loadavg['load1m']
+
+            tmpl_vars['loadaverage_percent'] = (float(ThreadMac.last_dict_loadavg['load1m'])*100)/int(ThreadMac.dict_machine['ncpu'])
+
+        return tmpl.render(**tmpl_vars)
+
+    @cherrypy.expose
+    def dashboard(self):
 
         if Collector.host_current == Collector.host_MacOS:
             # It's a mac
+
+            tmpl = self.lookup.get_template("dashboard_mac.tpl")
+
             tmpl_vars = dict()
 
             # Host informations
@@ -52,9 +69,9 @@ class WebHomePages:
             tmpl_vars['load_15m'] = ThreadMac.last_dict_loadavg['load15m']
 
             tmpl_vars['disks'] = ThreadMac.last_list_disk
+            tmpl_vars['disks_test'] = ThreadMac.last_list_disk
 
-        return tmpl.render(**tmpl_vars)
-
+            return tmpl.render(**tmpl_vars)
 
     def error_page_404(status, message, traceback, version):
         """
