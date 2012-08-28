@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # CentralReport Unix/Linux Indev version.
 # By careful! Don't use in production environment!
 
@@ -9,6 +11,10 @@ function uninstall_from_mac(){
         echo "CentralReport is already running! Trying to stop it..."
         sudo python ${INSTALL_DIR}/run.py stop
         echo "Done!"
+
+        # Wait before CR is really stopped
+        echo "Waiting few seconds until CentralReport daemon is really stopped..."
+        sleep 3;
     fi
 
     # We check if we found datas about CentralReport

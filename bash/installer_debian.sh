@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # CentralReport Unix/Linux Indev version.
 # By careful! Don't use in production environment!
 

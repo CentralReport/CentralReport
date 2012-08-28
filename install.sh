@@ -5,28 +5,13 @@
 # By careful! Don't use in production environment!
 
 # Importing scripts...
+source bash/vars.sh
 source bash/common_functions.sh
 source bash/installer_macos.sh
 source bash/installer_debian.sh
 
 # Vars
 ACTUAL_MODE=install                         # Modes : install, check
-PARENT_DIR=/usr/local/bin/
-INSTALL_DIR=/usr/local/bin/centralreport
-CONFIG_FILE=/etc/cr/centralreport.cfg
-PID_FILE=/tmp/daemon-centralreport.pid
-STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
-STARTUP_PLIST_INSTALL=lunchers/com.centralreport.plist
-
-STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
-STARTUP_DEBIAN_INSTALL=lunchers/centralreport_debian.sh
-
-# Temp install directories.
-CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
-MAKO_TAR=thirdparties/Mako.tar.gz
-
-CHERRYPY_DIR=thirdparties/CherryPy-3.2.2
-MAKO_DIR=thirdparties/Mako-0.7.2
 
 
 # Go!
@@ -50,11 +35,11 @@ fi
 getOS
 
 # Check the actual mode.
-if [ ${ACTUAL_MODE} == "install" ]; then
+if [ $ACTUAL_MODE = "install" ]; then
 
     # Right now, it only works on MacOS.
     # Support for Linux distrib coming soon.
-    if [ "$CURRENT_OS" != "$OS_MAC" && "$CURRENT_OS" != "$OS_DEBIAN" ]; then
+    if [ $CURRENT_OS != $OS_MAC ] && [ $CURRENT_OS != $OS_DEBIAN ]; then
         echo " "
         echo -e "\033[1;31mERROR"
         echo -e "\033[0;31mThe install is only design for Mac OS and Debian"
@@ -67,7 +52,7 @@ if [ ${ACTUAL_MODE} == "install" ]; then
         read
 
         # Are you sure to install CR ?
-        if [ $REPLY == "yes" ]; then
+        if [ $REPLY = "yes" ]; then
 
             # It's an indev version. At each install, we delete everything.
 
