@@ -11,6 +11,10 @@ function uninstall_from_debian(){
         echo "CentralReport is already running! Trying to stop it..."
         sudo python ${INSTALL_DIR}/run.py stop
         echo "Done!"
+
+        # Wait before CR is really stopped
+        echo "Waiting few seconds until CentralReport daemon is really stopped..."
+        sleep 3;
     fi
 
     # We check if we found datas about CentralReport

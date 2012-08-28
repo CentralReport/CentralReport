@@ -3,13 +3,19 @@
 # CentralReport Unix/Linux Indev version.
 # By careful! Don't use in production environment!
 
+# Vars
 PARENT_DIR=/usr/local/bin/
 INSTALL_DIR=/usr/local/bin/centralreport
+
 CONFIG_FILE=/etc/cr/centralreport.cfg
+
 PID_FILE=/tmp/daemon-centralreport.pid
+
+# Mac OS startup plist
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
 STARTUP_PLIST_INSTALL=lunchers/com.centralreport.plist
 
+# Debian startup script
 STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
 STARTUP_DEBIAN_INSTALL=lunchers/centralreport_debian.sh
 
