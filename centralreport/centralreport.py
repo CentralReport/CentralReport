@@ -50,8 +50,8 @@ class CentralReport:
         if ConfigGetter.config_webserver_enable == True:
             # Yeah !
             print("Enabling the webserver")
-            WebServer().start()
-            #WebServer()
+            #WebServer().start()
+            WebServer()
 
         else:
             print("Webserver is disabled by configuration file")

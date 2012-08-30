@@ -3,18 +3,23 @@ from utils.config import ConfigGetter
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
 
+from entities.CpuCheckEntity import CpuCheckEntity
+from entities.MemoryCheckEntity import MemoryCheckEntity
+from entities.LoadAverageCheckEntity import LoadAverageCheckEntity
+
 class MacCollector:
+    """
+        This collector can execute Mac OS command and get some useful values.
+    """
 
-
-    # Obtenir les infos sur la machine actuelle.
     def getInfos(self):
+        """
+            Getting some informations on this Mac.
+        """
+
         hostname = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
 
-        #print(cpu)
-
         uname = subprocess.Popen(['uname','-a'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-
-        #print(cpu)
 
         kernel = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         kernel_v = subprocess.Popen(['uname','-r'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
@@ -28,9 +33,13 @@ class MacCollector:
         return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'modelcpu' : cpu_model, 'language' : 'Python' }
 
 
-    # Obtenir les stats memoires
-    # Retourne un dictionnaire de donnees.
+
+
     def getMemory(self):
+        """
+            Getting memory informations.
+        """
+
         memsize = subprocess.Popen(['sysctl','-n','hw.memsize'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         memoire_complet = subprocess.Popen(['vm_stat'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
@@ -53,13 +62,25 @@ class MacCollector:
 
         mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(tabmemoire[5][1]))*4096/1024/1024
 
-        # On retourne un dictionnaire
-        return {'date': datetime.datetime.now(), 'mem_size' : mem_total ,'mem_free' : mem_free, 'mem_active' : mem_active, 'mem_inactive' : mem_inactive, 'mem_resident' : mem_resident, 'mem_swap' : mem_swap }
+        # Preparing return entity...
+        memoryCheck = MemoryCheckEntity()
+        memoryCheck.total = mem_total
+        memoryCheck.free = mem_free
+        memoryCheck.active = mem_active
+        memoryCheck.inactive = mem_inactive
+        memoryCheck.resident = mem_resident
+        memoryCheck.swapTotal = mem_swap
+
+        return memoryCheck
 
 
-    # Obtenir les stats CPU.
-    # Retourne un dictionnaire de donnees
+
+
     def getCPU(self):
+        """
+        Getting actual CPU utilization.
+        """
+
         # iostat - entrees / sorties
         iostat = subprocess.Popen(['iostat','-c','2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
@@ -71,19 +92,39 @@ class MacCollector:
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return {'date': datetime.datetime.now() ,'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
+        # Use your new CpuCheckEntity!
+        cpuCheck = CpuCheckEntity()
+        cpuCheck.idle = dict_iostat['id']
+        cpuCheck.system = dict_iostat['sy']
+        cpuCheck.user = dict_iostat['us']
+
+        return cpuCheck
 
 
-    # Obtenir les stats LoadAverage
+
+
     def getLoadAverage(self):
+        """
+            Getting the load average for this computer.
+        """
 
         dict_iostat = self.getIOStat()
 
-        return {'date' : datetime.datetime.now() ,'load1m' : dict_iostat['1m'], 'load5m' : dict_iostat['5m'], 'load15m' : dict_iostat['15m'] }
+        # Prepare return entity
+        loadAverageEntity = LoadAverageCheckEntity()
+        loadAverageEntity.last1m = dict_iostat['1m']
+        loadAverageEntity.last5m = dict_iostat['5m']
+        loadAverageEntity.last15m = dict_iostat['15m']
+
+        return loadAverageEntity
 
 
-    # Obtenir le dictionnaire IOStat
+
+
     def getIOStat(self):
+        """
+        Getting IOStat dictionary.
+        """
 
         # iostat - entrees / sorties
         iostat = subprocess.Popen(['iostat','-c','2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
@@ -99,8 +140,11 @@ class MacCollector:
         return dict_iostat
 
 
-    # Getting more information on disks (size for the moment)
+
     def getDisksInfo(self):
+        """
+        Getting active disks (with disk size for the moment)
+        """
 
         df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 

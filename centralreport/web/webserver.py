@@ -6,12 +6,14 @@ from mako.lookup import TemplateLookup
 from webHomePages import WebHomePages
 from utils.config import ConfigGetter
 
-class WebServer(threading.Thread):
+#class WebServer(threading.Thread):
+class WebServer():
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
     lookup = TemplateLookup(directories=[os.path.join(current_dir,'tpl')])
 
-    def run(self):
+    #def run(self):
+    def __init__(self):
         """
         Manage the small webserver
         """
