@@ -6,7 +6,7 @@
 
 # Importing some scripts
 source bash/vars.sh
-source bash/common_functions.sh
+source bash/functions.inc.sh
 source bash/uninstall_macos.sh
 source bash/uninstall_debian.sh
 

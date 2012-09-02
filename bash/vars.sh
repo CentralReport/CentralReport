@@ -11,6 +11,11 @@ CONFIG_FILE=/etc/cr/centralreport.cfg
 
 PID_FILE=/tmp/daemon-centralreport.pid
 
+# OS
+CURRENT_OS=
+OS_MAC="MacOS"
+OS_DEBIAN="Debian"
+
 # Mac OS startup plist
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
 STARTUP_PLIST_INSTALL=lunchers/com.centralreport.plist
