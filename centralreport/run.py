@@ -4,7 +4,7 @@
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
 import sys, time
-from deamon import Daemon
+from daemon import Daemon
 import centralreport
 
 __author__ = "che"

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plist version="1.0">
+<dict>
+        <key>Disabled</key>
+        <false/>
+        <key>Label</key>
+        <string>com.centralreport</string>
+        <key>KeepAlive</key>
+        <dict>
+            <key>SuccessfulExit</key>
+            <true/>
+        </dict>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>ProgramArguments</key>
+        <array>
+                <string>python</string>
+                <string>/usr/local/bin/centralreport/run.py</string>
+                <string>start</string>
+        </array>
+</dict>
+</plist>

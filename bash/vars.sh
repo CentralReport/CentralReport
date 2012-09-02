@@ -18,11 +18,11 @@ OS_DEBIAN="Debian"
 
 # Mac OS startup plist
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
-STARTUP_PLIST_INSTALL=lunchers/com.centralreport.plist
+STARTUP_PLIST_INSTALL=launchers/com.centralreport.plist
 
 # Debian startup script
 STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
-STARTUP_DEBIAN_INSTALL=lunchers/centralreport_debian.sh
+STARTUP_DEBIAN_INSTALL=launchers/centralreport_debian.sh
 
 # Temp install directories.
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
