@@ -1,24 +1,27 @@
-__author__ = 'che'
+# CentralReport - Indev version
+
+
+import time, threading, datetime
 
 from collectors.MacCollector import MacCollector
 from network.speaker import Speaker
 from utils.config import ConfigGetter
-import time
-import threading
+
 
 class ThreadMac(threading.Thread):
+    """
+    This thread can do periodic checks on the system (Mac OS X host only)
+    """
 
     # Last checks
     dict_machine = []
-    last_dict_cpu = []
-    last_dict_memory = []
-    last_dict_loadavg = []
-    last_list_disk = []
 
     # Last checks (with new entities classes)
+    last_check_date = None
     last_check_cpu = None
     last_check_memory = None
     last_check_loadAverage = None
+    last_check_disk = None
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -58,9 +61,11 @@ class ThreadMac(threading.Thread):
 
             #Checking disks informations
             print("DO A DISK CHECK")
-            ThreadMac.last_list_disk = self.MyCollector.getDisksInfo()
+            ThreadMac.last_check_disk = self.MyCollector.getDisksInfo()
 
+            # Update the last check date
+            ThreadMac.last_check_date = datetime.datetime.now()
 
-            # Et on attend une petite minute
+            # Wait 60 seconds before next checks...
             print("Next checks in 60 seconds...")
             time.sleep(60)

@@ -6,6 +6,8 @@ from utils.TextUtilities import TextUtilities
 from entities.CpuCheckEntity import CpuCheckEntity
 from entities.MemoryCheckEntity import MemoryCheckEntity
 from entities.LoadAverageCheckEntity import LoadAverageCheckEntity
+from entities.DiskCheckEntity import DiskCheckEntity
+from entities.DisksEntity import DisksEntity
 
 class MacCollector:
     """
@@ -151,7 +153,8 @@ class MacCollector:
         df_split = df_dict.splitlines()
         header = df_split[0].split()
 
-        return_list = []
+        # New return entity
+        listDisks = DisksEntity()
 
         for i in range(1,len(df_split)):
 
@@ -164,11 +167,17 @@ class MacCollector:
                 disk_used = int(line_dict['Used'])*512/1024/1024
                 disk_free = int(line_dict['Available'])*512/1024/1024
 
-                line_dict_formated=dict({'filesystem' : line_dict['Filesystem'], 'total' : disk_total,'used' : disk_used, 'free' : disk_free})
+                # Using new check entity
+                checkDisk = DiskCheckEntity()
+                checkDisk.date = datetime.datetime.now()
+                checkDisk.name = line_dict['Filesystem']
+                checkDisk.size = disk_total
+                checkDisk.used = disk_used
+                checkDisk.free = disk_free
 
-                return_list.append(line_dict_formated)
+                listDisks.checks.append(checkDisk)
 
-        return return_list
+        return listDisks
 
 
 
