@@ -8,6 +8,7 @@ from entities.MemoryCheckEntity import MemoryCheckEntity
 from entities.LoadAverageCheckEntity import LoadAverageCheckEntity
 from entities.DiskCheckEntity import DiskCheckEntity
 from entities.DisksEntity import DisksEntity
+from entities.HostEntity import HostEntity
 
 class MacCollector:
     """
@@ -32,8 +33,24 @@ class MacCollector:
 
         cpu_model = subprocess.Popen(['sysctl','-n','machdep.cpu.brand_string'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'model' : model, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'ncpu' : ncpu, 'architecture' : architecture, 'modelcpu' : cpu_model, 'language' : 'Python' }
+        # Using new HostEntity
+        hostEntity = HostEntity()
 
+        hostEntity.uuid = ConfigGetter.uuid
+
+        hostEntity.os = Collector.host_current
+        hostEntity.hostname = hostname
+        hostEntity.architecture = architecture
+
+        hostEntity.model = model
+
+        hostEntity.kernelName = kernel
+        hostEntity.kernelVersion = kernel_v
+
+        hostEntity.cpuModel = cpu_model
+        hostEntity.cpuCount = ncpu
+
+        return hostEntity
 
 
 

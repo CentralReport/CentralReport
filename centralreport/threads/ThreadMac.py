@@ -13,8 +13,8 @@ class ThreadMac(threading.Thread):
     This thread can do periodic checks on the system (Mac OS X host only)
     """
 
-    # Last checks
-    dict_machine = []
+    # Get host informations
+    hostEntity = None
 
     # Last checks (with new entities classes)
     last_check_date = None
@@ -36,9 +36,10 @@ class ThreadMac(threading.Thread):
     def run(self):
         # Ready to go !
         # On enregistre la machine
-        ThreadMac.dict_machine = self.MyCollector.getInfos()
+        ThreadMac.hostEntity = self.MyCollector.getInfos()
 
-        Speaker.sendStats(Speaker.page_INFOS,ThreadMac.dict_machine)
+        #Speaker.sendStats(Speaker.page_INFOS,ThreadMac.dict_machine)
+
 
         # Et on boucle a l'infini pour envoyer nos stats
         while True:

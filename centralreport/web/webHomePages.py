@@ -17,13 +17,13 @@ class WebHomePages:
         tmpl_vars = dict()
 
         if Collector.host_current == Collector.host_MacOS:
-            tmpl_vars['hostname'] = ThreadMac.dict_machine['hostname']
+            tmpl_vars['hostname'] = ThreadMac.hostEntity.hostname
 
             tmpl_vars['cpu_percent'] = 100 - int(ThreadMac.last_check_cpu.idle)
             tmpl_vars['memory_percent'] = ((int(ThreadMac.last_check_memory.total) - int(ThreadMac.last_check_memory.free))*100)/int(ThreadMac.last_check_memory.total)
             tmpl_vars['loadaverage'] = ThreadMac.last_check_loadAverage.last1m
 
-            tmpl_vars['loadaverage_percent'] = (float(ThreadMac.last_check_loadAverage.last1m)*100)/int(ThreadMac.dict_machine['ncpu'])
+            tmpl_vars['loadaverage_percent'] = (float(ThreadMac.last_check_loadAverage.last1m)*100)/int(ThreadMac.hostEntity.cpuCount)
 
         return tmpl.render(**tmpl_vars)
 

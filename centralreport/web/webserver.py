@@ -21,6 +21,9 @@ class WebServer():
         # Start home
         #cherrypy.tree.graft(WebHomePages(), '/')
 
+        # Register events...
+        cherrypy.engine.subscribe('graceful',self.stop)
+
         # Update the configuration...
         cherrypy.config.update({'server.socket_host': ConfigGetter.config_webserver_interface, 'server.socket_port': ConfigGetter.config_webserver_port})
         cherrypy.config.update({'tools.staticdir.root' : WebServer.current_dir})
@@ -36,3 +39,10 @@ class WebServer():
         # Go go go!
         cherrypy.engine.start()
         cherrypy.engine.block()
+
+    def stop(self):
+        """
+            When CherryPy is stopping, we restart it.
+        """
+        #self.__init__()
+        print("test")
