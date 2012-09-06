@@ -2,7 +2,7 @@
 # CentralReport Entity
 #
 
-import datetime
+import datetime,json,calendar
 
 class HostEntity:
     """ This entity contain some datas about actual host """
@@ -14,6 +14,7 @@ class HostEntity:
         self.hostname = ""
         self.architecture = ""
 
+        # TODO : move it in CPU check.
         self.cpuModel = ""
         self.cpuCount = 0
 
@@ -31,3 +32,19 @@ class HostEntity:
         self.language = 'Python'
 
 
+
+    def jsonSerialize(self):
+        """
+            Serialize this entity in JSON
+        """
+        return json.dumps({'type' : 'host',
+                           'uuid' : self.uuid,
+                           'date' : self.date.strftime('%s'),
+                           'os' : self.os,
+                           'hostname' : self.hostname,
+                           'architecture' : self.architecture,
+                           'cpuModel' : self.cpuModel,
+                           'kernel_name' : self.kernelName,
+                           'kernel_version' : self.kernelVersion,
+                           'model' : self.model,
+                           'language' : self.language})

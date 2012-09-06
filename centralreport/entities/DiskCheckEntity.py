@@ -2,7 +2,7 @@
 # CentralReport Entity
 #
 
-import datetime
+import datetime,json
 
 class DiskCheckEntity:
     """ This entity represent a disk check for the current host. """
@@ -15,3 +15,12 @@ class DiskCheckEntity:
         self.free = float(0)
 
 
+    def jsonSerialize(self):
+        """
+            Serialize this entity in JSON
+        """
+        return json.dumps({'date' : self.date.strftime('%s'),
+                           'name' : self.name,
+                           'size' : self.size,
+                           'used' : self.used,
+                           'free' : self.free})
