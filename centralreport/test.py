@@ -1,13 +1,9 @@
+import centralreport
+
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import collectors.MacCollector
+# This test file can launch CentralReport on dev host, without installation.
+# Please verify CR is not installed on your host before launch this script.
 
-#
-# Fichier de test - Librement modifiable
-#
-
-myCollector = collectors.MacCollector.MacCollector()
-
-for disk in myCollector.getDisksInfo():
-    print str(disk['filesystem']) +' '+ str(disk['free']) +' MB available on '+ str(disk['total']) +' MB'
+cr = centralreport.CentralReport()
