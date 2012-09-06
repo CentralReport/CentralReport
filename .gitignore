@@ -51,3 +51,8 @@ nbproject/*
 #############
 .idea/*
 */.idea/*
+
+# CentralReport test files #
+############################
+cr_test*
+*/cr_test*
