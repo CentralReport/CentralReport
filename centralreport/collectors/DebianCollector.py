@@ -1,14 +1,14 @@
 import subprocess
-from utils.config import ConfigGetter
+from utils.CRConfig import CRConfig
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
 
 __author__ = 'che'
 
-class DebianCollector:
+class DebianCollector(Collector):
 
     # Obtenir les infos sur la machine actuelle.
-    def getInfos(self):
+    def get_infos(self):
 
         # Nom de la machine
         hostname = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['hostname','-s'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
@@ -17,12 +17,12 @@ class DebianCollector:
         kernel_v = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['uname','-r'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
 
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'uuid' : ConfigGetter.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'language' : 'Python' }
+        return {'os' : Collector.host_current, 'hostname' : hostname, 'uuid' : CRConfig.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'language' : 'Python' }
 
 
     # Obtenir les stats CPU.
     # Retourne un dictionnaire de donnees
-    def getCPU(self):
+    def get_cpu(self):
         # vmstat - entrees / sorties
         iostat = subprocess.Popen(['vmstat','1','2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
@@ -37,7 +37,7 @@ class DebianCollector:
         return {'date': datetime.datetime.now(), 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
 
 
-    def getMemory(self):
+    def get_memory(self):
         """
         Retourne les stats de la memoire vive de notre host
         """
@@ -71,7 +71,7 @@ class DebianCollector:
 
 
     # Obtenir les stats LoadAverage
-    def getLoadAverage(self):
+    def get_loadaverage(self):
 
         loadavg_result = subprocess.Popen(['cat','/proc/loadavg'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 

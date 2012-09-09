@@ -3,51 +3,41 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import utils.log, utils.config
-from utils.config import ConfigGetter
-from collectors.Collector import Collector
-from threads.ThreadMac import ThreadMac
-from threads.ThreadDebian import ThreadDebian
+import utils.CRLog, utils.CRConfig
+from utils.CRConfig import CRConfig
+from threads.ThreadChecks import ThreadChecks
 from web.webserver import WebServer
 
-class CentralReport:
+class CentralReport():
 
     def __init__(self):
         # Constructeur
 
         # On prepare les logs
-        utils.log.CRLog.configLog()
-        utils.log.CRLog.writeInfo("CentralReport is starting...")
+        utils.CRLog.CRLog.configLog()
+        utils.CRLog.CRLog.writeInfo("CentralReport is starting...")
 
         # Ce constructeur va permettre de lancer l'ensemble des outils necessaires
-        # Premiere chose : regarde l'OS actuel
-        Collector.getCurrentHost()
 
         # Deuxieme chose : la configuration via le fichier de conf.
-        configuration = ConfigGetter()
+        configuration = CRConfig()
 
         #idMachine = utils.config.configGetter.config.get("General","id")
         #utils.log.CRLog.writeLog("UUID : "+ str(idMachine))
 
         # Quel thread doit-on lancer ?
-        if Collector.host_current == Collector.host_MacOS:
-            # C'est un mac ! Bon gars :)
-            print("Mac detected. Start ThreadMac")
-            # Lancement thread
-            ThreadMac().start()
+        if (CRConfig.HOST_CURRENT == CRConfig.HOST_MAC) | (CRConfig.HOST_CURRENT == CRConfig.HOST_DEBIAN) | (CRConfig.HOST_CURRENT == CRConfig.HOST_UBUNTU):
+            print(CRConfig.HOST_CURRENT +" detected. Starting ThreadChecks...")
 
-        elif Collector.host_current == Collector.host_Debian | Collector.host_current == Collector.host_Ubuntu:
-            # Distrib Debian ou Ubuntu. Aller, ca reste un assez bon gars ca :)
-            print(Collector.host_current +" detected. Start ThreadDebian")
             # Lancement thread
-            ThreadDebian().start()
+            ThreadChecks()
 
         else:
-            print("Sorry, but your distrib is not supported")
+            print("Sorry, but your OS is not supported yet...")
 
 
         # Enable webserver ?
-        if ConfigGetter.config_webserver_enable == True:
+        if CRConfig.config_webserver_enable == True:
             # Yeah !
             print("Enabling the webserver")
             #WebServer().start()
@@ -55,12 +45,13 @@ class CentralReport:
 
         else:
             print("Webserver is disabled by configuration file")
-            utils.log.CRLog.writeInfo("Webserver is disabled by configuration file")
+            utils.CRLog.CRLog.writeInfo("Webserver is disabled by configuration file")
+
 
 
 
         # End of file
-        utils.log.CRLog.writeInfo("CentralReport started!")
+        utils.CRLog.CRLog.writeInfo("CentralReport started!")
 
 
     def stop(self):
@@ -68,4 +59,4 @@ class CentralReport:
         Called when the scripts will be stopped
         """
 
-        utils.log.CRLog.writeInfo("Stopping CentralReport")
+        utils.CRLog.CRLog.writeInfo("Stopping CentralReport")

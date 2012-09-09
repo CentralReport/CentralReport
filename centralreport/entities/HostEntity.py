@@ -16,7 +16,7 @@ class HostEntity:
 
         # TODO : move it in CPU check.
         self.cpuModel = ""
-        self.cpuCount = 0
+        self.cpuCount = 1
 
         # Unix/Linux attributes
         self.kernelName = ""

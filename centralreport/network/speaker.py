@@ -1,7 +1,7 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-from utils.config import ConfigGetter
+from utils.CRConfig import CRConfig
 import urllib, urllib2
 
 class Speaker:
@@ -14,7 +14,7 @@ class Speaker:
     @staticmethod
     def sendStats(page,datas):
 
-        config_server_addr = ConfigGetter.config_server_addr
+        config_server_addr = CRConfig.config_server_addr
 
         url = "http://%s/CentralReport/%s" % (str(config_server_addr), str(page))
 

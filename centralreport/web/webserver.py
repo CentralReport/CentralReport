@@ -4,7 +4,7 @@
 import os, cherrypy, threading
 from mako.lookup import TemplateLookup
 from webHomePages import WebHomePages
-from utils.config import ConfigGetter
+from utils.CRConfig import CRConfig
 
 #class WebServer(threading.Thread):
 class WebServer():
@@ -25,7 +25,7 @@ class WebServer():
         cherrypy.engine.subscribe('graceful',self.stop)
 
         # Update the configuration...
-        cherrypy.config.update({'server.socket_host': ConfigGetter.config_webserver_interface, 'server.socket_port': ConfigGetter.config_webserver_port})
+        cherrypy.config.update({'server.socket_host': CRConfig.config_webserver_interface, 'server.socket_port': CRConfig.config_webserver_port})
         cherrypy.config.update({'tools.staticdir.root' : WebServer.current_dir})
 
         # Serving static content

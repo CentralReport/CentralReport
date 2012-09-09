@@ -1,5 +1,5 @@
 import subprocess, datetime
-from utils.config import ConfigGetter
+from utils.CRConfig import CRConfig
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
 
@@ -10,12 +10,13 @@ from entities.DiskCheckEntity import DiskCheckEntity
 from entities.DisksEntity import DisksEntity
 from entities.HostEntity import HostEntity
 
-class MacCollector:
+
+class MacCollector(Collector):
     """
         This collector can execute Mac OS command and get some useful values.
     """
 
-    def getInfos(self):
+    def get_infos(self):
         """
             Getting some informations on this Mac.
         """
@@ -36,9 +37,9 @@ class MacCollector:
         # Using new HostEntity
         hostEntity = HostEntity()
 
-        hostEntity.uuid = ConfigGetter.uuid
+        hostEntity.uuid = CRConfig.uuid
 
-        hostEntity.os = Collector.host_current
+        hostEntity.os = CRConfig.HOST_CURRENT
         hostEntity.hostname = hostname
         hostEntity.architecture = architecture
 
@@ -54,7 +55,7 @@ class MacCollector:
 
 
 
-    def getMemory(self):
+    def get_memory(self):
         """
             Getting memory informations.
         """
@@ -95,7 +96,7 @@ class MacCollector:
 
 
 
-    def getCPU(self):
+    def get_cpu(self):
         """
         Getting actual CPU utilization.
         """
@@ -122,7 +123,7 @@ class MacCollector:
 
 
 
-    def getLoadAverage(self):
+    def get_loadaverage(self):
         """
             Getting the load average for this computer.
         """
@@ -160,7 +161,7 @@ class MacCollector:
 
 
 
-    def getDisksInfo(self):
+    def get_disks(self):
         """
         Getting active disks (with disk size for the moment)
         """

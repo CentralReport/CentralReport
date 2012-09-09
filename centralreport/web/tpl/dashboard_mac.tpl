@@ -24,9 +24,9 @@
 
 
             var data = [
-                { label: "User",  data: ${cpu_user}, hoverable: true, clickable: true},
-                { label: "System",  data: ${cpu_system}},
-                { label: "Idle",  data: ${cpu_idle}, color: 3}
+                { label: "User",  data: ${cpu.user}, hoverable: true, clickable: true},
+                { label: "System",  data: ${cpu.system}},
+                { label: "Idle",  data: ${cpu.idle}, color: 3}
             ];
 
             $.plot($("#graph_cpu"), data,
@@ -58,10 +58,10 @@
                     });
 
             var memory_data = [
-                { label: "Resident", data: ${mem_resident}, color: 0},
-                { label: "Active",  data: ${mem_active}, color: 7},
-                { label: "Inactive",  data: ${mem_inactive}, color:1},
-                { label: "Free",  data: ${mem_free}, color: 3}
+                { label: "Resident", data: ${memory.resident}, color: 0},
+                { label: "Active",  data: ${memory.active}, color: 7},
+                { label: "Inactive",  data: ${memory.inactive}, color:1},
+                { label: "Free",  data: ${memory.free}, color: 3}
 
             ];
 
@@ -109,7 +109,7 @@
     <div class="content">
 
         <div class="page-header">
-            <h1>${hostname} <small>with CentralReport</small></h1>
+            <h1>${host.hostname} <small>with CentralReport</small></h1>
         </div>
 
         <div class="alert">
@@ -117,15 +117,17 @@
             This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
         </div>
 
+        <div><strong><a href="/">Back to summary</a></strong></div>
+
         <table class="table table-striped">
             <tbody>
             <tr>
                 <td>Kernel</td>
-                <td>${kernel} (Version : ${kernel_version})</td>
+                <td>${host.kernelName} (Version : ${host.kernelVersion})</td>
             </tr>
             <tr>
                 <td>Model</td>
-                <td>${mac_model}</td>
+                <td>${host.model}</td>
             </tr>
             </tbody>
         </table>
@@ -135,9 +137,9 @@
         <div class="row">
             <div class="span6">
 
-                <h5>Last check : ${cpu_date}</h5>
-                <p class="custom_margin_top_plus_20">Model : ${cpu_model}</p>
-                <p>Number of cores : ${ncpu}</p>
+                <h5>Last check : ${last_check}</h5>
+                <p class="custom_margin_top_plus_20">Model : ${host.cpuModel}</p>
+                <p>Number of cores : ${host.cpuCount}</p>
 
             </div>
             <div class="span6">
@@ -155,30 +157,30 @@
         <div class="row">
             <div class="span6">
 
-                <h5>Last check : ${mem_date}</h5>
+                <h5>Last check : ${last_check}</h5>
 
                 <div class="custom_margin_top_plus_20">
                     <table class="table table-striped">
                         <tbody>
                         <tr>
                             <td>Total</td>
-                            <td width="120px">${mem_total} MB</td>
+                            <td width="120px">${memory.total} MB</td>
                         </tr>
                         <tr>
                             <td><strong>Free</strong></td>
-                            <td><strong>${mem_free} MB</strong></td>
+                            <td><strong>${memory.free} MB</strong></td>
                         </tr>
                         <tr>
                             <td>Active</td>
-                            <td>${mem_active} MB</td>
+                            <td>${memory.active} MB</td>
                         </tr>
                         <tr>
                             <td>Inactive</td>
-                            <td>${mem_inactive} MB</td>
+                            <td>${memory.inactive} MB</td>
                         </tr>
                         <tr>
                             <td>Residente</td>
-                            <td>${mem_resident} MB</td>
+                            <td>${memory.resident} MB</td>
                         </tr>
                         </tbody>
                     </table>
@@ -187,7 +189,7 @@
                         <tbody>
                         <tr>
                             <td>Swap</td>
-                            <td width="120px">${mem_swap} MB</td>
+                            <td width="120px">${memory.swapSize} MB</td>
                         </tr>
                         </tbody>
                     </table>
@@ -206,22 +208,22 @@
         <div class="row">
             <div class="span6">
 
-                <h5>Last check : ${load_date}</h5>
+                <h5>Last check : ${last_check}</h5>
 
                 <div class="custom_margin_top_plus_20">
                     <table class="table table-striped">
                         <tbody>
                         <tr>
                             <td>Last minute</td>
-                            <td>${load_1m}</td>
+                            <td>${loadaverage.last1m}</td>
                         </tr>
                         <tr>
                             <td>Last 5 minutes</td>
-                            <td>${load_5m}</td>
+                            <td>${loadaverage.last5m}</td>
                         </tr>
                         <tr>
                             <td>Last 15 minutes</td>
-                            <td>${load_15m}</td>
+                            <td>${loadaverage.last15m}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -244,17 +246,17 @@
                     <table class="table table-striped">
                         <thead>
                         <th>Filesystem name</th>
-                        <th>Available</th>
-                        <th>Used</th>
-                        <th>Total</th>
+                        <th>Available (MB)</th>
+                        <th>Used (MB)</th>
+                        <th>Total (MB)</th>
                         </thead>
                         <tbody>
-                        % for disk in disks:
+                        % for disk in disks.checks:
                         <tr>
-                            <td>${disk['filesystem']|h}</td>
-                            <td>${disk['free']|h}</td>
-                            <td>${disk['used']|h}</td>
-                            <td>${disk['total']|h}</td>
+                            <td>${disk.name|h}</td>
+                            <td>${disk.free|h}</td>
+                            <td>${disk.used|h}</td>
+                            <td>${disk.size|h}</td>
                         </tr>
                         % endfor
                         </tbody>
