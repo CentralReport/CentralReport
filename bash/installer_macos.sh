@@ -91,4 +91,9 @@ function install_on_macos()
 
     echo "Mako is installed!"
     echo " "
+
+
+    echo " "
+    echo " ** Starting CentralReport... ** "
+    python ${INSTALL_DIR}/run.py start
 }

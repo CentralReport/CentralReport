@@ -5,11 +5,16 @@
 
 function install_on_debian()
 {
+    # Use root account
+    if [ $(whoami) != 'root' ]; then
+        su root;
+    fi
+
     # Check if CentralReport is already running!
     echo "Checking if CentralReport is already running"
     if [ -f ${PID_FILE} ]; then
         echo "CentralReport is already running! Trying to stop it..."
-        sudo python ${INSTALL_DIR}/run.py stop
+        python ${INSTALL_DIR}/run.py stop
         echo "Done!"
     fi
 
@@ -17,21 +22,21 @@ function install_on_debian()
     echo "Checking if install directory already exist"
     if [ -d ${INSTALL_DIR} ]; then
         echo "Remove existing install directory"
-        sudo rm -rfv $INSTALL_DIR
+        rm -rfv $INSTALL_DIR
         echo "Done!"
     fi
 
     echo "Checking if a config file already exist"
     if [ -f ${CONFIG_FILE} ]; then
         echo "Remove existing config file"
-        sudo rm -fv $CONFIG_FILE
+        rm -fv $CONFIG_FILE
         echo "Done!"
     fi
 
     echo "Checking if the startup script already exist"
     if [ -f ${STARTUP_DEBIAN} ]; then
         echo "Remove existing startup script"
-        sudo rm -rfv $STARTUP_DEBIAN
+        rm -rfv $STARTUP_DEBIAN
         echo "Done!"
     fi
 
@@ -41,20 +46,22 @@ function install_on_debian()
 
     echo "Copy CentralReport in the good directory..."
     echo " -- "
-    sudo mkdir ${INSTALL_DIR}
-    sudo cp -R -f -v centralreport ${PARENT_DIR}
+
+    mkdir ${INSTALL_DIR}
+    cp -R -f -v centralreport ${PARENT_DIR}
+
     echo " -- "
     echo "Copy : Done !"
 
     echo " "
     echo "Copy startup script in the init.d directory..."
-    sudo cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
-    sudo chmod 755 ${STARTUP_DEBIAN}
+    cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
+    chmod 755 ${STARTUP_DEBIAN}
     echo "Done!"
 
     echo " "
     echo "Register startup script in update-rc.d..."
-    sudo update-rc.d ${STARTUP_DEBIAN} defaults
+    update-rc.d centralreport_debian.sh defaults
     echo "Done!"
 
 
@@ -71,30 +78,52 @@ function install_on_debian()
 
     echo "Installing CherryPy..."
     cd ${CHERRYPY_DIR};
-    sudo python setup.py install
+    python setup.py install
     cd ../../;
 
     echo "Deleting install files..."
-    sudo rm -Rf ${CHERRYPY_DIR}
+    rm -Rf ${CHERRYPY_DIR}
 
     echo "CherryPy is installed!"
     echo " "
 
 
+    # First, we install Setuptools
+    echo "Installing Setuptools"
+    echo "Untar Setuptools..."
+    tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
 
-    # Then, installing Mako Templates...
+    echo "Installing Setuptools..."
+    cd ${SETUPTOOLS_DIR};
+    python setup.py install
+    cd ../../;
+
+    echo "Deleting install files..."
+    rm -Rf ${SETUPTOOLS_DIR}
+
+    echo "Setuptools is installed!"
+    echo " "
+
+
+    # Finally, installing Mako Templates...
     echo "Installing Mako Templates"
     echo "Untar Mako..."
+
     tar -xzvf ${MAKO_TAR} -C thirdparties/
 
     echo "Installing Mako..."
     cd ${MAKO_DIR};
-    sudo python setup.py install
+    python setup.py install
     cd ../../;
 
     echo "Deleting install files..."
-    sudo rm -Rf ${MAKO_DIR}
+    rm -Rf ${MAKO_DIR}
 
     echo "Mako is installed!"
     echo " "
+
+
+    echo " "
+    echo " ** Starting CentralReport... ** "
+    python ${INSTALL_DIR}/run.py start
 }

@@ -17,6 +17,7 @@ class MemoryCheckEntity:
 
         self.swapSize = float(0)
         self.swapUsed = float(0)
+        self.swapFree = float(0)
 
 
     def jsonSerialize(self):

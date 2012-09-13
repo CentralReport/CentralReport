@@ -71,10 +71,6 @@ if [ $ACTUAL_MODE = "install" ]; then
 
 
             echo " "
-            echo " ** Starting CentralReport... ** "
-            sudo python ${INSTALL_DIR}/run.py start
-
-            echo " "
             echo "Please wait before the first check..."
 
             sleep 3;

@@ -2,6 +2,11 @@ import subprocess
 from utils.CRConfig import CRConfig
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
+from entities.HostEntity import HostEntity
+from entities.CpuCheckEntity import CpuCheckEntity
+from entities.MemoryCheckEntity import MemoryCheckEntity
+from entities.LoadAverageCheckEntity import LoadAverageCheckEntity
+from entities.DisksEntity import DisksEntity
 
 __author__ = 'che'
 
@@ -17,7 +22,25 @@ class DebianCollector(Collector):
         kernel_v = TextUtilities.removeSpecialsCharacters(subprocess.Popen(['uname','-r'], stdout=subprocess.PIPE, close_fds=True).communicate()[0])
 
 
-        return {'os' : Collector.host_current, 'hostname' : hostname, 'uuid' : CRConfig.uuid, 'kernel' : kernel, 'kernel_v' : kernel_v, 'language' : 'Python' }
+        # Using new HostEntity
+        hostEntity = HostEntity()
+
+        hostEntity.uuid = CRConfig.uuid
+
+        hostEntity.os = CRConfig.HOST_CURRENT
+        hostEntity.hostname = hostname
+        #hostEntity.architecture = architecture
+
+        #hostEntity.model = model
+
+        hostEntity.kernelName = kernel
+        hostEntity.kernelVersion = kernel_v
+
+        #hostEntity.cpuModel = cpu_model
+        #hostEntity.cpuCount = ncpu
+
+        return hostEntity
+
 
 
     # Obtenir les stats CPU.
@@ -34,7 +57,15 @@ class DebianCollector(Collector):
         # Dictionnaire de valeur
         dict_iostat = dict(zip(headers,values))
 
-        return {'date': datetime.datetime.now(), 'user' : dict_iostat['us'], 'system' : dict_iostat['sy'], 'idle' : dict_iostat['id']}
+
+        # Use your new CpuCheckEntity!
+        cpuCheck = CpuCheckEntity()
+        cpuCheck.idle = dict_iostat['id']
+        cpuCheck.system = dict_iostat['sy']
+        cpuCheck.user = dict_iostat['us']
+
+        return cpuCheck
+
 
 
     def get_memory(self):
@@ -65,7 +96,18 @@ class DebianCollector(Collector):
         # Creation de notre dictionnaire
         dict_memory = dict(zip(list_headers,list_values))
 
-        return {'date': datetime.datetime.now(), 'mem_size' : dict_memory['MemTotal'], 'mem_free' : dict_memory['MemFree'], 'mem_active' : dict_memory['Active'], 'mem_inactive' : dict_memory['Inactive'], 'swap_total' : dict_memory['SwapTotal'], 'swap_free' : dict_memory['SwapFree']  }
+        # Preparing return entity...
+        memoryCheck = MemoryCheckEntity()
+        memoryCheck.total = int(dict_memory['MemTotal'])/1024
+        memoryCheck.free = int(dict_memory['MemFree'])/1024
+        memoryCheck.active = int(dict_memory['Active'])/1024
+        memoryCheck.inactive = int(dict_memory['Inactive'])/1024
+        memoryCheck.resident = 0
+        memoryCheck.swapTotal = int(dict_memory['SwapTotal'])/1024
+        memoryCheck.swapFree = int(dict_memory['SwapFree'])/1024
+        memoryCheck.swapUsed = int(float(dict_memory['SwapTotal']) - float(dict_memory['SwapFree']))/1024
+
+        return memoryCheck
 
 
 
@@ -79,4 +121,17 @@ class DebianCollector(Collector):
         dict_loadavg = loadavg_result.split(" ")
 
 
-        return {'date': datetime.datetime.now(), 'load1m' : dict_loadavg[0], 'load5m' : dict_loadavg[1], 'load15m' : dict_loadavg[2] }
+        # Prepare return entity
+        loadAverageEntity = LoadAverageCheckEntity()
+        loadAverageEntity.last1m = dict_loadavg[0]
+        loadAverageEntity.last5m = dict_loadavg[1]
+        loadAverageEntity.last15m = dict_loadavg[2]
+
+        return loadAverageEntity
+
+    def get_disks(self):
+
+        # Return entity
+        diskEntity = DisksEntity()
+
+        return diskEntity

@@ -27,6 +27,8 @@ STARTUP_DEBIAN_INSTALL=launchers/centralreport_debian.sh
 # Temp install directories.
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
 MAKO_TAR=thirdparties/Mako.tar.gz
+SETUPTOOLS_TAR=thirdparties/setuptools.tar.gz
 
 CHERRYPY_DIR=thirdparties/CherryPy-3.2.2
 MAKO_DIR=thirdparties/Mako-0.7.2
+SETUPTOOLS_DIR=thirdparties/setuptools-0.6c11
