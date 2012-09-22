@@ -11,3 +11,11 @@ function getOS(){
         CURRENT_OS=${OS_DEBIAN}
     fi
 }
+
+function displayError {
+
+    echo -e "\033[1;31m"
+    echo $1
+    echo -e "\033[0m"
+
+}

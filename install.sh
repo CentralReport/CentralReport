@@ -7,7 +7,7 @@
 # Importing scripts...
 source bash/vars.sh
 source bash/functions.inc.sh
-source bash/installer_macos.sh
+source bash/macos.inc.sh
 source bash/installer_debian.sh
 
 # Vars
