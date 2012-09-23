@@ -7,7 +7,7 @@
 # Importing some scripts
 source bash/vars.sh
 source bash/functions.inc.sh
-source bash/uninstall_macos.sh
+source bash/macos.inc.sh
 source bash/uninstall_debian.sh
 
 # Vars
@@ -47,7 +47,7 @@ if [ $REPLY == "yes" ]; then
         if [ $CURRENT_OS = $OS_MAC ]; then
 
             # Remove CR from this Mac
-            uninstall_from_mac
+            macos_uninstall
 
         elif [ $CURRENT_OS = $OS_DEBIAN ]; then
 

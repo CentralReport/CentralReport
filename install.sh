@@ -56,35 +56,50 @@ if [ $ACTUAL_MODE = "install" ]; then
 
             # It's an indev version. At each install, we delete everything.
 
+            # O=no error / 1=one or more errors
+            bit_error=0
+
             if [ ${CURRENT_OS} == "$OS_MAC" ]; then
                 echo "Ok, I continue. I will install CentralReport on a mac"
+                macos_install
+                if [ $? -ne 0 ]; then
+                    bit_error=1
+                fi
 
-                install_on_macos
             elif [ ${CURRENT_OS} == "$OS_DEBIAN" ]; then
                 echo "Ok. I continue. I will install CentralReport on Debian"
-
                 install_on_debian
+
             fi
 
 
-            # Done ! We can starting CentralReport!
+
+            if [ ${bit_error} -eq 1 ]; then
+
+                displayError "Error during CentralReport installation..."
+                displayError "CentralReport isn't installed on this host."
+
+            else
+                # Done ! We can starting CentralReport!
 
 
-            echo " "
-            echo "Please wait before the first check..."
+                echo " "
+                echo "Please wait before the first check..."
 
-            sleep 3;
+                sleep 3;
 
-            echo -e "\033[1;32m"
-            echo " "
-            echo "CentralReport might be installed!"
-            echo "You can go to http://127.0.0.1:8080 to display the web view"
-            echo "or you can edit the config file at /etc/cr/centralreport.cfg"
-            echo " "
-            echo "More help at http://github.com/miniche/CentralReport"
-            echo "Have fun!"
-            echo " "
-            echo -e "\033[0m"
+                echo -e "\033[1;32m"
+                echo " "
+                echo "CentralReport might be installed!"
+                echo "You can go to http://127.0.0.1:8080 to display the web view"
+                echo "or you can edit the config file at /etc/cr/centralreport.cfg"
+                echo " "
+                echo "More help at http://github.com/miniche/CentralReport"
+                echo "Have fun!"
+                echo " "
+                echo -e "\033[0m"
+
+            fi
 
         fi
 

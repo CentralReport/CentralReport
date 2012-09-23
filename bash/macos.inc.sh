@@ -13,21 +13,24 @@
 
 function macos_start_cr {
 
-    echo "Starting CentralReport..."
+    echo -e "\nStarting CentralReport..."
 
     if [ -f ${PID_FILE} ]; then
         echo "CentralReport is already running!"
-        return 1
+        return 0
 
     else
-        python ${INSTALL_DIR}/run.py start
+        sudo python ${INSTALL_DIR}/run.py start
 
         if [ $? -ne "0" ]; then
             displayError "Error on starting CentralReport (Error code : $?)"
-            return 0
-        else
-            echo "CentralReport started?"
             return 1
+        else
+            # Waiting three seconds before all CR threads really started.
+            sleep 3
+
+            echo "CentralReport started"
+            return 0
         fi
     fi
 
@@ -36,20 +39,23 @@ function macos_start_cr {
 
 function macos_stop_cr {
 
-    echo "Stopping CentralReport..."
+    echo -e "\nStopping CentralReport..."
 
     if [ ! -f ${PID_FILE} ]; then
             echo "CentralReport is already stopped!"
-            return 1
+            return 0
     else
-        python ${INSTALL_DIR}/run.py stop
+        sudo python ${INSTALL_DIR}/run.py stop
 
         if [ $? -ne "0" ]; then
             displayError "Error on stopping CentralReport (Error code : $?)"
-            return 0
-        else
-            echo "CentralReport stopped"
             return 1
+        else
+            # Waiting three seconds before all CR threads really stopped.
+            sleep 3
+
+            echo "CentralReport stopped"
+            return 0
         fi
     fi
 }
@@ -67,59 +73,62 @@ function macos_stop_cr {
 # --
 
 function macos_remove_bin {
-    echo "Remove existing install directory..."
+
+    echo -e "\nRemove existing install directory..."
 
     if [ -d ${INSTALL_DIR} ]; then
         sudo rm -rfv $INSTALL_DIR
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : $?)"
-            return 0
+            return 1
         else
             echo "Done!"
-            return 1
+            return 0
         fi
     else
         echo "CentralReport bin directory doesn't exist."
-        return 1
+        return 0
     fi
 }
 
 function macos_remove_config {
-    echo "Remove existing config file..."
+
+    echo -e "\nRemove existing config file..."
 
     if [ -f ${CONFIG_FILE} ]; then
         sudo rm -fv $CONFIG_FILE
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : $?)"
-            return 0
+            return 1
         else
             echo "Done!"
-            return 1
+            return 0
         fi
     else
         echo "CentralReport config file not found."
-        return 1
+        return 0
     fi
 }
 
 function macos_remove_startup_plist {
-    echo "Remove existing startup plist file..."
+
+    echo -e "\nRemove existing startup plist file..."
 
     if [ -f ${STARTUP_PLIST} ]; then
         sudo rm -fv $STARTUP_PLIST
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting startup plist file at ${STARTUP_PLIST} (Error code : $?)"
-            return 0
+            return 1
         else
             echo "Done!"
-            return 1
+            return 0
         fi
     else
         echo "Startup plist file not found."
-        return 1
+        return 0
     fi
 }
 
@@ -135,23 +144,22 @@ function macos_remove_startup_plist {
 function macos_cp_bin {
     # Copy CentralReport files in the right directory.
 
-    echo " "
-    echo "Copy CentralReport in the good directory..."
+    echo -e "\nCopy CentralReport in the good directory..."
 
     sudo mkdir ${INSTALL_DIR}
 
     if [ $? -ne "0" ]; then
           displayError "Error on creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
-          return 0
+          return 1
     else
         sudo cp -R -f -v centralreport ${PARENT_DIR}
 
         if [ $? -ne "0" ]; then
             displayError "Error on copying CentralReport bin files in ${PARENT_DIR} (Error code : $?)"
-            return 0
+            return 1
         else
             echo "Copy : Done !"
-            return 1
+            return 0
         fi
     fi
 }
@@ -159,17 +167,15 @@ function macos_cp_bin {
 function macos_cp_startup_plist {
     # Copy startup plist for launchd in the right directory.
 
-    echo " "
-    echo "Copy startup plist in the good directory..."
+    echo -e "\nCopy startup plist in the good directory..."
 
     sudo cp -f -v ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
-
     if [ $? -ne "0" ]; then
       displayError "Error on copying startup plist at ${STARTUP_PLIST} (Error code : $?)"
-      return 0
+      return 1
     else
         echo "Done!"
-        return 1
+        return 0
     fi
 }
 
@@ -180,24 +186,42 @@ function macos_cp_startup_plist {
 
 
 
+# --
+# Install procedure
+# --
 
+function macos_install {
 
-function install_on_macos {
+    # Use root privileges with sudo.
+    echo -e "\n\nPlease use your administrator password to install CentralReport on this Mac."
+    sudo -v
+    if [ $? -ne 0 ]; then
+        displayError "Impossible to use root privileges"
+        return 1
+    fi
 
-    # Check if CentralReport is already running!
-    macos_stop_cr
+    # Uninstall existing installation
+    macos_uninstall
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
 
-    # We check if we found datas about CentralReport
-    macos_remove_bin
-    macos_remove_config
-    macos_remove_startup_plist
 
     echo " "
     echo " ** Starting installation ** "
     echo " "
 
     macos_cp_bin
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
     macos_cp_startup_plist
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+
 
 
     echo " "
@@ -243,6 +267,53 @@ function install_on_macos {
 
     echo " "
     echo " ** Starting CentralReport... ** "
-    python ${INSTALL_DIR}/run.py start
+    macos_start_cr
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Deleting sudo privileges for this session...
+    sudo -k
+
+    return 0
+}
+
+
+
+
+
+
+# --
+# Uninstall procedure
+# --
+
+function macos_uninstall {
+
+    # Check if CentralReport is already running, and stop it.
+    macos_stop_cr
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete CR bin files
+    macos_remove_bin
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete CR config file
+    macos_remove_config
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete startup plist file
+    macos_remove_startup_plist
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+
+    return 0
 }
 
