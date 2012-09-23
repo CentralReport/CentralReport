@@ -44,6 +44,9 @@ if [ $REPLY == "yes" ]; then
 
     else
 
+
+        bit_error=0
+
         if [ $CURRENT_OS = $OS_MAC ]; then
 
             # Remove CR from this Mac

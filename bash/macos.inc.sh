@@ -146,6 +146,14 @@ function macos_cp_bin {
 
     echo -e "\nCopy CentralReport in the good directory..."
 
+    # It's possible that /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
+    if [ ! -d "/usr/local" ]; then
+        sudo mkdir /usr/local
+    fi
+    if [ ! -d "/usr/local/bin" ]; then
+            sudo mkdir /usr/local/bin
+        fi
+
     sudo mkdir ${INSTALL_DIR}
 
     if [ $? -ne "0" ]; then

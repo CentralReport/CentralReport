@@ -12,7 +12,7 @@ source bash/installer_debian.sh
 
 # Vars
 ACTUAL_MODE=install                         # Modes : install, check
-
+install_confirm="yes"
 
 # Go!
 
@@ -49,10 +49,10 @@ if [ $ACTUAL_MODE = "install" ]; then
         echo " "
         echo "Install mode enabled"
         echo "You will install CentralReport. Are you sure to continue? (Yes/No)"
-        read
+        #read install_confirm
 
         # Are you sure to install CR ?
-        if [ $REPLY = "yes" ]; then
+        if [ "$install_confirm" = "yes" ]; then
 
             # It's an indev version. At each install, we delete everything.
 
