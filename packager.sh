@@ -12,9 +12,19 @@ if [ $(uname -s) != "Darwin" ]; then
     exit 1
 fi
 
+# You must be in "CentralReport directory to execute this script
+if [ ${PWD##*/} != "CentralReport" ]; then
+    echo "ERROR - You must be in the CentralReport directory to execute this script."
+    exit 1
+fi
+
 cd ../
 
 sudo -v
+if [ $? -ne 0 ]; then
+    echo "ERROR - Incorrect root password. Script aborted."
+    exit
+fi
 
 echo "Generating CentralReport full package..."
 
