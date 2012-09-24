@@ -330,4 +330,3 @@ function macos_uninstall {
 
     return 0
 }
-
