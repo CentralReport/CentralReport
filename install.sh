@@ -31,6 +31,13 @@ if [ -n "$1" ]; then
     ACTUAL_MODE=$1
 fi
 
+# Python is mandatory for CentralReport
+getPythonIsInstalled
+if [ $? -ne 0 ]; then
+    displayError "Error, Python must be installed on your host to execute CentralReport."
+    exit 1
+fi
+
 # Getting current OS - from common_functions.sh
 getOS
 

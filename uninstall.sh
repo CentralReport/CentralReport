@@ -27,10 +27,17 @@ echo "Welcome! This script will uninstall CentralReport on your host."
 echo "If you wants more details, please visit http://github.com/miniche/CentralReport"
 echo -e "\033[0m"
 
+getPythonIsInstalled
+if [ $? -ne 0 ]; then
+    displayError "Error, Python must be installed on your host to remove CentralReport."
+    exit 1
+fi
+
 echo " "
 echo "Uninstall"
 echo "You will uninstall CentralReport. Are you sure to continue? (Yes/No)"
 #read unistall_confirm
+
 
 # Are you sure to uninstall CR ?
 if [ "$unistall_confirm" == "yes" ]; then

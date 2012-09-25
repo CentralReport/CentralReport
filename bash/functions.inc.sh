@@ -19,3 +19,15 @@ function displayError {
     echo -e "\033[0m"
 
 }
+
+function getPythonIsInstalled {
+
+    python -V
+
+    if [ $? -ne 0 ]; then
+        return 1
+    else
+        return 0
+    fi
+
+}

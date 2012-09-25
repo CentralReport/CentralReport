@@ -17,6 +17,8 @@ CURRENT_OS=""
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
 
+echo -e "\n\nWelcome to CentralReport one-line installer!"
+
 # Getting current OS
 if [ $(uname -s) == "Darwin" ]; then
     # Mac OS X
@@ -34,6 +36,14 @@ elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
 else
     echo " "
     echo "Sorry, your distro isn't supported yet..."
+    exit 1
+fi
+
+# Testing if Python is available on this host
+echo -e "\nTesting Python version..."
+python -V
+if [ $? -eq 0 ]; then
+    echo -e "\n\nError, Python must be installed on your host to execute CentralReport."
     exit 1
 fi
 
