@@ -19,10 +19,10 @@ case "$1" in
     ;;
   stop)
     echo "Stopping CentralReport"
-    python /usr/local/bin/centralreport/run.py start
+    python /usr/local/bin/centralreport/run.py stop
     ;;
   *)
-    echo "Usage: /etc/init.d/blah {start|stop}"
+    echo "Usage: /etc/init.d/centralreport_debian.sh {start|stop}"
     exit 1
     ;;
 esac

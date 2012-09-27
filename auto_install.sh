@@ -42,7 +42,7 @@ fi
 # Testing if Python is available on this host
 echo -e "\nTesting Python version..."
 python -V
-if [ $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
     echo -e "\n\nError, Python must be installed on your host to execute CentralReport."
     exit 1
 fi

@@ -1,4 +1,4 @@
-import subprocess
+import subprocess,datetime
 from utils.CRConfig import CRConfig
 from collectors.Collector import Collector
 from utils.TextUtilities import TextUtilities
@@ -7,6 +7,7 @@ from entities.CpuCheckEntity import CpuCheckEntity
 from entities.MemoryCheckEntity import MemoryCheckEntity
 from entities.LoadAverageCheckEntity import LoadAverageCheckEntity
 from entities.DisksEntity import DisksEntity
+from entities.DiskCheckEntity import DiskCheckEntity
 
 __author__ = 'che'
 
@@ -129,9 +130,38 @@ class DebianCollector(Collector):
 
         return loadAverageEntity
 
+
     def get_disks(self):
+        """
+        Getting active disks (with disk size for the moment)
+        """
 
-        # Return entity
-        diskEntity = DisksEntity()
+        df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        return diskEntity
+        df_split = df_dict.splitlines()
+        header = df_split[0].split()
+
+        # New return entity
+        listDisks = DisksEntity()
+
+        for i in range(1,len(df_split)):
+
+            if(df_split[i].startswith("/dev/")):
+                line_split = df_split[i].split()
+
+                # Getting info in MB (Linux count with '1K block' unit)
+                disk_total = int(line_split[1])/1024
+                disk_used = int(line_split[2])/1024
+                disk_free = int(line_split[3])/1024
+
+                # Using new check entity
+                checkDisk = DiskCheckEntity()
+                checkDisk.date = datetime.datetime.now()
+                checkDisk.name = line_split[0]
+                checkDisk.size = disk_total
+                checkDisk.used = disk_used
+                checkDisk.free = disk_free
+
+                listDisks.checks.append(checkDisk)
+
+        return listDisks
