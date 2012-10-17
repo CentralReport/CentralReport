@@ -14,7 +14,7 @@ function uninstall_from_debian(){
     echo "Checking if CentralReport is already running"
     if [ -f ${PID_FILE} ]; then
         echo "CentralReport is already running! Trying to stop it..."
-        python ${INSTALL_DIR}/run.py stop
+        python ${INSTALL_DIR}/centralreport.py stop
         echo "Done!"
 
         # Wait before CR is really stopped

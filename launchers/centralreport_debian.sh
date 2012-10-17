@@ -15,11 +15,11 @@
 case "$1" in
   start)
     echo "Starting CentralReport "
-    python /usr/local/bin/centralreport/run.py start
+    python /usr/local/bin/centralreport/centralreport.py start
     ;;
   stop)
     echo "Stopping CentralReport"
-    python /usr/local/bin/centralreport/run.py stop
+    python /usr/local/bin/centralreport/centralreport.py stop
     ;;
   *)
     echo "Usage: /etc/init.d/centralreport_debian.sh {start|stop}"

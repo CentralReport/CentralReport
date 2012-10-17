@@ -14,7 +14,7 @@ function install_on_debian()
     echo "Checking if CentralReport is already running"
     if [ -f ${PID_FILE} ]; then
         echo "CentralReport is already running! Trying to stop it..."
-        python ${INSTALL_DIR}/run.py stop
+        python ${INSTALL_DIR}/centralreport.py stop
         echo "Done!"
     fi
 
@@ -125,5 +125,5 @@ function install_on_debian()
 
     echo " "
     echo " ** Starting CentralReport... ** "
-    python ${INSTALL_DIR}/run.py start
+    python ${INSTALL_DIR}/centralreport.py start
 }

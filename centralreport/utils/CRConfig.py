@@ -3,12 +3,19 @@
 
 __author__ = 'che'
 
-import ConfigParser, os, uuid, subprocess
+import ConfigParser, os, uuid, subprocess,getpass
 
 class CRConfig:
 
     config = ConfigParser.ConfigParser()
 
+    # CentralReport Core config
+    if getpass.getuser() != "root":
+        pid_file = "/tmp/centralreport.pid"
+    else:
+        pid_file = "/var/run/centralreport.pid"
+
+    # Indev config
     uuid = ""
     config_enable_check_memory = True
     config_enable_check_cpu = True

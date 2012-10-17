@@ -20,7 +20,7 @@ function macos_start_cr {
         return 0
 
     else
-        sudo python ${INSTALL_DIR}/run.py start
+        sudo python ${INSTALL_DIR}/centralreport.py start
 
         if [ $? -ne "0" ]; then
             displayError "Error on starting CentralReport (Error code : $?)"
@@ -45,7 +45,7 @@ function macos_stop_cr {
             echo "CentralReport is already stopped!"
             return 0
     else
-        sudo python ${INSTALL_DIR}/run.py stop
+        sudo python ${INSTALL_DIR}/centralreport.py stop
 
         if [ $? -ne "0" ]; then
             displayError "Error on stopping CentralReport (Error code : $?)"
