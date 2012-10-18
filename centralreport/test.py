@@ -6,4 +6,7 @@ import centralreport
 # This test file can launch CentralReport on dev host, without installation.
 # Please verify CR is not installed on your host before launch this script.
 
-cr = centralreport.CentralReport()
+cr = centralreport.CentralReport("/tmp/centralreport_debug.pid")
+cr.run()
+
+# Ok !

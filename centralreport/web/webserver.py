@@ -1,7 +1,7 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import os, cherrypy, threading
+import os, cherrypy, threading,cherrypy._cplogging
 from mako.lookup import TemplateLookup
 from webHomePages import WebHomePages
 from utils.CRConfig import CRConfig
@@ -34,7 +34,12 @@ class WebServer():
                              '/img' : {'tools.staticdir.dir': 'img','tools.staticdir.on': True},
                              '/js' : {'tools.staticdir.dir': 'js','tools.staticdir.on': True}}
 
-        cherrypy.tree.mount(WebHomePages(self.lookup), '/',confStaticContent)
+        webApplication = cherrypy.tree.mount(WebHomePages(self.lookup), '/',confStaticContent)
+
+        # Disable screen log (standard out)
+        # http://stackoverflow.com/questions/4056958/cherrypy-logging-how-do-i-configure-and-use-the-global-and-application-level-lo
+        webApplication.log.screen = False
+        webApplication.log.access_file = None
 
         # Go go go!
         cherrypy.engine.start()
