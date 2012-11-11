@@ -88,6 +88,8 @@ if __name__ == "__main__":
         print("\nRestarting CentralReport...")
         daemon.start()
 
-    print("\n\n-- End of config script")
+    print("\n\n--------------------------------------------------")
+    print("             End of config script")
+    print("--------------------------------------------------")
 
     sys.exit(0)

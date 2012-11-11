@@ -62,8 +62,19 @@ function macos_stop_cr {
 
 
 
+# --
+# CentralReport config assistant
+# --
+function macos_config_assistant {
 
+    echo -e "\033[1;32mLauching CentralReport configuration assistant..."
+    echo -e "\033[0m"
 
+    sudo python ${CONFIG_ASSISTANT}
+
+    return 0
+
+}
 
 
 
@@ -272,6 +283,11 @@ function macos_install {
     echo "Mako is installed!"
     echo " "
 
+    # Cleaning screen
+    clear
+
+    # CR config assistant
+    macos_config_assistant
 
     echo " "
     echo " ** Starting CentralReport... ** "

@@ -3,13 +3,14 @@
 # CentralReport Unix/Linux Indev version.
 # By careful! Don't use in production environment!
 
-# Vars
+# Folders
 PARENT_DIR=/usr/local/bin/
 INSTALL_DIR=/usr/local/bin/centralreport
 
 CONFIG_FILE=/etc/cr/centralreport.cfg
+CONFIG_ASSISTANT=/usr/local/bin/centralreport/config.py
 
-PID_FILE=/tmp/daemon-centralreport.pid
+PID_FILE=/var/run/centralreport.pid
 
 # OS
 CURRENT_OS=

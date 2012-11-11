@@ -64,27 +64,30 @@ class Config:
 
 
         # Fichier de utils existe ?
-        config = ConfigParser.ConfigParser()
         if os.path.isfile(Config.chemin +'centralreport.cfg'):
             print('Fichier de conf : Existant. Lecture.')
         else:
             print('Fichier de conf : Inexistant. Creation.')
             Config.uuid = uuid.uuid1()
+
+            Config.config.add_section('General')
+            Config.config.add_section('Network')
+            Config.config.add_section('Webserver')
             self.writeConfigFile()
 
 
 
         # Lecture du fichier de utils
-        config.read(Config.chemin +'centralreport.cfg')
+        Config.config.read(Config.chemin +'centralreport.cfg')
 
-        Config.uuid = config.get('General', 'uuid')
-        Config.config_enable_check_memory = config.getboolean("Network","enable_check_memory")
-        Config.config_enable_check_cpu = config.getboolean("Network","enable_check_cpu")
-        Config.config_enable_check_loadaverage = config.getboolean("Network","enable_check_loadaverage")
-        Config.config_server_addr = config.get("Network",'server_addr')
-        Config.config_webserver_enable = config.getboolean("Webserver","enable")
-        Config.config_webserver_interface = config.get("Webserver","interface")
-        Config.config_webserver_port = config.getint("Webserver","port")
+        Config.uuid = Config.config.get('General', 'uuid')
+        Config.config_enable_check_memory = Config.config.getboolean("Network","enable_check_memory")
+        Config.config_enable_check_cpu = Config.config.getboolean("Network","enable_check_cpu")
+        Config.config_enable_check_loadaverage = Config.config.getboolean("Network","enable_check_loadaverage")
+        Config.config_server_addr = Config.config.get("Network",'server_addr')
+        Config.config_webserver_enable = Config.config.getboolean("Webserver","enable")
+        Config.config_webserver_interface = Config.config.get("Webserver","interface")
+        Config.config_webserver_port = Config.config.getint("Webserver","port")
 
 
     def writeConfigFile(self):
@@ -92,14 +95,15 @@ class Config:
             Write into the config file the actual configuration.
         """
         # On ecrit le fichier de conf
-        Config.config.add_section('General')
+
+
         Config.config.set('General', 'uuid', Config.uuid)
-        Config.config.add_section('Network')
+
         Config.config.set('Network', 'enable_check_cpu', Config.config_enable_check_cpu)
         Config.config.set('Network', 'enable_check_memory', Config.config_enable_check_memory)
         Config.config.set('Network', 'enable_check_loadaverage', Config.config_enable_check_loadaverage)
         Config.config.set("Network", 'server_addr', Config.config_server_addr)
-        Config.config.add_section('Webserver')
+
         Config.config.set("Webserver", 'enable', Config.config_webserver_enable)
         Config.config.set("Webserver", 'interface', Config.config_webserver_interface)
         Config.config.set("Webserver", 'port', Config.config_webserver_port)
