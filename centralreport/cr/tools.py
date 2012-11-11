@@ -69,22 +69,10 @@ class Config:
             print('Fichier de conf : Existant. Lecture.')
         else:
             print('Fichier de conf : Inexistant. Creation.')
-
-            # On ecrit le fichier de conf
-            config.add_section('General')
-            config.set('General', 'uuid', uuid.uuid1())
-            config.add_section('Network')
-            config.set('Network', 'enable_check_cpu', True)
-            config.set('Network', 'enable_check_memory', True)
-            config.set('Network', 'enable_check_loadaverage', True)
-            config.set("Network", 'server_addr', 'localhost:8888')
-            config.add_section('Webserver')
-            config.set("Webserver", 'enable', True)
-            config.set("Webserver", 'interface', '0.0.0.0')
-            config.set("Webserver", 'port', '8080')
+            Config.uuid = uuid.uuid1()
+            self.writeConfigFile()
 
 
-            config.write(open(Config.chemin +'centralreport.cfg','w'))
 
         # Lecture du fichier de utils
         config.read(Config.chemin +'centralreport.cfg')
@@ -99,6 +87,26 @@ class Config:
         Config.config_webserver_port = config.getint("Webserver","port")
 
 
+    def writeConfigFile(self):
+        """
+            Write into the config file the actual configuration.
+        """
+        # On ecrit le fichier de conf
+        Config.config.add_section('General')
+        Config.config.set('General', 'uuid', Config.uuid)
+        Config.config.add_section('Network')
+        Config.config.set('Network', 'enable_check_cpu', Config.config_enable_check_cpu)
+        Config.config.set('Network', 'enable_check_memory', Config.config_enable_check_memory)
+        Config.config.set('Network', 'enable_check_loadaverage', Config.config_enable_check_loadaverage)
+        Config.config.set("Network", 'server_addr', Config.config_server_addr)
+        Config.config.add_section('Webserver')
+        Config.config.set("Webserver", 'enable', Config.config_webserver_enable)
+        Config.config.set("Webserver", 'interface', Config.config_webserver_interface)
+        Config.config.set("Webserver", 'port', Config.config_webserver_port)
+
+        Config.config.write(open("/etc/cr/centralreport.cfg",'w'))
+
+
     @staticmethod
     def determine_current_host():
         """
@@ -106,8 +114,10 @@ class Config:
         """
 
         # Est-ce un mac ?
-        kernel_mac = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-        kernel_linux = subprocess.Popen(['sysctl','-n','kernel.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        try:
+            kernel_mac = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        except:
+            kernel_linux = subprocess.Popen(['sysctl','-n','kernel.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         #print(str(kernel_mac))
         if kernel_mac.startswith("Darwin"):

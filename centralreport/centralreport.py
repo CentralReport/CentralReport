@@ -14,6 +14,7 @@ class CentralReport(Daemon):
     # Bool : True = daemon is running.
     isRunning = True
     startingDate = None
+    configuration = None
 
     def run(self):
         # Constructeur
@@ -29,10 +30,7 @@ class CentralReport(Daemon):
         CentralReport.startingDate = datetime.datetime.now()
 
         # Ce constructeur va permettre de lancer l'ensemble des outils necessaires
-
-        # Deuxieme chose : la configuration via le fichier de conf.
-        configuration = Config()
-
+        CentralReport.configuration = Config()
         #idMachine = utils.config.configGetter.config.get("General","id")
         #utils.log.CRLog.writeLog("UUID : "+ str(idMachine))
 

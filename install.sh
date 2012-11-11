@@ -80,7 +80,6 @@ if [ $ACTUAL_MODE = "install" ]; then
             fi
 
 
-
             if [ ${bit_error} -eq 1 ]; then
 
                 displayError "Error during CentralReport installation..."
