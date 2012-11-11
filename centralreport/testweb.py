@@ -3,6 +3,6 @@
 
 # Fichier de test pour module web
 
-from web.webserver import WebServer
+from web.server import WebServer
 
 serveur = WebServer()

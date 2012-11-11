@@ -3,16 +3,17 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import sys,time,utils.CRLog, utils.CRConfig
+import sys,time,datetime
+import cr.log, cr.threads
+from cr.tools import Config
 from daemon import Daemon
-from utils.CRConfig import CRConfig
-from threads.ThreadChecks import ThreadChecks
-from web.webserver import WebServer
+from web.server import WebServer
 
 class CentralReport(Daemon):
 
     # Bool : True = daemon is running.
     isRunning = True
+    startingDate = None
 
     def run(self):
         # Constructeur
@@ -21,23 +22,26 @@ class CentralReport(Daemon):
         isError = False
 
         # On prepare les logs
-        utils.CRLog.CRLog.configLog()
-        utils.CRLog.CRLog.writeInfo("CentralReport is starting...")
+        cr.log.configLog()
+        cr.log.writeInfo("CentralReport is starting...")
+
+        # Starting date
+        CentralReport.startingDate = datetime.datetime.now()
 
         # Ce constructeur va permettre de lancer l'ensemble des outils necessaires
 
         # Deuxieme chose : la configuration via le fichier de conf.
-        configuration = CRConfig()
+        configuration = Config()
 
         #idMachine = utils.config.configGetter.config.get("General","id")
         #utils.log.CRLog.writeLog("UUID : "+ str(idMachine))
 
         # Quel thread doit-on lancer ?
-        if (CRConfig.HOST_CURRENT == CRConfig.HOST_MAC) | (CRConfig.HOST_CURRENT == CRConfig.HOST_DEBIAN) | (CRConfig.HOST_CURRENT == CRConfig.HOST_UBUNTU):
-            print(CRConfig.HOST_CURRENT +" detected. Starting ThreadChecks...")
+        if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
+            print(Config.HOST_CURRENT +" detected. Starting ThreadChecks...")
 
             # Lancement thread
-            ThreadChecks()
+            cr.threads.Checks()
 
         else:
             isError = True
@@ -45,36 +49,44 @@ class CentralReport(Daemon):
 
 
         # Enable webserver ?
-        if (CRConfig.config_webserver_enable == True) & (isError == False):
+        if (Config.config_webserver_enable == True) & (isError == False):
             # Yeah !
             print("Enabling the webserver")
-            #WebServer().start()
+
             WebServer()
 
         else:
             print("Webserver is disabled by configuration file")
-            utils.CRLog.CRLog.writeInfo("Webserver is disabled by configuration file")
+            cr.log.writeInfo("Webserver is disabled by configuration file")
 
         # End of file
         if(isError == False):
-            utils.CRLog.CRLog.writeInfo("CentralReport started!")
+            cr.log.writeInfo("CentralReport started!")
 
             while self.isRunning:
-                time.sleep(1)
+                try:
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    # Stopping CR
+                    print("KeyboardInterrupt exception. Stopping CentralReport...")
+                    self.isRunning = False
+                    self.stop()
 
         else:
-            utils.CRLog.CRLog.writeError("Error launching CentralReport!")
-
+           cr.log.writeError("Error launching CentralReport!")
 
     def stop(self):
         """
         Called when the scripts will be stopped
         """
 
-        utils.CRLog.CRLog.writeInfo("Stopping CentralReport...")
+        cr.log.writeInfo("Stopping CentralReport...")
 
         self.isRunning = False
         Daemon.stop(self)
+
+        # Stopping CR...
+        sys.exit(0)
 
 
 #
@@ -84,23 +96,22 @@ class CentralReport(Daemon):
 if __name__ == "__main__":
 
     # Launching the daemon...
-    daemon = CentralReport(utils.CRConfig.CRConfig.pid_file)
+    daemon = CentralReport(Config.pid_file)
 
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
-            print("CentralReport -- Start")
             daemon.start()
+        elif 'develop' == sys.argv[1]:
+            # With develop option, we only starting CR, without the daemonizer.
+            daemon.run()
         elif 'stop' == sys.argv[1]:
             daemon.stop()
-            print("CentralReport -- Stopped")
         elif 'restart' == sys.argv[1]:
-            print ("CentralReport -- Restarting...")
             daemon.restart()
-            print ("CentralReport -- Started")
         else:
-            print "Unknown command"
+            print("Unknown command")
             sys.exit(2)
         sys.exit(0)
     else:
-        print "usage: %s start|stop|restart" % sys.argv[0]
+        print("usage: %s start|stop|restart" % sys.argv[0])
         sys.exit(2)

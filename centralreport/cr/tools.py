@@ -1,11 +1,12 @@
+#
 # CentralReport - Indev version
-# Project by Charles-Emmanuel CAMUS - Avril 2012
+#
 
-__author__ = 'che'
+# This module contains the config class
 
 import ConfigParser, os, uuid, subprocess,getpass
 
-class CRConfig:
+class Config:
 
     config = ConfigParser.ConfigParser()
 
@@ -41,16 +42,16 @@ class CRConfig:
 
     def __init__(self):
 
-         # Determining current host/os
-        CRConfig.determine_current_host()
+    # Determining current host/os
+        Config.determine_current_host()
 
-        if CRConfig.HOST_CURRENT == CRConfig.HOST_MAC:
+        if Config.HOST_CURRENT == Config.HOST_MAC:
             # On est sur Mac. Test du repertoire
             if os.path.isdir("/etc/cr") != True:
                 # Creation du dossier
                 os.mkdir("/etc/cr")
 
-            CRConfig.chemin = "/etc/cr/"
+            Config.chemin = "/etc/cr/"
             print("Mac config")
         else:
             # On est sur un systeme Linux
@@ -58,13 +59,13 @@ class CRConfig:
             if os.path.isdir("/etc/cr") != True:
                 # Creation du dossier
                 os.mkdir("/etc/cr")
-            CRConfig.chemin = "/etc/cr/"
+            Config.chemin = "/etc/cr/"
             print("Linux config")
 
 
         # Fichier de utils existe ?
         config = ConfigParser.ConfigParser()
-        if os.path.isfile(CRConfig.chemin +'centralreport.cfg'):
+        if os.path.isfile(Config.chemin +'centralreport.cfg'):
             print('Fichier de conf : Existant. Lecture.')
         else:
             print('Fichier de conf : Inexistant. Creation.')
@@ -83,19 +84,19 @@ class CRConfig:
             config.set("Webserver", 'port', '8080')
 
 
-            config.write(open(CRConfig.chemin +'centralreport.cfg','w'))
+            config.write(open(Config.chemin +'centralreport.cfg','w'))
 
         # Lecture du fichier de utils
-        config.read(CRConfig.chemin +'centralreport.cfg')
+        config.read(Config.chemin +'centralreport.cfg')
 
-        CRConfig.uuid = config.get('General', 'uuid')
-        CRConfig.config_enable_check_memory = config.getboolean("Network","enable_check_memory")
-        CRConfig.config_enable_check_cpu = config.getboolean("Network","enable_check_cpu")
-        CRConfig.config_enable_check_loadaverage = config.getboolean("Network","enable_check_loadaverage")
-        CRConfig.config_server_addr = config.get("Network",'server_addr')
-        CRConfig.config_webserver_enable = config.getboolean("Webserver","enable")
-        CRConfig.config_webserver_interface = config.get("Webserver","interface")
-        CRConfig.config_webserver_port = config.getint("Webserver","port")
+        Config.uuid = config.get('General', 'uuid')
+        Config.config_enable_check_memory = config.getboolean("Network","enable_check_memory")
+        Config.config_enable_check_cpu = config.getboolean("Network","enable_check_cpu")
+        Config.config_enable_check_loadaverage = config.getboolean("Network","enable_check_loadaverage")
+        Config.config_server_addr = config.get("Network",'server_addr')
+        Config.config_webserver_enable = config.getboolean("Webserver","enable")
+        Config.config_webserver_interface = config.get("Webserver","interface")
+        Config.config_webserver_port = config.getint("Webserver","port")
 
 
     @staticmethod
@@ -111,11 +112,11 @@ class CRConfig:
         #print(str(kernel_mac))
         if kernel_mac.startswith("Darwin"):
             # Yes, it's a beautiful Mac !
-            CRConfig.HOST_CURRENT = CRConfig.HOST_MAC
+            Config.HOST_CURRENT = Config.HOST_MAC
 
         elif kernel_linux.startswith("Linux"):
             # Non ? On est sur linux !
-            CRConfig.HOST_CURRENT = CRConfig.HOST_LINUX
+            Config.HOST_CURRENT = Config.HOST_LINUX
 
             # On va essayer d'affiner en fonction des distributions
 
@@ -124,16 +125,15 @@ class CRConfig:
 
             if os.path.isfile("/etc/lsb-release"):
                 # Ubuntu !
-                CRConfig.HOST_CURRENT = CRConfig.HOST_UBUNTU
+                Config.HOST_CURRENT = Config.HOST_UBUNTU
             elif os.path.isfile("/etc/debian_version"):
                 # Une Debian pure et dure dans ce cas !
-                CRConfig.HOST_CURRENT = CRConfig.HOST_DEBIAN
+                Config.HOST_CURRENT = Config.HOST_DEBIAN
             elif os.path.isfile("/etc/fedora-release"):
                 # Fedora !
-                CRConfig.HOST_CURRENT = CRConfig.HOST_FEDORA
+                Config.HOST_CURRENT = Config.HOST_FEDORA
             elif os.path.isfile("/etc/redhat_version"):
                 # RedHat !
-                CRConfig.HOST_CURRENT = CRConfig.HOST_REDHAT
+                Config.HOST_CURRENT = Config.HOST_REDHAT
 
 
-        return CRConfig.HOST_CURRENT

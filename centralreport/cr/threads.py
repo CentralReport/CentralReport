@@ -3,10 +3,10 @@
 #
 
 import threading,time,datetime
-import collectors.Collector,collectors.DebianCollector,collectors.MacCollector
-from utils.CRConfig import CRConfig
+import cr.collectors
+from cr.tools import Config
 
-class ThreadChecks(threading.Thread):
+class Checks(threading.Thread):
     """
         This thread will perform periodically checks.
     """
@@ -33,10 +33,10 @@ class ThreadChecks(threading.Thread):
         print ("ThreadChecks is starting...")
 
         # What is the current os ?
-        if CRConfig.HOST_CURRENT == CRConfig.HOST_MAC:
-            self.MyCollector = collectors.MacCollector.MacCollector()
-        elif(CRConfig.HOST_CURRENT == CRConfig.HOST_DEBIAN) | (CRConfig.HOST_CURRENT == CRConfig.HOST_UBUNTU):
-            self.MyCollector = collectors.DebianCollector.DebianCollector()
+        if Config.HOST_CURRENT == Config.HOST_MAC:
+            self.MyCollector = cr.collectors.MacCollector()
+        elif(Config.HOST_CURRENT == Config.HOST_DEBIAN) | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
+            self.MyCollector = cr.collectors.DebianCollector()
 
         self.start()
 
@@ -47,35 +47,35 @@ class ThreadChecks(threading.Thread):
         """
 
         # Getting informations on the current host
-        ThreadChecks.hostEntity = self.MyCollector.get_infos()
+        Checks.hostEntity = self.MyCollector.get_infos()
 
-        while ThreadChecks.performChecks:
+        while Checks.performChecks:
 
             print("---- New check -----")
             print("Date : "+ datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
             # Checks CPU
-            if CRConfig.config_enable_check_cpu:
+            if Config.config_enable_check_cpu:
                 # Oui, on procede au releve CPU
                 print("Do a CPU check...")
-                ThreadChecks.last_check_cpu = self.MyCollector.get_cpu()
+                Checks.last_check_cpu = self.MyCollector.get_cpu()
 
             # Check memoire
-            if CRConfig.config_enable_check_memory:
+            if Config.config_enable_check_memory:
                 print("Do a memory check...")
-                ThreadChecks.last_check_memory = self.MyCollector.get_memory()
+                Checks.last_check_memory = self.MyCollector.get_memory()
 
             # Check Load Average
-            if CRConfig.config_enable_check_loadaverage:
+            if Config.config_enable_check_loadaverage:
                 print("Do a load average check...")
-                ThreadChecks.last_check_loadAverage = self.MyCollector.get_loadaverage()
+                Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
             #Checking disks informations
             print("Do a disk check....")
-            ThreadChecks.last_check_disk = self.MyCollector.get_disks()
+            Checks.last_check_disk = self.MyCollector.get_disks()
 
             # Update the last check date
-            ThreadChecks.last_check_date = datetime.datetime.now()
+            Checks.last_check_date = datetime.datetime.now()
 
             # Wait 60 seconds before next checks...
             print("All checks are done at : "+ datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

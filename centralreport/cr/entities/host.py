@@ -1,10 +1,15 @@
 #
-# CentralReport Entity
+# CentralReport - Indev version
 #
 
-import datetime,json,calendar
+# This module contains all entities about the current host :
+# infos (caracteristics)
+# disks
 
-class HostEntity:
+import datetime,json
+
+
+class Infos:
     """ This entity contain some datas about actual host """
 
     def __init__(self):
@@ -48,3 +53,22 @@ class HostEntity:
                            'kernel_version' : self.kernelVersion,
                            'model' : self.model,
                            'language' : self.language})
+
+
+
+
+
+class Disks:
+    """ This entity contain checks for all disks """
+
+    def __init__(self):
+        self.date = datetime.datetime.now()
+        self.checks = list()
+
+
+    def jsonSerialize(self):
+        """
+            Serialize this entity in JSON
+        """
+        return json.dumps({'date' : self.date.strftime('%s'),
+                           'disks' : self.checks})
