@@ -90,6 +90,19 @@ class Pages:
 
         tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m)*100)/int(Checks.hostEntity.cpuCount)
 
+        # Testing displaying disks stats
+        allChecksDisk = []
+
+        for disk in Checks.last_check_disk.checks:
+            checkDisk = {}
+            checkDisk['name'] = str.replace(disk.name,"/dev/","")
+            checkDisk['free'] = disk.free
+            checkDisk['percent'] = int(int(disk.used)*100/int(disk.size))
+
+            allChecksDisk.append(checkDisk)
+
+        tmpl_vars['disks'] = allChecksDisk
+
         return tmpl.render(**tmpl_vars)
 
     @cherrypy.expose

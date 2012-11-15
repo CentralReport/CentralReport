@@ -62,6 +62,27 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="span6">
+                    <div class="well" style="text-align: center;">
+                        <h3>Disks</h3>
+                        <br />
+
+                        <table class="table table-striped">
+                            <tbody>
+                            % for disk in disks:
+                            <tr>
+                                <td width="50%"><strong>${disk['name']}</strong></td>
+                                <td width="50%">${disk['free']} MB free (${disk['percent']} % used)</td>
+                            </tr>
+                            % endfor
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
 
         </div>
     </div>
