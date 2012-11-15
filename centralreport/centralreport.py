@@ -6,8 +6,8 @@
 import sys
 import time
 import datetime
-import cr.log
-import cr.threads
+import cr.log crLog
+import cr.threads crThreads
 from cr.tools import Config
 from daemon import Daemon
 from web.server import WebServer
@@ -26,8 +26,8 @@ class CentralReport(Daemon):
         isError = False
 
         # On prepare les logs
-        cr.log.configLog()
-        cr.log.writeInfo("CentralReport is starting...")
+        crLog.configLog()
+        crLog.writeInfo("CentralReport is starting...")
 
         # Starting date
         CentralReport.startingDate = datetime.datetime.now()
@@ -38,16 +38,16 @@ class CentralReport(Daemon):
         #utils.log.CRLog.writeLog("UUID : "+ str(idMachine))
 
         # Quel thread doit-on lancer ?
-        if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
+        if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
+        Config.HOST_CURRENT == Config.HOST_UBUNTU):
             print(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
 
             # Lancement thread
-            cr.threads.Checks()
+            crThreads.Checks()
 
         else:
             isError = True
             print("Sorry, but your OS is not supported yet...")
-
 
         # Enable webserver ?
         if (Config.config_webserver_enable) & (not isError):
@@ -58,11 +58,11 @@ class CentralReport(Daemon):
 
         else:
             print("Webserver is disabled by configuration file")
-            cr.log.writeInfo("Webserver is disabled by configuration file")
+            crLog.writeInfo("Webserver is disabled by configuration file")
 
         # End of file
         if(not isError):
-            cr.log.writeInfo("CentralReport started!")
+            crLog.writeInfo("CentralReport started!")
 
             while self.isRunning:
                 try:
@@ -74,14 +74,14 @@ class CentralReport(Daemon):
                     self.stop()
 
         else:
-            cr.log.writeError("Error launching CentralReport!")
+            crLog.writeError("Error launching CentralReport!")
 
     def stop(self):
         """
-        Called when the scripts will be stopped
+            Called when the scripts will be stopped
         """
 
-        cr.log.writeInfo("Stopping CentralReport...")
+        crLog.writeInfo("Stopping CentralReport...")
 
         self.isRunning = False
         Daemon.stop(self)

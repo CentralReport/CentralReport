@@ -16,27 +16,26 @@ class Infos:
     def __init__(self):
         self.date = datetime.datetime.now()
 
-        self.os = ""
-        self.hostname = ""
-        self.architecture = ""
+        self.os = ''
+        self.hostname = ''
+        self.architecture = ''
 
         # TODO : move it in CPU check.
-        self.cpuModel = ""
+        self.cpuModel = ''
         self.cpuCount = 1
 
         # Unix/Linux attributes
-        self.kernelName = ""
-        self.kernelVersion = ""
+        self.kernelName = ''
+        self.kernelVersion = ''
 
         # Unique uuid
-        self.uuid = ""
+        self.uuid = ''
 
         # Only for Mac OS
-        self.model = ""
+        self.model = ''
 
         # CentralReport app language
         self.language = 'Python'
-
 
     def jsonSerialize(self):
         """
@@ -64,7 +63,6 @@ class Disks:
     def __init__(self):
         self.date = datetime.datetime.now()
         self.checks = list()
-
 
     def jsonSerialize(self):
         """

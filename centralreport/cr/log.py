@@ -2,13 +2,11 @@ __author__ = 'che'
 
 import logging
 
+
 def configLog():
-    logging.basicConfig(
-        filename='/var/log/centralreport.log',
+    logging.basicConfig(filename='/var/log/centralreport.log',
         format='%(levelname)s - %(asctime)s : %(message)s',
-        level=logging.DEBUG,
-        datefmt='%m/%d/%Y %I:%M:%S %p'
-    )
+        level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S %p')
 
 
 def writeDebug(text):

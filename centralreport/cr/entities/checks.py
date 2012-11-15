@@ -15,7 +15,6 @@ class Cpu:
         self.user = float(0)
         self.system = float(0)
 
-
     def jsonSerialize(self):
         """
             Serialize this entity in JSON
@@ -34,16 +33,16 @@ class Disk:
 
     def __init__(self):
         self.date = datetime.datetime.now()
-        self.name = ""
+        self.name = ''
         self.size = float(0)
         self.used = float(0)
         self.free = float(0)
-
 
     def jsonSerialize(self):
         """
             Serialize this entity in JSON
         """
+
         return json.dumps({
             'date': self.date.strftime('%s'),
             'name': self.name,
@@ -61,7 +60,6 @@ class LoadAverage:
         self.last1m = float(0)
         self.last5m = float(0)
         self.last15m = float(0)
-
 
     def jsonSerialize(self):
         """
@@ -90,7 +88,6 @@ class Memory:
         self.swapSize = float(0)
         self.swapUsed = float(0)
         self.swapFree = float(0)
-
 
     def jsonSerialize(self):
         """
