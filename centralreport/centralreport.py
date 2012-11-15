@@ -95,10 +95,9 @@ class CentralReport(Daemon):
 #
 
 if __name__ == "__main__":
-    # Launching the daemon...
     daemon = CentralReport(Config.pid_file)
 
-    if len(sys.argv) == 2:
+    if 2 == len(sys.argv):
         if 'start' == sys.argv[1]:
             daemon.start()
         elif 'develop' == sys.argv[1]:

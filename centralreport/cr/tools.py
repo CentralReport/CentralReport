@@ -13,6 +13,8 @@ import getpass
 
 class Config:
 
+    CR_SYSTEM_PATH = '/etc/cr'
+
     config = ConfigParser.ConfigParser()
 
     # CentralReport Core config
@@ -49,23 +51,16 @@ class Config:
         Config.determine_current_host()
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
-            # On est sur Mac. Test du repertoire
-            if not os.path.isdir('/etc/cr'):
-                # Creation du dossier
-                os.mkdir('/etc/cr')
-
-            Config.chemin = '/etc/cr/'
             print('Mac config')
         else:
-            # On est sur un systeme Linux
-
-            if not os.path.isdir('/etc/cr'):
-                # Creation du dossier
-                os.mkdir('/etc/cr')
-            Config.chemin = '/etc/cr/'
             print('Linux config')
 
-        # Fichier de utils existe ?
+        # Creating the dir if it does not exists
+        if not os.path.isdir(self.CR_SYSTEM_PATH):
+            os.mkdir(self.CR_SYSTEM_PATH)
+        Config.chemin = self.CR_SYSTEM_PATH + '/'
+
+        # Managing config file
         if os.path.isfile(Config.chemin + 'centralreport.cfg'):
             print('Fichier de conf : Existant. Lecture.')
         else:
@@ -77,7 +72,7 @@ class Config:
             Config.config.add_section('Webserver')
             self.writeConfigFile()
 
-        # Lecture du fichier de utils
+        # Utils file
         Config.config.read(Config.chemin + 'centralreport.cfg')
 
         Config.uuid = Config.config.get('General', 'uuid')
@@ -93,8 +88,8 @@ class Config:
         """
             Write into the config file the actual configuration.
         """
-        # On ecrit le fichier de conf
 
+        # Writing conf file
         Config.config.set('General', 'uuid', Config.uuid)
 
         Config.config.set('Network', 'enable_check_cpu', Config.config_enable_check_cpu)
@@ -114,7 +109,6 @@ class Config:
             Detecting current OS...
         """
 
-        # Est-ce un mac ?
         try:
             kernel_mac = subprocess.Popen(
                 ['sysctl', '-n', 'kern.ostype'],
@@ -128,13 +122,9 @@ class Config:
                 close_fds=True
             ).communicate()[0]
 
-        #print(str(kernel_mac))
         if kernel_mac.startswith('Darwin'):
-            # Yes, it's a beautiful Mac !
             Config.HOST_CURRENT = Config.HOST_MAC
-
         elif kernel_linux.startswith('Linux'):
-            # Non ? On est sur linux !
             Config.HOST_CURRENT = Config.HOST_LINUX
 
             # On va essayer d'affiner en fonction des distributions

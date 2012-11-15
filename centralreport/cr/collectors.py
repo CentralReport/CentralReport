@@ -120,7 +120,7 @@ class MacCollector(_Collector):
 
     def get_cpu(self):
         """
-        Getting actual CPU utilization.
+            Getting actual CPU utilization.
         """
 
         # iostat - entrees / sorties
@@ -159,7 +159,7 @@ class MacCollector(_Collector):
 
     def getIOStat(self):
         """
-        Getting IOStat dictionary.
+            Getting IOStat dictionary.
         """
 
         # iostat - entrees / sorties
@@ -177,7 +177,7 @@ class MacCollector(_Collector):
 
     def get_disks(self):
         """
-        Getting active disks (with disk size for the moment)
+            Getting active disks (with disk size for the moment)
         """
 
         df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
@@ -224,22 +224,15 @@ class DebianCollector(_Collector):
         kernel = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['uname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
         kernel_v = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['uname', '-r'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
 
-        # Using new HostEntity
         hostEntity = crEntitiesHost.Infos()
 
         hostEntity.uuid = Config.uuid
 
         hostEntity.os = Config.HOST_CURRENT
         hostEntity.hostname = hostname
-        #hostEntity.architecture = architecture
-
-        #hostEntity.model = model
 
         hostEntity.kernelName = kernel
         hostEntity.kernelVersion = kernel_v
-
-        #hostEntity.cpuModel = cpu_model
-        #hostEntity.cpuCount = ncpu
 
         return hostEntity
 
@@ -267,7 +260,7 @@ class DebianCollector(_Collector):
 
     def get_memory(self):
         """
-        Retourne les stats de la memoire vive de notre host
+            Retourne les stats de la memoire vive de notre host
         """
         memory_result = subprocess.Popen(['cat', '/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
