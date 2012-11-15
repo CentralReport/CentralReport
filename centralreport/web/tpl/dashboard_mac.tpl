@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" />
+    <title>Current Host</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/custom.css">
-
 
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery.progressbar.js"></script>
@@ -12,16 +13,12 @@
     <script type="text/javascript" src="js/jquery.flot.pie.js"></script>
     <script type="text/javascript" src="js/jquery.flot.selection.js"></script>
 
-    <title>Current Host</title>
-
-
     <script type="text/javascript">
         var progress_key = '<?= $uuid ?>';
 
         $(document).ready(function() {
             $("#pb1").progressBar();
-            $("#pb4").progressBar(100, { showText: true, barImage: 'img/progressbg_green.gif'} );
-
+            $("#pb4").progressBar(100, {showText: true, barImage: 'img/progressbg_green.gif'} );
 
             var data = [
                 { label: "User",  data: ${cpu.user}, hoverable: true, clickable: true},
@@ -48,9 +45,7 @@
                                 }
                             }
                         },
-                        legend: {
-                            show: false
-                        },
+                        legend: {show: false},
                         grid: {
                             hoverable: true,
                             clickable: true
@@ -94,184 +89,156 @@
                     });
 
         });
-
-
-
-
-
-
     </script>
 </head>
-
-
 <body>
-<div class="container">
-    <div class="content">
+    <div class="container">
+        <div class="content">
 
-        <div class="page-header">
-            <h1>${host.hostname} <small>with CentralReport</small></h1>
-        </div>
-
-        <div class="alert">
-            <strong>Indev Version</strong><br />
-            This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
-        </div>
-
-        <div><strong><a href="/">Back to summary</a></strong></div>
-
-        <table class="table table-striped">
-            <tbody>
-            <tr>
-                <td>Kernel</td>
-                <td>${host.kernelName} (Version : ${host.kernelVersion})</td>
-            </tr>
-            <tr>
-                <td>Model</td>
-                <td>${host.model}</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <hr />
-        <h3>CPU</h3>
-        <div class="row">
-            <div class="span6">
-
-                <h5>Last check : ${last_check}</h5>
-                <p class="custom_margin_top_plus_20">Model : ${host.cpuModel}</p>
-                <p>Number of cores : ${host.cpuCount}</p>
-
+            <div class="page-header">
+                <h1>${host.hostname} <small>with CentralReport</small></h1>
             </div>
-            <div class="span6">
-                <div id="graph_cpu" style="width:400px;height:250px"></div>
+
+            <div class="alert">
+                <strong>Indev Version</strong><br />
+                This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
             </div>
-        </div>
 
+            <div><strong><a href="/">Back to summary</a></strong></div>
 
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td>Kernel</td>
+                    <td>${host.kernelName} (Version : ${host.kernelVersion})</td>
+                </tr>
+                <tr>
+                    <td>Model</td>
+                    <td>${host.model}</td>
+                </tr>
+                </tbody>
+            </table>
 
+            <hr />
+            <h3>CPU</h3>
+            <div class="row">
+                <div class="span6">
 
-
-        <hr />
-
-        <h3>Memory</h3>
-        <div class="row">
-            <div class="span6">
-
-                <h5>Last check : ${last_check}</h5>
-
-                <div class="custom_margin_top_plus_20">
-                    <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <td>Total</td>
-                            <td width="120px">${memory.total} MB</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Free</strong></td>
-                            <td><strong>${memory.free} MB</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Active</td>
-                            <td>${memory.active} MB</td>
-                        </tr>
-                        <tr>
-                            <td>Inactive</td>
-                            <td>${memory.inactive} MB</td>
-                        </tr>
-                        <tr>
-                            <td>Residente</td>
-                            <td>${memory.resident} MB</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <td>Swap</td>
-                            <td width="120px">${memory.swapSize} MB</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <h5>Last check : ${last_check}</h5>
+                    <p class="custom_margin_top_plus_20">Model : ${host.cpuModel}</p>
+                    <p>Number of cores : ${host.cpuCount}</p>
 
                 </div>
-
-            </div>
-            <div class="span6">
-                <div id="graph_memory" style="width:400px;height:250px"></div>
-            </div>
-        </div>
-
-        <hr />
-        <h3>Load average</h3>
-
-        <div class="row">
-            <div class="span6">
-
-                <h5>Last check : ${last_check}</h5>
-
-                <div class="custom_margin_top_plus_20">
-                    <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <td>Last minute</td>
-                            <td>${loadaverage.last1m}</td>
-                        </tr>
-                        <tr>
-                            <td>Last 5 minutes</td>
-                            <td>${loadaverage.last5m}</td>
-                        </tr>
-                        <tr>
-                            <td>Last 15 minutes</td>
-                            <td>${loadaverage.last15m}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                <div class="span6">
+                    <div id="graph_cpu" style="width:400px;height:250px"></div>
                 </div>
-
             </div>
-            <div class="span6">
-                &nbsp;
-            </div>
-        </div>
 
-        <hr />
-        <h3>Disks</h3>
+            <hr>
 
-        <div class="row">
-            <div class="span6">
+            <h3>Memory</h3>
+            <div class="row">
+                <div class="span6">
 
-                <div class="custom_margin_top_plus_20">
-                    <table class="table table-striped">
-                        <thead>
-                        <th>Filesystem name</th>
-                        <th>Available (MB)</th>
-                        <th>Used (MB)</th>
-                        <th>Total (MB)</th>
-                        </thead>
-                        <tbody>
-                        % for disk in disks.checks:
-                        <tr>
-                            <td>${disk.name|h}</td>
-                            <td>${disk.free|h}</td>
-                            <td>${disk.used|h}</td>
-                            <td>${disk.size|h}</td>
-                        </tr>
-                        % endfor
-                        </tbody>
-                    </table>
+                    <h5>Last check : ${last_check}</h5>
 
+                    <div class="custom_margin_top_plus_20">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>Total</td>
+                                <td width="120px">${memory.total} MB</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Free</strong></td>
+                                <td><strong>${memory.free} MB</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Active</td>
+                                <td>${memory.active} MB</td>
+                            </tr>
+                            <tr>
+                                <td>Inactive</td>
+                                <td>${memory.inactive} MB</td>
+                            </tr>
+                            <tr>
+                                <td>Residente</td>
+                                <td>${memory.resident} MB</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>Swap</td>
+                                <td width="120px">${memory.swapSize} MB</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
+                <div class="span6">
+                    <div id="graph_memory" style="width:400px;height:250px"></div>
+                </div>
             </div>
-            <div class="span6">
-                &nbsp;
+
+            <hr>
+            <h3>Load average</h3>
+
+            <div class="row">
+                <div class="span6">
+                    <h5>Last check : ${last_check}</h5>
+                    <div class="custom_margin_top_plus_20">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>Last minute</td>
+                                <td>${loadaverage.last1m}</td>
+                            </tr>
+                            <tr>
+                                <td>Last 5 minutes</td>
+                                <td>${loadaverage.last5m}</td>
+                            </tr>
+                            <tr>
+                                <td>Last 15 minutes</td>
+                                <td>${loadaverage.last15m}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="span6"></div>
+            </div>
+            <hr>
+            <h3>Disks</h3>
+
+            <div class="row">
+                <div class="span6">
+                    <div class="custom_margin_top_plus_20">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Filesystem name</th>
+                                <th>Available (MB)</th>
+                                <th>Used (MB)</th>
+                                <th>Total (MB)</th>
+                            </thead>
+                            <tbody>
+                                % for disk in disks.checks:
+                                    <tr>
+                                        <td>${disk.name|h}</td>
+                                        <td>${disk.free|h}</td>
+                                        <td>${disk.used|h}</td>
+                                        <td>${disk.size|h}</td>
+                                    </tr>
+                                % endfor
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="span6"></div>
             </div>
         </div>
-
-
     </div>
-</div>
 </body>
 </html>
