@@ -7,9 +7,13 @@
 # MacCollector class
 # DebianCollector class
 
-import subprocess,datetime
-import cr.utils.text,cr.entities.checks,cr.entities.host
+import subprocess
+import datetime
+import cr.utils.text
+import cr.entities.checks
+import cr.entities.host
 from cr.tools import Config
+
 
 class _Collector:
 
@@ -27,8 +31,6 @@ class _Collector:
 
     def get_disks(self):
         raise NameError,'Method not implemented yet'
-
-
 
 
 class MacCollector(_Collector):
@@ -216,9 +218,6 @@ class MacCollector(_Collector):
                 listDisks.checks.append(checkDisk)
 
         return listDisks
-
-
-
 
 
 class DebianCollector(_Collector):

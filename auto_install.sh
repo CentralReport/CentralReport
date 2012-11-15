@@ -20,7 +20,7 @@ OS_DEBIAN="Debian"
 echo -e "\n\nWelcome to CentralReport one-line installer!"
 
 # Getting current OS
-if [ $(uname -s) == "Darwin" ]; then
+if [ "Darwin" == $(uname -s) ]; then
     # Mac OS X
     CURRENT_OS=${OS_MAC}
 elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then

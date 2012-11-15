@@ -2,7 +2,9 @@
 # CentralReport - Indev version
 #
 
-import datetime,json
+import datetime
+import json
+
 
 class Cpu:
     """ This entity represent a cpu check for the current host. """
@@ -18,12 +20,13 @@ class Cpu:
         """
             Serialize this entity in JSON
         """
-        return json.dumps({'date' : self.date.strftime('%s'),
-                           'idle' : self.idle,
-                           'user' : self.user,
-                           'system' : self.system})
 
-
+        return json.dumps({
+            'date': self.date.strftime('%s'),
+            'idle': self.idle,
+            'user': self.user,
+            'system': self.system
+        })
 
 
 class Disk:
@@ -41,12 +44,13 @@ class Disk:
         """
             Serialize this entity in JSON
         """
-        return json.dumps({'date' : self.date.strftime('%s'),
-                           'name' : self.name,
-                           'size' : self.size,
-                           'used' : self.used,
-                           'free' : self.free})
-
+        return json.dumps({
+            'date': self.date.strftime('%s'),
+            'name': self.name,
+            'size': self.size,
+            'used': self.used,
+            'free': self.free
+        })
 
 
 class LoadAverage:
@@ -63,12 +67,13 @@ class LoadAverage:
         """
             Serialize this entity in JSON
         """
-        return json.dumps({'date' : self.date.strftime('%s'),
-                           'last1m' : self.last1m,
-                           'last5m' : self.last5m,
-                           'last15m' : self.last15m})
 
-
+        return json.dumps({
+            'date': self.date.strftime('%s'),
+            'last1m': self.last1m,
+            'last5m': self.last5m,
+            'last15m': self.last15m
+        })
 
 
 class Memory:
@@ -91,11 +96,14 @@ class Memory:
         """
             Serialize this entity in JSON
         """
-        return json.dumps({'date' : self.date.strftime('%s'),
-                           'total' : self.total,
-                           'free' : self.free,
-                           'active' : self.active,
-                           'inactive' : self.inactive,
-                           'resident' : self.resident,
-                           'swap_size' : self.swapSize,
-                           'swap_used' : self.swapUsed})
+
+        return json.dumps({
+            'date': self.date.strftime('%s'),
+            'total': self.total,
+            'free': self.free,
+            'active': self.active,
+            'inactive': self.inactive,
+            'resident': self.resident,
+            'swap_size': self.swapSize,
+            'swap_used': self.swapUsed
+        })

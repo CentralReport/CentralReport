@@ -4,7 +4,12 @@
 
 # This module contains the config class
 
-import ConfigParser, os, uuid, subprocess,getpass
+import ConfigParser
+import os
+import uuid
+import subprocess
+import getpass
+
 
 class Config:
 
@@ -47,7 +52,7 @@ class Config:
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
             # On est sur Mac. Test du repertoire
-            if os.path.isdir("/etc/cr") != True:
+            if not os.path.isdir("/etc/cr"):
                 # Creation du dossier
                 os.mkdir("/etc/cr")
 
@@ -56,7 +61,7 @@ class Config:
         else:
             # On est sur un systeme Linux
 
-            if os.path.isdir("/etc/cr") != True:
+            if not os.path.isdir("/etc/cr"):
                 # Creation du dossier
                 os.mkdir("/etc/cr")
             Config.chemin = "/etc/cr/"
@@ -119,9 +124,17 @@ class Config:
 
         # Est-ce un mac ?
         try:
-            kernel_mac = subprocess.Popen(['sysctl','-n','kern.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+            kernel_mac = subprocess.Popen(
+                ['sysctl','-n','kern.ostype'],
+                stdout=subprocess.PIPE,
+                close_fds=True
+            ).communicate()[0]
         except:
-            kernel_linux = subprocess.Popen(['sysctl','-n','kernel.ostype'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+            kernel_linux = subprocess.Popen(
+                ['sysctl','-n','kernel.ostype'],
+                stdout=subprocess.PIPE,
+                close_fds=True
+            ).communicate()[0]
 
         #print(str(kernel_mac))
         if kernel_mac.startswith("Darwin"):
@@ -149,5 +162,3 @@ class Config:
             elif os.path.isfile("/etc/redhat_version"):
                 # RedHat !
                 Config.HOST_CURRENT = Config.HOST_REDHAT
-
-

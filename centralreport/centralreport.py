@@ -3,14 +3,17 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import sys,time,datetime
-import cr.log, cr.threads
+import sys
+import time
+import datetime
+import cr.log
+import cr.threads
 from cr.tools import Config
 from daemon import Daemon
 from web.server import WebServer
 
-class CentralReport(Daemon):
 
+class CentralReport(Daemon):
     # Bool : True = daemon is running.
     isRunning = True
     startingDate = None
@@ -36,7 +39,7 @@ class CentralReport(Daemon):
 
         # Quel thread doit-on lancer ?
         if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
-            print(Config.HOST_CURRENT +" detected. Starting ThreadChecks...")
+            print(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
 
             # Lancement thread
             cr.threads.Checks()
@@ -47,7 +50,7 @@ class CentralReport(Daemon):
 
 
         # Enable webserver ?
-        if (Config.config_webserver_enable == True) & (isError == False):
+        if (Config.config_webserver_enable) & (not isError):
             # Yeah !
             print("Enabling the webserver")
 
@@ -58,7 +61,7 @@ class CentralReport(Daemon):
             cr.log.writeInfo("Webserver is disabled by configuration file")
 
         # End of file
-        if(isError == False):
+        if(not isError):
             cr.log.writeInfo("CentralReport started!")
 
             while self.isRunning:
@@ -71,7 +74,7 @@ class CentralReport(Daemon):
                     self.stop()
 
         else:
-           cr.log.writeError("Error launching CentralReport!")
+            cr.log.writeError("Error launching CentralReport!")
 
     def stop(self):
         """
@@ -92,7 +95,6 @@ class CentralReport(Daemon):
 #
 
 if __name__ == "__main__":
-
     # Launching the daemon...
     daemon = CentralReport(Config.pid_file)
 

@@ -42,7 +42,7 @@ fi
 getOS
 
 # Check the actual mode.
-if [ $ACTUAL_MODE = "install" ]; then
+if [ "install" == $ACTUAL_MODE ]; then
 
     # Right now, it only works on MacOS.
     # Support for Linux distrib coming soon.
@@ -59,7 +59,7 @@ if [ $ACTUAL_MODE = "install" ]; then
         #read install_confirm
 
         # Are you sure to install CR ?
-        if [ "$install_confirm" = "yes" ]; then
+        if [ "yes" == "$install_confirm" ]; then
 
             # It's an indev version. At each install, we delete everything.
 

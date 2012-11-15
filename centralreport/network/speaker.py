@@ -4,6 +4,7 @@
 from utils.CRConfig import CRConfig
 import urllib, urllib2
 
+
 class Speaker:
 
     page_INFOS = "remote.php"
@@ -13,9 +14,7 @@ class Speaker:
 
     @staticmethod
     def sendStats(page,datas):
-
         config_server_addr = CRConfig.config_server_addr
-
         url = "http://%s/CentralReport/%s" % (str(config_server_addr), str(page))
 
         #DEBUG

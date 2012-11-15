@@ -6,7 +6,8 @@
 # infos (caracteristics)
 # disks
 
-import datetime,json
+import datetime
+import json
 
 
 class Infos:
@@ -37,25 +38,24 @@ class Infos:
         self.language = 'Python'
 
 
-
     def jsonSerialize(self):
         """
             Serialize this entity in JSON
         """
-        return json.dumps({'type' : 'host',
-                           'uuid' : self.uuid,
-                           'date' : self.date.strftime('%s'),
-                           'os' : self.os,
-                           'hostname' : self.hostname,
-                           'architecture' : self.architecture,
-                           'cpuModel' : self.cpuModel,
-                           'kernel_name' : self.kernelName,
-                           'kernel_version' : self.kernelVersion,
-                           'model' : self.model,
-                           'language' : self.language})
 
-
-
+        return json.dumps({
+            'type': 'host',
+            'uuid': self.uuid,
+            'date': self.date.strftime('%s'),
+            'os': self.os,
+            'hostname': self.hostname,
+            'architecture': self.architecture,
+            'cpuModel': self.cpuModel,
+            'kernel_name': self.kernelName,
+            'kernel_version': self.kernelVersion,
+            'model': self.model,
+            'language': self.language
+        })
 
 
 class Disks:
@@ -70,5 +70,8 @@ class Disks:
         """
             Serialize this entity in JSON
         """
-        return json.dumps({'date' : self.date.strftime('%s'),
-                           'disks' : self.checks})
+
+        return json.dumps({
+            'date': self.date.strftime('%s'),
+            'disks': self.checks
+        })

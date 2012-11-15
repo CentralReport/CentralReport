@@ -2,15 +2,17 @@
 # CentralReport - Indev version
 #
 
-import threading,time,datetime
+import threading
+import time
+import datetime
 import cr.collectors
 from cr.tools import Config
+
 
 class Checks(threading.Thread):
     """
         This thread will perform periodically checks.
     """
-
 
     # True = perform checks...
     performChecks = True
@@ -25,7 +27,6 @@ class Checks(threading.Thread):
     last_check_loadAverage = None
     last_check_disk = None
 
-
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -39,6 +40,8 @@ class Checks(threading.Thread):
             self.MyCollector = cr.collectors.DebianCollector()
 
         self.start()
+
+
 
 
     def run(self):

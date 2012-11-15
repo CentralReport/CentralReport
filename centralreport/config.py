@@ -4,7 +4,10 @@
 # CentralReport - Indev version
 #
 
-import sys,time,random,socket
+import sys
+import time
+import random
+import socket
 from cr.tools import Config
 from centralreport import CentralReport
 
@@ -35,13 +38,13 @@ if __name__ == "__main__":
     print("With this web server, you can monitor this host without account on centralreport.net")
 
     validEnableWebServer = False
-    while (validEnableWebServer != True):
+    while (not validEnableWebServer):
         resultEnableWebServer = raw_input("Do you want to enable the internal web server? [yes/no] ")
-        if(resultEnableWebServer == "yes"):
+        if("yes" == resultEnableWebServer.lower()):
             validEnableWebServer = True
             Config.config_webserver_enable = True
 
-        elif(resultEnableWebServer == "no"):
+        elif("no" == resultEnableWebServer.lower()):
             validEnableWebServer = True
             Config.config_webserver_enable = False
 
@@ -50,11 +53,11 @@ if __name__ == "__main__":
 
 
     # If the webserver is enabled, we can ask the default port for it.
-    if(Config.config_webserver_enable == True):
+    if(Config.config_webserver_enable):
         print("\nDefault port is 8080. You can choose a custom port if you want.")
 
         validPort = False
-        while(validPort != True):
+        while(not validPort):
             resultPort = raw_input("Use this port : ")
             resultPortInt = 0
 
@@ -84,7 +87,7 @@ if __name__ == "__main__":
     config.writeConfigFile()
 
     # We're looking if CentralReport ran before.
-    if(centralReportRunningBefore == True):
+    if(centralReportRunningBefore):
         print("\nRestarting CentralReport...")
         daemon.start()
 
