@@ -84,6 +84,8 @@ class Pages:
 
         tmpl_vars['hostname'] = Checks.hostEntity.hostname
 
+        tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+
         tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
         tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free))*100)/int(Checks.last_check_memory.total)
         tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m

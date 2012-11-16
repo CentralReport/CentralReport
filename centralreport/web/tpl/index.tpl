@@ -29,6 +29,8 @@
 
             <div><strong><a href="dashboard">Go to full report</a></strong></div>
 
+            <h4>Last check : ${last_check}</h4>
+
             <div class="row custom_margin_top_plus_20">
                 <div class="span4">
                     <div class="well" style="text-align: center;">
