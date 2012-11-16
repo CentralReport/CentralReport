@@ -6,8 +6,8 @@
 import sys
 import time
 import datetime
-import cr.log crLog
-import cr.threads crThreads
+import cr.log as crLog
+import cr.threads as crThreads
 from cr.tools import Config
 from daemon import Daemon
 from web.server import WebServer

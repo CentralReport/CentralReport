@@ -1,12 +1,14 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-from utils.CRConfig import CRConfig
 import urllib
 import urllib2
-
+from cr.tools import Config
 
 class Speaker:
+
+    # PS : This class is not used for the moment.
+    # It has created for testing purpose only.
 
     PAGE_INFOS = 'remote.php'
     PAGE_CPU = 'remote_cpu.php'
@@ -15,7 +17,7 @@ class Speaker:
 
     @staticmethod
     def sendStats(page, datas):
-        config_server_addr = CRConfig.config_server_addr
+        config_server_addr = Config.config_server_addr
         url = 'http://%s/CentralReport/%s' % (str(config_server_addr), str(page))
 
         #DEBUG

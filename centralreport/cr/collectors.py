@@ -38,8 +38,8 @@ class MacCollector(_Collector):
         This collector can execute Mac OS command and get some useful values.
     """
 
-    PAGEBYTES_TO_MBYTES = 4096 / 1024 / 1024
-    BLOCKBYTES_TO_MBYTES = 512 / 1024 / 1024
+    PAGEBYTES_TO_MBYTES = 4096./ 1024./1024.
+    BLOCKBYTES_TO_MBYTES = 512./1024./1024.
 
     def get_infos(self):
         """
@@ -99,13 +99,14 @@ class MacCollector(_Collector):
             tabmemoire[i] = tabmemoire[i].split(':')
 
         # Variables specifiques
-        mem_free = (int(tabmemoire[1][1]) + int(tabmemoire[4][1])) * self.PAGEBYTES_TO_MBYTES
-        mem_active = int(tabmemoire[2][1]) * self.PAGEBYTES_TO_MBYTES
-        mem_inactive = int(tabmemoire[3][1]) * self.PAGEBYTES_TO_MBYTES
-        mem_resident = int(tabmemoire[5][1]) * self.PAGEBYTES_TO_MBYTES
-        mem_swap = int(tabmemoire[11][1]) * self.PAGEBYTES_TO_MBYTES
+        mem_free = (int(tabmemoire[1][1]) + int(tabmemoire[4][1])) * float(MacCollector.PAGEBYTES_TO_MBYTES)
+        #mem_free = (int(tabmemoire[1][1]) + int(tabmemoire[4][1])) * 0.0039
+        mem_active = int(tabmemoire[2][1]) * float(MacCollector.PAGEBYTES_TO_MBYTES)
+        mem_inactive = int(tabmemoire[3][1]) * float(MacCollector.PAGEBYTES_TO_MBYTES)
+        mem_resident = int(tabmemoire[5][1]) * float(MacCollector.PAGEBYTES_TO_MBYTES)
+        mem_swap = int(tabmemoire[11][1]) * float(MacCollector.PAGEBYTES_TO_MBYTES)
 
-        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(tabmemoire[5][1])) * self.PAGEBYTES_TO_MBYTES
+        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(tabmemoire[5][1])) * float(MacCollector.PAGEBYTES_TO_MBYTES)
 
         # Preparing return entity...
         memoryCheck = crEntitiesChecks.Memory()
@@ -195,9 +196,9 @@ class MacCollector(_Collector):
                 line_dict = dict(zip(header, line_split))
 
                 # Getting info in MB (Mac OS count with '512 blocks' unit)
-                disk_total = int(line_dict['512-blocks']) * self.BLOCKBYTES_TO_MBYTES
-                disk_used = int(line_dict['Used']) * self.BLOCKBYTES_TO_MBYTES
-                disk_free = int(line_dict['Available']) * self.BLOCKBYTES_TO_MBYTES
+                disk_total = int(line_dict['512-blocks']) * MacCollector.BLOCKBYTES_TO_MBYTES
+                disk_used = int(line_dict['Used']) * MacCollector.BLOCKBYTES_TO_MBYTES
+                disk_free = int(line_dict['Available']) * MacCollector.BLOCKBYTES_TO_MBYTES
 
                 # Using new check entity
                 checkDisk = crEntitiesChecks.Disk()

@@ -49,7 +49,7 @@ class WebServer(threading.Thread):
             '/js': {
                 'tools.staticdir.dir': 'js',
                 'tools.staticdir.on': True
-            }
+            },
             '/media': {
                 'tools.staticdir.dir': 'media',
                 'tools.staticdir.on': True
@@ -112,8 +112,8 @@ class Pages:
         for disk in Checks.last_check_disk.checks:
             checkDisk = {}
             checkDisk['name'] = str.replace(disk.name, '/dev/', '')
-            checkDisk['free'] = disk.free
-            checkDisk['percent'] = int(int(disk.used) * 100 / int(disk.size))
+            checkDisk['free'] = round(disk.free,2)
+            checkDisk['percent'] = int(round(disk.used,0) * 100 / int(disk.size))
 
             allChecksDisk.append(checkDisk)
 
