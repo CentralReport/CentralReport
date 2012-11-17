@@ -17,6 +17,9 @@ class Checks(threading.Thread):
     # True = perform checks...
     performChecks = True
 
+    # Count (Perform a check when starting)
+    tickCount = 60
+
     # Get host informations
     hostEntity = None
 
@@ -52,30 +55,37 @@ class Checks(threading.Thread):
 
         while Checks.performChecks:
 
-            print('---- New check -----')
-            print('Date : ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            if self.tickCount == 60:
+                print('---- New check -----')
+                print('Date : ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-            # Checking CPU
-            if Config.config_enable_check_cpu:
-                print('Do a CPU check...')
-                Checks.last_check_cpu = self.MyCollector.get_cpu()
+                # Checking CPU
+                if Config.config_enable_check_cpu:
+                    print('Do a CPU check...')
+                    Checks.last_check_cpu = self.MyCollector.get_cpu()
 
-            # Checking memory
-            if Config.config_enable_check_memory:
-                print('Do a memory check...')
-                Checks.last_check_memory = self.MyCollector.get_memory()
+                # Checking memory
+                if Config.config_enable_check_memory:
+                    print('Do a memory check...')
+                    Checks.last_check_memory = self.MyCollector.get_memory()
 
-            # Checking Load Average
-            if Config.config_enable_check_loadaverage:
-                print('Do a load average check...')
-                Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
+                # Checking Load Average
+                if Config.config_enable_check_loadaverage:
+                    print('Do a load average check...')
+                    Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
-            # Checking disks informations
-            print('Do a disk check....')
-            Checks.last_check_disk = self.MyCollector.get_disks()
-            Checks.last_check_date = datetime.datetime.now()  # Update the last check date
+                # Checking disks informations
+                print('Do a disk check....')
+                Checks.last_check_disk = self.MyCollector.get_disks()
+                Checks.last_check_date = datetime.datetime.now()  # Update the last check date
 
-            # Wait 60 seconds before next checks...
-            print('All checks are done at : ' + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            print('Next checks in 60 seconds...')
-            time.sleep(60)
+                # Wait 60 seconds before next checks...
+                print('All checks are done at : ' + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                print('Next checks in 60 seconds...')
+
+                self.tickCount = 0
+
+            # new tick
+            self.tickCount += 1
+            time.sleep(1)
+

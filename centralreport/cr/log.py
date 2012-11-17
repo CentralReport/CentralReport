@@ -12,7 +12,6 @@ def configLog():
 def writeDebug(text):
     logging.debug(text)
 
-
 def writeInfo(text):
     logging.info(text)
 

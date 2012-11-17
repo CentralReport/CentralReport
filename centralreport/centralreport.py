@@ -19,6 +19,10 @@ class CentralReport(Daemon):
     startingDate = None
     configuration = None
 
+    # Threads
+    webserver_thread = None
+    checks_thread = None
+
     def run(self):
         # Constructeur
 
@@ -43,7 +47,7 @@ class CentralReport(Daemon):
             print(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
 
             # Lancement thread
-            crThreads.Checks()
+            self.checks_thread = crThreads.Checks()
 
         else:
             isError = True
@@ -54,7 +58,7 @@ class CentralReport(Daemon):
             # Yeah !
             print("Enabling the webserver")
 
-            WebServer()
+            self.webserver = WebServer()
 
         else:
             print("Webserver is disabled by configuration file")
@@ -80,14 +84,26 @@ class CentralReport(Daemon):
         """
             Called when the scripts will be stopped
         """
-
         crLog.writeInfo("Stopping CentralReport...")
-
         self.isRunning = False
-        Daemon.stop(self)
 
-        # Stopping CR...
-        sys.exit(0)
+        if None != self.webserver:
+            print('Stopping Webserver...')
+            self.webserver.stop()
+
+        if None != self.checks_thread:
+            print('Stopping checks thread...')
+            crThreads.Checks.performChecks = False
+
+        print("Stopping daemon...")
+
+        try:
+            Daemon.stop(self)
+        except:
+            crLog.writeInfo("Pid file not found.")
+
+        return 0
+
 
 
 #
@@ -100,9 +116,6 @@ if __name__ == "__main__":
     if 2 == len(sys.argv):
         if 'start' == sys.argv[1]:
             daemon.start()
-        elif 'develop' == sys.argv[1]:
-            # With develop option, we only starting CR, without the daemonizer.
-            daemon.run()
         elif 'stop' == sys.argv[1]:
             daemon.stop()
         elif 'restart' == sys.argv[1]:

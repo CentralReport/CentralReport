@@ -200,10 +200,21 @@ class MacCollector(_Collector):
                 disk_used = int(line_dict['Used']) * MacCollector.BLOCKBYTES_TO_MBYTES
                 disk_free = int(line_dict['Available']) * MacCollector.BLOCKBYTES_TO_MBYTES
 
+                # Getting user friendly name
+                # Read http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline for more informations about shell pipe in Python
+                #
+                # Full command : diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
+                disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout = subprocess.PIPE)
+                disk_name_p2 = subprocess.Popen(['grep', 'Media Name'], stdin = disk_name_p1.stdout, stdout = subprocess.PIPE)
+                disk_name_p1.stdout.close()
+                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin = disk_name_p2.stdout, stdout = subprocess.PIPE).communicate()[0]
+                disk_name_p2.stdout.close()
+
                 # Using new check entity
                 checkDisk = crEntitiesChecks.Disk()
                 checkDisk.date = datetime.datetime.now()
-                checkDisk.name = line_dict['Filesystem']
+                checkDisk.name = disk_name_p3.lstrip()
+                checkDisk.unix_namename = line_dict['Filesystem']
                 checkDisk.size = disk_total
                 checkDisk.used = disk_used
                 checkDisk.free = disk_free

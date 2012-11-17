@@ -4,6 +4,7 @@
 import os
 import cherrypy
 import threading
+import cr.utils.text as crUtilsText
 from mako.lookup import TemplateLookup
 from cr.tools import Config
 from cr.threads import Checks
@@ -82,7 +83,7 @@ class WebServer(threading.Thread):
         """
             When CherryPy is stopping, we restart it.
         """
-        print("test")
+        cherrypy.engine.stop()
 
 
 class Pages:
@@ -112,7 +113,7 @@ class Pages:
         for disk in Checks.last_check_disk.checks:
             checkDisk = {}
             checkDisk['name'] = str.replace(disk.name, '/dev/', '')
-            checkDisk['free'] = round(disk.free,2)
+            checkDisk['free'] = crUtilsText.numberSeparators(round(disk.free,2), ' ')
             checkDisk['percent'] = int(round(disk.used,0) * 100 / int(disk.size))
 
             allChecksDisk.append(checkDisk)
