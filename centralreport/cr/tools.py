@@ -13,7 +13,11 @@ import getpass
 
 class Config:
 
-    CR_SYSTEM_PATH = '/etc/cr'
+    CR_CONFIG_PATH = '/etc'
+    CR_CONFIG_FILE = 'centralreport.cfg'
+    CR_CONFIG_FULL_PATH = CR_CONFIG_PATH +"/"+ CR_CONFIG_FILE
+
+    CR_CURRENT_CONFIG_BUILD = 1
 
     config = ConfigParser.ConfigParser()
 
@@ -23,8 +27,10 @@ class Config:
     else:
         pid_file = '/var/run/centralreport.pid'
 
-    # Indev config
+    # Universal Unique IDentifier for the current host. '' = not defined yet.
     uuid = ''
+
+    # Indev config - Not used for the moment
     config_enable_check_memory = True
     config_enable_check_cpu = True
     config_enable_check_loadaverage = True
@@ -34,6 +40,9 @@ class Config:
     config_webserver_enable = True
     config_webserver_interface = '0.0.0.0'
     config_webserver_port = 8080
+
+    # Config build
+    config_build = 1
 
     # Current host
     HOST_CURRENT = ''
@@ -55,39 +64,53 @@ class Config:
         else:
             print('Linux config')
 
+        # miniche 22/11/2012 : /etc/ must already exist.
         # Creating the dir if it does not exists
-        if not os.path.isdir(self.CR_SYSTEM_PATH):
-            os.mkdir(self.CR_SYSTEM_PATH)
-        Config.chemin = self.CR_SYSTEM_PATH + '/'
+        #if not os.path.isdir(self.CR_CONFIG_PATH):
+        #    os.mkdir(self.CR_SYSTEM_PATH)
+        #Config.chemin = self.CR_SYSTEM_PATH + '/'
 
         # Managing config file
-        if os.path.isfile(Config.chemin + 'centralreport.cfg'):
+        if os.path.isfile(Config.CR_CONFIG_FULL_PATH):
             print('Fichier de conf : Existant. Lecture.')
+            self.readConfigFile()
         else:
             print('Fichier de conf : Inexistant. Creation.')
-            Config.uuid = uuid.uuid1()
-
-            Config.config.add_section('General')
-            Config.config.add_section('Network')
-            Config.config.add_section('Webserver')
             self.writeConfigFile()
 
         # Utils file
-        Config.config.read(Config.chemin + 'centralreport.cfg')
+
+
+
+    def readConfigFile(self):
+        """ Read config file """
+
+        Config.config.read(Config.CR_CONFIG_FULL_PATH)
 
         Config.uuid = Config.config.get('General', 'uuid')
-        Config.config_enable_check_memory = Config.config.getboolean('Network', 'enable_check_memory')
-        Config.config_enable_check_cpu = Config.config.getboolean('Network', 'enable_check_cpu')
-        Config.config_enable_check_loadaverage = Config.config.getboolean('Network', 'enable_check_loadaverage')
+
         Config.config_server_addr = Config.config.get('Network', 'server_addr')
+
         Config.config_webserver_enable = Config.config.getboolean('Webserver', 'enable')
         Config.config_webserver_interface = Config.config.get('Webserver', 'interface')
         Config.config_webserver_port = Config.config.getint('Webserver', 'port')
 
+        Config.config_build = Config.config.get('Config','build')
+
+
+
     def writeConfigFile(self):
-        """
-            Write into the config file the actual configuration.
-        """
+        """  Write into the config file the actual configuration. """
+
+        if not os.path.isfile(Config.CR_CONFIG_FULL_PATH):
+            Config.config.add_section('General')
+            Config.config.add_section('Network')
+            Config.config.add_section('Webserver')
+            Config.config.add_section('Config')
+
+        # Generating uuid if empty
+        if '' == Config.uuid:
+            Config.uuid = uuid.uuid1()
 
         # Writing conf file
         Config.config.set('General', 'uuid', Config.uuid)
@@ -101,7 +124,13 @@ class Config:
         Config.config.set('Webserver', 'interface', Config.config_webserver_interface)
         Config.config.set('Webserver', 'port', Config.config_webserver_port)
 
-        Config.config.write(open('/etc/cr/centralreport.cfg', 'w'))
+        Config.config.set('Config','build',Config.config_build)
+
+        try:
+            Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))
+        except IOError:
+            print('/!\ Error writing config file. Using the default config')
+
 
     @staticmethod
     def determine_current_host():

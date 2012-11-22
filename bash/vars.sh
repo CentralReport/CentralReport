@@ -7,7 +7,7 @@
 PARENT_DIR=/usr/local/bin/
 INSTALL_DIR=/usr/local/bin/centralreport
 
-CONFIG_FILE=/etc/cr/centralreport.cfg
+CONFIG_FILE=/etc/centralreport.cfg
 CONFIG_ASSISTANT=/usr/local/bin/centralreport/config.py
 
 PID_FILE=/var/run/centralreport.pid
@@ -19,11 +19,11 @@ OS_DEBIAN="Debian"
 
 # Mac OS startup plist
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
-STARTUP_PLIST_INSTALL=launchers/com.centralreport.plist
+STARTUP_PLIST_INSTALL=utils/launchers/mac/com.centralreport.plist
 
 # Debian startup script
 STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
-STARTUP_DEBIAN_INSTALL=launchers/centralreport_debian.sh
+STARTUP_DEBIAN_INSTALL=utils/launchers/debian/centralreport.sh
 
 # Temp install directories.
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
