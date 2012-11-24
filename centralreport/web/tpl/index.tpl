@@ -17,7 +17,7 @@
 
             <div class="page-header">
                 <h2>
-                    ${hostname} dashboard
+                    {{ hostname }} dashboard
                     <small>by CentralReport</small>
                 </h2>
             </div>
@@ -35,34 +35,34 @@
 
             <hr />
 
-            <h4>Last check : ${last_check}</h4>
+            <h4>Last check : {{ last_check }}</h4>
 
 
             <div class="row custom_margin_top_plus_20">
                 <div class="span4">
                     <div class="well" style="text-align: center;">
                         <h3>CPU</h3>
-                        <h2>${cpu_percent} %</h2>
+                        <h2>{{ cpu_percent }} %</h2>
                         <div class="progress progress-striped progress-success">
-                            <div class="bar" style="width: ${cpu_percent}%;"></div>
+                            <div class="bar" style="width:{{ cpu_percent }}%;"></div>
                         </div>
                     </div>
                 </div>
                 <div class="span4">
                     <div class="well" style="text-align: center;">
                         <h3>Memory</h3>
-                        <h2>${memory_percent} %</h2>
+                        <h2>{{ memory_percent }} %</h2>
                         <div class="progress progress-striped progress-success">
-                            <div class="bar" style="width: ${memory_percent}%;"></div>
+                            <div class="bar" style="width:{{ memory_percent }}%;"></div>
                         </div>
                     </div>
                 </div>
                 <div class="span4">
                     <div class="well" style="text-align: center;">
                         <h3>Load Average</h3>
-                        <h2>${loadaverage}</h2>
+                        <h2>{{ loadaverage }}</h2>
                         <div class="progress progress-striped progress-success">
-                            <div class="bar" style="width: ${loadaverage_percent}%;">${loadaverage_percent} % of 4 cores</div>
+                            <div class="bar" style="width:{{ loadaverage_percent }}%;">{{ loadaverage_percent }} % of 4 cores</div>
                         </div>
                     </div>
                 </div>
@@ -74,17 +74,17 @@
                         <h3>Disks</h3>
                         <table class="table table-striped">
                             <tbody>
-                                % for disk in disks:
+                                {% for disk in disks %}
                                     <tr>
-                                        <td width="33%"><strong>${disk['name']}</strong></td>
-                                        <td width="33%">${disk['free']} MB free (${disk['percent']} % used)</td>
+                                        <td width="33%"><strong>{{ disk.name }}</strong></td>
+                                        <td width="33%">{{ disk.free }} MB free ({{ disk.percent }} % used)</td>
                                         <td width="33%">
                                             <div class="progress progress-striped progress-success">
-                                                <div class="bar" style="width: ${disk['percent']}%;"></div>
+                                                <div class="bar" style="width:{{ disk.percent }}%;"></div>
                                             </div>
                                         </td>
                                     </tr>
-                                % endfor
+                                {% endfor %}
                             </tbody>
                         </table>
 

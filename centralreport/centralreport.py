@@ -47,7 +47,7 @@ class CentralReport(Daemon):
             print(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
 
             # Lancement thread
-            self.checks_thread = crThreads.Checks()
+            CentralReport.checks_thread = crThreads.Checks()
 
         else:
             isError = True
@@ -58,7 +58,7 @@ class CentralReport(Daemon):
             # Yeah !
             print("Enabling the webserver")
 
-            self.webserver = WebServer()
+            CentralReport.webserver_thread = WebServer()
 
         else:
             print("Webserver is disabled by configuration file")
@@ -68,13 +68,13 @@ class CentralReport(Daemon):
         if(not isError):
             crLog.writeInfo("CentralReport started!")
 
-            while self.isRunning:
+            while CentralReport.isRunning:
                 try:
                     time.sleep(1)
                 except KeyboardInterrupt:
                     # Stopping CR
                     print("KeyboardInterrupt exception. Stopping CentralReport...")
-                    self.isRunning = False
+                    CentralReport.isRunning = False
                     self.stop()
 
         else:
@@ -87,9 +87,9 @@ class CentralReport(Daemon):
         crLog.writeInfo("Stopping CentralReport...")
         self.isRunning = False
 
-        if None != self.webserver:
+        if None != CentralReport.webserver_thread:
             print('Stopping Webserver...')
-            self.webserver.stop()
+            CentralReport.webserver_thread.stop()
 
         if None != self.checks_thread:
             print('Stopping checks thread...')

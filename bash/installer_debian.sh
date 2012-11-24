@@ -106,20 +106,20 @@ function install_on_debian()
 
 
     # Finally, installing Mako Templates...
-    echo "Installing Mako Templates"
+    echo "Installing Jinja2 Templates"
     echo "Untar Mako..."
 
-    tar -xzvf ${MAKO_TAR} -C thirdparties/
+    tar -xzvf ${JINJA_TAR} -C thirdparties/
 
-    echo "Installing Mako..."
-    cd ${MAKO_DIR};
+    echo "Installing Jinja2..."
+    cd ${JINJA_DIR};
     python setup.py install
     cd ../../;
 
     echo "Deleting install files..."
-    rm -Rf ${MAKO_DIR}
+    rm -Rf ${JINJA_DIR}
 
-    echo "Mako is installed!"
+    echo "Jinja2 is installed!"
     echo " "
 
 

@@ -2,19 +2,21 @@
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
 import os
-import cherrypy
 import threading
+import cherrypy
+from jinja2 import Environment, FileSystemLoader
 import cr.utils.text as crUtilsText
-from mako.lookup import TemplateLookup
 from cr.tools import Config
 from cr.threads import Checks
-
 
 class WebServer(threading.Thread):
 #class WebServer():
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    lookup = TemplateLookup(directories=[os.path.join(current_dir, 'tpl')])
+    env = Environment(loader=FileSystemLoader(os.path.join(current_dir,'tpl')))
+
+    # Not used anymore (Mako templates)
+    #lookup = TemplateLookup(directories=[os.path.join(current_dir, 'tpl')])
 
     #def run(self):
     def __init__(self):
@@ -58,7 +60,7 @@ class WebServer(threading.Thread):
         }
 
         # Using Pages class (see below)
-        webApplication = cherrypy.tree.mount(Pages(self.lookup), '/', confStaticContent)
+        webApplication = cherrypy.tree.mount(Pages(self.env), '/', confStaticContent)
 
         # Disable screen log (standard out)
         # http://stackoverflow.com/questions/4056958/cherrypy-logging-how-do-i-configure-and-use-the-global-and-application-level-lo
@@ -88,12 +90,13 @@ class WebServer(threading.Thread):
 
 class Pages:
 
-    def __init__(self, lookupTemplate):
-        self.lookup = lookupTemplate
+    def __init__(self, env_template):
+        self.env = env_template
 
     @cherrypy.expose
     def index(self):
-        tmpl = self.lookup.get_template('index.tpl')
+        #tmpl = self.lookup.get_template('index.tpl')
+        tmpl = self.env.get_template('index.tpl')
 
         tmpl_vars = dict()
 
@@ -120,12 +123,14 @@ class Pages:
 
         tmpl_vars['disks'] = allChecksDisk
 
-        return tmpl.render(**tmpl_vars)
+        #return tmpl.render(**tmpl_vars)
+        return tmpl.render(tmpl_vars)
+
 
     @cherrypy.expose
     def dashboard(self):
 
-        tmpl = self.lookup.get_template("dashboard_mac.tpl")
+        tmpl = self.env.get_template("dashboard_mac.tpl")
         tmpl_vars = dict()
 
         tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
@@ -170,7 +175,7 @@ class Pages:
         #            tmpl_vars['disks'] = ThreadMac.last_list_disk
         #            tmpl_vars['disks_test'] = ThreadMac.last_list_disk
 
-        return tmpl.render(**tmpl_vars)
+        return tmpl.render(tmpl_vars)
 
     def error_page_404(status, message, traceback, version):
         """

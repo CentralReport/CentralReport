@@ -27,9 +27,9 @@ STARTUP_DEBIAN_INSTALL=utils/launchers/debian/centralreport.sh
 
 # Temp install directories.
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
-MAKO_TAR=thirdparties/Mako.tar.gz
+JINJA_TAR=thirdparties/Jinja2.tar.gz
 SETUPTOOLS_TAR=thirdparties/setuptools.tar.gz
 
 CHERRYPY_DIR=thirdparties/CherryPy-3.2.2
-MAKO_DIR=thirdparties/Mako-0.7.2
+JINJA_DIR=thirdparties/Jinja2-2.6
 SETUPTOOLS_DIR=thirdparties/setuptools-0.6c11

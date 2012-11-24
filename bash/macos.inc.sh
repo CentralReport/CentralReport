@@ -163,7 +163,7 @@ function macos_cp_bin {
     fi
     if [ ! -d "/usr/local/bin" ]; then
             sudo mkdir /usr/local/bin
-        fi
+    fi
 
     sudo mkdir ${INSTALL_DIR}
 
@@ -267,20 +267,20 @@ function macos_install {
 
 
 
-    # Then, installing Mako Templates...
-    echo "Installing Mako Templates"
-    echo "Untar Mako..."
-    tar -xzvf ${MAKO_TAR} -C thirdparties/
+    # Then, installing Jinja2 Templates...
+    echo "Installing Jinja2"
+    echo "Untar Jinja2..."
+    tar -xzvf ${JINJA_TAR} -C thirdparties/
 
-    echo "Installing Mako..."
-    cd ${MAKO_DIR};
+    echo "Installing Jinja2..."
+    cd ${JINJA_DIR};
     sudo python setup.py install
     cd ../../;
 
     echo "Deleting install files..."
-    sudo rm -Rf ${MAKO_DIR}
+    sudo rm -Rf ${JINJA_DIR}
 
-    echo "Mako is installed!"
+    echo "Jinja2 is installed!"
     echo " "
 
     # Cleaning screen

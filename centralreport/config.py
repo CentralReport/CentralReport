@@ -12,7 +12,9 @@ from centralreport import CentralReport
 
 if __name__ == '__main__':
 
-    if (1 == len(sys.argv)) | ('editor' == sys.argv[1]):
+
+    if 1 == len(sys.argv):
+
         print('\n')
         print('-------------------------------------------------- ')
         print('         CentralReport config editor                 ')
