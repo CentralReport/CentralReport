@@ -8,7 +8,7 @@
 source bash/vars.sh
 source bash/functions.inc.sh
 source bash/macos.inc.sh
-source bash/uninstall_debian.sh
+source bash/debian.inc.sh
 
 # Vars
 ACTUAL_MODE=install     # Modes : install, check
@@ -40,11 +40,11 @@ echo "You will uninstall CentralReport. Are you sure to continue? (Yes/No)"
 
 
 # Are you sure to uninstall CR ?
-if [ "$unistall_confirm" == "yes" ]; then
+if [ ${unistall_confirm} == "yes" ]; then
     echo "OK, continue"
     echo " "
 
-    if [ $CURRENT_OS != "$OS_MAC" ] && [ $CURRENT_OS != $OS_DEBIAN ]; then
+    if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
         echo " "
         echo -e "\033[1;31mERROR"
         echo -e "\033[0;31mThe uninstall is only design for Mac OS and Debian"
@@ -54,7 +54,7 @@ if [ "$unistall_confirm" == "yes" ]; then
         # 0 = no
         bit_error=0
 
-        if [ $CURRENT_OS = $OS_MAC ]; then
+        if [ ${CURRENT_OS} = ${OS_MAC} ]; then
             # Remove CR from this Mac
             macos_uninstall
             if [ $? -ne 0 ]; then
@@ -64,10 +64,13 @@ if [ "$unistall_confirm" == "yes" ]; then
             # Remove sudo privileges
             sudo -k
 
-        elif [ $CURRENT_OS = $OS_DEBIAN ]; then
+        elif [ ${CURRENT_OS} = ${OS_DEBIAN} ]; then
 
             # Remove CR from this computer
-            uninstall_from_debian
+            debian_uninstall
+            if [ $? -ne 0 ]; then
+                bit_error=1
+            fi
 
         fi
 

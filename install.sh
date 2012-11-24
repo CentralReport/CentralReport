@@ -8,7 +8,7 @@
 source bash/vars.sh
 source bash/functions.inc.sh
 source bash/macos.inc.sh
-source bash/installer_debian.sh
+source bash/debian.inc.sh
 
 # Vars
 ACTUAL_MODE=install                         # Modes : install, check
@@ -42,11 +42,11 @@ fi
 getOS
 
 # Check the actual mode.
-if [ "install" == $ACTUAL_MODE ]; then
+if [ "install" == ${ACTUAL_MODE} ]; then
 
     # Right now, it only works on MacOS.
     # Support for Linux distrib coming soon.
-    if [ $CURRENT_OS != $OS_MAC ] && [ $CURRENT_OS != $OS_DEBIAN ]; then
+    if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
         echo " "
         echo -e "\033[1;31mERROR"
         echo -e "\033[0;31mThe install is only design for Mac OS and Debian"
@@ -59,23 +59,23 @@ if [ "install" == $ACTUAL_MODE ]; then
         #read install_confirm
 
         # Are you sure to install CR ?
-        if [ "yes" == "$install_confirm" ]; then
+        if [ "yes" == ${install_confirm} ]; then
 
             # It's an indev version. At each install, we delete everything.
 
             # O=no error / 1=one or more errors
             bit_error=0
 
-            if [ ${CURRENT_OS} == "$OS_MAC" ]; then
+            if [ ${CURRENT_OS} == ${OS_MAC} ]; then
                 echo "Ok, I continue. I will install CentralReport on a mac"
                 macos_install
                 if [ $? -ne 0 ]; then
                     bit_error=1
                 fi
 
-            elif [ ${CURRENT_OS} == "$OS_DEBIAN" ]; then
+            elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
                 echo "Ok. I continue. I will install CentralReport on Debian"
-                install_on_debian
+                debian_install
 
             fi
 
