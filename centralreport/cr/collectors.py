@@ -9,6 +9,7 @@
 
 import subprocess
 import datetime
+import time
 import cr.utils.text as crUtilsText
 import cr.entities.checks as crEntitiesChecks
 import cr.entities.host as crEntitiesHost
@@ -156,6 +157,8 @@ class MacCollector(_Collector):
         loadAverageEntity.last5m = dict_iostat['5m']
         loadAverageEntity.last15m = dict_iostat['15m']
 
+        loadAverageEntity.uptime = self.get_uptime()
+
         return loadAverageEntity
 
     def getIOStat(self):
@@ -175,6 +178,25 @@ class MacCollector(_Collector):
         dict_iostat = dict(zip(headers, values))
 
         return dict_iostat
+
+
+    def get_uptime(self):
+        """
+            Gets the number of seconds since the last boot
+        """
+        uptime_cmd = subprocess.Popen(['sysctl', '-n', 'kern.boottime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        # Getting the split dict. The last command return this pattern : { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
+        # We want to use the first value
+        dict_uptime = uptime_cmd.split(' ')
+
+        try:
+            timestamp_boot = int(dict_uptime[3].replace(',',''))
+        except:
+            timestamp_boot = time.time()
+
+        return int(int(time.time()) - int(timestamp_boot))
+
 
     def get_disks(self):
         """
@@ -328,7 +350,26 @@ class DebianCollector(_Collector):
         loadAverageEntity.last5m = dict_loadavg[1]
         loadAverageEntity.last15m = dict_loadavg[2]
 
+        loadAverageEntity.uptime = self.get_uptime()
+
         return loadAverageEntity
+
+
+    def get_uptime(self):
+        """
+            Gets the number of seconds since the last boot
+        """
+        uptime_cmd = subprocess.Popen(['cat', '/proc/uptime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
+        uptime_dict = uptime_cmd.split(' ')
+
+        try:
+            uptime = int(uptime_dict[0])
+        except:
+            uptime = int(0)
+
+        return int(uptime)
+
 
     def get_disks(self):
         """

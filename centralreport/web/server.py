@@ -4,10 +4,13 @@
 import os
 import threading
 import cherrypy
+import datetime
+import calendar
 from jinja2 import Environment, FileSystemLoader
 import cr.utils.text as crUtilsText
 from cr.tools import Config
 from cr.threads import Checks
+import cr.utils.date as crUtilsDate
 
 class WebServer(threading.Thread):
 #class WebServer():
@@ -110,6 +113,8 @@ class Pages:
         tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
 
         tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
+        tmpl_vars['uptime'] = int(Checks.last_check_loadAverage.uptime)
+        tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
         # Testing displaying disks stats
         allChecksDisk = []

@@ -37,7 +37,6 @@
 
             <h4>Last check : {{ last_check }}</h4>
 
-
             <div class="row custom_margin_top_plus_20">
                 <div class="span4">
                     <div class="well" style="text-align: center;">
@@ -69,7 +68,7 @@
             </div>
 
             <div class="row">
-                <div class="span12">
+                <div class="span8">
                     <div class="well" style="text-align: center;">
                         <h3>Disks</h3>
                         <table class="table table-striped">
@@ -88,6 +87,15 @@
                             </tbody>
                         </table>
 
+                    </div>
+
+                </div>
+                <div class="span4">
+
+                    <div class="well" style="text-align: center;">
+                        <h3>Uptime</h3>
+                        <h2>{{ uptime }} sec</h2>
+                        <h4>{{ start_date }}</h4>
                     </div>
 
                 </div>

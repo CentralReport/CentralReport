@@ -58,6 +58,7 @@ class LoadAverage:
 
     def __init__(self):
         self.date = datetime.datetime.now()
+        self.uptime = int(0)    # Uptime in seconds
         self.last1m = float(0)
         self.last5m = float(0)
         self.last15m = float(0)
