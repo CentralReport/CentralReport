@@ -29,7 +29,9 @@ STARTUP_DEBIAN_INSTALL=utils/launchers/debian/centralreport.sh
 CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
 JINJA_TAR=thirdparties/Jinja2.tar.gz
 SETUPTOOLS_TAR=thirdparties/setuptools.tar.gz
+SETPROCTITLE_TAR=thirdparties/setproctitle.tar.gz
 
 CHERRYPY_DIR=thirdparties/CherryPy-3.2.2
 JINJA_DIR=thirdparties/Jinja2-2.6
 SETUPTOOLS_DIR=thirdparties/setuptools-0.6c11
+SETPROCTITLE_DIR=thirdparties/setproctitle-1.1.6

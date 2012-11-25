@@ -20,18 +20,23 @@ if __name__ == '__main__':
         print('         CentralReport config editor                 ')
         print('--------------------------------------------------   ')
         print('\n')
-        print('You can also edit manually the config file, located at /etc/cr/centralreport.cfg')
+        print('You can also edit manually the config file, located at /etc/centralreport.cfg')
 
         print('Stopping CentralReport...')
         time.sleep(1)
 
         daemon = CentralReport(Config.pid_file)
-        centralReportRunningBefore = True
-        try:
-            daemon.stop()
-        except:
+        if 0 == daemon.status():
             print('CentralReport is not running')
             centralReportRunningBefore = False
+
+        else:
+            centralReportRunningBefore = True
+            try:
+                daemon.stop()
+            except:
+                print('Error stopping CentralReport daemon...')
+
 
         # Getting the actual config
         config = Config()

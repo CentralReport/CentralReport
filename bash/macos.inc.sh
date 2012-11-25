@@ -88,7 +88,7 @@ function macos_remove_bin {
     echo -e "\nRemove existing install directory..."
 
     if [ -d ${INSTALL_DIR} ]; then
-        sudo rm -rfv $INSTALL_DIR
+        sudo rm -rfv ${INSTALL_DIR}
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : $?)"
@@ -108,7 +108,7 @@ function macos_remove_config {
     echo -e "\nRemove existing config file..."
 
     if [ -f ${CONFIG_FILE} ]; then
-        sudo rm -fv $CONFIG_FILE
+        sudo rm -fv ${CONFIG_FILE}
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : $?)"
@@ -128,7 +128,7 @@ function macos_remove_startup_plist {
     echo -e "\nRemove existing startup plist file..."
 
     if [ -f ${STARTUP_PLIST} ]; then
-        sudo rm -fv $STARTUP_PLIST
+        sudo rm -fv ${STARTUP_PLIST}
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting startup plist file at ${STARTUP_PLIST} (Error code : $?)"

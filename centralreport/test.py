@@ -11,10 +11,12 @@ print('--- CentralReport debug mode. ---')
 print('This tool is only for debug purpose. For running CR in production env, '
       'use python centralreport.py start instead.')
 print('---------------------------------')
+print('')
 
 cr = centralreport.CentralReport("/tmp/centralreport_debug.pid")
-return_value = cr.run()
+return_value = cr.debug()
 
+print('')
 print('---------------------------------')
 print('Ending debug mode')
 print('---------------------------------')

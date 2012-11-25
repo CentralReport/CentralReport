@@ -4,7 +4,10 @@
 # For CentralReport Indev version.
 # By careful! Don't use in production environment!
 
+
 # This script package CentralReport in one archive (.tar.gz)
+# This archive is to be placed on the CR website and working with "online_installer" and "online_uninstaller"
+
 
 # Works only on Mac OS for now!
 if [ $(uname -s) != "Darwin" ]; then
@@ -13,12 +16,12 @@ if [ $(uname -s) != "Darwin" ]; then
 fi
 
 # You must be in "CentralReport directory to execute this script
-if [ ${PWD##*/} != "CentralReport" ]; then
+if [ ${PWD##*/} != "tools" ]; then
     echo "ERROR - You must be in the CentralReport directory to execute this script."
     exit 1
 fi
 
-cd ../
+cd ../../
 
 sudo -v
 if [ $? -ne 0 ]; then

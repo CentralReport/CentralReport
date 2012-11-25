@@ -34,7 +34,8 @@ class WebServer(threading.Thread):
         # Update the configuration...
         cherrypy.config.update({'server.socket_host': Config.config_webserver_interface, 'server.socket_port': Config.config_webserver_port})
         cherrypy.config.update({'tools.staticdir.root': WebServer.current_dir})
-#        cherrypy.config.update({'engine.timeout_monitor.on' : False})
+        cherrypy.config.update({'log.screen': False})
+        #        cherrypy.config.update({'engine.timeout_monitor.on' : False})
 
         # Serving static content
         confStaticContent = {

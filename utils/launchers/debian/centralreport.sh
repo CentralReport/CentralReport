@@ -25,8 +25,11 @@ case "$1" in
     echo "Restarting CentralReport"
     python /usr/local/bin/centralreport/centralreport.py restart
     ;;
+  status)
+    python /usr/local/bin/centralreport/centralreport.py status
+    ;;
   *)
-    echo "Usage: /etc/init.d/centralreport_debian.sh {start|stop|restart}"
+    echo "Usage: /etc/init.d/centralreport_debian.sh {start|stop|restart|status}"
     exit 1
     ;;
 esac

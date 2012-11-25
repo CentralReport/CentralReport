@@ -9,26 +9,30 @@ import os
 import uuid
 import subprocess
 import getpass
+import log as crLog
 
 
 class Config:
 
     CR_CONFIG_PATH = '/etc'
     CR_CONFIG_FILE = 'centralreport.cfg'
-    CR_CONFIG_FULL_PATH = CR_CONFIG_PATH +"/"+ CR_CONFIG_FILE
+    CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH,CR_CONFIG_FILE)
 
     CR_CURRENT_CONFIG_BUILD = 1
 
     config = ConfigParser.ConfigParser()
 
-    # CentralReport Core config
-    if getpass.getuser() != 'root':
+    # Universal Unique IDentifier for the current host. '' = not defined yet.
+    uuid = ''
+
+    # Debug mode
+    config_enable_debug_mode = False
+
+    # CentralReport pid file
+    if True == config_enable_debug_mode:
         pid_file = '/tmp/centralreport.pid'
     else:
         pid_file = '/var/run/centralreport.pid'
-
-    # Universal Unique IDentifier for the current host. '' = not defined yet.
-    uuid = ''
 
     # Indev config - Not used for the moment
     config_enable_check_memory = True
@@ -60,9 +64,9 @@ class Config:
         Config.determine_current_host()
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
-            print('Mac config')
+            crLog.writeDebug('Mac config')
         else:
-            print('Linux config')
+            crLog.writeDebug('Linux config')
 
         # miniche 22/11/2012 : /etc/ must already exist.
         # Creating the dir if it does not exists
@@ -72,10 +76,10 @@ class Config:
 
         # Managing config file
         if os.path.isfile(Config.CR_CONFIG_FULL_PATH):
-            print('Fichier de conf : Existant. Lecture.')
+            crLog.writeDebug('Configuration file : Found. Reading it.')
             self.readConfigFile()
         else:
-            print('Fichier de conf : Inexistant. Creation.')
+            crLog.writeInfo('Configuration file : Not found. Creating it.')
             self.writeConfigFile()
 
         # Utils file
@@ -129,7 +133,7 @@ class Config:
         try:
             Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))
         except IOError:
-            print('/!\ Error writing config file. Using the default config')
+            crLog.writeError('/!\ Error writing config file. Using the default config')
 
 
     @staticmethod

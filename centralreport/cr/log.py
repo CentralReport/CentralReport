@@ -1,12 +1,25 @@
 __author__ = 'che'
 
 import logging
+import sys
 
 
-def configLog():
-    logging.basicConfig(filename='/var/log/centralreport.log',
-        format='%(levelname)s - %(asctime)s : %(message)s',
-        level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S %p')
+def configLog(enable_debug_mode = False):
+    """
+        Config the logging system (executed on time when CentralReport starting)
+    """
+
+    if enable_debug_mode == False:
+        # Writing only "INFO" or more important messages in a log file (production environement)
+        logging.basicConfig(filename='/var/log/centralreport.log',
+                            format='%(levelname)s \t %(asctime)s \t %(message)s',
+                            level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S')
+
+    else:
+        # In debug mode, we only display message on standard output.
+        logging.basicConfig(stream=sys.stdout,
+                            format='%(levelname)s \t %(asctime)s \t %(message)s',
+                            level=logging.DEBUG, datefmt='%m/%d/%Y %H:%M:%S')
 
 
 def writeDebug(text):

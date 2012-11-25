@@ -9,7 +9,7 @@ import datetime
 import cr.log as crLog
 import cr.threads as crThreads
 from cr.tools import Config
-from daemon import Daemon
+from cr.daemon import Daemon
 from web.server import WebServer
 
 
@@ -17,11 +17,14 @@ class CentralReport(Daemon):
     # Bool : True = daemon is running.
     isRunning = True
     startingDate = None
+
+    # Configuration object
     configuration = None
 
     # Threads
     webserver_thread = None
     checks_thread = None
+
 
     def run(self):
         # Constructeur
@@ -30,55 +33,65 @@ class CentralReport(Daemon):
         isError = False
 
         # On prepare les logs
-        crLog.configLog()
+        crLog.configLog(Config.config_enable_debug_mode)
         crLog.writeInfo("CentralReport is starting...")
 
         # Starting date
         CentralReport.startingDate = datetime.datetime.now()
 
-        # Ce constructeur va permettre de lancer l'ensemble des outils necessaires
+        # Getting config object
         CentralReport.configuration = Config()
-        #idMachine = utils.config.configGetter.config.get("General","id")
-        #utils.log.CRLog.writeLog("UUID : "+ str(idMachine))
 
-        # Quel thread doit-on lancer ?
+        # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
         Config.HOST_CURRENT == Config.HOST_UBUNTU):
-            print(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
+            crLog.writeInfo(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
 
-            # Lancement thread
+            # Launching checks thread
             CentralReport.checks_thread = crThreads.Checks()
 
         else:
             isError = True
-            print("Sorry, but your OS is not supported yet...")
+            crLog.writeCritical("Sorry, but your OS is not supported yet...")
 
         # Enable webserver ?
         if (Config.config_webserver_enable) & (not isError):
             # Yeah !
-            print("Enabling the webserver")
+            crLog.writeInfo("Enabling the webserver")
 
             CentralReport.webserver_thread = WebServer()
 
         else:
-            print("Webserver is disabled by configuration file")
             crLog.writeInfo("Webserver is disabled by configuration file")
 
-        # End of file
+
+        #
         if(not isError):
             crLog.writeInfo("CentralReport started!")
 
             while CentralReport.isRunning:
                 try:
+
+                    if Config.config_enable_debug_mode == False:
+                        # If .pid file is not found, we must stop CR (only in production environement)
+                        try:
+                            pf = file(self.pidfile, 'r')
+                            pf.close()
+                        except IOError:
+                            crLog.writeError('Pid file is not found. CentralReport must stop itself.')
+                            CentralReport.isRunning = False
+                            self.stop()
+
                     time.sleep(1)
                 except KeyboardInterrupt:
                     # Stopping CR
-                    print("KeyboardInterrupt exception. Stopping CentralReport...")
+                    crLog.writeFatal("KeyboardInterrupt exception. Stopping CentralReport...")
                     CentralReport.isRunning = False
                     self.stop()
 
         else:
             crLog.writeError("Error launching CentralReport!")
+
 
     def stop(self):
         """
@@ -88,14 +101,14 @@ class CentralReport(Daemon):
         self.isRunning = False
 
         if None != CentralReport.webserver_thread:
-            print('Stopping Webserver...')
+            crLog.writeInfo('Stopping Webserver...')
             CentralReport.webserver_thread.stop()
 
         if None != self.checks_thread:
-            print('Stopping checks thread...')
+            crLog.writeInfo('Stopping checks thread...')
             crThreads.Checks.performChecks = False
 
-        print("Stopping daemon...")
+        crLog.writeInfo("Stopping daemon...")
 
         try:
             Daemon.stop(self)
@@ -105,6 +118,30 @@ class CentralReport(Daemon):
         return 0
 
 
+    def status(self):
+        """
+            CentralReport is running ?
+            @return Int : Unix daemon pid ID
+        """
+
+        try:
+            pf = file(self.pidfile, 'r')
+            pid = int(pf.read().strip())
+            pf.close()
+        except IOError:
+            pid = 0
+
+        return pid
+
+
+    def debug(self):
+        """
+            Use this function to launch CentralReport without running the daemon.
+            Very useful to run CR in a IDE console :)
+        """
+
+        Config.config_enable_debug_mode = True
+        self.run()
 
 #
 # Main script
@@ -116,14 +153,25 @@ if __name__ == "__main__":
     if 2 == len(sys.argv):
         if 'start' == sys.argv[1]:
             daemon.start()
+
         elif 'stop' == sys.argv[1]:
             daemon.stop()
+
         elif 'restart' == sys.argv[1]:
             daemon.restart()
+
+        elif 'status' == sys.argv[1]:
+            pid = daemon.status()
+            if 0 == pid :
+                print('CentralReport is not running')
+            else:
+                print('CentralReport is running with pid '+ str(pid))
+
         else:
-            print("Unknown command")
+            crLog.writeError("Unknown command")
             sys.exit(2)
         sys.exit(0)
+
     else:
-        print("usage: %s start|stop|restart" % sys.argv[0])
+        crLog.writeError("usage: %s start|stop|restart|status" % sys.argv[0])
         sys.exit(2)
