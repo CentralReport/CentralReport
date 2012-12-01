@@ -1,41 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>CentralReport dashboard</title>
+{% extends "layout/page.layout.tpl" %}
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/custom.css">
-    <script type="text/javascript" src="js/jquery.js"></script>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
+{% block title %}CentralReport dashboard{% endblock %}
 
-            <div class="page-header">
-                <h2>
-                    {{ hostname }} dashboard
-                    <small>by CentralReport</small>
-                </h2>
-            </div>
+{% block header_title %}CentralReport host dashboard{% endblock %}
+{% block header_subtitle %}{{ hostname }}{% endblock %}
+
+{% block content %}
 
             <div class="alert">
                 <strong>Indev Version</strong><br />
                 This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
             </div>
 
-            <div>
-                <strong>
-                    <a href="dashboard">Go to full report</a>
-                </strong>
+            <div class="box">
+                Last check : {{ last_check }}
             </div>
-
-            <hr />
-
-            <h4>Last check : {{ last_check }}</h4>
 
             <div class="row custom_margin_top_plus_20">
                 <div class="span4">
@@ -100,7 +79,14 @@
 
                 </div>
             </div>
-        </div>
-    </div>
-</body>
-</html>
+
+
+            <div class="box box-center">
+                <a href="dashboard">Go to full report</a>
+            </div>
+
+
+
+{% endblock %}
+
+{% block footer_version %}CentralReport Unix/Linux - Indev version{% endblock %}

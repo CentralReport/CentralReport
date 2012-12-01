@@ -113,7 +113,15 @@ class Pages:
         tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
 
         tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
+
         tmpl_vars['uptime'] = int(Checks.last_check_loadAverage.uptime)
+
+        # WIP (miniche)
+        #tmpl_vars['uptime'] = crUtilsText.secondsToFullTime(int(Checks.last_check_loadAverage.uptime))
+
+        print(crUtilsDate.datetimeToTimestamp(Checks.last_check_date))
+        print(int(Checks.last_check_loadAverage.uptime))
+
         tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
         # Testing displaying disks stats

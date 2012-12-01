@@ -15,9 +15,9 @@
         <true/>
         <key>ProgramArguments</key>
         <array>
-                <string>python</string>
-                <string>/usr/local/bin/centralreport/centralreport.py</string>
-                <string>start</string>
+            <string>python</string>
+            <string>/usr/local/bin/centralreport/centralreport.py</string>
+            <string>start</string>
         </array>
 </dict>
 </plist>

@@ -33,3 +33,10 @@ def numberSeparators(number, separator=' '):
     else:
         return str_number[0]
 
+
+
+def _WIP_secondsToFullTime(seconds):
+    """
+        WIP (miniche)
+    """
+    return int(int(seconds)/3600)

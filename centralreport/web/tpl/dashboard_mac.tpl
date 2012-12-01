@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Current Host</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/custom.css">
+{% extends "layout/page.layout.tpl" %}
 
-    <script type="text/javascript" src="js/jquery.js"></script>
+{% block title %}CentralReport dashboard{% endblock %}
+
+{% block header_title %}CentralReport host dashboard{% endblock %}
+{% block header_subtitle %}{{ hostname }}{% endblock %}
+
+{% block head_javascript %}
+
     <script type="text/javascript" src="js/jquery.flot.js"></script>
     <script type="text/javascript" src="js/jquery.flot.pie.js"></script>
     <script type="text/javascript" src="js/jquery.flot.selection.js"></script>
@@ -86,15 +85,10 @@
 
         });
     </script>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
 
-            <div class="page-header">
-                <h1>{{ host.hostname }} <small>with CentralReport</small></h1>
-            </div>
+{% endblock %}
 
+{% block content %}
             <div class="alert">
                 <strong>Indev Version</strong><br />
                 This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
@@ -234,7 +228,7 @@
                 </div>
                 <div class="span6"></div>
             </div>
-        </div>
-    </div>
-</body>
-</html>
+
+{% endblock %}
+
+{% block footer_version %}CentralReport Unix/Linux - Indev version{% endblock %}

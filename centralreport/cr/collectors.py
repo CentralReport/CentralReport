@@ -33,6 +33,9 @@ class _Collector:
     def get_disks(self):
         raise NameError('Method not implemented yet')
 
+    def get_uptime(self):
+        raise NameError('Method not implemented yet')
+
 
 class MacCollector(_Collector):
     """
@@ -248,10 +251,15 @@ class MacCollector(_Collector):
 
 class DebianCollector(_Collector):
 
-    # Obtenir les infos sur la machine actuelle.
-    def get_infos(self):
+    """
+       This collector can execute Debian/Ubuntu commands and get some useful values.
+   """
 
-        # Nom de la machine
+    def get_infos(self):
+        """
+            Getting informations on this host
+        """
+
         subprocessPIPE = subprocess.PIPE
         hostname = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
 
@@ -270,10 +278,13 @@ class DebianCollector(_Collector):
 
         return hostEntity
 
-    # Obtenir les stats CPU.
-    # Retourne un dictionnaire de donnees
+
     def get_cpu(self):
-        # vmstat - entrees / sorties
+        """
+            Get CPU stats
+        """
+
+        # vmstat - input / output
         iostat = subprocess.Popen(['vmstat', '1', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         # Formatage de vmstat
@@ -294,8 +305,9 @@ class DebianCollector(_Collector):
 
     def get_memory(self):
         """
-            Retourne les stats de la memoire vive de notre host
+            Get memory usage
         """
+
         memory_result = subprocess.Popen(['cat', '/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         # On decoupe toutes les lignes
@@ -398,6 +410,7 @@ class DebianCollector(_Collector):
                 checkDisk = crEntitiesChecks.Disk()
                 checkDisk.date = datetime.datetime.now()
                 checkDisk.name = line_split[0]
+                checkDisk.unix_name = line_split[0]
                 checkDisk.size = disk_total
                 checkDisk.used = disk_used
                 checkDisk.free = disk_free
