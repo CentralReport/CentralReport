@@ -18,10 +18,6 @@ class WebServer(threading.Thread):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(os.path.join(current_dir,'tpl')))
 
-    # Not used anymore (Mako templates)
-    #lookup = TemplateLookup(directories=[os.path.join(current_dir, 'tpl')])
-
-    #def run(self):
     def __init__(self):
         """
             Manage the small webserver
@@ -99,7 +95,6 @@ class Pages:
 
     @cherrypy.expose
     def index(self):
-        #tmpl = self.lookup.get_template('index.tpl')
         tmpl = self.env.get_template('index.tpl')
 
         tmpl_vars = dict()
@@ -137,7 +132,6 @@ class Pages:
 
         tmpl_vars['disks'] = allChecksDisk
 
-        #return tmpl.render(**tmpl_vars)
         return tmpl.render(tmpl_vars)
 
 
