@@ -33,7 +33,7 @@ class CentralReport(Daemon):
         isError = False
 
         # On prepare les logs
-        crLog.configLog(Config.config_enable_debug_mode)
+        crLog.configLog(Config.CR_CONFIG_ENABLE_DEBUG_MODE)
         crLog.writeInfo("CentralReport is starting...")
 
         # Starting date
@@ -55,7 +55,7 @@ class CentralReport(Daemon):
             crLog.writeCritical("Sorry, but your OS is not supported yet...")
 
         # Enable webserver ?
-        if (Config.config_webserver_enable) & (not isError):
+        if (Config.getConfigValue('enable','Webserver')) & (not isError):
             # Yeah !
             crLog.writeInfo("Enabling the webserver")
 
@@ -72,7 +72,7 @@ class CentralReport(Daemon):
             while CentralReport.isRunning:
                 try:
 
-                    if Config.config_enable_debug_mode == False:
+                    if Config.CR_CONFIG_ENABLE_DEBUG_MODE == False:
                         # If .pid file is not found, we must stop CR (only in production environement)
                         try:
                             pf = file(self.pidfile, 'r')
@@ -140,7 +140,7 @@ class CentralReport(Daemon):
             Very useful to run CR in a IDE console :)
         """
 
-        Config.config_enable_debug_mode = True
+        Config.CR_CONFIG_ENABLE_DEBUG_MODE = True
         self.run()
 
 #
@@ -148,7 +148,7 @@ class CentralReport(Daemon):
 #
 
 if __name__ == "__main__":
-    daemon = CentralReport(Config.pid_file)
+    daemon = CentralReport(Config.CR_PID_FILE)
 
     if 2 == len(sys.argv):
         if 'start' == sys.argv[1]:

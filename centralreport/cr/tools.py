@@ -8,45 +8,25 @@ import ConfigParser
 import os
 import uuid
 import subprocess
-import getpass
 import log as crLog
 
 
 class Config:
+    """
+        Manage CentralReport config vars.
+    """
 
+    # Python object used to manage the config file.
+    config = ConfigParser.ConfigParser()
+
+    # Constants : Config file location
     CR_CONFIG_PATH = '/etc'
     CR_CONFIG_FILE = 'centralreport.cfg'
     CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH,CR_CONFIG_FILE)
 
-    CR_CURRENT_CONFIG_BUILD = 1
-
-    config = ConfigParser.ConfigParser()
-
-    # Universal Unique IDentifier for the current host. '' = not defined yet.
-    uuid = ''
-
     # Debug mode
-    config_enable_debug_mode = False
-
-    # CentralReport pid file
-    if True == config_enable_debug_mode:
-        pid_file = '/tmp/centralreport.pid'
-    else:
-        pid_file = '/var/run/centralreport.pid'
-
-    # Indev config - Not used for the moment
-    config_enable_check_memory = True
-    config_enable_check_cpu = True
-    config_enable_check_loadaverage = True
-    config_server_addr = ''
-
-    # CherryPy webserver config
-    config_webserver_enable = True
-    config_webserver_interface = '0.0.0.0'
-    config_webserver_port = 8080
-
-    # Config build
-    config_build = 1
+    # False = Production environment. True = debug/test/develop environment.
+    CR_CONFIG_ENABLE_DEBUG_MODE = False
 
     # Current host
     HOST_CURRENT = ''
@@ -58,9 +38,58 @@ class Config:
     HOST_REDHAT = 'RedHat'
     HOST_FEDORA = 'Fedora'
 
-    def __init__(self):
 
-    # Determining current host/os
+    # Universal Unique IDentifier for the current host. '' = not defined yet.
+    CR_HOST_UUID = ''
+
+    # CentralReport pid file
+    if True == CR_CONFIG_ENABLE_DEBUG_MODE:
+        CR_PID_FILE = '/tmp/centralreport.pid'
+    else:
+        CR_PID_FILE = '/var/run/centralreport.pid'
+
+
+    # Customizable values. This values are stored in the config file.
+    # Values are default values and can by updated by config file content.
+    _CR_CONFIG_VALUES = {
+        'General':
+            {
+                'uuid':''
+            },
+        'Webserver':
+            {
+                'enable':True,
+                'interface':'0.0.0.0',
+                'port':'8080'
+            },
+        'Checks':
+            {
+                'enable_cpu_check':True,
+                'enable_memory_check':True,
+                'enable_load_check':True,
+                'enable_disks_check':True
+            }
+    }
+
+
+    # Indev config - Not used for the moment
+    #config_enable_check_memory = True
+    #config_enable_check_cpu = True
+    #config_enable_check_loadaverage = True
+    #config_server_addr = ''
+
+    # CherryPy webserver config
+    #config_webserver_enable = True
+    #config_webserver_interface = '0.0.0.0'
+    #config_webserver_port = 8080
+
+
+    def __init__(self):
+        """
+            Constructor
+        """
+
+        # Determining current host/os
         Config.determine_current_host()
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
@@ -89,51 +118,111 @@ class Config:
     def readConfigFile(self):
         """ Read config file """
 
+        crLog.writeDebug('Reading the config file...')
+
+        # Using Python ConfigParser module to read the file
         Config.config.read(Config.CR_CONFIG_FULL_PATH)
 
-        Config.uuid = Config.config.get('General', 'uuid')
+        # False = all sections and options are found.
+        # True = config must be updated : some options or sections are mising (outdated config file ?)
+        config_must_be_updated = False
 
-        Config.config_server_addr = Config.config.get('Network', 'server_addr')
+        # Getting all values...
+        for config_section in Config._CR_CONFIG_VALUES:
 
-        Config.config_webserver_enable = Config.config.getboolean('Webserver', 'enable')
-        Config.config_webserver_interface = Config.config.get('Webserver', 'interface')
-        Config.config_webserver_port = Config.config.getint('Webserver', 'port')
+            for config_value in config_section:
 
-        Config.config_build = Config.config.get('Config','build')
+                try:
+                    Config._CR_CONFIG_VALUES[config_section][config_value] = Config.config.get(config_section,config_value)
+                except ConfigParser.NoSectionError:
+                    config_must_be_updated = True
+                    crLog.writeError('Config section not exist in the file : '+ config_section)
+                except ConfigParser.NoOptionError:
+                    config_must_be_updated = True
+                    crLog.writeError('Config value not exist in the file : '+ config_value)
+                except:
+                    config_must_be_updated = True
+                    crLog.writeError('Error getting a config value : '+ config_section +'/'+ config_value)
+
+
+        # In this case, config file have been written by a last version of CR. We must update it to include new sections or options.
+        if True == config_must_be_updated:
+            self.writeConfigFile()
 
 
 
     def writeConfigFile(self):
         """  Write into the config file the actual configuration. """
 
-        if not os.path.isfile(Config.CR_CONFIG_FULL_PATH):
-            Config.config.add_section('General')
-            Config.config.add_section('Network')
-            Config.config.add_section('Webserver')
-            Config.config.add_section('Config')
+        crLog.writeInfo('Writing the config file...')
 
         # Generating uuid if empty
-        if '' == Config.uuid:
-            Config.uuid = uuid.uuid1()
+        if '' == Config.CR_HOST_UUID:
+            Config.CR_HOST_UUID = uuid.uuid1()
 
-        # Writing conf file
-        Config.config.set('General', 'uuid', Config.uuid)
+        # Writing conf file. Reading all sections defined in the config...
+        for config_section in Config._CR_CONFIG_VALUES:
 
-        Config.config.set('Network', 'enable_check_cpu', Config.config_enable_check_cpu)
-        Config.config.set('Network', 'enable_check_memory', Config.config_enable_check_memory)
-        Config.config.set('Network', 'enable_check_loadaverage', Config.config_enable_check_loadaverage)
-        Config.config.set("Network", 'server_addr', Config.config_server_addr)
+            try:
+                Config.config.add_section(config_section)
+            except ConfigParser.DuplicateSectionError:
+                crLog.writeDebug('Section already exist : '+ config_section)
+            except:
+                crLog.writeError('Error creating new section : '+ config_section +' : '+ Exception.message)
 
-        Config.config.set('Webserver', 'enable', Config.config_webserver_enable)
-        Config.config.set('Webserver', 'interface', Config.config_webserver_interface)
-        Config.config.set('Webserver', 'port', Config.config_webserver_port)
+            # Reading all values in this section
+            config_section_vars = Config._CR_CONFIG_VALUES[config_section]
+            for config_value in config_section_vars:
 
-        Config.config.set('Config','build',Config.config_build)
+                try:
+                    Config.config.set(config_section,config_value,Config._CR_CONFIG_VALUES[config_section][config_value])
+                except:
+                    crLog.writeError('Error writing config value : '+ config_section +'/'+ config_value)
 
+
+        # Writing the config file on filesystem...
         try:
             Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))
         except IOError:
             crLog.writeError('/!\ Error writing config file. Using the default config')
+
+
+    @staticmethod
+    def getConfigValue(variable,section = None):
+        """
+            Getting a config value
+        """
+
+        if None != section:
+            # We have the name of the section. Try to get the value...
+            try:
+                return Config._CR_CONFIG_VALUES[section][variable]
+            except:
+                raise NameError('Section or Variable not found ! ('+ section +'/'+ variable +')')
+        else:
+            # Finding the first "variable" in all sections...
+            for config_section in Config._CR_CONFIG_VALUES:
+
+                config_section_var = Config._CR_CONFIG_VALUES[config_section]
+                for config_value in config_section_var:
+
+                    if config_value == variable:
+                        return Config._CR_CONFIG_VALUES[config_section][config_value]
+
+            # If we are here, "variable" was not found in the config variables...
+            raise NameError('Variable '+ variable +' not found in the config !')
+
+
+    @staticmethod
+    def setConfigValue(section,variable,value):
+        """
+            Setting new value to a config variable, in a defined section
+        """
+
+        try:
+            Config._CR_CONFIG_VALUES[section][variable] = value
+        except:
+            raise NameError('Section or Variable not found ! ('+ section +'/'+ variable +')')
 
 
     @staticmethod

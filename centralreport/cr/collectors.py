@@ -67,7 +67,7 @@ class MacCollector(_Collector):
         # Using new HostEntity
         hostEntity = crEntitiesHost.Infos()
 
-        hostEntity.uuid = Config.uuid
+        hostEntity.uuid = Config.CR_HOST_UUID
 
         hostEntity.os = Config.HOST_CURRENT
         hostEntity.hostname = hostname

@@ -62,17 +62,17 @@ class Checks(threading.Thread):
                 crLog.writeDebug('---- New check -----')
 
                 # Checking CPU
-                if Config.config_enable_check_cpu:
+                if Config.getConfigValue('enable_cpu_check'):
                     crLog.writeDebug('Do a CPU check...')
                     Checks.last_check_cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
-                if Config.config_enable_check_memory:
+                if Config.getConfigValue('enable_memory_check'):
                     crLog.writeDebug('Do a memory check...')
                     Checks.last_check_memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
-                if Config.config_enable_check_loadaverage:
+                if Config.getConfigValue('enable_load_check'):
                     crLog.writeDebug('Do a load average check...')
                     Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 

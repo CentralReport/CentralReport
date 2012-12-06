@@ -31,7 +31,7 @@ class WebServer(threading.Thread):
         cherrypy.engine.subscribe('graceful', self.stop)
 
         # Update the configuration...
-        cherrypy.config.update({'server.socket_host': Config.config_webserver_interface, 'server.socket_port': Config.config_webserver_port})
+        cherrypy.config.update({'server.socket_host': Config.getConfigValue('interface','Webserver'), 'server.socket_port': int(Config.getConfigValue('port','Webserver'))})
         cherrypy.config.update({'tools.staticdir.root': WebServer.current_dir})
         cherrypy.config.update({'log.screen': False})
         #        cherrypy.config.update({'engine.timeout_monitor.on' : False})
@@ -113,9 +113,8 @@ class Pages:
 
         # WIP (miniche)
         #tmpl_vars['uptime'] = crUtilsText.secondsToFullTime(int(Checks.last_check_loadAverage.uptime))
-
-        print(crUtilsDate.datetimeToTimestamp(Checks.last_check_date))
-        print(int(Checks.last_check_loadAverage.uptime))
+        #print(crUtilsDate.datetimeToTimestamp(Checks.last_check_date))
+        #print(int(Checks.last_check_loadAverage.uptime))
 
         tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
