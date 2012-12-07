@@ -35,6 +35,15 @@ def numberSeparators(number, separator=' '):
 
 
 
+def textToBool(text):
+    true_values = ['True','true','t','T','1']
+
+    if text in true_values:
+        return True
+    else:
+        return False
+
+
 def _WIP_secondsToFullTime(seconds):
     """
         WIP (miniche)

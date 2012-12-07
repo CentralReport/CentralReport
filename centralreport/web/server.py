@@ -31,7 +31,7 @@ class WebServer(threading.Thread):
         cherrypy.engine.subscribe('graceful', self.stop)
 
         # Update the configuration...
-        cherrypy.config.update({'server.socket_host': Config.getConfigValue('interface','Webserver'), 'server.socket_port': int(Config.getConfigValue('port','Webserver'))})
+        cherrypy.config.update({'server.socket_host': Config.getConfigValue('Webserver','interface'), 'server.socket_port': int(Config.getConfigValue('Webserver','port'))})
         cherrypy.config.update({'tools.staticdir.root': WebServer.current_dir})
         cherrypy.config.update({'log.screen': False})
         #        cherrypy.config.update({'engine.timeout_monitor.on' : False})

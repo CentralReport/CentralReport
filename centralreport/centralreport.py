@@ -8,6 +8,7 @@ import time
 import datetime
 import cr.log as crLog
 import cr.threads as crThreads
+import cr.utils.text as crUtilsText
 from cr.tools import Config
 from cr.daemon import Daemon
 from web.server import WebServer
@@ -30,6 +31,7 @@ class CentralReport(Daemon):
         # Constructeur
 
         # False = no error
+        # True = one or more errors when CentralReport is trying to start
         isError = False
 
         # On prepare les logs
@@ -55,7 +57,8 @@ class CentralReport(Daemon):
             crLog.writeCritical("Sorry, but your OS is not supported yet...")
 
         # Enable webserver ?
-        if (Config.getConfigValue('enable','Webserver')) & (not isError):
+        print(Config.getConfigValue('Webserver','enable'))
+        if not isError & crUtilsText.textToBool(Config.getConfigValue('Webserver','enable')):
             # Yeah !
             crLog.writeInfo("Enabling the webserver")
 
@@ -66,7 +69,7 @@ class CentralReport(Daemon):
 
 
         #
-        if(not isError):
+        if not isError:
             crLog.writeInfo("CentralReport started!")
 
             while CentralReport.isRunning:

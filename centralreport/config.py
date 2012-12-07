@@ -25,7 +25,7 @@ if __name__ == '__main__':
         print('Stopping CentralReport...')
         time.sleep(1)
 
-        daemon = CentralReport(Config.pid_file)
+        daemon = CentralReport(Config.CR_PID_FILE)
         if 0 == daemon.status():
             print('CentralReport is not running')
             centralReportRunningBefore = False
@@ -52,17 +52,18 @@ if __name__ == '__main__':
             resultEnableWebServer = raw_input('Do you want to enable the internal web server? [yes/no] ')
             if('yes' == resultEnableWebServer.lower()):
                 validEnableWebServer = True
-                Config.config_webserver_enable = True
+                Config.setConfigValue('Webserver','enable',True)
 
             elif('no' == resultEnableWebServer.lower()):
                 validEnableWebServer = True
                 Config.config_webserver_enable = False
+                Config.setConfigValue('Webserver','enable',False)
 
             else:
                 print('We do not understand your answer. Please use "yes" or "no"')
 
         # If the webserver is enabled, we can ask the default port for it.
-        if Config.config_webserver_enable:
+        if bool(Config.getConfigValue('Webserver','enable')):
             print('\n')
             print('Default port is 8080. You can choose a custom port if you want.')
 
@@ -88,14 +89,14 @@ if __name__ == '__main__':
                     validPort = False
                     print('You must enter a valid number!')
 
-            Config.config_webserver_port = resultPortInt
+            Config.setConfigValue('Webserver','port',resultPortInt)
 
         print('\n\n')
         print('Thanks! Writing the new config file...')
         config.writeConfigFile()
 
         # We're looking if CentralReport ran before.
-        if(centralReportRunningBefore):
+        if centralReportRunningBefore:
             print('\n')
             print('Restarting CentralReport...')
             daemon.start()

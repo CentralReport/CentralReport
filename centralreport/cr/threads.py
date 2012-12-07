@@ -7,6 +7,7 @@ import time
 import datetime
 import cr.collectors as crCollectors
 import cr.log as crLog
+import cr.utils.text as crUtilsText
 from cr.tools import Config
 
 
@@ -62,17 +63,17 @@ class Checks(threading.Thread):
                 crLog.writeDebug('---- New check -----')
 
                 # Checking CPU
-                if Config.getConfigValue('enable_cpu_check'):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_cpu_check')):
                     crLog.writeDebug('Do a CPU check...')
                     Checks.last_check_cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
-                if Config.getConfigValue('enable_memory_check'):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_memory_check')):
                     crLog.writeDebug('Do a memory check...')
                     Checks.last_check_memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
-                if Config.getConfigValue('enable_load_check'):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_load_check')):
                     crLog.writeDebug('Do a load average check...')
                     Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 

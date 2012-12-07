@@ -130,7 +130,7 @@ class Config:
         # Getting all values...
         for config_section in Config._CR_CONFIG_VALUES:
 
-            for config_value in config_section:
+            for config_value in Config._CR_CONFIG_VALUES[config_section]:
 
                 try:
                     Config._CR_CONFIG_VALUES[config_section][config_value] = Config.config.get(config_section,config_value)
@@ -188,29 +188,14 @@ class Config:
 
 
     @staticmethod
-    def getConfigValue(variable,section = None):
+    def getConfigValue(section,variable):
         """
             Getting a config value
         """
-
-        if None != section:
-            # We have the name of the section. Try to get the value...
-            try:
-                return Config._CR_CONFIG_VALUES[section][variable]
-            except:
-                raise NameError('Section or Variable not found ! ('+ section +'/'+ variable +')')
-        else:
-            # Finding the first "variable" in all sections...
-            for config_section in Config._CR_CONFIG_VALUES:
-
-                config_section_var = Config._CR_CONFIG_VALUES[config_section]
-                for config_value in config_section_var:
-
-                    if config_value == variable:
-                        return Config._CR_CONFIG_VALUES[config_section][config_value]
-
-            # If we are here, "variable" was not found in the config variables...
-            raise NameError('Variable '+ variable +' not found in the config !')
+        try:
+            return Config._CR_CONFIG_VALUES[section][variable]
+        except:
+            raise NameError('Section or Variable not found ! ('+ section +'/'+ variable +')')
 
 
     @staticmethod
