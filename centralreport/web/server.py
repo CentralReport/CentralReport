@@ -109,7 +109,9 @@ class Pages:
 
         tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
 
-        tmpl_vars['uptime'] = int(Checks.last_check_loadAverage.uptime)
+        #tmpl_vars['uptime'] = int(Checks.last_check_loadAverage.uptime)
+        tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
+        tmpl_vars['uptime_seconds'] = int(Checks.last_check_loadAverage.uptime)
 
         # WIP (miniche)
         #tmpl_vars['uptime'] = crUtilsText.secondsToFullTime(int(Checks.last_check_loadAverage.uptime))

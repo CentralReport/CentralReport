@@ -73,8 +73,10 @@
 
                     <div class="well" style="text-align: center;">
                         <h3>Uptime</h3>
-                        <h2>{{ uptime }} sec</h2>
-                        <h4>{{ start_date }}</h4>
+                        <h4>{{ uptime }}</h4>
+                        <h4>({{ uptime_seconds }} seconds)</h4>
+                        <br />
+                        <h4>Since : {{ start_date }}</h4>
                     </div>
 
                 </div>
