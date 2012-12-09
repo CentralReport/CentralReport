@@ -123,7 +123,7 @@ function debian_remove_config {
     fi
 }
 
-function debian_remove_startup_plist {
+function debian_remove_startup_script {
 
     echo -e "\nRemove existing startup plist file..."
 
@@ -219,8 +219,20 @@ function debian_install {
         exit 1
     fi
 
-    # Uninstall existing installation
-    debian_uninstall
+    # Uninstall previsous installation, if exist.
+    debian_stop_cr
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete CR bin files
+    debian_remove_bin
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete startup plist file
+    debian_remove_startup_script
     if [ $? -ne 0 ]; then
         return 1
     fi
@@ -336,7 +348,7 @@ function debian_uninstall {
     fi
 
     # Delete startup plist file
-    debian_remove_startup_plist
+    debian_remove_startup_script
     if [ $? -ne 0 ]; then
         return 1
     fi

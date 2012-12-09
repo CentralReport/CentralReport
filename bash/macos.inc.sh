@@ -219,8 +219,20 @@ function macos_install {
         return 1
     fi
 
-    # Uninstall existing installation
-    macos_uninstall
+    # Uninstall existing previous installation, if exist
+    macos_stop_cr
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete CR bin files
+    macos_remove_bin
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    # Delete startup plist file
+    macos_remove_startup_plist
     if [ $? -ne 0 ]; then
         return 1
     fi
