@@ -77,17 +77,15 @@
                             </div>
                         </div>
                         <div class="dashboard-box-datas">
-                            <div class="dashboard-box-datas">
-                                <div class="title">
-                                    {{ loadaverage }}
-                                </div>
-                                <div class="subtitle">
-                                    {{ loadaverage_percent }} % of 4 cores
-                                </div>
+                            <div class="title">
+                                {{ loadaverage }}
+                            </div>
+                            <div class="subtitle">
+                                {{ loadaverage_percent }} % of 4 cores
+                            </div>
 
-                                <div class="progress progress-striped progress-success">
-                                    <div class="bar" style="width:{{ loadaverage_percent }}%;"></div>
-                                </div>
+                            <div class="progress progress-striped progress-success">
+                                <div class="bar" style="width:{{ loadaverage_percent }}%;"></div>
                             </div>
                         </div>
                     </div>
@@ -153,7 +151,7 @@
             </div>
 
             <div class="headhand headhand-center">
-                <a href="dashboard">Go to full report</a>
+                <a href="dashboard">Go to old full report</a>
             </div>
 
 

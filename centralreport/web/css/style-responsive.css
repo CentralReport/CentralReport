@@ -1,0 +1,97 @@
+/*!
+ * CentralReport custom style - Indev version *
+ * To use with Bootstrap
+ *
+ * Please visit https://github.com/miniche/CentralReport for more informations
+ */
+
+@media (max-width: 767px) {
+
+    .page-header {
+        width: 100%;
+        margin-left: -20px;
+
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+
+        -webkit-box-shadow: 0;
+        -moz-box-shadow: 0;
+        box-shadow: 0;
+    }
+
+    .dashboard-box {
+        margin-top: 20px;
+    }
+
+    .row {
+        margin-top: 0px;
+    }
+
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+    .page-header {
+        width: 100%;
+        margin-left: -20px;
+
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+
+        -webkit-box-shadow: 0;
+        -moz-box-shadow: 0;
+        box-shadow: 0;
+    }
+}
+
+@media (min-width: 980px) and (max-width: 1023px) {
+
+    .page-header {
+        width: 940px;
+
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    }
+
+}
+
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+
+    .page-header {
+        width: 984px;
+
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    }
+
+}
+
+@media (min-width: 1200px) {
+
+    .page-header {
+        width: 1200px;
+
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    }
+
+}
+

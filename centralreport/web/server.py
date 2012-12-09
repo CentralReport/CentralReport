@@ -111,7 +111,7 @@ class Pages:
 
         #tmpl_vars['uptime'] = int(Checks.last_check_loadAverage.uptime)
         tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
-        tmpl_vars['uptime_seconds'] = int(Checks.last_check_loadAverage.uptime)
+        tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
 
         # WIP (miniche)
         #tmpl_vars['uptime'] = crUtilsText.secondsToFullTime(int(Checks.last_check_loadAverage.uptime))
