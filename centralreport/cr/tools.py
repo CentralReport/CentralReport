@@ -51,6 +51,7 @@ class Config:
 
     # Customizable values. This values are stored in the config file.
     # Values are default values and can by updated by config file content.
+    # Please only use string values, and cast it in your code.
     _CR_CONFIG_VALUES = {
         'General':
             {
@@ -68,6 +69,15 @@ class Config:
                 'enable_memory_check':'True',
                 'enable_load_check':'True',
                 'enable_disks_check':'True'
+            },
+        'Alerts':
+            {
+                'cpu_warning':'75',
+                'cpu_alert':'90',
+                'memory_warning':'75',
+                'memory_alert':'90',
+                'load_warning':'75',
+                'load_alert':'90'
             }
     }
 

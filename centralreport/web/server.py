@@ -103,35 +103,65 @@ class Pages:
 
         tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
 
-        tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
-        tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
-        tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
+        # CPU stats
+        if None != Checks.last_check_cpu:
+            tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
 
-        tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
+            if int(tmpl_vars['cpu_percent']) >= int(Config.getConfigValue('Alerts','cpu_alert')):
+                tmpl_vars['cpu_alert'] = True
+            elif int(tmpl_vars['cpu_percent']) >= int(Config.getConfigValue('Alerts','cpu_warning')):
+                tmpl_vars['cpu_warning'] = True
+            else:
+                tmpl_vars['cpu_ok'] = True
 
-        #tmpl_vars['uptime'] = int(Checks.last_check_loadAverage.uptime)
-        tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
-        tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
 
-        # WIP (miniche)
-        #tmpl_vars['uptime'] = crUtilsText.secondsToFullTime(int(Checks.last_check_loadAverage.uptime))
-        #print(crUtilsDate.datetimeToTimestamp(Checks.last_check_date))
-        #print(int(Checks.last_check_loadAverage.uptime))
 
-        tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+        # Memory stats
+        if None != Checks.last_check_memory:
+            tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
 
-        # Testing displaying disks stats
-        allChecksDisk = []
+            if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_alert')):
+                tmpl_vars['memory_alert'] = True
+            elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_warning')):
+                tmpl_vars['memory_warning'] = True
+            else:
+                tmpl_vars['memory_ok'] = True
 
-        for disk in Checks.last_check_disk.checks:
-            checkDisk = {}
-            checkDisk['name'] = str.replace(disk.name, '/dev/', '')
-            checkDisk['free'] = crUtilsText.numberSeparators(round(disk.free,2), ' ')
-            checkDisk['percent'] = int(round(disk.used,0) * 100 / int(disk.size))
 
-            allChecksDisk.append(checkDisk)
+        # Load average stats
+        if None != Checks.last_check_loadAverage:
+            tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
+            tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
 
-        tmpl_vars['disks'] = allChecksDisk
+            if int(tmpl_vars['loadaverage_percent']) >= int(Config.getConfigValue('Alerts','load_alert')):
+                tmpl_vars['load_alert'] = True
+            elif int(tmpl_vars['loadaverage_percent']) >= int(Config.getConfigValue('Alerts','load_warning')):
+                tmpl_vars['load_warning'] = True
+            else:
+                tmpl_vars['load_ok'] = True
+
+
+        # Uptime stats (checked in load average collector)
+        if None != Checks.last_check_loadAverage:
+            tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
+            tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
+            tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+
+
+
+        # DIsks stats
+        if None != Checks.last_check_disk:
+            allChecksDisk = []
+
+            for disk in Checks.last_check_disk.checks:
+                checkDisk = {}
+                checkDisk['name'] = str.replace(disk.name, '/dev/', '')
+                checkDisk['free'] = crUtilsText.numberSeparators(round(disk.free,2), ' ')
+                checkDisk['percent'] = int(round(disk.used,0) * 100 / int(disk.size))
+
+                allChecksDisk.append(checkDisk)
+
+            tmpl_vars['disks'] = allChecksDisk
 
         return tmpl.render(tmpl_vars)
 
@@ -149,40 +179,6 @@ class Pages:
         tmpl_vars['loadaverage'] = Checks.last_check_loadAverage
         tmpl_vars['disks'] = Checks.last_check_disk
 
-        # Host informations
-        #            tmpl_vars['hostname'] = ThreadMac.dict_machine['hostname']
-        #
-        #
-        #            # CPU informations
-        #            last_check = ThreadMac.last_dict_cpu['date']
-        #            tmpl_vars['kernel'] = ThreadMac.dict_machine['kernel']
-        #            tmpl_vars['kernel_version'] = ThreadMac.dict_machine['kernel_v']
-        #            tmpl_vars['mac_model'] = ThreadMac.dict_machine['model']
-        #            tmpl_vars['ncpu'] = ThreadMac.dict_machine['ncpu']
-        #
-        #            tmpl_vars['cpu_date'] = ThreadMac.last_dict_cpu['date'].strftime("%Y-%m-%d %H:%M:%S")
-        #            tmpl_vars['cpu_model'] = ThreadMac.dict_machine['modelcpu']
-        #            tmpl_vars['cpu_idle'] = ThreadMac.last_dict_cpu['idle']
-        #            tmpl_vars['cpu_system'] = ThreadMac.last_dict_cpu['system']
-        #            tmpl_vars['cpu_user'] = ThreadMac.last_dict_cpu['user']
-        #
-        #            # Memory informations
-        #            tmpl_vars['mem_date'] = ThreadMac.last_dict_memory['date'].strftime("%Y-%m-%d %H:%M:%S")
-        #            tmpl_vars['mem_free'] = ThreadMac.last_dict_memory['mem_free']
-        #            tmpl_vars['mem_active'] = ThreadMac.last_dict_memory['mem_active']
-        #            tmpl_vars['mem_inactive'] = ThreadMac.last_dict_memory['mem_inactive']
-        #            tmpl_vars['mem_resident'] = ThreadMac.last_dict_memory['mem_resident']
-        #            tmpl_vars['mem_total'] = ThreadMac.last_dict_memory['mem_size']
-        #            tmpl_vars['mem_swap'] = ThreadMac.last_dict_memory['mem_swap']
-        #
-        #            # Load average informations
-        #            tmpl_vars['load_date'] = ThreadMac.last_dict_loadavg['date'].strftime("%Y-%m-%d %H:%M:%S")
-        #            tmpl_vars['load_1m'] = ThreadMac.last_dict_loadavg['load1m']
-        #            tmpl_vars['load_5m'] = ThreadMac.last_dict_loadavg['load5m']
-        #            tmpl_vars['load_15m'] = ThreadMac.last_dict_loadavg['load15m']
-        #
-        #            tmpl_vars['disks'] = ThreadMac.last_list_disk
-        #            tmpl_vars['disks_test'] = ThreadMac.last_list_disk
 
         return tmpl.render(tmpl_vars)
 

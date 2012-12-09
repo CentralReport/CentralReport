@@ -78,8 +78,11 @@ class Checks(threading.Thread):
                     Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
                 # Checking disks informations
-                crLog.writeDebug('Do a disk check....')
-                Checks.last_check_disk = self.MyCollector.get_disks()
+                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_disks_check')):
+                    crLog.writeDebug('Do a disk check....')
+                    Checks.last_check_disk = self.MyCollector.get_disks()
+
+                # Updating last check date...
                 Checks.last_check_date = datetime.datetime.now()  # Update the last check date
 
                 # Wait 60 seconds before next checks...

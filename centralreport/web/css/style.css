@@ -66,6 +66,7 @@ html, body {
     font-size: 15px;
     font-weight: bold;
 
+    margin-top: 20px;
     padding: 5px 20px;
 
     background: rgb(234,234,234); /* Old browsers */
@@ -118,7 +119,7 @@ html, body {
 }
 
 /* Status of current data displayed in the box */
-.dashboard-box-headhand .dashboard-box-status {
+.dashboard-box-headhand .dashboard-box-status-ok {
     width: 40px;
     height: 22px;
 
@@ -126,6 +127,30 @@ html, body {
     text-align: center;
 
     background-image: url(/img/check_18x18.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dashboard-box-headhand .dashboard-box-status-alert {
+    width: 40px;
+    height: 22px;
+
+    float: left;
+    text-align: center;
+
+    background-image: url(/img/error_18x18.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dashboard-box-headhand .dashboard-box-status-warning {
+    width: 40px;
+    height: 22px;
+
+    float: left;
+    text-align: center;
+
+    background-image: url(/img/warning_18x18.png);
     background-repeat: no-repeat;
     background-position: center;
 }
