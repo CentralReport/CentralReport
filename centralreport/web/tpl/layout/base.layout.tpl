@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="css/custom.css">
 
-    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
 
     {% block head_javascript %}{% endblock %}
 
