@@ -230,4 +230,4 @@
 
 {% endblock %}
 
-{% block footer_version %}CentralReport Unix/Linux - Indev version{% endblock %}
+{% block footer_version %}CentralReport Unix/Linux {{ CR_version }} - {{ CR_version_name }}{% endblock %}

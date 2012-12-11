@@ -101,6 +101,9 @@ class Pages:
 
         tmpl_vars['hostname'] = Checks.hostEntity.hostname
 
+        tmpl_vars['CR_version'] = Config.CR_VERSION
+        tmpl_vars['CR_version_name'] = Config.CR_VERSION_NAME
+
         tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
 
         # CPU stats

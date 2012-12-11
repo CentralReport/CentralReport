@@ -19,6 +19,13 @@ class Config:
     # Python object used to manage the config file.
     config = ConfigParser.ConfigParser()
 
+    CR_VERSION_MAJOR = 0
+    CR_VERSION_MINOR = 0
+    CR_VERSION_REVISION = 0
+
+    CR_VERSION = str(CR_VERSION_MAJOR) +"."+ str(CR_VERSION_MINOR) +"."+ str(CR_VERSION_REVISION)
+    CR_VERSION_NAME = 'Indev Version'
+
     # Constants : Config file location
     CR_CONFIG_PATH = '/etc'
     CR_CONFIG_FILE = 'centralreport.cfg'
