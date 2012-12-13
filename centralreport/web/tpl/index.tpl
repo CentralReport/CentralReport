@@ -94,7 +94,7 @@
                     {{ memory_percent }} %
                 </div>
                 <div class="subtitle">
-                    {{ memory_used }} used - {{ memory_free }} free
+                    {{ memory_used }} used and {{ memory_free }} free
                 </div>
 
                 {% if memory_alert is defined %}
@@ -179,19 +179,19 @@
                 </div>
 
                 {% if load_alert is defined %}
-                <div class="progress progress-striped progress-danger">
-                    {% elif load_warning is defined %}
+                    <div class="progress progress-striped progress-danger">
+                {% elif load_warning is defined %}
                     <div class="progress progress-striped progress-warning">
-                        {% elif load_ok is defined %}
-                        <div class="progress progress-striped progress-success">
-                            {% endif %}
+                {% elif load_ok is defined %}
+                    <div class="progress progress-striped progress-success">
+                {% endif %}
 
-                            <div class="bar" style="width:{{ loadaverage_percent }}%;"></div>
-                        </div>`
-                        {% endif %}
+                        <div class="bar" style="width:{{ loadaverage_percent }}%;"></div>
                     </div>
+                {% endif %}
                 </div>
             </div>
+        </div>
 
     <div class="span8">
         <div class="dashboard-box">
@@ -244,7 +244,7 @@
                     {% for disk in disks %}
                     <tr>
                         <td width="33%"><strong>{{ disk.name }}</strong></td>
-                        <td width="33%">{{ disk.free }} MB free ({{ disk.percent }} % used)</td>
+                        <td width="33%">{{ disk.free }} free / {{ disk.total }} total ({{ disk.percent }} % used)</td>
                         <td width="33%">
                             <div class="progress progress-striped progress-success">
                                 <div class="bar" style="width:{{ disk.percent }}%;"></div>

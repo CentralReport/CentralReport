@@ -143,7 +143,7 @@ class Pages:
 
             if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts','swap_alert')):
                 tmpl_vars['swap_alert'] = True
-            elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','swap_warning')):
+            elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts','swap_warning')):
                 tmpl_vars['swap_warning'] = True
             else:
                 tmpl_vars['swap_ok'] = True
@@ -177,7 +177,8 @@ class Pages:
             for disk in Checks.last_check_disk.checks:
                 checkDisk = {}
                 checkDisk['name'] = str.replace(disk.name, '/dev/', '')
-                checkDisk['free'] = crUtilsText.numberSeparators(round(disk.free,2), ' ')
+                checkDisk['free'] = crUtilsText.convertByte(disk.free)
+                checkDisk['total'] = crUtilsText.convertByte(disk.size)
                 checkDisk['percent'] = int(round(disk.used,0) * 100 / int(disk.size))
 
                 allChecksDisk.append(checkDisk)

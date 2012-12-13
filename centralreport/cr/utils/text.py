@@ -139,5 +139,5 @@ def convertByte(byte_to_convert):
         return str(round(byte_to_convert / KBYTE, 2)) + " KB"
 
     else:
-        return str(round(byte_to_convert,0)) + " BYTES"
+        return str(round(byte_to_convert,0)) + " B"
 
