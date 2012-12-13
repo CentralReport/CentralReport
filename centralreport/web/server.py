@@ -109,6 +109,8 @@ class Pages:
         # CPU stats
         if None != Checks.last_check_cpu:
             tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
+            tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
+            tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
 
             if int(tmpl_vars['cpu_percent']) >= int(Config.getConfigValue('Alerts','cpu_alert')):
                 tmpl_vars['cpu_alert'] = True
@@ -122,6 +124,9 @@ class Pages:
         # Memory stats
         if None != Checks.last_check_memory:
             tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
+            tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
+            tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
+            tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
 
             if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_alert')):
                 tmpl_vars['memory_alert'] = True

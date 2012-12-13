@@ -32,8 +32,8 @@ def numberSeparators(number, separator=' '):
     # Verify if the var "number" have a decimal part.
     if len(str_number) > 1:
         return str_number[0] +'.'+ str_number[1]
-    else:
-        return str_number[0]
+
+    return str_number[0]
 
 
 
@@ -42,14 +42,14 @@ def textToBool(text):
 
     if text in true_values:
         return True
-    else:
-        return False
+
+    return False
 
 
 
 def secondsToPhraseTime(seconds):
     """
-        WIP (miniche)
+        Convert seconds to a phrase time (ex : 65 = 1 minute 5 seconds)
     """
 
     ONE_YEAR = 60*60*24*365
@@ -114,3 +114,30 @@ def secondsToPhraseTime(seconds):
 
 
     return str(result_string)
+
+
+def convertByte(byte_to_convert):
+    """
+        Convert byte to most biggest unit
+    """
+
+    TBYTE = 1024*1024*1024*1024
+    GBYTE = 1024*1024*1024
+    MBYTE = 1024*1024
+    KBYTE = 1024
+
+    if byte_to_convert / TBYTE >= 1:
+        return str(round(byte_to_convert  / TBYTE, 2)) + " TB"
+
+    elif byte_to_convert / GBYTE >= 1:
+        return str(round(byte_to_convert / GBYTE, 2)) + " GB"
+
+    elif byte_to_convert / MBYTE >= 1:
+        return str(round(byte_to_convert / MBYTE, 2)) + " MB"
+
+    elif byte_to_convert / KBYTE >= 1:
+        return str(round(byte_to_convert / KBYTE, 2)) + " KB"
+
+    else:
+        return str(round(byte_to_convert,0)) + " BYTES"
+

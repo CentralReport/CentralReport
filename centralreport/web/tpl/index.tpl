@@ -32,7 +32,7 @@
                                 <div class="dashboard-box-status"></div>
                             {% endif %}
                             <div class="dashboard-box-title">
-                                CPU
+                                CPU (used)
                             </div>
                         </div>
 
@@ -44,6 +44,9 @@
                             {% else %}
                                 <div class="title">
                                     {{ cpu_percent }} %
+                                </div>
+                                <div class="subtitle">
+                                    {{ cpu_user }} % user - {{ cpu_system }} % system
                                 </div>
 
                                 {% if cpu_alert is defined %}
@@ -78,7 +81,7 @@
                             {% endif %}
 
                             <div class="dashboard-box-title">
-                                Memory
+                                Memory (used)
                             </div>
                         </div>
                         <div class="dashboard-box-datas">
@@ -89,6 +92,9 @@
                             {% else %}
                                 <div class="title">
                                     {{ memory_percent }} %
+                                </div>
+                                <div class="subtitle">
+                                    {{ memory_used }} used on {{ memory_total }} total = {{ memory_free }} free
                                 </div>
 
                                 {% if memory_alert is defined %}
