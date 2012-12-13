@@ -83,6 +83,8 @@ class Config:
                 'cpu_alert':'90',
                 'memory_warning':'75',
                 'memory_alert':'90',
+                'swap_warning':'1',
+                'swap_alert':'75',
                 'load_warning':'75',
                 'load_alert':'90'
             }

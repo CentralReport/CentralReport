@@ -119,7 +119,9 @@ class MacCollector(_Collector):
         memoryCheck.active = mem_active
         memoryCheck.inactive = mem_inactive
         memoryCheck.resident = mem_resident
-        memoryCheck.swapTotal = mem_swap
+        memoryCheck.swapSize = mem_total
+        memoryCheck.swapFree = 0
+        memoryCheck.swapUsed = mem_swap
 
         return memoryCheck
 

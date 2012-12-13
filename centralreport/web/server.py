@@ -128,12 +128,25 @@ class Pages:
             tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
             tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
 
+            tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
+            tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
+            tmpl_vars['swap_total'] = crUtilsText.convertByte(Checks.last_check_memory.swapSize)
+            tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
+
             if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_alert')):
                 tmpl_vars['memory_alert'] = True
             elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_warning')):
                 tmpl_vars['memory_warning'] = True
             else:
                 tmpl_vars['memory_ok'] = True
+
+
+            if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts','swap_alert')):
+                tmpl_vars['swap_alert'] = True
+            elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','swap_warning')):
+                tmpl_vars['swap_warning'] = True
+            else:
+                tmpl_vars['swap_ok'] = True
 
 
         # Load average stats
