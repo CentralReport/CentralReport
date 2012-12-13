@@ -13,7 +13,8 @@
 </div>
 
 <div class="headhand">
-    Last check : {{ last_check }}
+    Last check : <span id="last_check_date">{{ last_check }}</span>
+    <small id="ajax_enabled"></small>
 </div>
 
 <div class="row">
@@ -267,6 +268,10 @@
 
 
 
+{% endblock %}
+
+{% block bottom_javascript %}
+    <script type="text/javascript" src="js/cr.ajax.js"></script>
 {% endblock %}
 
 {% block footer_version %}CentralReport Unix/Linux {{ CR_version }} - {{ CR_version_name }}{% endblock %}

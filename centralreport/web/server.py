@@ -11,6 +11,7 @@ from cr.tools import Config
 import cr.log as crLog
 from cr.threads import Checks
 import cr.utils.date as crUtilsDate
+import cr.log as crLog
 
 class WebServer(threading.Thread):
 #class WebServer():
@@ -217,6 +218,7 @@ class Pages:
 
         return tmpl.render(tmpl_vars)
 
+
     def error_page_404(status, message, traceback, version):
         """
             Our 404 error.
@@ -226,7 +228,17 @@ class Pages:
     cherrypy.config.update({'error_page.404': error_page_404})
 
 
-    @cherrypy.expose
-    def test(self):
+    @cherrypy.expose()
+    def api_date_check(self):
+        tmpl = self.env.get_template('json/date_check.json')
+        cherrypy.response.headers['Content-Type'] = "application/json"
+        tmpl_vars = dict()
 
-        return '<h1>This is a test</h1> ... and it works!'
+        if None == Checks.last_check_date:
+            tmpl_vars['last_timestamp'] = '0'
+            tmpl_vars['last_fulldate'] = 'Never'
+        else:
+            tmpl_vars['last_timestamp'] = crUtilsDate.datetimeToTimestamp(Checks.last_check_date)
+            tmpl_vars['last_fulldate'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+
+        return tmpl.render(tmpl_vars)

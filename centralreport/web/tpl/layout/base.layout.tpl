@@ -21,5 +21,7 @@
 </head>
 <body>
     {% block body %}{% endblock %}
+
+    {% block bottom_javascript %}{% endblock %}
 </body>
 </html>

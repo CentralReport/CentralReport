@@ -83,6 +83,14 @@ html, body {
     text-align: center;
 }
 
+.headhand small {
+    float:right;
+}
+
+.headhand:after {
+    clear: both;
+}
+
 
 /* The dashboard box */
 .dashboard-box {
