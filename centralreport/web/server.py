@@ -237,8 +237,61 @@ class Pages:
         if None == Checks.last_check_date:
             tmpl_vars['last_timestamp'] = '0'
             tmpl_vars['last_fulldate'] = 'Never'
+            tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
         else:
             tmpl_vars['last_timestamp'] = crUtilsDate.datetimeToTimestamp(Checks.last_check_date)
             tmpl_vars['last_fulldate'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+            tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
+
+        return tmpl.render(tmpl_vars)
+
+
+    @cherrypy.expose()
+    def api_full_check(self):
+        tmpl = self.env.get_template('json/full_check.json')
+        cherrypy.response.headers['Content-Type'] = "application/json"
+        tmpl_vars = dict()
+
+        if None == Checks.last_check_date:
+            tmpl_vars['last_timestamp'] = '0'
+            tmpl_vars['last_fulldate'] = 'Never'
+        else:
+            tmpl_vars['last_timestamp'] = crUtilsDate.datetimeToTimestamp(Checks.last_check_date)
+            tmpl_vars['last_fulldate'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+            tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
+
+
+            # CPU Check informations
+            if None != Checks.last_check_cpu:
+                tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
+                tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
+                tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
+
+
+                if int(tmpl_vars['cpu_percent']) >= int(Config.getConfigValue('Alerts','cpu_alert')):
+                    tmpl_vars['cpu_state'] = "alert"
+                elif int(tmpl_vars['cpu_percent']) >= int(Config.getConfigValue('Alerts','cpu_warning')):
+                    tmpl_vars['cpu_state'] = "warning"
+                else:
+                    tmpl_vars['cpu_state'] = "ok"
+
+            # Memory check informations
+            if None != Checks.last_check_memory:
+                tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
+                tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
+                tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
+                tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
+
+                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
+                tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
+                tmpl_vars['swap_total'] = crUtilsText.convertByte(Checks.last_check_memory.swapSize)
+                tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
+
+                if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_alert')):
+                    tmpl_vars['memory_state'] = "alert"
+                elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts','memory_warning')):
+                    tmpl_vars['memory_state'] = "warning"
+                else:
+                    tmpl_vars['memory_state'] = "ok"
 
         return tmpl.render(tmpl_vars)

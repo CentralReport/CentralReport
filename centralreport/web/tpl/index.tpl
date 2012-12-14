@@ -37,17 +37,17 @@
                 </div>
             </div>
 
-            <div class="dashboard-box-datas">
+            <div class="dashboard-box-datas" id="div_cpu_box">
                 {% if cpu_percent is undefined %}
                 <div class="title">
                     Not checked
                 </div>
                 {% else %}
                 <div class="title">
-                    {{ cpu_percent }} %
+                    <span id="span_cpu_percent_value">{{ cpu_percent }}</span> %
                 </div>
                 <div class="subtitle">
-                    {{ cpu_user }} % user - {{ cpu_system }} % system
+                    <span id="span_cpu_user_value">{{ cpu_user }}</span> % user - <span id="span_cpu_system_value">{{ cpu_system }}</span> % system
                 </div>
 
                 {% if cpu_alert is defined %}
@@ -58,7 +58,7 @@
                         <div class="progress progress-striped progress-success">
                             {% endif %}
 
-                            <div class="bar" style="width:{{ cpu_percent }}%;"></div>
+                            <div id="bar_cpu_percent" class="bar" style="width:{{ cpu_percent }}%;"></div>
                         </div>
 
                         {% endif %}
@@ -85,17 +85,17 @@
                     Memory (used)
                 </div>
             </div>
-            <div class="dashboard-box-datas">
+            <div class="dashboard-box-datas" id="div_memory_box">
                 {% if memory_percent is undefined %}
                 <div class="title">
                     Not checked
                 </div>
                 {% else %}
                 <div class="title">
-                    {{ memory_percent }} %
+                    <span id="span_memory_percent_value">{{ memory_percent }}</span> %
                 </div>
                 <div class="subtitle">
-                    {{ memory_used }} used and {{ memory_free }} free
+                     <span id="span_memory_used_value">{{ memory_used }}</span> used and <span id="span_memory_free_value">{{ memory_free }}</span> free
                 </div>
 
                 {% if memory_alert is defined %}
@@ -106,7 +106,7 @@
                         <div class="progress progress-striped progress-success">
                             {% endif %}
 
-                            <div class="bar" style="width:{{ memory_percent }}%;"></div>
+                            <div id="bar_memory_percent" class="bar" style="width:{{ memory_percent }}%;"></div>
                         </div>
                         {% endif %}
                     </div>

@@ -1,4 +1,5 @@
 {
     "last_timestamp": "{{ last_timestamp }}",
-    "last_fulldate": "{{ last_fulldate }}"
+    "last_fulldate": "{{ last_fulldate }}",
+    "current_timestamp": "{{ current_timestamp }}"
 }
