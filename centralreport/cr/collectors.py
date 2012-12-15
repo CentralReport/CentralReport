@@ -232,7 +232,7 @@ class MacCollector(_Collector):
                 #
                 # Full command : diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
                 disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout = subprocess.PIPE)
-                disk_name_p2 = subprocess.Popen(['grep', 'Media Name'], stdin = disk_name_p1.stdout, stdout = subprocess.PIPE)
+                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin = disk_name_p1.stdout, stdout = subprocess.PIPE)
                 disk_name_p1.stdout.close()
                 disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin = disk_name_p2.stdout, stdout = subprocess.PIPE).communicate()[0]
                 disk_name_p2.stdout.close()

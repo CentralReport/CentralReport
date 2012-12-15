@@ -55,11 +55,10 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         echo " "
         echo "Install mode enabled"
-        echo "You will install CentralReport. Are you sure to continue? (Yes/No)"
-        #read install_confirm
+        read -p "You will install CentralReport. Are you sure to continue (y/n)" RESP
 
         # Are you sure to install CR ?
-        if [ "yes" == ${install_confirm} ]; then
+        if [ "$RESP" = "y" ]; then
 
             # It's an indev version. At each install, we delete everything.
 
