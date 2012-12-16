@@ -262,8 +262,12 @@ class Pages:
 
 
             # CPU Check informations
-            if None != Checks.last_check_cpu:
-                tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
+            if None == Checks.last_check_cpu:
+                tmpl_vars['cpu_check_enabled'] = "False"
+            else:
+                tmpl_vars['cpu_check_enabled'] = "True"
+
+                tmpl_vars['cpu_percent'] = int(Checks.last_check_cpu.user) + int(Checks.last_check_cpu.system)
                 tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
                 tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
 
@@ -276,7 +280,11 @@ class Pages:
                     tmpl_vars['cpu_state'] = "ok"
 
             # Memory check informations
-            if None != Checks.last_check_memory:
+            if None == Checks.last_check_memory:
+                tmpl_vars['memory_check_enabled'] = "False"
+            else:
+                tmpl_vars['memory_check_enabled'] = "True"
+
                 tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
                 tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
                 tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
@@ -293,5 +301,19 @@ class Pages:
                     tmpl_vars['memory_state'] = "warning"
                 else:
                     tmpl_vars['memory_state'] = "ok"
+
+
+            if None == Checks.last_check_loadAverage:
+                tmpl_vars['load_check_enabled'] = "False"
+            else:
+                tmpl_vars['load_check_enabled'] = "True"
+
+                tmpl_vars['load_last_one'] = Checks.last_check_loadAverage.last1m
+                tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
+
+                tmpl_vars['uptime_full_text'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
+                tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
+                tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+
 
         return tmpl.render(tmpl_vars)

@@ -129,17 +129,17 @@
                     Swap
                 </div>
             </div>
-            <div class="dashboard-box-datas">
+            <div class="dashboard-box-datas" id="div_swap_box">
                 {% if swap_percent is undefined %}
                 <div class="title">
                     Not checked
                 </div>
                 {% else %}
                 <div class="title">
-                    {{ swap_used }}
+                    <span id="span_swap_used_value">{{ swap_used }}</span>
                 </div>
                 <div class="subtitle">
-                    {{ swap_percent }} % of physical memory
+                    <span id="span_swap_percent_value">{{ swap_percent }}</span> % of physical memory
                 </div>
                 {% endif %}
 
@@ -166,17 +166,17 @@
                     Load Average
                 </div>
             </div>
-            <div class="dashboard-box-datas">
+            <div class="dashboard-box-datas" id="div_load_box">
                 {% if loadaverage is undefined %}
                 <div class="title">
                     Not checked
                 </div>
                 {% else %}
                 <div class="title">
-                    {{ loadaverage }}
+                    <span id="span_load_value">{{ loadaverage }}</span>
                 </div>
                 <div class="subtitle">
-                    {{ loadaverage_percent }} % of {{ cpu_count }} cores
+                    <span id="span_load_percent_value">{{ loadaverage_percent }}</span> % of {{ cpu_count }} cores
                 </div>
 
                 {% if load_alert is defined %}
@@ -187,7 +187,7 @@
                     <div class="progress progress-striped progress-success">
                 {% endif %}
 
-                        <div class="bar" style="width:{{ loadaverage_percent }}%;"></div>
+                        <div id="bar_load_percent" class="bar" style="width:{{ loadaverage_percent }}%;"></div>
                     </div>
                 {% endif %}
                 </div>
@@ -204,17 +204,17 @@
                     Uptime
                 </div>
             </div>
-            <div class="dashboard-box-text">
+            <div class="dashboard-box-text" id="div_uptime_box">
                 {% if loadaverage is undefined %}
                 <div class="title">
                     Not checked
                 </div>
                 {% else %}
                 <div class="title">
-                    {{ uptime }} <small>({{ uptime_seconds }} seconds)</small>
+                    <span id="span_uptime_full_text">{{ uptime }}</span> <small>(<span id="span_uptime_seconds_value">{{ uptime_seconds }}</span> seconds)</small>
                 </div>
                 <div class="subtitle">
-                    Boot date : {{ start_date }}
+                    Boot date : <span id="span_uptime_start_date_value">{{ start_date }}</span>
                 </div>
                 {% endif %}
             </div>
