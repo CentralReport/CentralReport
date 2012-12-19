@@ -317,3 +317,25 @@ class Pages:
 
 
         return tmpl.render(tmpl_vars)
+
+
+    @cherrypy.expose()
+    def api_disks_check(self):
+        tmpl = self.env.get_template('blocks/disks.block.tpl')
+        tmpl_vars = dict()
+
+        if None != Checks.last_check_disk:
+            allChecksDisk = []
+
+            for disk in Checks.last_check_disk.checks:
+                checkDisk = {}
+                checkDisk['name'] = str.replace(disk.name, '/dev/', '')
+                checkDisk['free'] = crUtilsText.convertByte(disk.free)
+                checkDisk['total'] = crUtilsText.convertByte(disk.size)
+                checkDisk['percent'] = int(round(disk.used,0) * 100 / int(disk.size))
+
+                allChecksDisk.append(checkDisk)
+
+            tmpl_vars['disks'] = allChecksDisk
+
+        return tmpl.render(tmpl_vars)

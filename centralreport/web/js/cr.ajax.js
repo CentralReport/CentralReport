@@ -8,13 +8,13 @@
  */
 
 // Client timestamp
-actual_client_timestamp = 0
+var actual_client_timestamp = 0;
 
 // Last check timestamp (server side)
-last_timestamp = 0;
+var last_timestamp = 0;
 
 // Next check will be occur at this timestamp (client side)
-next_check_at = 0;
+var next_check_at = 0;
 
 /**
  * Verify if a new check is avaiable
@@ -142,6 +142,14 @@ function updateLastCheck() {
 
             $("#div_uptime_box").fadeOut(300).fadeIn(300);
         }
+
+
+        $.get('/api_disks_check', function(data) {
+
+            $("#div_disks_box").html(data);
+            $("#div_disks_box").fadeOut(300).fadeIn(300);
+
+        });
 
         // Reload is done!
         $("#ajax_enabled").html("Ajax reload : Done");

@@ -225,7 +225,7 @@
 
 <div class="row">
     <div class="span12">
-        <div class="dashboard-box">
+        <div id="div_disks_box" class="dashboard-box">
             <div class="dashboard-box-headhand">
                 <div class="dashboard-box-status-ok">
 
