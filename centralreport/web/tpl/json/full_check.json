@@ -22,6 +22,7 @@
 
     "load_check_enabled": "{{ load_check_enabled }}",
     "load_percent": "{{ load_percent }}",
+    "load_state": "{{ load_state }}",
     "load_last_one": "{{ load_last_one }}",
 
     "uptime_full_text": "{{ uptime_full_text }}",

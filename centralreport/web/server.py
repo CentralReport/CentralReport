@@ -311,6 +311,13 @@ class Pages:
                 tmpl_vars['load_last_one'] = Checks.last_check_loadAverage.last1m
                 tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
 
+                if int(tmpl_vars['load_percent']) >= int(Config.getConfigValue('Alerts','load_alert')):
+                    tmpl_vars['load_state'] = "alert"
+                elif int(tmpl_vars['load_percent']) >= int(Config.getConfigValue('Alerts','load_warning')):
+                    tmpl_vars['load_state'] = "warning"
+                else:
+                    tmpl_vars['load_state'] = "ok"
+
                 tmpl_vars['uptime_full_text'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
                 tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
                 tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")

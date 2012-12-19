@@ -103,9 +103,34 @@ function updateLastCheck() {
             $("#span_cpu_user_value").html(data["cpu_user"]);
             $("#span_cpu_system_value").html(data["cpu_system"]);
 
+            // Progress bar
             $("#bar_cpu_percent").css("width",data["cpu_percent"] + "%")
+
+            // Progress bar color and status image
+            var newCpuClass = "dashboard-box-status";
+            var newCpuProgressBarClass = "progress progress-striped "
+
+            switch (data["cpu_state"]) {
+                case 'ok':
+                    newCpuClass = "dashboard-box-status-ok";
+                    newCpuProgressBarClass += "progress-success"
+                    break;
+                case 'warning':
+                    newCpuClass = "dashboard-box-status-warning";
+                    newCpuProgressBarClass += "progress-warning"
+                    break;
+                case 'error':
+                    newCpuClass = "dashboard-box-status-error";
+                    newCpuProgressBarClass += "progress-danger"
+                    break;
+            }
+            $("#div_cpu_status").removeClass().addClass(newCpuClass);
+            $("#div_cpu_progress").removeClass().addClass(newCpuProgressBarClass);
+
+
             $("#div_cpu_box").fadeOut(300).fadeIn(300);
         }
+
 
         // Memory and Swap
         if(data["memory_check_enabled"] == "True") {
@@ -115,6 +140,28 @@ function updateLastCheck() {
             $("#span_memory_used_value").html(data["memory_used"]);
 
             $("#bar_memory_percent").css("width",data["memory_percent"] + "%");
+
+            // Progress bar color and status image
+            var newMemoryClass = "dashboard-box-status";
+            var newCpuProgressBarClass = "progress progress-striped "
+
+            switch (data["memory_state"]) {
+                case "ok":
+                    newMemoryClass = "dashboard-box-status-ok";
+                    newCpuProgressBarClass += "progress-success"
+                    break;
+                case "warning":
+                    newMemoryClass = "dashboard-box-status-warning";
+                    newCpuProgressBarClass += "progress-warning"
+                    break;
+                case "error":
+                    newMemoryClass = "dashboard-box-status-error";
+                    newCpuProgressBarClass += "progress-danger"
+                    break;
+            }
+            $("#div_memory_status").removeClass().addClass(newMemoryClass);
+            $("#div_memory_progress").removeClass().addClass(newCpuProgressBarClass);
+
             $("#div_memory_box").fadeOut(300).fadeIn(300);
 
 
@@ -131,6 +178,29 @@ function updateLastCheck() {
             // Load average
             $("#span_load_percent_value").html(data["load_percent"]);
             $("#span_load_value").html(data["load_last_one"]);
+
+            $("#bar_memory_percent").css("width",data["memory_percent"] + "%");
+
+            // Progress bar color and status image
+            var newLoadClass = "dashboard-box-status";
+            var newLoadProgressBarClass = "progress progress-striped "
+
+            switch (data["memory_state"]) {
+                case "ok":
+                    newLoadClass = "dashboard-box-status-ok";
+                    newLoadProgressBarClass += "progress-success"
+                    break;
+                case "warning":
+                    newLoadClass = "dashboard-box-status-warning";
+                    newLoadProgressBarClass += "progress-warning"
+                    break;
+                case "error":
+                    newLoadClass = "dashboard-box-status-error";
+                    newLoadProgressBarClass += "progress-danger"
+                    break;
+            }
+            $("#div_load_status").removeClass().addClass(newLoadClass);
+            $("#div_load_progress").removeClass().addClass(newLoadProgressBarClass);
 
             $("#bar_load_percent").css("width",data["load_percent"] + "%");
             $("#div_load_box").fadeOut(300).fadeIn(300);

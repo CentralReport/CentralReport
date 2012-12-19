@@ -24,13 +24,13 @@
 
             <div class="dashboard-box-headhand">
                 {% if cpu_alert is defined %}
-                <div class="dashboard-box-status-alert"></div>
+                <div id="div_cpu_status" class="dashboard-box-status-alert"></div>
                 {% elif cpu_warning is defined %}
-                <div class="dashboard-box-status-warning"></div>
+                <div id="div_cpu_status" class="dashboard-box-status-warning"></div>
                 {% elif cpu_ok is defined %}
-                <div class="dashboard-box-status-ok"></div>
+                <div id="div_cpu_status" class="dashboard-box-status-ok"></div>
                 {% else %}
-                <div class="dashboard-box-status"></div>
+                <div id="div_cpu_status" class="dashboard-box-status"></div>
                 {% endif %}
                 <div class="dashboard-box-title">
                     CPU (used)
@@ -51,11 +51,13 @@
                 </div>
 
                 {% if cpu_alert is defined %}
-                <div class="progress progress-striped progress-danger">
+                <div id="div_cpu_progress" class="progress progress-striped progress-danger">
                     {% elif cpu_warning is defined %}
-                    <div class="progress progress-striped progress-warning">
+                    <div id="div_cpu_progress" class="progress progress-striped progress-warning">
                         {% elif cpu_ok is defined %}
-                        <div class="progress progress-striped progress-success">
+                        <div id="div_cpu_progress" class="progress progress-striped progress-success">
+                        {% else %}
+                        <div id="div_cpu_progress" class="progress progress-striped">
                             {% endif %}
 
                             <div id="bar_cpu_percent" class="bar" style="width:{{ cpu_percent }}%;"></div>
@@ -72,13 +74,13 @@
             <div class="dashboard-box-headhand">
 
                 {% if memory_alert is defined %}
-                <div class="dashboard-box-status-alert"></div>
+                <div id="div_memory_status" class="dashboard-box-status-alert"></div>
                 {% elif memory_warning is defined %}
-                <div class="dashboard-box-status-warning"></div>
+                <div id="div_memory_status" class="dashboard-box-status-warning"></div>
                 {% elif memory_ok is defined %}
-                <div class="dashboard-box-status-ok"></div>
+                <div id="div_memory_status" class="dashboard-box-status-ok"></div>
                 {% else %}
-                <div class="dashboard-box-status"></div>
+                <div id="div_memory_status" class="dashboard-box-status"></div>
                 {% endif %}
 
                 <div class="dashboard-box-title">
@@ -99,11 +101,13 @@
                 </div>
 
                 {% if memory_alert is defined %}
-                <div class="progress progress-striped progress-danger">
+                <div id="div_memory_progress" class="progress progress-striped progress-danger">
                     {% elif memory_warning is defined %}
-                    <div class="progress progress-striped progress-warning">
+                    <div id="div_memory_progress" class="progress progress-striped progress-warning">
                         {% elif memory_ok is defined %}
-                        <div class="progress progress-striped progress-success">
+                        <div id="div_memory_progress" class="progress progress-striped progress-success">
+                            {% else %}
+                            <div id="div_memory_progress" class="progress progress-striped">
                             {% endif %}
 
                             <div id="bar_memory_percent" class="bar" style="width:{{ memory_percent }}%;"></div>
@@ -154,13 +158,13 @@
         <div class="dashboard-box">
             <div class="dashboard-box-headhand">
                 {% if load_alert is defined %}
-                <div class="dashboard-box-status-alert"></div>
+                <div id="div_load_status" class="dashboard-box-status-alert"></div>
                 {% elif load_warning is defined %}
-                <div class="dashboard-box-status-warning"></div>
+                <div id="div_load_status" class="dashboard-box-status-warning"></div>
                 {% elif load_ok is defined %}
-                <div class="dashboard-box-status-ok"></div>
+                <div id="div_load_status" class="dashboard-box-status-ok"></div>
                 {% else %}
-                <div class="dashboard-box-status"></div>
+                <div id="div_load_status" class="dashboard-box-status"></div>
                 {% endif %}
                 <div class="dashboard-box-title">
                     Load Average
@@ -180,11 +184,13 @@
                 </div>
 
                 {% if load_alert is defined %}
-                    <div class="progress progress-striped progress-danger">
+                    <div id="div_load_progress" class="progress progress-striped progress-danger">
                 {% elif load_warning is defined %}
-                    <div class="progress progress-striped progress-warning">
+                    <div id="div_load_progress" class="progress progress-striped progress-warning">
                 {% elif load_ok is defined %}
-                    <div class="progress progress-striped progress-success">
+                    <div id="div_load_progress" class="progress progress-striped progress-success">
+                {% else %}
+                    <div id="div_load_progress" class="progress progress-striped">
                 {% endif %}
 
                         <div id="bar_load_percent" class="bar" style="width:{{ loadaverage_percent }}%;"></div>
