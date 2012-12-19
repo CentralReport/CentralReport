@@ -7,7 +7,7 @@
 import ConfigParser
 import os
 import uuid
-import subprocess
+import platform
 import log as crLog
 
 
@@ -235,22 +235,11 @@ class Config:
             Detecting current OS...
         """
 
-        try:
-            kernel_mac = subprocess.Popen(
-                ['sysctl', '-n', 'kern.ostype'],
-                stdout=subprocess.PIPE,
-                close_fds=True
-            ).communicate()[0]
-        except:
-            kernel_linux = subprocess.Popen(
-                ['sysctl', '-n', 'kernel.ostype'],
-                stdout=subprocess.PIPE,
-                close_fds=True
-            ).communicate()[0]
+        kernel = platform.system()
 
-        if kernel_mac.startswith('Darwin'):
+        if kernel.startswith('Darwin'):
             Config.HOST_CURRENT = Config.HOST_MAC
-        elif kernel_linux.startswith('Linux'):
+        elif kernel.startswith('Linux'):
             Config.HOST_CURRENT = Config.HOST_LINUX
 
             # On va essayer d'affiner en fonction des distributions

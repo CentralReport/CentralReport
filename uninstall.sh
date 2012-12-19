@@ -35,12 +35,12 @@ fi
 
 echo " "
 echo "Uninstall"
-echo "You will uninstall CentralReport. Are you sure to continue? (Yes/No)"
+read -p "You will uninstall CentralReport. Are you sure to continue (y/n)" RESP
 #read unistall_confirm
 
 
 # Are you sure to uninstall CR ?
-if [ ${unistall_confirm} == "yes" ]; then
+if [ "$RESP" = "y" ]; then
     echo "OK, continue"
     echo " "
 

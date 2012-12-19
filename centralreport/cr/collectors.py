@@ -6,12 +6,17 @@
 # Collector abstract class
 # MacCollector class
 # DebianCollector class
+import platform
 
 import subprocess
 import datetime
 import time
+from os import getloadavg
+import multiprocessing
+import cr.log as crLog
 import cr.utils.text as crUtilsText
 import cr.entities.checks as crEntitiesChecks
+import socket
 import cr.entities.host as crEntitiesHost
 from cr.tools import Config
 
@@ -263,18 +268,24 @@ class DebianCollector(_Collector):
         """
 
         subprocessPIPE = subprocess.PIPE
-        hostname = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
-
-        kernel = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['uname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
-        kernel_v = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['uname', '-r'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
+        hostname = socket.gethostname()
+        kernel = platform.system()
+        kernel_v = platform.release()
 
         hostEntity = crEntitiesHost.Infos()
+        hostEntity.uuid = Config.CR_HOST_UUID
 
-        hostEntity.uuid = Config.uuid
+        try:
+            ncpu = multiprocessing.cpu_count()
+        except(ImportError,NotImplementedError):
+            try:
+                ncpu = open('/proc/cpuinfo').read().count('processor\t:')
+            except IOError:
+                pass
 
         hostEntity.os = Config.HOST_CURRENT
         hostEntity.hostname = hostname
-
+        hostEntity.cpuCount = ncpu
         hostEntity.kernelName = kernel
         hostEntity.kernelVersion = kernel_v
 
@@ -354,10 +365,10 @@ class DebianCollector(_Collector):
             Getting load average
         """
 
-        loadavg_result = subprocess.Popen(['cat', '/proc/loadavg'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        loadavg_result = getloadavg()
 
         # On va spliter en fonction des espaces
-        dict_loadavg = loadavg_result.split(" ")
+        dict_loadavg = loadavg_result
 
         # Prepare return entity
         loadAverageEntity = crEntitiesChecks.LoadAverage()
@@ -375,16 +386,14 @@ class DebianCollector(_Collector):
             Gets the number of seconds since the last boot
         """
         uptime_cmd = subprocess.Popen(['cat', '/proc/uptime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-
         uptime_dict = uptime_cmd.split(' ')
 
         try:
-            uptime = int(uptime_dict[0])
+            uptime = int(float(uptime_dict[0]))
         except:
             uptime = int(0)
 
         return int(uptime)
-
 
     def get_disks(self):
         """
@@ -405,9 +414,9 @@ class DebianCollector(_Collector):
                 line_split = df_split[i].split()
 
                 # Getting info in MB (Linux count with '1K block' unit)
-                disk_total = int(line_split[1]) / 1024
-                disk_used = int(line_split[2]) / 1024
-                disk_free = int(line_split[3]) / 1024
+                disk_total = int(line_split[1]) * 1024
+                disk_used = int(line_split[2]) * 1024
+                disk_free = int(line_split[3]) * 1024
 
                 # Using new check entity
                 checkDisk = crEntitiesChecks.Disk()

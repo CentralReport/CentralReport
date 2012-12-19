@@ -175,7 +175,7 @@
                     {{ loadaverage }}
                 </div>
                 <div class="subtitle">
-                    {{ loadaverage_percent }} % of 4 cores
+                    {{ loadaverage_percent }} % of {{ cpu_count }} cores
                 </div>
 
                 {% if load_alert is defined %}

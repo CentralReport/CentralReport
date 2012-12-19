@@ -43,7 +43,7 @@ class Checks(threading.Thread):
         # What is the current os ?
         if Config.HOST_CURRENT == Config.HOST_MAC:
             self.MyCollector = crCollectors.MacCollector()
-        elif(Config.HOST_CURRENT == Config.HOST_DEBIAN) \
+        elif(Config.HOST_CURRENT == Config.HOST_DEBIAN)\
             | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
             self.MyCollector = crCollectors.DebianCollector()
 
@@ -53,32 +53,30 @@ class Checks(threading.Thread):
         """
             Execute checks
         """
-
         # Getting informations about the current host
         Checks.hostEntity = self.MyCollector.get_infos()
 
         while Checks.performChecks:
-
             if self.tickCount == self.tickPerformCheck:
                 crLog.writeDebug('---- New check -----')
 
                 # Checking CPU
-                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_cpu_check')):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_cpu_check')):
                     crLog.writeDebug('Do a CPU check...')
                     Checks.last_check_cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
-                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_memory_check')):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_memory_check')):
                     crLog.writeDebug('Do a memory check...')
                     Checks.last_check_memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
-                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_load_check')):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_load_check')):
                     crLog.writeDebug('Do a load average check...')
                     Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
                 # Checking disks informations
-                if crUtilsText.textToBool(Config.getConfigValue('Checks','enable_disks_check')):
+                if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_disks_check')):
                     crLog.writeDebug('Do a disk check....')
                     Checks.last_check_disk = self.MyCollector.get_disks()
 
@@ -87,7 +85,7 @@ class Checks(threading.Thread):
 
                 # Wait 60 seconds before next checks...
                 crLog.writeDebug('All checks are done')
-                crLog.writeDebug('Next checks in '+ str(self.tickPerformCheck) +' seconds...')
+                crLog.writeDebug('Next checks in ' + str(self.tickPerformCheck) + ' seconds...')
 
                 self.tickCount = 0
 

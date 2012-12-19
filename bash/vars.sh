@@ -22,7 +22,7 @@ STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist
 STARTUP_PLIST_INSTALL=utils/launchers/mac/com.centralreport.plist
 
 # Debian startup script
-STARTUP_DEBIAN=/etc/init.d/centralreport_debian.sh
+STARTUP_DEBIAN=/etc/init.d/centralreport.sh
 STARTUP_DEBIAN_INSTALL=utils/launchers/debian/centralreport.sh
 
 # Temp install directories.

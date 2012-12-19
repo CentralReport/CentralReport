@@ -277,7 +277,21 @@ function debian_install {
     echo "CherryPy is installed!"
     echo " "
 
+    # First, we install Setuptools
+    echo "Installing Setuptools"
+    echo "Untar Setuptools..."
+    tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
 
+    echo "Installing Setuptools..."
+    cd ${SETUPTOOLS_DIR};
+    python setup.py install
+    cd ../../;
+
+    echo "Deleting install files..."
+    rm -Rf ${SETUPTOOLS_DIR}
+
+    echo "Setuptools is installed!"
+    echo " "
 
     # Then, installing Jinja2 Templates...
     echo "Installing Jinja2"
