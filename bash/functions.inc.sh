@@ -12,14 +12,6 @@ function getOS(){
     fi
 }
 
-function displayError {
-
-    echo -e "\033[1;31m"
-    echo $1
-    echo -e "\033[0m"
-
-}
-
 function getPythonIsInstalled {
 
     python -V
@@ -30,4 +22,44 @@ function getPythonIsInstalled {
         return 0
     fi
 
+}
+
+function displayMessage() {
+  echo "$*"
+}
+
+function displaytTitle() {
+  displayMessage "------------------------------------------------------------------------------"
+  displayMessage "$*"
+  displayMessage "------------------------------------------------------------------------------"
+}
+
+function displayError() {
+  displayMessage "$*" >&2
+}
+
+# First parameter: ERROR CODE
+# Second parameter: MESSAGE
+function displayErrorAndExit() {
+  local exitcode=$1
+  shift
+displayerror "$*"
+  exit $exitcode
+}
+
+# First parameter: MESSAGE
+# Others parameters: COMMAND (! not |)
+function displayAndExec() {
+  local message=$1
+  echo -n "[En cours] $message"
+  shift
+echo ">>> $*" >> /dev/null 2>&1
+  sh -c "$*" >> /dev/null 2>&1
+  local ret=$?
+  if [ $ret -ne 0 ]; then
+echo -e "\r\e[0;31m [ERROR]\e[0m $message"
+  else
+echo -e "\r\e[0;32m [OK]\e[0m $message"
+  fi
+return $ret
 }
