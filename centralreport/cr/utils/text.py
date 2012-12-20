@@ -95,7 +95,7 @@ def secondsToPhraseTime(seconds):
         remaining_seconds = remaining_seconds - minutes * ONE_MINUTE
         result_string += '1 minute ' if 1 == minutes else str(int(minutes)) + ' minutes '
 
-    result_string += '1 second ' if 1 == seconds else str(int(seconds)) + ' seconds '
+    result_string += '1 second ' if 1 == remaining_seconds else str(int(remaining_seconds)) + ' seconds '
 
     return str(result_string)
 

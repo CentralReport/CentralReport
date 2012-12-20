@@ -28,5 +28,4 @@
     "uptime_full_text": "{{ uptime_full_text }}",
     "uptime_seconds": "{{ uptime_seconds }}",
     "start_date": "{{ start_date }}"
-
 }

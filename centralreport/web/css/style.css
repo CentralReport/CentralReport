@@ -6,7 +6,9 @@
  */
 
 
-/* Override some defaults */
+/**
+ * Layout
+ */
 html, body {
     background-color: #eee;
 }
@@ -14,12 +16,10 @@ html, body {
 /* Top header */
 .page-header {
     min-height: 20px;
-
-    margin: 0px -20px;
+    margin: 0 -20px;
     padding: 15px 20px;
 
     font-size:20px;
-
     color: #FFF;
 
     background: rgb(125,126,125); /* Old browsers */
@@ -85,17 +85,17 @@ html, body {
 }
 
 .headhand small {
-    float:right;
+    float: right;
 }
 
 
 /* The dashboard box */
 .dashboard-box {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 
-    -webkit-box-shadow: 0px 0px 10px 0px #7A7A7A;
-    box-shadow: 0px 0px 10px 0px #7A7A7A;
+    -webkit-box-shadow: 0 0 10px 0 #7A7A7A;
+    box-shadow: 0 0 10px 0 #7A7A7A;
 
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -104,7 +104,6 @@ html, body {
 
 /* Header of each dashboard box */
 .dashboard-box-headhand {
-
     height: 24px;
 
     background: rgb(255,255,255); /* Old browsers */
@@ -119,10 +118,6 @@ html, body {
 
 }
 
-.dashboard-box-headhand:after {
-    clear: both;
-}
-
 /* Status of current data displayed in the box */
 .dashboard-box-headhand .dashboard-box-status-ok {
     width: 40px;
@@ -133,7 +128,7 @@ html, body {
 
     background-image: url(/img/check_18x18.png);
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center center;
 }
 
 .dashboard-box-headhand .dashboard-box-status-alert {
@@ -145,7 +140,7 @@ html, body {
 
     background-image: url(/img/error_18x18.png);
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center center;
 }
 
 .dashboard-box-headhand .dashboard-box-status-warning {
@@ -157,7 +152,7 @@ html, body {
 
     background-image: url(/img/warning_18x18.png);
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center center;
 }
 
 
@@ -168,7 +163,7 @@ html, body {
     margin-left: 40px;
 
     padding-top: 2px;
-    padding-left: 0px;
+    padding-left: 0;
 
 }
 
@@ -176,10 +171,9 @@ html, body {
 /* Div data */
 .dashboard-box .dashboard-box-datas {
     min-height: 120px;
-
     max-height: 200px;
 
-    margin: 0px;
+    margin: 0;
 
     padding: 1px 0;
 
@@ -201,9 +195,9 @@ html, body {
     margin-top: 20px;
 
     font-size: 40px;
-    line-height: 40px;
-
     font-weight: bold;
+    line-height: 1;
+
 }
 
 /* Minor information in the box */
@@ -214,14 +208,12 @@ html, body {
 
     font-size: 15px;
     font-weight: bold;
+    line-height: 1.5;
 }
 
 /* Displaying the progress bar in the box */
 .dashboard-box-datas .progress {
-    margin-top: 35px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 0px;
+    margin: 35px 10px 0;
 }
 
 
@@ -229,29 +221,24 @@ html, body {
 /* Text box (to display more informations than the "data box" */
 .dashboard-box .dashboard-box-text {
     min-height: 120px;
-
-    margin: 0px;
+    margin: 0;
     background-color: #f5f5f5;
 }
 
 .dashboard-box-text .title {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 10px;
 
     font-size: 20px;
     font-weight: bold;
+    line-height: 1.5;
 }
 
 .dashboard-box-text .subtitle {
-    padding-top: -5px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: -5px 10px 10px 10px;
 
     font-size: 15px;
     font-weight: bold;
+    line-height: 1.5;
 }
 
 
@@ -264,4 +251,5 @@ html, body {
 
     color: #777777;
     font-size: 0.9em;
+    line-height: 1.5;
 }

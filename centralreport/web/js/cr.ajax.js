@@ -7,271 +7,266 @@
  * Date: 13/12/12
  */
 
-// Client timestamp
-var actual_client_timestamp = 0;
-
-// Last check timestamp (server side)
-var last_timestamp = 0;
-
-// Next check will be occur at this timestamp (client side)
-var next_check_at = 0;
+var actualClientTimestamp = 0;  // Client timestamp
+var lastTimestamp = 0;  // Last check timestamp (server side)
+var nextCheckAt = 0;  // Next check will be occur at this timestamp (client side)
 
 /**
  * Refresh the next check counter
  */
-function updateNextCheckCounter(){
+var updateNextCheckCounter = function () {
+    var nextCheckIn = 0;
+    var ajaxEnabledElement;
+    var actualClientTimestamp;
+    var ajaxEnabledElementText = '';
 
-    actual_client_timestamp = Math.round(new Date().getTime() / 1000);
+    if (0 !== nextCheckAt){
+        actualClientTimestamp = Math.round(new Date().getTime() / 1000);
+        nextCheckIn = parseInt(nextCheckAt - actualClientTimestamp, 10) + 3;
 
-    if(next_check_at != 0){
-        var nextCheckIn = parseInt(next_check_at - actual_client_timestamp) + parseInt(3);
+        ajaxEnabledElement = $('#ajax_enabled');
 
-        if(nextCheckIn < -5) {
-            $("#ajax_enabled").html("Error. Next try in few seconds");
-        }
-        else if(nextCheckIn <= 0) {
-            $("#ajax_enabled").html("Next check is very close !");
+        if (nextCheckIn < -5) {
+            ajaxEnabledElementText = 'Error. Next try in few seconds';
+        } else if (nextCheckIn <= 0) {
+            ajaxEnabledElementText = 'Next check is very close!';
         } else {
-            $("#ajax_enabled").html("Next check in "+ nextCheckIn +" seconds");
+            ajaxEnabledElementText = 'Next check in ' + nextCheckIn + ' seconds';
         }
+
+        ajaxEnabledElement.text(ajaxEnabledElementText);
     }
 
-    setTimeout(updateNextCheckCounter,1000);
-
-}
+    setTimeout(updateNextCheckCounter, 1000);
+};
 
 
 /**
- * Verify if a new check is avaiable
+ * Verifies if a new check is available
  */
-function verifyIsNewCheckIsAvailable() {
+var verifyIsNewCheckIsAvailable = function () {
+    var ajaxEnabledElement = $('#ajax_enabled');
+    var ajaxErrorAlertElement = $('#div_ajax_error_alert');
+    var logText = '';
 
-    console.log("CR - Verify if a new check is available...");
-    actual_client_timestamp = Math.round(new Date().getTime() / 1000);
+    console.log('CR - Verify if a new check is available...');
+    actualClientTimestamp = Math.round(new Date().getTime() / 1000);
 
-    $("#ajax_enabled").html("No new check");
-    $("#div_ajax_error_alert").css("display","none");
+    ajaxEnabledElement.text('No new check');
+    ajaxErrorAlertElement.hide();
 
     $.ajax('/api_date_check')
         .done(function(data) {
-
-            // If last_timestamp=0, CR hasn't done any checks yet...
-            if(data["last_timestamp"] == 0) {
-                $("#last_check_date").html("No check available");
-                last_timestamp = 0;
+            // If lastTimestamp=0, CR hasn't done any checks yet...
+            if (0 === data['last_timestamp']) {
+                $('#last_check_date').text('No check available');
+                lastTimestamp = 0;
             } else {
-                $("#last_check_date").html(data["last_fulldate"]);
+                $('#last_check_date').text(data['last_fulldate']);
 
                 // Now, we can getting all checks values...
-                if(parseInt(data['last_timestamp']) != last_timestamp) {
+                if (parseInt(data['last_timestamp'], 10) !== lastTimestamp) {
 
-                    console.log("CR - /!\\ Last timestamp has changed!");
+                    console.log('CR - /!\\ Last timestamp has changed!');
 
-                    $("#ajax_enabled").html("Getting last check...");
+                    ajaxEnabledElement.text('Getting last check...');
 
-                    last_timestamp = parseInt(data['last_timestamp']);
-                    server_timestamp = parseInt(data['current_timestamp']);
+                    lastTimestamp = parseInt(data['last_timestamp'], 10);
+                    server_timestamp = parseInt(data['current_timestamp'], 10);
 
                     // Differences between computer clock and client clock
-                    actual_client_timestamp = Math.round(new Date().getTime() / 1000)
-                    diff_timestamp_client_server = server_timestamp - actual_client_timestamp;
+                    actualClientTimestamp = Math.round(new Date().getTime() / 1000);
+                    diff_timestamp_client_server = server_timestamp - actualClientTimestamp;
 
                     // All checks are done every 60 seconds by the agent
-                    next_check_at = last_timestamp + 60 + diff_timestamp_client_server;
+                    nextCheckAt = lastTimestamp + 60 + diff_timestamp_client_server;
 
                     updateLastCheck();
-
                 }
             }
 
             // We add 4 seconds between two checks, to be sure the next check is done
-            next_check_in = parseInt(next_check_at - actual_client_timestamp) + parseInt(4)
-            console.log("CR - Next checks estimated in "+ next_check_in +" seconds")
+            var nextCheckIn = parseInt(nextCheckAt - actualClientTimestamp, 10) + parseInt(4, 10);
+            console.log('CR - Next checks estimated in ' + nextCheckIn + ' seconds');
 
             // Execute next test in 20 seconds
-            if(next_check_at == 0) {
-                console.log("CR - Testing if new checks are available in 20 seconds...");
-                setTimeout(verifyIsNewCheckIsAvailable,20000);
-            } else if(next_check_in<(-10)) {
-                console.log("CR - New checks are very late... Next try in 10 seconds");
-                setTimeout(verifyIsNewCheckIsAvailable,10000);
-            } else if(next_check_in<(-1)) {
-                console.log("CR - New checks should have been done... Do a another try in 2 seconds");
-                setTimeout(verifyIsNewCheckIsAvailable,2000);
-            } else if(next_check_in<3) {
-                console.log("CR - Next checks are very close. Next try in 1 second");
-                setTimeout(verifyIsNewCheckIsAvailable,1000);
+            if (0 === nextCheckAt) {
+                logText = 'Testing if new checks are available in 20 seconds...';
+                time = 20000;
+            } else if (nextCheckIn < -10) {
+                logText = 'New checks are very late... Next try in 10 seconds';
+                time = 10000;
+            } else if (nextCheckIn < -1) {
+                logText = 'New checks should have been done... Do a another try in 2 seconds';
+                time = 2000;
+            } else if (nextCheckIn < 3) {
+                logText = 'Next checks are very close. Next try in 1 second';
+                time = 1000;
             } else {
-                console.log("CR - Testing if new checks are available in "+ next_check_in +" second(s)");
-                setTimeout(verifyIsNewCheckIsAvailable,parseInt(next_check_in*1000));
+                logText = 'Testing if new checks are available in ' + nextCheckIn + ' second(s)';
+                time = parseInt(nextCheckIn * 1000, 10);
             }
+
+            console.log('CR - ' + logText);
+            setTimeout(verifyIsNewCheckIsAvailable, time);
         })
         .fail(function() {
+            ajaxErrorAlertElement.text('Ajax error. Next try in 30 seconds...');
+            ajaxErrorAlertElement.show();
 
-            $("#div_ajax_error_alert").html("Ajax error. Next try in 30 seconds...");
-            $("#div_ajax_error_alert").css("display","block");
-            setTimeout(verifyIsNewCheckIsAvailable,30000);
-
+            setTimeout(verifyIsNewCheckIsAvailable, 30000);
         });
-
-
-}
+};
 
 
 /**
  * This function get the last check and update view values
  */
-function updateLastCheck() {
+var updateLastCheck = function () {
+    var lastCheckDate = $('#last_check_date');
+    var dataCpuPercent;
+    var dataMemoryPercent;
+    var newMemoryClass = 'dashboard-box-status';
+    var newCpuProgressBarClass = 'progress progress-striped ';
+    var newMemoryProgressBarClass = 'progress progress-striped ';
+    var newLoadProgressBarClass = 'progress progress-striped ';
 
-    console.log("CR - Getting last check values...");
+    console.log('CR - Getting last check values...');
 
-    $.getJSON('/api_full_check',function(data) {
+    $.getJSON('/api_full_check', function(data) {
 
+        dataCpuPercent = data['cpu_percent'];
+        dataMemoryPercent = data['memory_percent'];
+        newMemoryClass = 'dashboard-box-status';
         // Refresh last check date
-        $("#last_check_date").html(data["last_fulldate"]);
-        $("#last_check_date").fadeOut(300).fadeIn(300);
+
+        lastCheckDate.text(data['last_fulldate']);
+        lastCheckDate.fadeOut(300).fadeIn(300);
 
         // CPU
-        if(data["cpu_check_enabled"] == "True") {
-            $("#span_cpu_percent_value").html(data["cpu_percent"]);
-            $("#span_cpu_user_value").html(data["cpu_user"]);
-            $("#span_cpu_system_value").html(data["cpu_system"]);
+        if (data['cpu_check_enabled'] === 'True') {
+            $('#span_cpu_percent_value').text(dataCpuPercent);
+            $('#span_cpu_user_value').text(data['cpu_user']);
+            $('#span_cpu_system_value').text(data['cpu_system']);
 
             // Progress bar
-            $("#bar_cpu_percent").css("width",data["cpu_percent"] + "%")
+            createProgressBar('#bar_cpu_percent', dataCpuPercent);
 
-            // Progress bar color and status image
-            var newCpuClass = "dashboard-box-status";
-            var newCpuProgressBarClass = "progress progress-striped "
-
-            switch (data["cpu_state"]) {
+            switch (data['cpu_state']) {
                 case 'ok':
-                    newCpuClass = "dashboard-box-status-ok";
-                    newCpuProgressBarClass += "progress-success"
+                    newCpuClass = 'dashboard-box-status-ok';
+                    newCpuProgressBarClass += 'progress-success';
                     break;
                 case 'warning':
-                    newCpuClass = "dashboard-box-status-warning";
-                    newCpuProgressBarClass += "progress-warning"
+                    newCpuClass = 'dashboard-box-status-warning';
+                    newCpuProgressBarClass += 'progress-warning';
                     break;
                 case 'alert':
-                    newCpuClass = "dashboard-box-status-alert";
-                    newCpuProgressBarClass += "progress-danger"
+                    newCpuClass = 'dashboard-box-status-alert';
+                    newCpuProgressBarClass += 'progress-danger';
                     break;
             }
-            $("#div_cpu_status").removeClass().addClass(newCpuClass);
-            $("#div_cpu_progress").removeClass().addClass(newCpuProgressBarClass);
+            $('#div_cpu_status').removeClass().addClass(newCpuClass);
+            $('#div_cpu_progress').removeClass().addClass(newCpuProgressBarClass);
 
 
-            $("#div_cpu_box").fadeOut(300).fadeIn(300);
+            $('#div_cpu_box').fadeOut(300).fadeIn(300);
         }
 
 
         // Memory and Swap
-        if(data["memory_check_enabled"] == "True") {
+        if ('True' === data['memory_check_enabled']) {
             // Memory
-            $("#span_memory_percent_value").html(data["memory_percent"]);
-            $("#span_memory_free_value").html(data["memory_free"]);
-            $("#span_memory_used_value").html(data["memory_used"]);
+            $('#span_memory_percent_value').text(dataMemoryPercent);
+            $('#span_memory_free_value').text(data['memory_free']);
+            $('#span_memory_used_value').text(data['memory_used']);
 
-            $("#bar_memory_percent").css("width",data["memory_percent"] + "%");
+            createProgressBar('#bar_memory_percent', dataMemoryPercent);
+            newCpuProgressBarClass = '';
 
-            // Progress bar color and status image
-            var newMemoryClass = "dashboard-box-status";
-            var newCpuProgressBarClass = "progress progress-striped "
-
-            switch (data["memory_state"]) {
-                case "ok":
-                    newMemoryClass = "dashboard-box-status-ok";
-                    newCpuProgressBarClass += "progress-success"
+            switch (data['memory_state']) {
+                case 'ok':
+                    newMemoryClass = 'dashboard-box-status-ok';
+                    newMemoryProgressBarClass += 'progress-success';
                     break;
-                case "warning":
-                    newMemoryClass = "dashboard-box-status-warning";
-                    newCpuProgressBarClass += "progress-warning"
+                case 'warning':
+                    newMemoryClass = 'dashboard-box-status-warning';
+                    newMemoryProgressBarClass += 'progress-warning';
                     break;
-                case "alert":
-                    newMemoryClass = "dashboard-box-status-alert";
-                    newCpuProgressBarClass += "progress-danger"
+                case 'alert':
+                    newMemoryClass = 'dashboard-box-status-alert';
+                    newMemoryProgressBarClass += 'progress-danger';
                     break;
             }
-            $("#div_memory_status").removeClass().addClass(newMemoryClass);
-            $("#div_memory_progress").removeClass().addClass(newCpuProgressBarClass);
+            $('#div_memory_status').removeClass().addClass(newMemoryClass);
+            $('#div_memory_progress').removeClass().addClass(newMemoryProgressBarClass);
 
-            $("#div_memory_box").fadeOut(300).fadeIn(300);
-
+            $('#div_memory_box').fadeOut(300).fadeIn(300);
 
             // Swap
-            $("#span_swap_used_value").html(data["swap_used"]);
-            $("#span_swap_percent_value").html(data["swap_percent"]);
+            $('#span_swap_used_value').text(data['swap_used']);
+            $('#span_swap_percent_value').text(data['swap_percent']);
 
-            $("#div_swap_box").fadeOut(300).fadeIn(300);
+            $('#div_swap_box').fadeOut(300).fadeIn(300);
         }
 
 
         // Load average and uptime
-        if(data["load_check_enabled"] == "True") {
+        if (data['load_check_enabled'] === 'True') {
             // Load average
-            $("#span_load_percent_value").html(data["load_percent"]);
-            $("#span_load_value").html(data["load_last_one"]);
+            $('#span_load_percent_value').text(data['load_percent']);
+            $('#span_load_value').text(data['load_last_one']);
 
-            $("#bar_memory_percent").css("width",data["memory_percent"] + "%");
+            createProgressBar('#bar_memory_percent', dataMemoryPercent);
 
-            // Progress bar color and status image
-            var newLoadClass = "dashboard-box-status";
-            var newLoadProgressBarClass = "progress progress-striped "
-
-            switch (data["memory_state"]) {
-                case "ok":
-                    newLoadClass = "dashboard-box-status-ok";
-                    newLoadProgressBarClass += "progress-success"
+            switch (data['memory_state']) {
+                case 'ok':
+                    newLoadClass = 'dashboard-box-status-ok';
                     break;
-                case "warning":
-                    newLoadClass = "dashboard-box-status-warning";
-                    newLoadProgressBarClass += "progress-warning"
+                case 'warning':
+                    newLoadClass = 'dashboard-box-status-warning';
                     break;
-                case "alert":
-                    newLoadClass = "dashboard-box-status-alert";
-                    newLoadProgressBarClass += "progress-danger"
+                case 'alert':
+                    newLoadClass = 'dashboard-box-status-alert';
                     break;
             }
-            $("#div_load_status").removeClass().addClass(newLoadClass);
-            $("#div_load_progress").removeClass().addClass(newLoadProgressBarClass);
+            $('#div_load_status').removeClass().addClass(newLoadClass);
 
-            $("#bar_load_percent").css("width",data["load_percent"] + "%");
-            $("#div_load_box").fadeOut(300).fadeIn(300);
+            createProgressBar('#bar_load_percent', data['load_percent']);
+            $('#div_load_box').fadeOut(300).fadeIn(300);
 
             // Uptime
-            $("#span_uptime_full_text").html(data["uptime_full_text"]);
-            $("#span_uptime_seconds_values").html(data["uptime_seconds_values"]);
-            $("#span_uptime_start_date_value").html(data["start_date"]);
-
-            $("#div_uptime_box").fadeOut(300).fadeIn(300);
+            $('#span_uptime_full_text').text(data['uptime_full_text']);
+            $('#span_uptime_seconds_values').text(data['uptime_seconds_values']);
+            $('#span_uptime_start_date_value').text(data['start_date']);
+            $('#div_uptime_box').fadeOut(300).fadeIn(300);
         }
 
-
         $.get('/api_disks_check', function(data) {
-
-            $("#div_disks_box").html(data);
-            $("#div_disks_box").fadeOut(300).fadeIn(300);
+            var disksBoxElement = $('#div_disks_box');
+            disksBoxElement.html(data);
+            disksBoxElement.fadeOut(300).fadeIn(300);
 
         });
 
-        // Reload is done!
-        $("#ajax_enabled").html("Ajax reload : Done");
+        $('#ajax_enabled').text('Ajax reload : Done');
     });
+};
 
-}
+
+/*
+ * Set the width of a progress bar
+ */
+var createProgressBar = function (element, value) {
+    $(element).css('width', value + '%');
+};
 
 
-$(document).ready(function() {
-
-    // Enable Ajax auto refresh
-    $("#ajax_enabled").html("Ajax refresh enabled...");
-
-    // Enable auto-refresh next check counter
+/*
+ * Initialization
+ */
+$(function () {
+    $('#ajax_enabled').text('Ajax refresh enabled...');  // Enable Ajax auto refresh
     updateNextCheckCounter();
-
-    // Verify if a new check is available on the server
     verifyIsNewCheckIsAvailable();
-
 });
-
