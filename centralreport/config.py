@@ -4,14 +4,13 @@
 # CentralReport - Indev version
 #
 
+import socket
 import sys
 import time
-import socket
-from cr.tools import Config
 from centralreport import CentralReport
+from cr.tools import Config
 
 if __name__ == '__main__':
-
 
     if 1 == len(sys.argv):
 
@@ -37,9 +36,7 @@ if __name__ == '__main__':
             except:
                 print('Error stopping CentralReport daemon...')
 
-
-        # Getting the actual config
-        config = Config()
+        config = Config()  # Getting the actual config
 
         # Enable or disable internal web server
         print('\n\n')
@@ -52,18 +49,18 @@ if __name__ == '__main__':
             resultEnableWebServer = raw_input('Do you want to enable the internal web server? [yes/no] ')
             if('yes' == resultEnableWebServer.lower()):
                 validEnableWebServer = True
-                Config.setConfigValue('Webserver','enable',True)
+                Config.setConfigValue('Webserver', 'enable', True)
 
             elif('no' == resultEnableWebServer.lower()):
                 validEnableWebServer = True
                 Config.config_webserver_enable = False
-                Config.setConfigValue('Webserver','enable',False)
+                Config.setConfigValue('Webserver', 'enable', False)
 
             else:
                 print('We do not understand your answer. Please use "yes" or "no"')
 
         # If the webserver is enabled, we can ask the default port for it.
-        if bool(Config.getConfigValue('Webserver','enable')):
+        if bool(Config.getConfigValue('Webserver', 'enable')):
             print('\n')
             print('Default port is 8080. You can choose a custom port if you want.')
 
@@ -89,13 +86,13 @@ if __name__ == '__main__':
                     validPort = False
                     print('You must enter a valid number!')
 
-            Config.setConfigValue('Webserver','port',resultPortInt)
+            Config.setConfigValue('Webserver', 'port', resultPortInt)
 
         print('\n\n')
         print('Thanks! Writing the new config file...')
         config.writeConfigFile()
 
-        # We're looking if CentralReport ran before.
+        # Checking if CentralReport was previously running.
         if centralReportRunningBefore:
             print('\n')
             print('Restarting CentralReport...')

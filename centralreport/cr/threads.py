@@ -2,43 +2,36 @@
 # CentralReport - Indev version
 #
 
-import threading
-import time
-import datetime
 import cr.collectors as crCollectors
 import cr.log as crLog
 import cr.utils.text as crUtilsText
+import datetime
+import threading
+import time
 from cr.tools import Config
 
 
 class Checks(threading.Thread):
     """
-        This thread will perform periodically checks.
+        Thread performing periodically checks.
     """
 
-    # True = perform checks...
-    performChecks = True
-
-    # Initial Count (Perform a check when starting)
-    tickCount = 60
-    # Perform a check every xx ticks (1 tick = 1 second)
-    tickPerformCheck = 60
-
-    # Get host informations
-    hostEntity = None
+    hostEntity = None  # Get host informations
 
     # Last checks (with new entities classes)
-    last_check_date = None
     last_check_cpu = None
-    last_check_memory = None
-    last_check_loadAverage = None
+    last_check_date = None
     last_check_disk = None
+    last_check_loadAverage = None
+    last_check_memory = None
+
+    performChecks = True  # True = perform checks...
+    tickCount = 60  # Initial Count (Perform a check when starting)
+    tickPerformCheck = 60  # Perform a check every xx ticks (1 tick = 1 second)
 
     def __init__(self):
         threading.Thread.__init__(self)
-
-        # Standard output
-        crLog.writeDebug('ThreadChecks is starting...')
+        crLog.writeDebug('ThreadChecks is starting...')  # Standard output
 
         # What is the current os ?
         if Config.HOST_CURRENT == Config.HOST_MAC:
@@ -51,8 +44,9 @@ class Checks(threading.Thread):
 
     def run(self):
         """
-            Execute checks
+            Executes checks.
         """
+
         # Getting informations about the current host
         Checks.hostEntity = self.MyCollector.get_infos()
 
@@ -62,22 +56,22 @@ class Checks(threading.Thread):
 
                 # Checking CPU
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_cpu_check')):
-                    crLog.writeDebug('Do a CPU check...')
+                    crLog.writeDebug('Doing a CPU check...')
                     Checks.last_check_cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_memory_check')):
-                    crLog.writeDebug('Do a memory check...')
+                    crLog.writeDebug('Doing a memory check...')
                     Checks.last_check_memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_load_check')):
-                    crLog.writeDebug('Do a load average check...')
+                    crLog.writeDebug('Doing a load average check...')
                     Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
                 # Checking disks informations
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_disks_check')):
-                    crLog.writeDebug('Do a disk check....')
+                    crLog.writeDebug('Doing a disk check....')
                     Checks.last_check_disk = self.MyCollector.get_disks()
 
                 # Updating last check date...
@@ -92,4 +86,3 @@ class Checks(threading.Thread):
             # new tick
             self.tickCount += 1
             time.sleep(1)
-

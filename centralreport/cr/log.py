@@ -4,12 +4,12 @@ import logging
 import sys
 
 
-def configLog(enable_debug_mode = False):
+def configLog(enable_debug_mode=False):
     """
-        Config the logging system (executed on time when CentralReport starting)
+        Configures the logging system (executed on time when CentralReport is starting).
     """
 
-    if enable_debug_mode == False:
+    if not enable_debug_mode:
         # Writing only "INFO" or more important messages in a log file (production environement)
         logging.basicConfig(filename='/var/log/centralreport.log',
                             format='%(levelname)s \t %(asctime)s \t %(message)s',
@@ -24,6 +24,7 @@ def configLog(enable_debug_mode = False):
 
 def writeDebug(text):
     logging.debug(text)
+
 
 def writeInfo(text):
     logging.info(text)

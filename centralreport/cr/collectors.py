@@ -6,19 +6,18 @@
 # Collector abstract class
 # MacCollector class
 # DebianCollector class
-import platform
-
-import subprocess
-import datetime
-import time
-from os import getloadavg
-import multiprocessing
+import cr.entities.checks as crEntitiesChecks
+import cr.entities.host as crEntitiesHost
 import cr.log as crLog
 import cr.utils.text as crUtilsText
-import cr.entities.checks as crEntitiesChecks
+import datetime
+import multiprocessing
+import platform
 import socket
-import cr.entities.host as crEntitiesHost
+import subprocess
+import time
 from cr.tools import Config
+from os import getloadavg
 
 
 class _Collector:
@@ -44,7 +43,7 @@ class _Collector:
 
 class MacCollector(_Collector):
     """
-        This collector can execute Mac OS command and get some useful values.
+        Collector executing Mac OS commands and getting useful values.
     """
 
     PAGEBYTES_TO_BYTES = 4096.
@@ -52,20 +51,20 @@ class MacCollector(_Collector):
 
     def get_infos(self):
         """
-            Getting some informations on this Mac.
+            Gets information about this Mac.
         """
 
         subprocessPIPE = subprocess.PIPE
         hostname = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
 
-        uname = subprocess.Popen(['uname', '-a'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        #uname = subprocess.Popen(['uname', '-a'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        #memsize = subprocess.Popen(['sysctl', '-n', 'hw.memsize'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
+        architecture = subprocess.Popen(['sysctl', '-n', 'hw.machine'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
         kernel = subprocess.Popen(['sysctl', '-n', 'kern.ostype'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
         kernel_v = subprocess.Popen(['uname', '-r'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
         model = subprocess.Popen(['sysctl', '-n', 'hw.model'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
         ncpu = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        memsize = subprocess.Popen(['sysctl', '-n', 'hw.memsize'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        architecture = subprocess.Popen(['sysctl', '-n', 'hw.machine'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
         cpu_model = subprocess.Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
@@ -90,11 +89,11 @@ class MacCollector(_Collector):
 
     def get_memory(self):
         """
-            Getting memory informations.
+            Gets memory information.
         """
 
         subprocessPIPE = subprocess.PIPE
-        memsize = subprocess.Popen(['sysctl', '-n', 'hw.memsize'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        #memsize = subprocess.Popen(['sysctl', '-n', 'hw.memsize'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
         memoire_complet = subprocess.Popen(['vm_stat'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
@@ -132,7 +131,7 @@ class MacCollector(_Collector):
 
     def get_cpu(self):
         """
-            Getting actual CPU utilization.
+            Gets actual CPU utilization.
         """
 
         # iostat - entrees / sorties
@@ -156,7 +155,7 @@ class MacCollector(_Collector):
 
     def get_loadaverage(self):
         """
-            Getting the load average for this computer.
+            Gets the host load average.
         """
 
         dict_iostat = self.getIOStat()
@@ -173,7 +172,7 @@ class MacCollector(_Collector):
 
     def getIOStat(self):
         """
-            Getting IOStat dictionary.
+            Gets IOStat dictionary.
         """
 
         # iostat - entrees / sorties
@@ -189,10 +188,9 @@ class MacCollector(_Collector):
 
         return dict_iostat
 
-
     def get_uptime(self):
         """
-            Gets the number of seconds since the last boot
+            Gets the number of seconds since the last boot.
         """
         uptime_cmd = subprocess.Popen(['sysctl', '-n', 'kern.boottime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
@@ -201,16 +199,15 @@ class MacCollector(_Collector):
         dict_uptime = uptime_cmd.split(' ')
 
         try:
-            timestamp_boot = int(dict_uptime[3].replace(',',''))
+            timestamp_boot = int(dict_uptime[3].replace(',', ''))
         except:
             timestamp_boot = time.time()
 
         return int(int(time.time()) - int(timestamp_boot))
 
-
     def get_disks(self):
         """
-            Getting active disks (with disk size for the moment)
+            Gets active disks (with disk size for the moment).
         """
 
         df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
@@ -236,10 +233,10 @@ class MacCollector(_Collector):
                 # Read http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline for more informations about shell pipe in Python
                 #
                 # Full command : diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
-                disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout = subprocess.PIPE)
-                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin = disk_name_p1.stdout, stdout = subprocess.PIPE)
+                disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout=subprocess.PIPE)
+                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin=disk_name_p1.stdout, stdout=subprocess.PIPE)
                 disk_name_p1.stdout.close()
-                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin = disk_name_p2.stdout, stdout = subprocess.PIPE).communicate()[0]
+                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin=disk_name_p2.stdout, stdout=subprocess.PIPE).communicate()[0]
                 disk_name_p2.stdout.close()
 
                 # Using new check entity
@@ -257,17 +254,16 @@ class MacCollector(_Collector):
 
 
 class DebianCollector(_Collector):
-
     """
-       This collector can execute Debian/Ubuntu commands and get some useful values.
-   """
+        Collector executing Debian/Ubuntu commands and getting useful values.
+    """
 
     def get_infos(self):
         """
-            Getting informations on this host
+            Gets information about this host.
         """
 
-        subprocessPIPE = subprocess.PIPE
+        #subprocessPIPE = subprocess.PIPE
         hostname = socket.gethostname()
         kernel = platform.system()
         kernel_v = platform.release()
@@ -277,7 +273,7 @@ class DebianCollector(_Collector):
 
         try:
             ncpu = multiprocessing.cpu_count()
-        except(ImportError,NotImplementedError):
+        except(ImportError, NotImplementedError):
             try:
                 ncpu = open('/proc/cpuinfo').read().count('processor\t:')
             except IOError:
@@ -291,10 +287,9 @@ class DebianCollector(_Collector):
 
         return hostEntity
 
-
     def get_cpu(self):
         """
-            Get CPU stats
+            Gets CPU stats.
         """
 
         # vmstat - input / output
@@ -318,7 +313,7 @@ class DebianCollector(_Collector):
 
     def get_memory(self):
         """
-            Get memory usage
+            Gets memory usage.
         """
 
         memory_result = subprocess.Popen(['cat', '/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
@@ -359,10 +354,9 @@ class DebianCollector(_Collector):
 
         return memoryCheck
 
-    # Obtenir les stats LoadAverage
     def get_loadaverage(self):
         """
-            Getting load average
+            Gets load average.
         """
 
         loadavg_result = getloadavg()
@@ -380,10 +374,9 @@ class DebianCollector(_Collector):
 
         return loadAverageEntity
 
-
     def get_uptime(self):
         """
-            Gets the number of seconds since the last boot
+            Gets the number of seconds since the last boot.
         """
         uptime_cmd = subprocess.Popen(['cat', '/proc/uptime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         uptime_dict = uptime_cmd.split(' ')
@@ -397,16 +390,14 @@ class DebianCollector(_Collector):
 
     def get_disks(self):
         """
-            Getting active disks (with disk size for the moment)
+            Gets active disks (with disk size for the moment).
         """
 
         df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-
         df_split = df_dict.splitlines()
-        header = df_split[0].split()
+        #header = df_split[0].split()
 
-        # New return entity
-        listDisks = crEntitiesHost.Disks()
+        listDisks = crEntitiesHost.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
 
@@ -414,18 +405,18 @@ class DebianCollector(_Collector):
                 line_split = df_split[i].split()
 
                 # Getting info in MB (Linux count with '1K block' unit)
+                disk_free = int(line_split[3]) * 1024
                 disk_total = int(line_split[1]) * 1024
                 disk_used = int(line_split[2]) * 1024
-                disk_free = int(line_split[3]) * 1024
 
                 # Using new check entity
                 checkDisk = crEntitiesChecks.Disk()
                 checkDisk.date = datetime.datetime.now()
-                checkDisk.name = line_split[0]
-                checkDisk.unix_name = line_split[0]
-                checkDisk.size = disk_total
-                checkDisk.used = disk_used
                 checkDisk.free = disk_free
+                checkDisk.name = line_split[0]
+                checkDisk.size = disk_total
+                checkDisk.unix_name = line_split[0]
+                checkDisk.used = disk_used
 
                 listDisks.checks.append(checkDisk)
 

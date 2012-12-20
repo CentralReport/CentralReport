@@ -2,17 +2,15 @@
 # CentralReport - Indev version
 #
 
-import time
-import calendar
 import cr.log as crLog
+import time
 
 
 def datetimeToTimestamp(datetime):
     """
-        Convert a datetime to Unix timestamp (simple, but this function may be very useful)
+        Converts a datetime to Unix timestamp.
     """
 
-    # return value
     timestamp = 0
 
     try:

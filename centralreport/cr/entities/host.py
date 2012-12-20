@@ -2,7 +2,7 @@
 # CentralReport - Indev version
 #
 
-# This module contains all entities about the current host :
+# This module contains all entities about the current host:
 # infos (caracteristics)
 # disks
 
@@ -11,62 +11,62 @@ import json
 
 
 class Infos:
-    """ This entity contain some datas about actual host """
+    """
+        Entity containing datas about actual host.
+    """
 
     def __init__(self):
-        self.date = datetime.datetime.now()
-
-        self.os = ''
-        self.hostname = ''
         self.architecture = ''
 
         # TODO : move it in CPU check.
         self.cpuModel = ''
         self.cpuCount = 1
 
+        self.date = datetime.datetime.now()
+        self.hostname = ''
+
         # Unix/Linux attributes
         self.kernelName = ''
         self.kernelVersion = ''
 
-        # Unique uuid
+        self.language = 'Python'  # CentralReport app language
+        self.model = ''  # Only for Mac OS
+        self.os = ''
         self.uuid = ''
-
-        # Only for Mac OS
-        self.model = ''
-
-        # CentralReport app language
-        self.language = 'Python'
 
     def jsonSerialize(self):
         """
-            Serialize this entity in JSON
+            Serializes this entity in JSON.
         """
 
         return json.dumps({
-            'type': 'host',
-            'uuid': self.uuid,
-            'date': self.date.strftime('%s'),
-            'os': self.os,
-            'hostname': self.hostname,
             'architecture': self.architecture,
+            'cpuCount': self.cpuCount,
             'cpuModel': self.cpuModel,
+            'date': self.date.strftime('%s'),
+            'hostname': self.hostname,
             'kernel_name': self.kernelName,
             'kernel_version': self.kernelVersion,
             'model': self.model,
-            'language': self.language
+            'language': self.language,
+            'os': self.os,
+            'type': 'host',
+            'uuid': self.uuid
         })
 
 
 class Disks:
-    """ This entity contain checks for all disks """
+    """
+        Entity containing checks for all the disks.
+    """
 
     def __init__(self):
-        self.date = datetime.datetime.now()
         self.checks = list()
+        self.date = datetime.datetime.now()
 
     def jsonSerialize(self):
         """
-            Serialize this entity in JSON
+            Serializes this entity in JSON.
         """
 
         return json.dumps({

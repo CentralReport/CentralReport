@@ -3,10 +3,10 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import sys
-import os
-import time
 import atexit
+import os
+import sys
+import time
 from signal import SIGTERM
 
 

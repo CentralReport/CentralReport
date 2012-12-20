@@ -1,5 +1,5 @@
-import sys
 import centralreport
+import sys
 
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012

@@ -3,72 +3,58 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
-import sys
-import time
-import datetime
 import cr.log as crLog
 import cr.threads as crThreads
 import cr.utils.text as crUtilsText
-from cr.tools import Config
+import datetime
+import sys
+import time
 from cr.daemon import Daemon
+from cr.tools import Config
 from web.server import WebServer
 
 
 class CentralReport(Daemon):
-    # Bool : True = daemon is running.
-    isRunning = True
+    configuration = None  # Configuration object
+    isRunning = True  # Bool : True = daemon is running.
     startingDate = None
 
-    # Configuration object
-    configuration = None
-
     # Threads
-    webserver_thread = None
     checks_thread = None
-
+    webserver_thread = None
 
     def run(self):
-        # Constructeur
+        """
+            Constructor.
+        """
 
-        # False = no error
-        # True = one or more errors when CentralReport is trying to start
-        isError = False
+        isError = False  # If True, there are one or more errors when CentralReport is trying to start
 
-        # On prepare les logs
+        # Preparing Logs
         crLog.configLog(Config.CR_CONFIG_ENABLE_DEBUG_MODE)
         crLog.writeInfo("CentralReport is starting...")
 
-        # Starting date
-        CentralReport.startingDate = datetime.datetime.now()
-
-        # Getting config object
-        CentralReport.configuration = Config()
+        CentralReport.startingDate = datetime.datetime.now()  # Starting date
+        CentralReport.configuration = Config()  # Getting config object
 
         # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
         Config.HOST_CURRENT == Config.HOST_UBUNTU):
             crLog.writeInfo(Config.HOST_CURRENT + " detected. Starting ThreadChecks...")
-
-            # Launching checks thread
-            CentralReport.checks_thread = crThreads.Checks()
-
+            CentralReport.checks_thread = crThreads.Checks()  # Launching checks thread
         else:
             isError = True
             crLog.writeCritical("Sorry, but your OS is not supported yet...")
 
-        # Enable webserver ?
-        print(Config.getConfigValue('Webserver','enable'))
-        if not isError & crUtilsText.textToBool(Config.getConfigValue('Webserver','enable')):
-            # Yeah !
+        # Is webserver enabled ?
+        print(Config.getConfigValue('Webserver', 'enable'))
+
+        if not isError & crUtilsText.textToBool(Config.getConfigValue('Webserver', 'enable')):
             crLog.writeInfo("Enabling the webserver")
-
             CentralReport.webserver_thread = WebServer()
-
         else:
             crLog.writeInfo("Webserver is disabled by configuration file")
 
-
-        #
         if not isError:
             crLog.writeInfo("CentralReport started!")
 
@@ -95,11 +81,11 @@ class CentralReport(Daemon):
         else:
             crLog.writeError("Error launching CentralReport!")
 
-
     def stop(self):
         """
             Called when the scripts will be stopped
         """
+
         crLog.writeInfo("Stopping CentralReport...")
         self.isRunning = False
 
@@ -116,14 +102,13 @@ class CentralReport(Daemon):
         try:
             Daemon.stop(self)
         except:
-            crLog.writeInfo("Pid file not found.")
+            crLog.writeInfo("PID file not found.")
 
         return 0
 
-
     def status(self):
         """
-            CentralReport is running ?
+            Checks the status of Central Report and returns the demon PID.
             @return Int : Unix daemon pid ID
         """
 
@@ -136,10 +121,9 @@ class CentralReport(Daemon):
 
         return pid
 
-
     def debug(self):
         """
-            Use this function to launch CentralReport without running the daemon.
+            Function used to launch CentralReport without running the daemon.
             Very useful to run CR in a IDE console :)
         """
 
@@ -150,7 +134,7 @@ class CentralReport(Daemon):
 # Main script
 #
 
-if __name__ == "__main__":
+if "__main__" == __name__:
     daemon = CentralReport(Config.CR_PID_FILE)
 
     if 2 == len(sys.argv):
@@ -165,10 +149,11 @@ if __name__ == "__main__":
 
         elif 'status' == sys.argv[1]:
             pid = daemon.status()
-            if 0 == pid :
+
+            if 0 == pid:
                 print('CentralReport is not running')
             else:
-                print('CentralReport is running with pid '+ str(pid))
+                print('CentralReport is running with pid ' + str(pid))
 
         else:
             crLog.writeError("Unknown command")

@@ -5,10 +5,12 @@ import urllib
 import urllib2
 from cr.tools import Config
 
-class Speaker:
 
-    # PS : This class is not used for the moment.
-    # It has created for testing purpose only.
+class Speaker:
+    """
+        PS : This class is not used for the moment.
+        It has been created for testing purpose only.
+    """
 
     PAGE_INFOS = 'remote.php'
     PAGE_CPU = 'remote_cpu.php'
@@ -19,6 +21,7 @@ class Speaker:
     def sendStats(page, datas):
         config_server_addr = Config.config_server_addr
         url = 'http://%s/CentralReport/%s' % (str(config_server_addr), str(page))
+        error = False
 
         #DEBUG
         print('URL : ' + url)
