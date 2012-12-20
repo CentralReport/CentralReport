@@ -12,7 +12,7 @@
         Not checked
     </div>
     {% else %}
-    <table class="table table-striped">
+    <table class="table table-striped table_inline">
         <tbody>
         {% for disk in disks %}
         <tr>

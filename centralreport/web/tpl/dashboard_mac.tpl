@@ -111,7 +111,7 @@
 
             <hr />
             <h3>CPU</h3>
-            <div class="row">
+            <div class="row-fluid">
                 <div class="span6">
 
                     <h5>Last check : {{ last_check }}</h5>
@@ -127,7 +127,7 @@
             <hr>
 
             <h3>Memory</h3>
-            <div class="row">
+            <div class="row-fluid">
                 <div class="span6">
 
                     <h5>Last check : {{ last_check }}</h5>
@@ -176,7 +176,7 @@
             <hr>
             <h3>Load average</h3>
 
-            <div class="row">
+            <div class="row-fluid">
                 <div class="span6">
                     <h5>Last check : {{ last_check }}</h5>
                     <div class="custom_margin_top_plus_20">
@@ -203,7 +203,7 @@
             <hr>
             <h3>Disks</h3>
 
-            <div class="row">
+            <div class="row-fluid">
                 <div class="span6">
                     <div class="custom_margin_top_plus_20">
                         <table class="table table-striped">

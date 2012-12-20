@@ -2,12 +2,13 @@
 
 {% block body %}
 
-<div class="page-header">
-    {% block header_title %}CentralReport host dashboard{% endblock %}
-    <small>{% block header_subtitle %}{% endblock %}</small>
-</div>
-
 <div class="container">
+
+    <div class="page-header clearfix">
+        {% block header_title %}CentralReport host dashboard{% endblock %}
+        <small>{% block header_subtitle %}{% endblock %}</small>
+    </div>
+
     <div class="content">
 
         {% block content %}<h1>No data to display</h1>{% endblock %}

@@ -17,68 +17,102 @@ var last_timestamp = 0;
 var next_check_at = 0;
 
 /**
+ * Refresh the next check counter
+ */
+function updateNextCheckCounter(){
+
+    actual_client_timestamp = Math.round(new Date().getTime() / 1000);
+
+    if(next_check_at != 0){
+        var nextCheckIn = parseInt(next_check_at - actual_client_timestamp) + parseInt(3);
+
+        if(nextCheckIn < -5) {
+            $("#ajax_enabled").html("Error. Next try in few seconds");
+        }
+        else if(nextCheckIn <= 0) {
+            $("#ajax_enabled").html("Next check is very close !");
+        } else {
+            $("#ajax_enabled").html("Next check in "+ nextCheckIn +" seconds");
+        }
+    }
+
+    setTimeout(updateNextCheckCounter,1000);
+
+}
+
+
+/**
  * Verify if a new check is avaiable
  */
-function testNewCheck() {
+function verifyIsNewCheckIsAvailable() {
 
     console.log("CR - Verify if a new check is available...");
-    actual_client_timestamp = Math.round(new Date().getTime() / 1000)
+    actual_client_timestamp = Math.round(new Date().getTime() / 1000);
 
     $("#ajax_enabled").html("No new check");
+    $("#div_ajax_error_alert").css("display","none");
 
-    $.getJSON('/api_date_check',function(data) {
+    $.ajax('/api_date_check')
+        .done(function(data) {
 
-        if(data["last_timestamp"] == 0) {
-            $("#last_check_date").html("No check available");
-            last_timestamp = 0;
-        } else {
-            $("#last_check_date").html(data["last_fulldate"]);
+            // If last_timestamp=0, CR hasn't done any checks yet...
+            if(data["last_timestamp"] == 0) {
+                $("#last_check_date").html("No check available");
+                last_timestamp = 0;
+            } else {
+                $("#last_check_date").html(data["last_fulldate"]);
 
-            // Now, we can getting all checks values...
-            if(parseInt(data['last_timestamp']) != last_timestamp) {
+                // Now, we can getting all checks values...
+                if(parseInt(data['last_timestamp']) != last_timestamp) {
 
-                console.log("CR - /!\\ Last timestamp has changed!");
+                    console.log("CR - /!\\ Last timestamp has changed!");
 
-                $("#ajax_enabled").html("Getting last check...");
+                    $("#ajax_enabled").html("Getting last check...");
 
-                last_timestamp = parseInt(data['last_timestamp']);
-                server_timestamp = parseInt(data['current_timestamp']);
+                    last_timestamp = parseInt(data['last_timestamp']);
+                    server_timestamp = parseInt(data['current_timestamp']);
 
-                // Differences between computer clock and client clock
-                actual_client_timestamp = Math.round(new Date().getTime() / 1000)
-                diff_timestamp_client_server = server_timestamp - actual_client_timestamp;
+                    // Differences between computer clock and client clock
+                    actual_client_timestamp = Math.round(new Date().getTime() / 1000)
+                    diff_timestamp_client_server = server_timestamp - actual_client_timestamp;
 
-                // All checks are done every 60 seconds by the agent
-                next_check_at = last_timestamp + 60 + diff_timestamp_client_server;
+                    // All checks are done every 60 seconds by the agent
+                    next_check_at = last_timestamp + 60 + diff_timestamp_client_server;
 
-                updateLastCheck();
+                    updateLastCheck();
 
+                }
             }
-        }
 
-        // 2 seconds to be sure to
-        next_check_in = parseInt(next_check_at - actual_client_timestamp) + parseInt(4)
-        console.log("CR - Next checks estimated in "+ next_check_in +" seconds")
+            // We add 4 seconds between two checks, to be sure the next check is done
+            next_check_in = parseInt(next_check_at - actual_client_timestamp) + parseInt(4)
+            console.log("CR - Next checks estimated in "+ next_check_in +" seconds")
 
-        // Execute next test in 20 seconds
-        if(next_check_at == 0) {
-            console.log("CR - Testing if new checks are available in 20 seconds...");
-            setTimeout(testNewCheck,20000);
-        } else if(next_check_in<(-10)) {
-            console.log("CR - New checks are very late... Next try in 10 seconds");
-            setTimeout(testNewCheck,10000);
-        } else if(next_check_in<(-1)) {
-            console.log("CR - New checks should have been done... Do a another try in 2 seconds");
-            setTimeout(testNewCheck,2000);
-        } else if(next_check_in<3) {
-            console.log("CR - Next checks are very close. Next try in 1 second");
-            setTimeout(testNewCheck,1000);
-        } else {
-            console.log("CR - Testing if new checks are available in "+ next_check_in +" second(s)");
-            setTimeout(testNewCheck,parseInt(next_check_in*1000));
-        }
+            // Execute next test in 20 seconds
+            if(next_check_at == 0) {
+                console.log("CR - Testing if new checks are available in 20 seconds...");
+                setTimeout(verifyIsNewCheckIsAvailable,20000);
+            } else if(next_check_in<(-10)) {
+                console.log("CR - New checks are very late... Next try in 10 seconds");
+                setTimeout(verifyIsNewCheckIsAvailable,10000);
+            } else if(next_check_in<(-1)) {
+                console.log("CR - New checks should have been done... Do a another try in 2 seconds");
+                setTimeout(verifyIsNewCheckIsAvailable,2000);
+            } else if(next_check_in<3) {
+                console.log("CR - Next checks are very close. Next try in 1 second");
+                setTimeout(verifyIsNewCheckIsAvailable,1000);
+            } else {
+                console.log("CR - Testing if new checks are available in "+ next_check_in +" second(s)");
+                setTimeout(verifyIsNewCheckIsAvailable,parseInt(next_check_in*1000));
+            }
+        })
+        .fail(function() {
 
-    });
+            $("#div_ajax_error_alert").html("Ajax error. Next try in 30 seconds...");
+            $("#div_ajax_error_alert").css("display","block");
+            setTimeout(verifyIsNewCheckIsAvailable,30000);
+
+        });
 
 
 }
@@ -119,8 +153,8 @@ function updateLastCheck() {
                     newCpuClass = "dashboard-box-status-warning";
                     newCpuProgressBarClass += "progress-warning"
                     break;
-                case 'error':
-                    newCpuClass = "dashboard-box-status-error";
+                case 'alert':
+                    newCpuClass = "dashboard-box-status-alert";
                     newCpuProgressBarClass += "progress-danger"
                     break;
             }
@@ -154,8 +188,8 @@ function updateLastCheck() {
                     newMemoryClass = "dashboard-box-status-warning";
                     newCpuProgressBarClass += "progress-warning"
                     break;
-                case "error":
-                    newMemoryClass = "dashboard-box-status-error";
+                case "alert":
+                    newMemoryClass = "dashboard-box-status-alert";
                     newCpuProgressBarClass += "progress-danger"
                     break;
             }
@@ -194,8 +228,8 @@ function updateLastCheck() {
                     newLoadClass = "dashboard-box-status-warning";
                     newLoadProgressBarClass += "progress-warning"
                     break;
-                case "error":
-                    newLoadClass = "dashboard-box-status-error";
+                case "alert":
+                    newLoadClass = "dashboard-box-status-alert";
                     newLoadProgressBarClass += "progress-danger"
                     break;
             }
@@ -227,12 +261,17 @@ function updateLastCheck() {
 
 }
 
+
 $(document).ready(function() {
 
     // Enable Ajax auto refresh
     $("#ajax_enabled").html("Ajax refresh enabled...");
 
-    testNewCheck();
+    // Enable auto-refresh next check counter
+    updateNextCheckCounter();
+
+    // Verify if a new check is available on the server
+    verifyIsNewCheckIsAvailable();
 
 });
 

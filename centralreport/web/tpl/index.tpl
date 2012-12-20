@@ -12,12 +12,25 @@
     This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
 </div>
 
-<div class="headhand">
+<noscript>
+    <div id="div_ajax_available_alert" class="alert alert-info">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Dynamic refresh is not available on your web browser</strong><br />
+        Please activate Javascript or try a more powerful web browser like Firefox, Chrome or Safari.
+    </div>
+</noscript>
+
+
+<div id="div_ajax_error_alert" class="alert alert-error" style="display:none;">
+    An error has occured
+</div>
+
+<div class="headhand clearfix">
     Last check : <span id="last_check_date">{{ last_check }}</span>
     <small id="ajax_enabled"></small>
 </div>
 
-<div class="row">
+<div class="row-fluid">
     <div class="span4">
 
         <div class="dashboard-box">
@@ -153,7 +166,7 @@
 
 </div>
 
-<div class="row">
+<div class="row-fluid">
     <div class="span4">
         <div class="dashboard-box">
             <div class="dashboard-box-headhand">
@@ -229,7 +242,7 @@
 
 </div>
 
-<div class="row">
+<div class="row-fluid">
     <div class="span12">
         <div id="div_disks_box" class="dashboard-box">
             <div class="dashboard-box-headhand">
@@ -246,7 +259,7 @@
                     Not checked
                 </div>
                 {% else %}
-                <table class="table table-striped">
+                <table class="table table-striped table_inline">
                     <tbody>
                     {% for disk in disks %}
                     <tr>
@@ -268,7 +281,7 @@
 
 </div>
 
-<div class="headhand headhand-center">
+<div class="headhand headhand-center clearfix">
     <a href="dashboard">Go to old full report</a>
 </div>
 

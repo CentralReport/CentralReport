@@ -13,11 +13,9 @@ html, body {
 
 /* Top header */
 .page-header {
-    width: 1024px;
+    min-height: 20px;
 
-    height: 20px;
-
-    margin: 0px auto;
+    margin: 0px -20px;
     padding: 15px 20px;
 
     font-size:20px;
@@ -44,7 +42,7 @@ html, body {
 .container > .content {
     background-color: #fff;
     padding: 20px;
-    margin: 0 -20px 0; /* negative indent the amount of the padding to maintain the grid system */
+    margin: 0;
     -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
     border-radius: 0 0 6px 6px;
@@ -54,19 +52,22 @@ html, body {
 }
 
 /* Each row must be marged top with 20px */
-.row {
-    margin-top: 20px;
+.row-fluid {
+    margin-bottom: 20px;
 }
 
+.table_inline {
+    margin-bottom: 0;
+}
 
 /* Headhand to display some useful informations */
 .headhand {
-    height: 20px;
+    min-height: 20px;
 
     font-size: 15px;
     font-weight: bold;
 
-    margin-top: 20px;
+    margin-bottom: 20px;
     padding: 5px 20px;
 
     background: rgb(234,234,234); /* Old browsers */
@@ -85,10 +86,6 @@ html, body {
 
 .headhand small {
     float:right;
-}
-
-.headhand:after {
-    clear: both;
 }
 
 
