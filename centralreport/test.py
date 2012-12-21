@@ -1,5 +1,6 @@
 import centralreport
 import sys
+import os
 
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
@@ -22,4 +23,5 @@ print('Ending debug mode')
 print('---------------------------------')
 
 # Ok !
+os.system('kill %d' % os.getpid())
 sys.exit(0)
