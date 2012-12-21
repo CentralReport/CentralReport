@@ -67,7 +67,7 @@
                         {% elif cpu_warning is defined %}
                             {% set cpu_status = 'progress-warning' %}
                         {% elif cpu_ok is defined %}
-                            {% set cpu_status = 'progress-ok' %}
+                            {% set cpu_status = 'progress-success' %}
                         {% endif %}
 
                         <div id="div_cpu_progress" class="progress progress-striped {{ cpu_status }}">

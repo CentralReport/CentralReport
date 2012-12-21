@@ -182,7 +182,6 @@ var updateLastCheck = function () {
             $('#span_memory_used_value').text(data['memory_used']);
 
             createProgressBar('#bar_memory_percent', dataMemoryPercent);
-            newCpuProgressBarClass = '';
 
             switch (data['memory_state']) {
                 case 'ok':
@@ -217,22 +216,26 @@ var updateLastCheck = function () {
             $('#span_load_percent_value').text(data['load_percent']);
             $('#span_load_value').text(data['load_last_one']);
 
-            createProgressBar('#bar_memory_percent', dataMemoryPercent);
+            createProgressBar('#bar_load_percent', data['load_percent']);
 
-            switch (data['memory_state']) {
+            switch (data['load_state']) {
                 case 'ok':
                     newLoadClass = 'dashboard-box-status-ok';
+                    newLoadProgressBarClass += 'progress-success';
                     break;
                 case 'warning':
                     newLoadClass = 'dashboard-box-status-warning';
+                    newLoadProgressBarClass += 'progress-warning';
                     break;
                 case 'alert':
                     newLoadClass = 'dashboard-box-status-alert';
+                    newLoadProgressBarClass += 'progress-danger';
                     break;
             }
             $('#div_load_status').removeClass().addClass(newLoadClass);
+            $('#div_memory_progress').removeClass().addClass(newLoadProgressBarClass);
 
-            createProgressBar('#bar_load_percent', data['load_percent']);
+
             $('#div_load_box').fadeOut(300).fadeIn(300);
 
             // Uptime
