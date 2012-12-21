@@ -317,13 +317,13 @@ class Pages:
 
                     if isinstance(tmpl_vars['swap_percent'], int):
                         if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_alert')):
-                            tmpl_vars['swap_alert'] = True
+                            tmpl_vars['swap_state'] = 'alert'
                         elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_warning')):
-                            tmpl_vars['swap_warning'] = True
+                            tmpl_vars['swap_state'] = 'warning'
                         else:
-                            tmpl_vars['swap_ok'] = True
+                            tmpl_vars['swap_state'] = 'ok'
                     else:
-                        tmpl_vars['swap_ok'] = True
+                        tmpl_vars['swap_state'] = 'ok'
 
                 else:
                     # No swap available on this host

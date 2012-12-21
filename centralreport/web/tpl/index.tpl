@@ -138,7 +138,7 @@
                         {% set swap_status = 'dashboard-box-status-ok' %}
                     {% endif %}
 
-                    <div class="{{ swap_status }}"></div>
+                    <div id="div_swap_status" class="{{ swap_status }}"></div>
                     <div class="dashboard-box-title">Swap (used)</div>
                 </div>
                 <div class="dashboard-box-datas" id="div_swap_box">
@@ -158,6 +158,20 @@
                         <div class="subtitle">
                             <span id="span_swap_percent_value">{{ swap_percent }}</span> % of
                             <span id="span_swap_size_value">{{ swap_size }}</span>
+                        </div>
+
+                        {% set swap_status = '' %}
+
+                        {% if swap_alert is defined %}
+                            {% set swap_status = 'progress-danger' %}
+                        {% elif swap_warning is defined %}
+                            {% set swap_status = 'progress-warning' %}
+                        {% elif swap_ok is defined %}
+                            {% set swap_status = 'progress-success' %}
+                        {% endif %}
+
+                        <div id="div_swap_progress" class="progress progress-striped {{ swap_status }}">
+                            <div id="bar_swap_percent" class="bar" style="width:{{ swap_percent }}%;"></div>
                         </div>
                     {% else %}
                         <div class="title">Not available</div>

@@ -132,8 +132,10 @@ var updateLastCheck = function () {
     var dataCpuPercent;
     var dataMemoryPercent;
     var newMemoryClass = 'dashboard-box-status';
+    var newSwapClass = 'dashboard-box-status';
     var newCpuProgressBarClass = 'progress progress-striped ';
     var newMemoryProgressBarClass = 'progress progress-striped ';
+    var newSwapProgressBarClass = 'progress progress-striped ';
     var newLoadProgressBarClass = 'progress progress-striped ';
 
     console.log('CR - Getting last check values...');
@@ -217,6 +219,27 @@ var updateLastCheck = function () {
                     $("#span_swap_used_value").text(data['swap_used']);
                     $("#span_swap_size_value").text(data['swap_total']);
                     $("#span_swap_percent_value").text(data['swap_percent']);
+
+                    // Refresh progress bar
+                    createProgressBar('#bar_swap_percent', data['swap_percent']);
+
+                    switch (data['swap_state']) {
+                        case 'ok':
+                            newSwapClass = 'dashboard-box-status-ok';
+                            newSwapProgressBarClass += 'progress-success';
+                            break;
+                        case 'warning':
+                            newSwapClass = 'dashboard-box-status-warning';
+                            newSwapProgressBarClass += 'progress-warning';
+                            break;
+                        case 'alert':
+                            newSwapClass = 'dashboard-box-status-alert';
+                            newSwapProgressBarClass += 'progress-danger';
+                            break;
+                    }
+                    $('#div_swap_status').removeClass().addClass(newSwapClass);
+                    $('#div_swap_progress').removeClass().addClass(newSwapProgressBarClass);
+
                     break;
 
             }

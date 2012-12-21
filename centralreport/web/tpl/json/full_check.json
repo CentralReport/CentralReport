@@ -21,6 +21,7 @@
     "swap_free": "{{ swap_free }}",
     "swap_used": "{{ swap_used }}",
     "swap_total": "{{ swap_size }}",
+    "swap_state": "{{ swap_state }}",
 
     "load_check_enabled": "{{ load_check_enabled }}",
     "load_percent": "{{ load_percent }}",
