@@ -35,12 +35,12 @@ fi
 
 echo " "
 echo "Uninstall"
-read -p "You will uninstall CentralReport. Are you sure to continue (y/n)" RESP
-#read unistall_confirm
+read -p "You will uninstall CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
 
 
 # Are you sure to uninstall CR ?
-if [ "$RESP" = "y" ]; then
+verifyYesNoAnswer ${RESP}
+if [ $? -eq 0 ]; then
     echo "OK, continue"
     echo " "
 

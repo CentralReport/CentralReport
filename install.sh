@@ -55,10 +55,11 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         echo " "
         echo "Install mode enabled"
-        read -p "You will install CentralReport. Are you sure to continue (y/n)" RESP
+        read -p "You will install CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
 
         # Are you sure to install CR ?
-        if [ "$RESP" = "y" ]; then
+        verifyYesNoAnswer ${RESP}
+        if [ $? -eq 0 ]; then
 
             # It's an indev version. At each install, we delete everything.
 

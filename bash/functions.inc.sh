@@ -63,3 +63,16 @@ echo -e "\r\e[0;32m [OK ]\e[0m $message"
   fi
 return $ret
 }
+
+
+# This function verify if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
+# PARAMETER : a string
+# RETURN : If true, this function return 0 (no error), else return 1 for any other answer.
+function verifyYesNoAnswer() {
+
+    case "$1" in
+        y|Y|yes|YES|Yes) return 0 ;;
+        *) echo Exiting; return 1 ;;
+    esac
+
+}
