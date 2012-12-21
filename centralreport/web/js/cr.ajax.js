@@ -76,7 +76,12 @@ var verifyIsNewCheckIsAvailable = function () {
 
                     // Differences between computer clock and client clock
                     actualClientTimestamp = Math.round(new Date().getTime() / 1000);
-                    diff_timestamp_client_server = server_timestamp - actualClientTimestamp;
+
+                    if (server_timestamp < actualClientTimestamp){
+                        diff_timestamp_client_server = actualClientTimestamp - server_timestamp;
+                    } else {
+                        diff_timestamp_client_server = server_timestamp - actualClientTimestamp;
+                    }
 
                     // All checks are done every 60 seconds by the agent
                     nextCheckAt = lastTimestamp + 60 + diff_timestamp_client_server;
