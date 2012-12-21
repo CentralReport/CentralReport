@@ -20,7 +20,7 @@
     "swap_percent": "{{ swap_percent }}",
     "swap_free": "{{ swap_free }}",
     "swap_used": "{{ swap_used }}",
-    "swap_total": "{{ swap_total }}",
+    "swap_total": "{{ swap_size }}",
 
     "load_check_enabled": "{{ load_check_enabled }}",
     "load_percent": "{{ load_percent }}",

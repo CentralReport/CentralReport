@@ -139,11 +139,11 @@
                     {% endif %}
 
                     <div class="{{ swap_status }}"></div>
-                    <div class="dashboard-box-title">Swap</div>
+                    <div class="dashboard-box-title">Swap (used)</div>
                 </div>
                 <div class="dashboard-box-datas" id="div_swap_box">
                     {% if 'undefined' == swap_configuration %}
-                        <div class="title">Not swap</div>
+                        <div class="title">No swap</div>
                     {% elif 'unlimited' == swap_configuration %}
                         <div class="title">
                             <span id="span_swap_used_value">{{ swap_used }}</span>

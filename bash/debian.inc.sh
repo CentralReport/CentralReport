@@ -166,7 +166,7 @@ function debian_cp_startup_plist {
     else
         chmod 755 ${STARTUP_DEBIAN}
 
-        displayAndExec "Registring startup script" update-rc.d centralreport.sh defaults
+        displayAndExec "Registering startup script" update-rc.d centralreport.sh defaults
 
         if [ $? -ne "0" ]; then
           displayError "Error on registering startup script with update-rc.d (Error code : $?)"

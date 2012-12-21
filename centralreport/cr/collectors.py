@@ -348,7 +348,7 @@ class DebianCollector(_Collector):
         memoryCheck.active = int(dict_memory['Active']) * 1024
         memoryCheck.inactive = int(dict_memory['Inactive']) * 1024
         memoryCheck.resident = 0
-        memoryCheck.swapTotal = int(dict_memory['SwapTotal']) * 1024
+        memoryCheck.swapSize = int(dict_memory['SwapTotal']) * 1024
         memoryCheck.swapFree = int(dict_memory['SwapFree']) * 1024
         memoryCheck.swapUsed = int(float(dict_memory['SwapTotal']) - float(dict_memory['SwapFree'])) * 1024
 
