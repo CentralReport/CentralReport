@@ -106,6 +106,7 @@ class Pages:
 
         tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
 
+
         # CPU stats
         if Checks.last_check_cpu is not None:
             tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
@@ -120,23 +121,17 @@ class Pages:
             else:
                 tmpl_vars['cpu_ok'] = True
 
-        # Memory stats
+
+        # Memory and swap stats
         if Checks.last_check_memory is not None:
+
+            # First : Memory stats
             tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
             tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
             tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
             tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
 
-            if 0 != int(Checks.last_check_memory.swapSize):
-                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
-                tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
-            else:
-                tmpl_vars['swap_percent'] = 0
-                tmpl_vars['swap_used'] = "No Swap"
-
-            tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
-            tmpl_vars['swap_total'] = crUtilsText.convertByte(Checks.last_check_memory.swapSize)
-
+            # Memory status
             if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_alert')):
                 tmpl_vars['memory_alert'] = True
             elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_warning')):
@@ -144,15 +139,36 @@ class Pages:
             else:
                 tmpl_vars['memory_ok'] = True
 
-            if isinstance(tmpl_vars['swap_percent'], int):
-                if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_alert')):
-                    tmpl_vars['swap_alert'] = True
-                elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_warning')):
-                    tmpl_vars['swap_warning'] = True
+
+            # Last : swap stats
+            if 0 != int(Checks.last_check_memory.swapSize):
+                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
+                tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
+
+                tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
+                tmpl_vars['swap_size'] = crUtilsText.convertByte(Checks.last_check_memory.swapSize)
+
+                # On Mac, the swap is unlimited (only limited by the available hard drive size)
+                if Checks.last_check_memory.swapSize == Checks.last_check_memory.total:
+                    tmpl_vars['swap_configuration'] = 'unlimited'
+                else:
+                    tmpl_vars['swap_configuration'] = 'limited'
+
+                if isinstance(tmpl_vars['swap_percent'], int):
+                    if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_alert')):
+                        tmpl_vars['swap_alert'] = True
+                    elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_warning')):
+                        tmpl_vars['swap_warning'] = True
+                    else:
+                        tmpl_vars['swap_ok'] = True
                 else:
                     tmpl_vars['swap_ok'] = True
+
             else:
-                tmpl_vars['swap_ok'] = True
+                # No swap available on this host
+                tmpl_vars['swap_configuration'] = "undefined"
+
+
 
         # Load average stats
         if Checks.last_check_loadAverage is not None:
@@ -166,6 +182,7 @@ class Pages:
             else:
                 tmpl_vars['load_ok'] = True
 
+
         # Uptime stats (checked in load average collector)
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
@@ -175,6 +192,7 @@ class Pages:
             crLog.writeDebug('My Uptime seconds' + str(tmpl_vars['uptime_seconds']))
 
             tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+
 
         # DIsks stats
         if Checks.last_check_disk is not None:
@@ -276,11 +294,6 @@ class Pages:
                 tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
                 tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
 
-                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
-                tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
-                tmpl_vars['swap_total'] = crUtilsText.convertByte(Checks.last_check_memory.swapSize)
-                tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
-
                 if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_alert')):
                     tmpl_vars['memory_state'] = "alert"
                 elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_warning')):
@@ -288,6 +301,35 @@ class Pages:
                 else:
                     tmpl_vars['memory_state'] = "ok"
 
+                    # Last : swap stats
+                if 0 != int(Checks.last_check_memory.swapSize):
+                    tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
+                    tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
+
+                    tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
+                    tmpl_vars['swap_size'] = crUtilsText.convertByte(Checks.last_check_memory.swapSize)
+
+                    # On Mac, the swap is unlimited (only limited by the available hard drive size)
+                    if Checks.last_check_memory.swapSize == Checks.last_check_memory.total:
+                        tmpl_vars['swap_configuration'] = 'unlimited'
+                    else:
+                        tmpl_vars['swap_configuration'] = 'limited'
+
+                    if isinstance(tmpl_vars['swap_percent'], int):
+                        if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_alert')):
+                            tmpl_vars['swap_alert'] = True
+                        elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_warning')):
+                            tmpl_vars['swap_warning'] = True
+                        else:
+                            tmpl_vars['swap_ok'] = True
+                    else:
+                        tmpl_vars['swap_ok'] = True
+
+                else:
+                    # No swap available on this host
+                    tmpl_vars['swap_configuration'] = "undefined"
+
+            # Load average
             if Checks.last_check_loadAverage is None:
                 tmpl_vars['load_check_enabled'] = "False"
             else:

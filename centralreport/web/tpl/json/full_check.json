@@ -15,6 +15,8 @@
     "memory_total": "{{ memory_total }}",
     "memory_used": "{{ memory_used }}",
     "memory_state": "{{ memory_state }}",
+
+    "swap_configuration": "{{ swap_configuration }}",
     "swap_percent": "{{ swap_percent }}",
     "swap_free": "{{ swap_free }}",
     "swap_used": "{{ swap_used }}",

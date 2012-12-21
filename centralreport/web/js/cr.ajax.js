@@ -203,6 +203,19 @@ var updateLastCheck = function () {
             $('#div_memory_box').fadeOut(300).fadeIn(300);
 
             // Swap
+            switch (data['swap_configuration']) {
+                case 'unlimited':
+                    $("#span_swap_used_value").text(data['swap_used']);
+                    $("#span_swap_percent_value").text(data['swap_percent']);
+                    break;
+                case 'limited':
+                    $("#span_swap_used_value").text(data['swap_used']);
+                    $("#span_swap_size_value").text(data['swap_total']);
+                    $("#span_swap_percent_value").text(data['swap_percent']);
+                    break;
+
+            }
+
             $('#span_swap_used_value').text(data['swap_used']);
             $('#span_swap_percent_value').text(data['swap_percent']);
 

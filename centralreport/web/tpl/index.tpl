@@ -103,7 +103,8 @@
                             <span id="span_memory_percent_value">{{ memory_percent }}</span> %
                         </div>
                         <div class="subtitle">
-                             <span id="span_memory_used_value">{{ memory_used }}</span> used and <span id="span_memory_free_value">{{ memory_free }}</span> free
+                            <span id="span_memory_used_value">{{ memory_used }}</span> used and
+                            <span id="span_memory_free_value">{{ memory_free }}</span> free
                         </div>
 
                         {% set memory_status = '' %}
@@ -141,15 +142,25 @@
                     <div class="dashboard-box-title">Swap</div>
                 </div>
                 <div class="dashboard-box-datas" id="div_swap_box">
-                    {% if swap_percent is undefined %}
-                        <div class="title">Not checked</div>
-                    {% else %}
+                    {% if 'undefined' == swap_configuration %}
+                        <div class="title">Not swap</div>
+                    {% elif 'unlimited' == swap_configuration %}
                         <div class="title">
                             <span id="span_swap_used_value">{{ swap_used }}</span>
                         </div>
                         <div class="subtitle">
                             <span id="span_swap_percent_value">{{ swap_percent }}</span> % of physical memory
                         </div>
+                    {% elif 'limited' == swap_configuration %}
+                        <div class="title">
+                            <span id="span_swap_used_value">{{ swap_used }}</span>
+                        </div>
+                        <div class="subtitle">
+                            <span id="span_swap_percent_value">{{ swap_percent }}</span> % of
+                            <span id="span_swap_size_value">{{ swap_size }}</span>
+                        </div>
+                    {% else %}
+                        <div class="title">Not available</div>
                     {% endif %}
 
                 </div>
