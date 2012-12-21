@@ -361,7 +361,7 @@ class Pages:
 
             for disk in Checks.last_check_disk.checks:
                 checkDisk = {}
-                checkDisk['name'] = str.replace(disk.name, '/dev/', '')
+                checkDisk['name'] = str.replace(disk.name, '/dev/', '').decode('utf-8')
                 checkDisk['free'] = crUtilsText.convertByte(disk.free)
                 checkDisk['total'] = crUtilsText.convertByte(disk.size)
                 checkDisk['percent'] = int(round(disk.used, 0) * 100 / int(disk.size))
