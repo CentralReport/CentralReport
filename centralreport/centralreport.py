@@ -47,8 +47,6 @@ class CentralReport(Daemon):
             crLog.writeCritical("Sorry, but your OS is not supported yet...")
 
         # Is webserver enabled ?
-        print(Config.getConfigValue('Webserver', 'enable'))
-
         if not isError & crUtilsText.textToBool(Config.getConfigValue('Webserver', 'enable')):
             crLog.writeInfo("Enabling the webserver")
             CentralReport.webserver_thread = WebServer()
