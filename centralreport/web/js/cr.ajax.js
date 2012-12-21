@@ -246,7 +246,7 @@ var updateLastCheck = function () {
                     break;
             }
             $('#div_load_status').removeClass().addClass(newLoadClass);
-            $('#div_memory_progress').removeClass().addClass(newLoadProgressBarClass);
+            $('#div_load_progress').removeClass().addClass(newLoadProgressBarClass);
 
 
             $('#div_load_box').fadeOut(300).fadeIn(300);
