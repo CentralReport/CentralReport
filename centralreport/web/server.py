@@ -7,6 +7,7 @@ import cr.utils.date as crUtilsDate
 import cr.utils.text as crUtilsText
 import datetime
 import os
+import routes
 import threading
 from cr.threads import Checks
 from cr.tools import Config
@@ -58,6 +59,9 @@ class WebServer(threading.Thread):
             '/media': {
                 'tools.staticdir.dir': 'media',
                 'tools.staticdir.on': True
+            },
+            '/api': {
+                'request.dispatch': self.setupRoutes()
             }
         }
 
@@ -70,6 +74,14 @@ class WebServer(threading.Thread):
         webApplication.log.access_file = None
 
         self.start()
+
+    def setupRoutes(self):
+        d = cherrypy.dispatch.RoutesDispatcher()
+        d.connect('api_disks_check', '/api/disks_check', controller=Pages(self.env).api_disks_check)
+        d.connect('api_date_check', '/api/date_check', controller=Pages(self.env).api_date_check)
+        d.connect('api_full_check', '/api/full_check', controller=Pages(self.env).api_full_check)
+        dispatcher = d
+        return dispatcher
 
     def run(self):
         """
@@ -237,7 +249,7 @@ class Pages:
 
     @cherrypy.expose()
     def api_date_check(self):
-        tmpl = self.env.get_template('json/date_check.json')
+        tmpl =  self.env.get_template('json/date_check.json')
         cherrypy.response.headers['Content-Type'] = "application/json"
         tmpl_vars = dict()
 
@@ -353,7 +365,7 @@ class Pages:
 
     @cherrypy.expose()
     def api_disks_check(self):
-        tmpl = self.env.get_template('blocks/disks.block.tpl')
+        tmpl =  self.env.get_template('blocks/disks.block.tpl')
         tmpl_vars = dict()
 
         if None != Checks.last_check_disk:
