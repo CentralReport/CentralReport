@@ -60,7 +60,7 @@ class WebServer(threading.Thread):
                 'tools.staticdir.dir': 'media',
                 'tools.staticdir.on': True
             },
-            '/api': {
+            '/api/check': {
                 'request.dispatch': self.setupRoutes()
             }
         }
@@ -76,11 +76,10 @@ class WebServer(threading.Thread):
         self.start()
 
     def setupRoutes(self):
-        d = cherrypy.dispatch.RoutesDispatcher()
-        d.connect('api_disks_check', '/api/disks_check', controller=Pages(self.env).api_disks_check)
-        d.connect('api_date_check', '/api/date_check', controller=Pages(self.env).api_date_check)
-        d.connect('api_full_check', '/api/full_check', controller=Pages(self.env).api_full_check)
-        dispatcher = d
+        dispatcher = cherrypy.dispatch.RoutesDispatcher()
+        dispatcher.connect('api_disks_check', '/api/check/disks', controller=Pages(self.env).api_disks_check)
+        dispatcher.connect('api_date_check', '/api/check/date', controller=Pages(self.env).api_date_check)
+        dispatcher.connect('api_full_check', '/api/check/full', controller=Pages(self.env).api_full_check)
         return dispatcher
 
     def run(self):
