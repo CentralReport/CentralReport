@@ -262,20 +262,8 @@ function macos_install {
 
 
     # First, we install CherryPy
-    echo "Installing CherryPy"
-    echo "Untar CherryPy..."
-    tar -xzvf ${CHERRYPY_TAR} -C thirdparties/
-
-    echo "Installing CherryPy..."
-    cd ${CHERRYPY_DIR};
-    sudo python setup.py install
-    cd ../../;
-
-    echo "Deleting install files..."
-    sudo rm -Rf ${CHERRYPY_DIR}
-
-    echo "CherryPy is installed!"
-    echo " "
+    echo "Installing CherryPy with easy_install..."
+    sudo easy_install CherryPy
 
 
     # Then, installing Jinja2 Templates...

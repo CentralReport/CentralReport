@@ -234,22 +234,16 @@ function debian_install {
     displayAndExec "Deleting install files..." rm -Rf ${SETUPTOOLS_DIR}
 
 
-    # Installing CherryPy...
-    displaytTitle "Installing CherryPy"
-    displayAndExec "Untar CherryPy..." tar -xzvf ${CHERRYPY_TAR} -C thirdparties/
+    # Using easy_install (included in setuptools), we're installing required libraries...
+    displaytTitle "Installing required libraries"
 
-    cd ${CHERRYPY_DIR};
-    displayAndExec "Installing CherryPy..." python setup.py install
-    cd ../../;
+    # CherryPy (webserver)
+    displayAndExec "Installing CherryPy..." easy_install CherryPy
 
-    displayAndExec "Deleting install files..." rm -Rf ${CHERRYPY_DIR}
-
-
-    # Then, installing Jinja2 Templates with easy_install (on Linux, requires setuptools)
-    displaytTitle "Others libraries..."
+    # Jinja2 (Templates for CherryPy)
     displayAndExec "Installing Jinj2..." easy_install Jinja2
 
-    # Installing Routes python package...
+    # Routes (route dispatcher for CherryPy)
     displayAndExec "Installing Routes..." easy_install routes
 
     # ----
