@@ -222,17 +222,8 @@ function debian_install {
     displaytTitle "Starting installing thirparties software"
     echo " (Please consult http://github.com/miniche/CentralReport for licenses) "
 
-    # First, we install CherryPy
-    displaytTitle "Installing CherryPy"
-    displayAndExec "Untar CherryPy..." tar -xzvf ${CHERRYPY_TAR} -C thirdparties/
 
-    cd ${CHERRYPY_DIR};
-    displayAndExec "Installing CherryPy..." python setup.py install
-    cd ../../;
-
-    displayAndExec "Deleting install files..." rm -Rf ${CHERRYPY_DIR}
-
-    # First, we install Setuptools
+    # Setuptools (easy_install included)
     displaytTitle "Installing Setuptools"
     displayAndExec "Untar Setuptools..." tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
 
@@ -242,15 +233,26 @@ function debian_install {
 
     displayAndExec "Deleting install files..." rm -Rf ${SETUPTOOLS_DIR}
 
-    # Then, installing Jinja2 Templates...
-    displaytTitle "Installing Jinja2"
-    displayAndExec "Untar Jinja2..." tar -xzvf ${JINJA_TAR} -C thirdparties/
 
-    cd ${JINJA_DIR};
-    displayAndExec "Installing Jinja2..." python setup.py install
+    # Installing CherryPy...
+    displaytTitle "Installing CherryPy"
+    displayAndExec "Untar CherryPy..." tar -xzvf ${CHERRYPY_TAR} -C thirdparties/
+
+    cd ${CHERRYPY_DIR};
+    displayAndExec "Installing CherryPy..." python setup.py install
     cd ../../;
 
-    displayAndExec "Deleting install files..." rm -Rf ${JINJA_DIR}
+    displayAndExec "Deleting install files..." rm -Rf ${CHERRYPY_DIR}
+
+
+    # Then, installing Jinja2 Templates with easy_install (on Linux, requires setuptools)
+    displaytTitle "Others libraries..."
+    displayAndExec "Installing Jinj2..." easy_install Jinja2
+
+    # Installing Routes python package...
+    displayAndExec "Installing Routes..." easy_install routes
+
+    # ----
 
     # CR config assistant
     debian_config_assistant

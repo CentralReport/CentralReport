@@ -278,22 +278,15 @@ function macos_install {
     echo " "
 
 
-
     # Then, installing Jinja2 Templates...
-    echo "Installing Jinja2"
-    echo "Untar Jinja2..."
-    tar -xzvf ${JINJA_TAR} -C thirdparties/
+    echo "Installing Jinja2 with easy_install..."
+    sudo easy_install Jinja2
 
-    echo "Installing Jinja2..."
-    cd ${JINJA_DIR};
-    sudo python setup.py install
-    cd ../../;
 
-    echo "Deleting install files..."
-    sudo rm -Rf ${JINJA_DIR}
+    # Finally, installing Routes library...
+    echo "Installing Routes with easy_install..."
+    sudo easy_install routes
 
-    echo "Jinja2 is installed!"
-    echo " "
 
     # Cleaning screen
     clear
