@@ -65,7 +65,7 @@ function debian_config_assistant {
     displaytTitle "Lauching CentralReport configuration assistant..."
     echo -e "\033[0m"
 
-    python ${CONFIG_ASSISTANT}
+    python ${CONFIG_ASSISTANT} < /dev/tty
 
     return 0
 }

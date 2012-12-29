@@ -70,7 +70,7 @@ function macos_config_assistant {
     echo -e "\033[1;32mLauching CentralReport configuration assistant..."
     echo -e "\033[0m"
 
-    sudo python ${CONFIG_ASSISTANT}
+    sudo python ${CONFIG_ASSISTANT} < /dev/tty
 
     return 0
 
