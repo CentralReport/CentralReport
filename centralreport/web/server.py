@@ -77,9 +77,10 @@ class WebServer(threading.Thread):
 
     def setupRoutes(self):
         dispatcher = cherrypy.dispatch.RoutesDispatcher()
-        dispatcher.connect('api_disks_check', '/api/check/disks', controller=Pages(self.env).api_disks_check)
         dispatcher.connect('api_date_check', '/api/check/date', controller=Pages(self.env).api_date_check)
         dispatcher.connect('api_full_check', '/api/check/full', controller=Pages(self.env).api_full_check)
+        dispatcher.connect('api_disks_check', '/api/check/disks', controller=Pages(self.env).api_disks_check)
+
         return dispatcher
 
     def run(self):

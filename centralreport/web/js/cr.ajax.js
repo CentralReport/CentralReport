@@ -55,7 +55,7 @@ var verifyIsNewCheckIsAvailable = function () {
     ajaxEnabledElement.text('No new check');
     ajaxErrorAlertElement.hide();
 
-    $.ajax('/api_date_check')
+    $.ajax('/api/check/date')
         .done(function(data) {
             // If lastTimestamp=0, CR hasn't done any checks yet...
             if (0 === data['last_timestamp']) {
@@ -140,7 +140,7 @@ var updateLastCheck = function () {
 
     console.log('CR - Getting last check values...');
 
-    $.getJSON('/api_full_check', function(data) {
+    $.getJSON('/api/check/full', function(data) {
 
         dataCpuPercent = data['cpu_percent'];
         dataMemoryPercent = data['memory_percent'];
@@ -286,7 +286,7 @@ var updateLastCheck = function () {
             $('#div_uptime_box').fadeOut(300).fadeIn(300);
         }
 
-        $.get('/api_disks_check', function(data) {
+        $.get('/api/check/disks', function(data) {
             var disksBoxElement = $('#div_disks_box');
             disksBoxElement.html(data);
             disksBoxElement.fadeOut(300).fadeIn(300);
