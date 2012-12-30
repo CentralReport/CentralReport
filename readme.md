@@ -38,7 +38,7 @@ Please visit [Wiki installation page](https://github.com/miniche/CentralReport/w
 CentralReport runs on **Debian, Ubuntu and Mac OS X**.
 Right now, it's just a standalone version. It's free and very easy : install CentralReport and active the small web server included. You can monitor your host with a simple web browser : 
 
-![Mac Screenshot](https://raw.github.com/miniche/CentralReport/develop-doc/tools/screenshots/Capture_Mac.png)
+![Mac Screenshot](https://raw.github.com/miniche/CentralReport/develop/tools/screenshots/Capture_Mac.png)
 
 
 
