@@ -1,6 +1,6 @@
 {% extends "layout/page.layout.tpl" %}
 
-{% block title %}CentralReport dashboard{% endblock %}
+{% block title %}{{ hostname }} dashboard - CentralReport{% endblock %}
 
 {% block header_title %}CentralReport host dashboard{% endblock %}
 {% block header_subtitle %}{{ hostname }}{% endblock %}
