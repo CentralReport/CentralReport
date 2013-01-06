@@ -277,28 +277,26 @@ class DebianCollector(_Collector):
         os_name = 'Linux'
         os_version = ''
 
-        if Config.HOST_CURRENT == Config.HOST_DEBIAN:
+        if Config.HOST_DEBIAN == Config.HOST_CURRENT:
             os_name = 'Debian'
             os_version = subprocess.Popen(['cat', '/etc/debian_version'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-        elif Config.HOST_CURRENT == Config.HOST_UBUNTU:
+        elif Config.HOST_UBUNTU == Config.HOST_CURRENT:
             os_name = 'Ubuntu'
 
             # OS version for Ubuntu
-            os_version = 'Unkown'
+            os_version = 'Unknown'
             os_version_full = subprocess.Popen(['cat', '/etc/lsb-release'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
             os_version_lines = os_version_full.splitlines()
 
             # Looking for "DISTRIB_RELEASE" key
-            for i in range(0,len(os_version_lines)):
+            for i in range(0, len(os_version_lines)):
 
                 if os_version_lines[i].startswith("DISTRIB_RELEASE"):
                     try:
-                        os_version = os_version_lines[i].split("=")[1].replace(' ','')
+                        os_version = os_version_lines[i].split("=")[1].replace(' ', '')
                     except:
                         crLog.writeError('Error getting Ubuntu version')
                         os_version = ''
-
-
 
         hostEntity = crEntitiesHost.Infos()
         hostEntity.uuid = Config.CR_HOST_UUID

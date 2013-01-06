@@ -15,11 +15,11 @@
     <div id="host_header">
         <div class="row-fluid">
             <div class="span1">
-                {% if host_os == 'MAC' %}
+                {% if 'MAC' == host_os %}
                     <img src="img/logos/Apple_logo.png" alt="Apple" />
-                {% elif host_os == 'UBUNTU' %}
+                {% elif 'UBUNTU' == host_os %}
                     <img src="img/logos/Ubuntu_logo.png" alt="Ubuntu" />
-                {% elif host_os == 'DEBIAN' %}
+                {% elif 'DEBIAN' == host_os %}
                     <img src="img/logos/Debian_logo.png" alt="Debian" />
                 {% endif %}
             </div>
