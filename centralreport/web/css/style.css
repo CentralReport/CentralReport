@@ -89,6 +89,19 @@ html, body {
 }
 
 
+/* Host header */
+#host_header .hostname {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+#host_header .hostversion {
+    font-weight: bold;
+}
+
+
 /* The dashboard box */
 .dashboard-box {
     margin: 0;

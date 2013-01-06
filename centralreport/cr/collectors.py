@@ -57,15 +57,17 @@ class MacCollector(_Collector):
         subprocessPIPE = subprocess.PIPE
         hostname = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
 
-        #uname = subprocess.Popen(['uname', '-a'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        #memsize = subprocess.Popen(['sysctl', '-n', 'hw.memsize'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-
         architecture = subprocess.Popen(['sysctl', '-n', 'hw.machine'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+
         kernel = subprocess.Popen(['sysctl', '-n', 'kern.ostype'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
         kernel_v = subprocess.Popen(['uname', '-r'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        model = subprocess.Popen(['sysctl', '-n', 'hw.model'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        ncpu = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
+        os_name = subprocess.Popen(['sw_vers', '-productName'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        os_version = subprocess.Popen(['sw_vers', '-productVersion'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+
+        model = subprocess.Popen(['sysctl', '-n', 'hw.model'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+
+        ncpu = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
         cpu_model = subprocess.Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
         # Using new HostEntity
@@ -81,6 +83,8 @@ class MacCollector(_Collector):
 
         hostEntity.kernelName = kernel
         hostEntity.kernelVersion = kernel_v
+        hostEntity.osName = os_name
+        hostEntity.osVersion = os_version
 
         hostEntity.cpuModel = cpu_model
         hostEntity.cpuCount = ncpu
@@ -271,6 +275,7 @@ class DebianCollector(_Collector):
         hostEntity = crEntitiesHost.Infos()
         hostEntity.uuid = Config.CR_HOST_UUID
 
+        # Number of CPU/CPU cores
         try:
             ncpu = multiprocessing.cpu_count()
         except(ImportError, NotImplementedError):

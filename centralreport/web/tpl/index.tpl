@@ -3,10 +3,34 @@
 {% block title %}{{ hostname }} dashboard - CentralReport{% endblock %}
 
 {% block header_title %}CentralReport host dashboard{% endblock %}
-{% block header_subtitle %}{{ hostname }}{% endblock %}
+{% block header_subtitle %}{% endblock %}
 
 {% block content %}
-    <div class="alert">
+
+    <div class="headhand clearfix">
+        Last check : <span id="last_check_date">{{ last_check }}</span>
+        <small id="ajax_enabled"></small>
+    </div>
+
+    <div id="host_header">
+        <div class="row-fluid">
+            <div class="span1">
+                {% if host_os == 'MAC' %}
+                    <img src="img/logos/Apple_logo.png" alt="Apple" />
+                {% elif host_os == 'UBUNTU' %}
+                    <img src="img/logos/Ubuntu_logo.png" alt="Ubuntu" />
+                {% elif host_os == 'DEBIAN' %}
+                    <img src="img/logos/Debian_logo.png" alt="Debian" />
+                {% endif %}
+            </div>
+            <div class="span11">
+                <div class="hostname">{{ hostname }}</div>
+                <div class="hostversion">{{ os_name }} {{ os_version }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert hide">
         <strong>Indev Version</strong><br />
         This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
     </div>
@@ -22,11 +46,6 @@
 
     <div id="div_ajax_error_alert" class="alert alert-error hide">
         An error occured
-    </div>
-
-    <div class="headhand clearfix">
-        Last check : <span id="last_check_date">{{ last_check }}</span>
-        <small id="ajax_enabled"></small>
     </div>
 
     <div class="row-fluid">

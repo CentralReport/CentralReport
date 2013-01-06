@@ -111,7 +111,18 @@ class Pages:
 
         tmpl_vars = dict()
 
+        # Host informations
         tmpl_vars['hostname'] = Checks.hostEntity.hostname
+        tmpl_vars['os_name'] = Checks.hostEntity.osName
+        tmpl_vars['os_version'] = Checks.hostEntity.osVersion
+
+        if Config.HOST_CURRENT == Config.HOST_MAC:
+            tmpl_vars['host_os'] = 'MAC'
+        elif Config.HOST_CURRENT == Config.HOST_UBUNTU:
+            tmpl_vars['host_os'] = 'UBUNTU'
+        elif Config.HOST_DEBIAN == Config.HOST_DEBIAN:
+            tmpl_vars['host_os'] = 'DEBIAN'
+
 
         tmpl_vars['CR_version'] = Config.CR_VERSION
         tmpl_vars['CR_version_name'] = Config.CR_VERSION_NAME

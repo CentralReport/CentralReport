@@ -29,6 +29,10 @@ class Infos:
         self.kernelName = ''
         self.kernelVersion = ''
 
+        # OS informations
+        self.osName = ''
+        self.osVersion = ''
+
         self.language = 'Python'  # CentralReport app language
         self.model = ''  # Only for Mac OS
         self.os = ''
