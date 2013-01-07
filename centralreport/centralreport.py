@@ -9,6 +9,7 @@ import cr.utils.text as crUtilsText
 import datetime
 import sys
 import time
+import os
 from cr.daemon import Daemon
 from cr.tools import Config
 from web.server import WebServer
@@ -101,6 +102,11 @@ class CentralReport(Daemon):
             Daemon.stop(self)
         except:
             crLog.writeInfo("PID file not found.")
+
+        # In test mode, we only return 0 (exit can be personalized by others scripts)
+        # But in production, we kill immediately the process.
+        if Config.CR_CONFIG_ENABLE_DEBUG_MODE == False:
+            os.system('kill %d' % os.getpid())
 
         return 0
 
