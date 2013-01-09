@@ -27,9 +27,7 @@
         margin-top: 0;
     }
 
-    .host_name {
-        text-align: center;
-    }
+    .host_name,
     .host_logo {
         text-align: center;
     }
@@ -49,10 +47,8 @@
         box-shadow: none;
     }
 
-    .host_name {
-        text-align: left;
-    }
-    .host_logo {
+    .host_name,.
+    host_logo {
         text-align: left;
     }
 }
@@ -69,9 +65,7 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0,.15);
     }
 
-    .host_name {
-        text-align: left;
-    }
+    .host_name,
     .host_logo {
         text-align: left;
     }
@@ -90,9 +84,7 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
     }
 
-    .host_name {
-        text-align: left;
-    }
+    .host_name,
     .host_logo {
         text-align: left;
     }
@@ -110,9 +102,7 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
     }
 
-    .host_name {
-        text-align: left;
-    }
+    .host_name,
     .host_logo {
         text-align: left;
     }
