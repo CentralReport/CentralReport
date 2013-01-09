@@ -8,7 +8,7 @@
 @media (max-width: 767px) {
 
     .page-header {
-        margin-left: -20px;
+        margin: 0;
 
         -webkit-border-radius: 0;
         -moz-border-radius: 0;
@@ -27,6 +27,13 @@
         margin-top: 0;
     }
 
+    .host_name {
+        text-align: center;
+    }
+    .host_logo {
+        text-align: center;
+    }
+
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
@@ -40,6 +47,13 @@
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         box-shadow: none;
+    }
+
+    .host_name {
+        text-align: left;
+    }
+    .host_logo {
+        text-align: left;
     }
 }
 
@@ -55,6 +69,12 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0,.15);
     }
 
+    .host_name {
+        text-align: left;
+    }
+    .host_logo {
+        text-align: left;
+    }
 }
 
 
@@ -70,6 +90,12 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
     }
 
+    .host_name {
+        text-align: left;
+    }
+    .host_logo {
+        text-align: left;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -84,5 +110,11 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
     }
 
+    .host_name {
+        text-align: left;
+    }
+    .host_logo {
+        text-align: left;
+    }
 }
 

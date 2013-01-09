@@ -14,7 +14,7 @@
 
     <div id="host_header">
         <div class="row-fluid">
-            <div class="span1">
+            <div class="span1 host_logo">
                 {% if 'MAC' == host_os %}
                     <img src="img/logos/Apple_logo.png" alt="Apple logo" />
                 {% elif 'UBUNTU' == host_os %}
@@ -23,7 +23,7 @@
                     <img src="img/logos/Debian_logo.png" alt="Debian logo" />
                 {% endif %}
             </div>
-            <div class="span11">
+            <div class="span11 host_name">
                 <div class="hostname">{{ hostname }}</div>
                 <div class="hostversion">{{ os_name }} {{ os_version }}</div>
             </div>
