@@ -16,11 +16,11 @@
         <div class="row-fluid">
             <div class="span1">
                 {% if 'MAC' == host_os %}
-                    <img src="img/logos/Apple_logo.png" alt="Apple" />
+                    <img src="img/logos/Apple_logo.png" alt="Apple logo" />
                 {% elif 'UBUNTU' == host_os %}
-                    <img src="img/logos/Ubuntu_logo.png" alt="Ubuntu" />
+                    <img src="img/logos/Ubuntu_logo.png" alt="Ubuntu logo" />
                 {% elif 'DEBIAN' == host_os %}
-                    <img src="img/logos/Debian_logo.png" alt="Debian" />
+                    <img src="img/logos/Debian_logo.png" alt="Debian logo" />
                 {% endif %}
             </div>
             <div class="span11">

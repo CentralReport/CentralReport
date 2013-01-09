@@ -120,7 +120,7 @@ class Pages:
             tmpl_vars['host_os'] = 'MAC'
         elif Config.HOST_CURRENT == Config.HOST_UBUNTU:
             tmpl_vars['host_os'] = 'UBUNTU'
-        elif Config.HOST_DEBIAN == Config.HOST_DEBIAN:
+        elif Config.HOST_CURRENT == Config.HOST_DEBIAN:
             tmpl_vars['host_os'] = 'DEBIAN'
 
 

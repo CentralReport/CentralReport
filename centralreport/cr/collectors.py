@@ -288,7 +288,7 @@ class DebianCollector(_Collector):
             os_version_full = subprocess.Popen(['cat', '/etc/lsb-release'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
             os_version_lines = os_version_full.splitlines()
 
-            # Looking for "DISTRIB_RELEASE" key
+            # Looking for the "DISTRIB_RELEASE" key
             for i in range(0, len(os_version_lines)):
 
                 if os_version_lines[i].startswith("DISTRIB_RELEASE"):
