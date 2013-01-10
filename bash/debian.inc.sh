@@ -35,7 +35,7 @@ function debian_start_cr {
 
 function debian_stop_cr {
 
-    displaytTitle "Stopping CentralReport..."
+    displayTitle "Stopping CentralReport..."
 
     if [ ! -f ${PID_FILE} ]; then
             echo "CentralReport is already stopped!"
@@ -62,7 +62,7 @@ function debian_stop_cr {
 function debian_config_assistant {
 
     echo -e "\033[44m\033[1;37m"
-    displaytTitle "Lauching CentralReport configuration assistant..."
+    displayTitle "Lauching CentralReport configuration assistant..."
     echo -e "\033[0m"
 
     python ${CONFIG_ASSISTANT} < /dev/tty
@@ -207,7 +207,7 @@ function debian_install {
         return 1
     fi
 
-    displaytTitle "Starting installation"
+    displayTitle "Starting installation"
 
     debian_cp_bin
     if [ $? -ne 0 ]; then
@@ -219,12 +219,12 @@ function debian_install {
         return 1
     fi
 
-    displaytTitle "Starting installing thirparties software"
+    displayTitle "Starting installing thirparties software"
     echo " (Please consult http://github.com/miniche/CentralReport for licenses) "
 
 
     # Setuptools (easy_install included)
-    displaytTitle "Installing Setuptools"
+    displayTitle "Installing Setuptools"
     displayAndExec "Untar Setuptools..." tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
 
     cd ${SETUPTOOLS_DIR};
@@ -235,7 +235,7 @@ function debian_install {
 
 
     # Using easy_install (included in setuptools), we're installing required libraries...
-    displaytTitle "Installing required libraries"
+    displayTitle "Installing required libraries"
 
     # CherryPy (webserver)
     displayAndExec "Installing CherryPy..." easy_install CherryPy
@@ -251,7 +251,7 @@ function debian_install {
     # CR config assistant
     debian_config_assistant
 
-    displaytTitle "Starting CentralReport..."
+    displayTitle "Starting CentralReport..."
     debian_start_cr
     if [ $? -ne 0 ]; then
         return 1

@@ -76,6 +76,9 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
                 echo "Ok. I continue. I will install CentralReport on Debian"
                 debian_install
+                if [ $? -ne 0 ]; then
+                    bit_error=1
+                fi
 
             fi
 

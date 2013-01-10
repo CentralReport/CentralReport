@@ -28,7 +28,7 @@ function displayMessage() {
   echo "$*"
 }
 
-function displaytTitle() {
+function displayTitle() {
   displayMessage "------------------------------------------------------------------------------"
   displayMessage "$*"
   displayMessage "------------------------------------------------------------------------------"
@@ -57,9 +57,9 @@ echo ">>> $*" >> /dev/null 2>&1
   sh -c "$*" >> /dev/null 2>&1
   local ret=$?
   if [ $ret -ne 0 ]; then
-echo -e "\r\e[0;31m [ERR]\e[0m $message"
+echo -e "\r\033[0;31m [ERR]\033[0m $message"
   else
-echo -e "\r\e[0;32m [OK ]\e[0m $message"
+echo -e "\r\033[0;32m [OK ]\033[0m $message"
   fi
 return $ret
 }

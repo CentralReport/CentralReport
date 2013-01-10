@@ -42,14 +42,15 @@ function macos_stop_cr {
     echo -e "\nStopping CentralReport..."
 
     if [ ! -f ${PID_FILE} ]; then
-            echo "CentralReport is already stopped!"
-            return 0
+        echo "CentralReport is already stopped!"
+        return 0
     else
         sudo python ${INSTALL_DIR}/centralreport.py stop
-
-        if [ $? -ne "0" ]; then
-            displayError "Error on stopping CentralReport (Error code : $?)"
-            return 1
+        RETURN_CODE="$?"
+        
+        if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
+            displayError "Error on stopping CentralReport (Error code : ${RETURN_CODE})"
+            return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really stopped.
             sleep 3
@@ -85,10 +86,8 @@ function macos_config_assistant {
 
 function macos_remove_bin {
 
-    echo -e "\nRemove existing install directory..."
-
     if [ -d ${INSTALL_DIR} ]; then
-        sudo rm -rfv ${INSTALL_DIR}
+        displayAndExec "Remove existing install directory..." sudo rm -rfv ${INSTALL_DIR}
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : $?)"
@@ -105,10 +104,8 @@ function macos_remove_bin {
 
 function macos_remove_config {
 
-    echo -e "\nRemove existing config file..."
-
     if [ -f ${CONFIG_FILE} ]; then
-        sudo rm -fv ${CONFIG_FILE}
+        displayAndExec "Remove existing config file..." sudo rm -fv ${CONFIG_FILE}
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : $?)"
@@ -125,10 +122,8 @@ function macos_remove_config {
 
 function macos_remove_startup_plist {
 
-    echo -e "\nRemove existing startup plist file..."
-
     if [ -f ${STARTUP_PLIST} ]; then
-        sudo rm -fv ${STARTUP_PLIST}
+        displayAndExec "Remove existing startup plist file..." sudo rm -fv ${STARTUP_PLIST}
 
         if [ $? -ne "0" ]; then
             displayError "Error on deleting startup plist file at ${STARTUP_PLIST} (Error code : $?)"
@@ -219,6 +214,8 @@ function macos_install {
         return 1
     fi
 
+    displayTitle "Removing any existing installation"
+
     # Uninstall existing previous installation, if exist
     macos_stop_cr
     if [ $? -ne 0 ]; then
@@ -238,9 +235,8 @@ function macos_install {
     fi
 
 
-    echo " "
-    echo " ** Starting installation ** "
-    echo " "
+
+    displayTitle "Installing CentralReport"
 
     macos_cp_bin
     if [ $? -ne 0 ]; then
@@ -255,25 +251,28 @@ function macos_install {
 
 
 
-    echo " "
-    echo " ** Starting installing thirparties software ** "
+    displayTitle "Starting installing thirparties software"
     echo " (Please consult http://github.com/miniche/CentralReport for licenses) "
-    echo " "
 
-
-    # First, we install CherryPy
-    echo "Installing CherryPy with easy_install..."
-    sudo easy_install CherryPy
+    # First, we install CherryPy...
+    displayAndExec "CherryPy" sudo easy_install CherryPy
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
 
 
     # Then, installing Jinja2 Templates...
-    echo "Installing Jinja2 with easy_install..."
-    sudo easy_install Jinja2
+    displayAndExec "Jinja" sudo easy_install Jinja2
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
 
 
     # Finally, installing Routes library...
-    echo "Installing Routes with easy_install..."
-    sudo easy_install routes
+    displayAndExec "Routes" sudo easy_install routes
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
 
 
     # Cleaning screen
@@ -312,6 +311,8 @@ function macos_uninstall {
         displayError "Impossible to use root privileges"
         return 1
     fi
+
+    displayTitle "Removing CentralReport files and directories"
 
     # Check if CentralReport is already running, and stop it.
     macos_stop_cr
