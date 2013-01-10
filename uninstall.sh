@@ -47,7 +47,7 @@ if [ $? -eq 0 ]; then
     if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
         echo " "
         echo -e "\033[1;31mERROR"
-        echo -e "\033[0;31mThe uninstall is only design for Mac OS and Debian"
+        echo -e "\033[0;31mThe uninstall is only designed for Mac OS and Debian"
         echo -e "Other Linux distros support coming soon! \033[0m"
 
     else

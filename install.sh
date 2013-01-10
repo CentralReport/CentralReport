@@ -26,7 +26,7 @@ echo " During installation, we can ask an administrator password. It permit Cent
 echo " to write in some directories and remove old CR installations."
 echo -e "\033[0m"
 
-# In the future, it will possible to have different modes.
+# In the future, it will be possible to have different modes.
 if [ -n "$1" ]; then
     ACTUAL_MODE=$1
 fi
@@ -49,7 +49,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
     if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
         echo " "
         echo -e "\033[1;31mERROR"
-        echo -e "\033[0;31mThe install is only design for Mac OS and Debian"
+        echo -e "\033[0;31mThe install is only designed for Mac OS, Debian and Ubuntu."
         echo -e "Other Linux distros support coming soon! \033[0m"
     else
 
@@ -85,7 +85,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
             if [ ${bit_error} -eq 1 ]; then
 
-                displayError "Error during CentralReport installation..."
+                displayError "Error during CentralReport installation!"
                 displayError "CentralReport isn't installed on this host."
 
             else
@@ -94,8 +94,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
                 echo -e "\033[1;32m"
                 echo " "
                 echo "CentralReport is now installed!"
-                echo "You can go to http://127.0.0.1:8080 to display the web view"
-                echo "or you can edit the config file at /etc/centralreport.cfg"
+                echo "For more options, you can edit the config file at /etc/centralreport.cfg"
                 echo " "
                 echo "More help at http://github.com/miniche/CentralReport"
                 echo "Have fun!"
