@@ -69,9 +69,9 @@ class WebServer(threading.Thread):
         webApplication = cherrypy.tree.mount(Pages(self.env), '/', confStaticContent)
 
         # Disable screen log (standard out)
-        # http://stackoverflow.com/questions/4056958/cherrypy-logging-how-do-i-configure-and-use-the-global-and-application-level-lo
-        webApplication.log.screen = False
-        webApplication.log.access_file = None
+        cherrypy.log.error_log.propagate = False
+        cherrypy.log.access_log.propagate = False
+
 
         self.start()
 
@@ -209,11 +209,7 @@ class Pages:
         # Uptime stats (checked in load average collector)
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
-            crLog.writeDebug('My Uptime' + str(tmpl_vars['uptime']))
-
             tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
-            crLog.writeDebug('My Uptime seconds' + str(tmpl_vars['uptime_seconds']))
-
             tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
 
