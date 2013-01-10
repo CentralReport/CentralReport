@@ -207,7 +207,7 @@ function debian_install {
         return 1
     fi
 
-    displayTitle "Starting installation"
+    displayTitle "Starting installation..."
 
     debian_cp_bin
     if [ $? -ne 0 ]; then
@@ -219,12 +219,12 @@ function debian_install {
         return 1
     fi
 
-    displayTitle "Starting installing thirparties software"
+    displayTitle "Starting installing thirparties software..."
     echo " (Please consult http://github.com/miniche/CentralReport for licenses) "
 
 
     # Setuptools (easy_install included)
-    displayTitle "Installing Setuptools"
+    displayTitle "Installing Setuptools..."
     displayAndExec "Untar Setuptools..." tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
 
     cd ${SETUPTOOLS_DIR};
@@ -235,7 +235,7 @@ function debian_install {
 
 
     # Using easy_install (included in setuptools), we're installing required libraries...
-    displayTitle "Installing required libraries"
+    displayTitle "Installing required libraries..."
 
     # CherryPy (webserver)
     displayAndExec "Installing CherryPy..." easy_install CherryPy

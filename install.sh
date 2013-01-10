@@ -89,19 +89,13 @@ if [ "install" == ${ACTUAL_MODE} ]; then
                 displayError "CentralReport isn't installed on this host."
 
             else
-                # Done ! We can starting CentralReport!
 
-
-                echo " "
-                echo "Please wait before the first check..."
-
-                sleep 3;
-
+                # Display the success text!
                 echo -e "\033[1;32m"
                 echo " "
-                echo "CentralReport might be installed!"
+                echo "CentralReport is now installed!"
                 echo "You can go to http://127.0.0.1:8080 to display the web view"
-                echo "or you can edit the config file at /etc/cr/centralreport.cfg"
+                echo "or you can edit the config file at /etc/centralreport.cfg"
                 echo " "
                 echo "More help at http://github.com/miniche/CentralReport"
                 echo "Have fun!"
