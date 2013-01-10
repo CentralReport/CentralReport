@@ -69,8 +69,9 @@ class WebServer(threading.Thread):
         webApplication = cherrypy.tree.mount(Pages(self.env), '/', confStaticContent)
 
         # Disable screen log (standard out)
-        cherrypy.log.error_log.propagate = False
-        cherrypy.log.access_log.propagate = False
+        if False == Config.CR_CONFIG_ENABLE_DEBUG_MODE:
+            cherrypy.log.error_log.propagate = False
+            cherrypy.log.access_log.propagate = False
 
 
         self.start()
