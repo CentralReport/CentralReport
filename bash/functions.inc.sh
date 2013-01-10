@@ -3,8 +3,9 @@
 # CentralReport Unix/Linux Indev version.
 # By careful! Don't use in production environment!
 
+# Get actual OS (Linux distrib or Unix OS)
 function getOS(){
-    # Getting actual OS (Linux distrib or Unix OS)
+
     if [ $(uname -s) == "Darwin" ]; then
         CURRENT_OS=${OS_MAC}
     elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
@@ -12,8 +13,11 @@ function getOS(){
     fi
 }
 
+# Display the python version (if python is available)
+# Return 0 is python is available, or 1 if an error occured
 function getPythonIsInstalled {
 
+    echo " "
     python -V
 
     if [ $? -ne 0 ]; then
@@ -24,48 +28,55 @@ function getPythonIsInstalled {
 
 }
 
+# Display a message on the standard out
 function displayMessage() {
-  echo "$*"
+    echo "$*"
 }
 
+# Display a title
 function displayTitle() {
-  displayMessage "------------------------------------------------------------------------------"
-  displayMessage "$*"
-  displayMessage "------------------------------------------------------------------------------"
+    displayMessage "------------------------------------------------------------------------------"
+    displayMessage "$*"
+    displayMessage "------------------------------------------------------------------------------"
 }
 
+# Display an error
 function displayError() {
-  displayMessage "$*" >&2
+    displayMessage "$*" >&2
 }
 
+# Display an error message and exit the current function or program
 # First parameter: ERROR CODE
 # Second parameter: MESSAGE
 function displayErrorAndExit() {
-  local exitcode=$1
-  shift
-displayerror "$*"
-  exit $exitcode
+    local exitcode=$1
+    shift
+    displayerror "$*"
+    exit $exitcode
 }
 
 # First parameter: MESSAGE
 # Others parameters: COMMAND (! not |)
 function displayAndExec() {
-  local message=$1
-  echo -n "[...] $message"
-  shift
-echo ">>> $*" >> /dev/null 2>&1
-  sh -c "$*" >> /dev/null 2>&1
-  local ret=$?
-  if [ $ret -ne 0 ]; then
-echo -e "\r\033[0;31m [ERR]\033[0m $message"
-  else
-echo -e "\r\033[0;32m [OK ]\033[0m $message"
-  fi
-return $ret
+    local message=$1
+    echo -n "[...] $message"
+    shift
+
+    echo ">>> $*" >> /dev/null 2>&1
+    sh -c "$*" >> /dev/null 2>&1
+    local ret=$?
+
+    if [ $ret -ne 0 ]; then
+        echo -e "\r\033[0;31m [ERR]\033[0m $message"
+    else
+        echo -e "\r\033[0;32m [OK ]\033[0m $message"
+    fi
+
+    return $ret
 }
 
 
-# This function verify if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
+# Verify if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
 # PARAMETER : a string
 # RETURN : If true, this function return 0 (no error), else return 1 for any other answer.
 function verifyYesNoAnswer() {
