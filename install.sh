@@ -90,7 +90,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
             else
 
-                # Display the success text!
+                # Displays the success text!
                 echo -e "\033[1;32m"
                 echo " "
                 echo "CentralReport is now installed!"

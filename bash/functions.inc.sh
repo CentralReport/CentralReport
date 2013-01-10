@@ -3,7 +3,7 @@
 # CentralReport Unix/Linux Indev version.
 # By careful! Don't use in production environment!
 
-# Get actual OS (Linux distrib or Unix OS)
+# Gets actual OS (Linux distrib or Unix OS)
 function getOS(){
 
     if [ $(uname -s) == "Darwin" ]; then
@@ -13,7 +13,7 @@ function getOS(){
     fi
 }
 
-# Display the python version (if python is available)
+# Displays the python version (if python is available)
 # Return 0 is python is available, or 1 if an error occured
 function getPythonIsInstalled {
 
@@ -28,24 +28,24 @@ function getPythonIsInstalled {
 
 }
 
-# Display a message on the standard out
+# Displays a message on the standard out
 function displayMessage() {
     echo "$*"
 }
 
-# Display a title
+# Displays a title
 function displayTitle() {
     displayMessage "------------------------------------------------------------------------------"
     displayMessage "$*"
     displayMessage "------------------------------------------------------------------------------"
 }
 
-# Display an error
+# Displays an error
 function displayError() {
     displayMessage "$*" >&2
 }
 
-# Display an error message and exit the current function or program
+# Displays an error message and exit the current function or program
 # First parameter: ERROR CODE
 # Second parameter: MESSAGE
 function displayErrorAndExit() {
@@ -76,7 +76,7 @@ function displayAndExec() {
 }
 
 
-# Verify if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
+# Verifies if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
 # PARAMETER : a string
 # RETURN : If true, this function return 0 (no error), else return 1 for any other answer.
 function verifyYesNoAnswer() {
