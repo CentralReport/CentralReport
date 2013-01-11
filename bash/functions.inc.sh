@@ -51,10 +51,10 @@ function displayAndExec() {
     local ret=$?
 
     if [ ${ret} -ne 0 ]; then
-        writeLog "[ERR] ${message}"
+        logFile "[ERR] ${message}"
         echo -e "\r\033[0;31m [ERR]\033[0m ${message}"
     else
-        writeLog "[OK ] ${message}"
+        logFile "[OK ] ${message}"
         echo -e "\r\033[0;32m [OK ]\033[0m ${message}"
     fi
 

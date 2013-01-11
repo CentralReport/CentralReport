@@ -11,10 +11,10 @@
 # --
 function debian_start_cr {
 
-    writeTitle "Starting CentralReport..."
+    printTitle "Starting CentralReport..."
 
     if [ -f ${PID_FILE} ]; then
-        writeInfo "CentralReport is already running!"
+        logInfo "CentralReport is already running!"
         return 0
 
     else
@@ -22,13 +22,13 @@ function debian_start_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            writeError "Error when starting CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error when starting CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really started.
             sleep 3
 
-            writeInfo "CentralReport started"
+            logInfo "CentralReport started"
             return 0
         fi
     fi
@@ -38,23 +38,23 @@ function debian_start_cr {
 
 function debian_stop_cr {
 
-    writeTitle "Stopping CentralReport..."
+    printTitle "Stopping CentralReport..."
 
     if [ ! -f ${PID_FILE} ]; then
-            writeInfo "CentralReport is already stopped!"
+            logInfo "CentralReport is already stopped!"
             return 0
     else
         python ${INSTALL_DIR}/centralreport.py stop
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
-            writeError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really stopped.
             sleep 3
 
-            writeInfo "CentralReport stopped"
+            logInfo "CentralReport stopped"
             return 0
         fi
     fi
@@ -65,9 +65,9 @@ function debian_stop_cr {
 # --
 function debian_config_assistant {
 
-    writeConsole "\033[44m\033[1;37m"
-    writeTitle "Lauching CentralReport configuration wizard..."
-    writeConsole "\033[0m"
+    logConsole "\033[44m\033[1;37m"
+    printTitle "Lauching CentralReport configuration wizard..."
+    logConsole "\033[0m"
 
     python ${CONFIG_ASSISTANT} < /dev/tty
 
@@ -80,56 +80,56 @@ function debian_config_assistant {
 
 function debian_remove_bin {
 
-    writeLog "Removing CentralReport bin files..."
+    logFile "Removing CentralReport bin files..."
 
     if [ -d ${INSTALL_DIR} ]; then
         displayAndExec "Remove existing install directory..." rm -rfv $INSTALL_DIR
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            writeError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
-            writeLog "CentralReport bin files removed"
+            logFile "CentralReport bin files removed"
             return 0
         fi
     else
-        writeInfo "CentralReport bin directory doesn't exist!"
+        logInfo "CentralReport bin directory doesn't exist!"
         return 0
     fi
 }
 
 function debian_remove_config {
 
-    writeLog "Removing CentralReport config file..."
+    logFile "Removing CentralReport config file..."
 
     if [ -f ${CONFIG_FILE} ]; then
         displayAndExec "Remove existing config file..." rm -fv $CONFIG_FILE
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            writeError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
+            logError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
-            writeLog "CentralReport config file deleted"
+            logFile "CentralReport config file deleted"
             return 0
         fi
     else
-        writeInfo "CentralReport config file not found!"
+        logInfo "CentralReport config file not found!"
         return 0
     fi
 }
 
 function debian_remove_startup_script {
 
-    writeLog "Removing startup script..."
+    logFile "Removing startup script..."
 
     if [ -f ${STARTUP_DEBIAN} ]; then
         displayAndExec "Remove existing startup script..." rm -rfv $STARTUP_DEBIAN
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            writeError "Error on deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
+            logError "Error on deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
             return 1
         else
 
@@ -137,16 +137,16 @@ function debian_remove_startup_script {
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                writeError "Error on removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
+                logError "Error on removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
-                writeLog "Startup script deleted"
+                logFile "Startup script deleted"
                 return 0
             fi
             return 0
         fi
     else
-        writeInfo "Startup plist file not found!"
+        logInfo "Startup plist file not found!"
         return 0
     fi
 }
@@ -159,14 +159,14 @@ function debian_cp_bin {
     mkdir ${INSTALL_DIR}
 
     if [ $? -ne "0" ]; then
-          writeError "Error on creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
+          logError "Error on creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
           return 1
     else
         displayAndExec "Copy CentralReport in the good directory..." cp -R -f -v centralreport ${PARENT_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            writeError "Error on copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error on copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             return 0
@@ -181,7 +181,7 @@ function debian_cp_startup_plist {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-      writeError "Error on copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+      logError "Error on copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
       return ${RETURN_CODE}
     else
         chmod 755 ${STARTUP_DEBIAN}
@@ -190,7 +190,7 @@ function debian_cp_startup_plist {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-          writeError "Error on registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
+          logError "Error on registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
           return ${RETURN_CODE}
         else
             return 0
@@ -206,7 +206,7 @@ function debian_install {
     # Install only can perform if current user is root (or have administrative privileges)
     if [[ $EUID -ne 0 ]]; then
         echo " "
-        writeError "You must be root to run CentralReport installer!"
+        logError "You must be root to run CentralReport installer!"
         exit 1
     fi
 
@@ -231,7 +231,7 @@ function debian_install {
         return ${RETURN_CODE}
     fi
 
-    writeTitle "Starting installation..."
+    printTitle "Starting installation..."
 
     debian_cp_bin
     RETURN_CODE="$?"
@@ -245,12 +245,12 @@ function debian_install {
         return ${RETURN_CODE}
     fi
 
-    writeTitle "Installing third-party softwares..."
-    writeInfo " (Please consult http://github.com/miniche/CentralReport for licenses) "
+    printTitle "Installing third-party softwares..."
+    logInfo " (Please consult http://github.com/miniche/CentralReport for licenses) "
 
 
     # Setuptools (easy_install included)
-    writeTitle "Installing Setuptools..."
+    printTitle "Installing Setuptools..."
     displayAndExec "Untar Setuptools..." tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
@@ -273,7 +273,7 @@ function debian_install {
 
 
     # Using easy_install (included in setuptools), we're installing required libraries...
-    writeTitle "Installing required libraries..."
+    printTitle "Installing required libraries..."
 
     # CherryPy (webserver)
     displayAndExec "Installing CherryPy..." easy_install CherryPy
@@ -319,7 +319,7 @@ function debian_uninstall {
     # Uninstall only can perform if current user is root (or have administrative privileges)
     if [[ $EUID -ne 0 ]]; then
         echo " "
-        writeError "You must be root to uninstall CentralReport!"
+        logError "You must be root to uninstall CentralReport!"
         exit 1
     fi
 

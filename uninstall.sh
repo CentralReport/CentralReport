@@ -19,37 +19,37 @@ unistall_confirm="yes"
 getOS
 
 # Go!
-writeLog "-------------- Starting CentralReport uninstaller  --------------"
+logFile "-------------- Starting CentralReport uninstaller  --------------"
 
-writeConsole "\033[44m\033[1;37m"
-writeConsole " "
-writeConsole "-------------- CentralReport uninstaller --------------"
-writeConsole " "
-writeConsole "Welcome! This script will uninstall CentralReport on your host."
-writeConsole "If you want more details, please visit http://github.com/miniche/CentralReport"
-writeConsole "\033[0m"
+logConsole "\033[44m\033[1;37m"
+logConsole " "
+logConsole "-------------- CentralReport uninstaller --------------"
+logConsole " "
+logConsole "Welcome! This script will uninstall CentralReport on your host."
+logConsole "If you want more details, please visit http://github.com/miniche/CentralReport"
+logConsole "\033[0m"
 
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    writeError "Error, Python must be installed on your host to remove CentralReport."
+    logError "Error, Python must be installed on your host to remove CentralReport."
     exit 1
 fi
 
-writeConsole " "
+logConsole " "
 read -p "You will uninstall CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
 
 
 # Are you sure to uninstall CR ?
 verifyYesNoAnswer ${RESP}
 if [ $? -eq 0 ]; then
-    writeConsole "Processing..."
-    writeConsole " "
+    logConsole "Processing..."
+    logConsole " "
 
     if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-        writeConsole " "
-        writeError "ERROR"
-        writeError "The uninstall is only designed for Mac OS and Debian"
-        writeError "Other Linux distros support coming soon!"
+        logConsole " "
+        logError "ERROR"
+        logError "The uninstall is only designed for Mac OS and Debian"
+        logError "Other Linux distros support coming soon!"
 
     else
         # 0 = no
@@ -77,25 +77,25 @@ if [ $? -eq 0 ]; then
 
         if [ ${bit_error} -eq 1 ]; then
 
-            writeError "Error during CentralReport uninstall..."
-            writeError "CentralReport may still be installed on this host"
+            logError "Error during CentralReport uninstall..."
+            logError "CentralReport may still be installed on this host"
 
         else
             # Ok, it's done !
-            writeConsole "\033[1;32m"
-            writeConsole " "
-            writeInfo "CentralReport might be deleted on your host."
-            writeInfo "It's sad, but you're welcome ! :-)"
-            writeConsole " "
-            writeInfo "PS : You can write to developers if you found bad things in CentralReport."
-            writeInfo "You can find them at http://github.com/miniche/CentralReport"
-            writeInfo "Thanks!"
-            writeConsole "\033[0m"
+            logConsole "\033[1;32m"
+            logConsole " "
+            logInfo "CentralReport might be deleted on your host."
+            logInfo "It's sad, but you're welcome ! :-)"
+            logConsole " "
+            logInfo "PS : You can write to developers if you found bad things in CentralReport."
+            logInfo "You can find them at http://github.com/miniche/CentralReport"
+            logInfo "Thanks!"
+            logConsole "\033[0m"
 
         fi
     fi
 fi
 
 # End of program
-writeConsole " "
-writeInfo " -- End of program -- "
+logConsole " "
+logInfo " -- End of program -- "
