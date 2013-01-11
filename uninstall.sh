@@ -6,6 +6,7 @@
 
 # Importing some scripts
 source bash/vars.sh
+source bash/log.inc.sh
 source bash/functions.inc.sh
 source bash/macos.inc.sh
 source bash/debian.inc.sh

@@ -6,6 +6,7 @@
 
 # Importing scripts...
 source bash/vars.sh
+source bash/log.inc.sh
 source bash/functions.inc.sh
 source bash/macos.inc.sh
 source bash/debian.inc.sh
@@ -15,16 +16,17 @@ ACTUAL_MODE=install                         # Modes : install, check
 install_confirm="yes"
 
 # Go!
+writeLog "-------------- Starting CentralReport installer  --------------"
 
-echo -e "\033[44m\033[1;37m"
-echo -e "  -------------- CentralReport installer --------------\033[0;44m"
-echo " "
-echo "  Welcome! This script will install CentralReport on your host."
-echo "  If you wants more details, please visit http://github.com/miniche/CentralReport."
-echo " "
-echo " During installation, we can ask an administrator password. It permit CentralReport "
-echo " to write in some directories and remove old CR installations."
-echo -e "\033[0m"
+writeConsole "\033[44m\033[1;37m"
+writeConsole "  -------------- CentralReport installer --------------"
+writeConsole "\033[0;44m"
+writeConsole "  Welcome! This script will install CentralReport on your host."
+writeConsole "  If you wants more details, please visit http://github.com/miniche/CentralReport."
+writeConsole " "
+writeConsole " During installation, we can ask an administrator password. It permit CentralReport "
+writeConsole " to write in some directories and remove old CR installations."
+writeConsole "\033[0m"
 
 # In the future, it will be possible to have different modes.
 if [ -n "$1" ]; then
@@ -34,7 +36,7 @@ fi
 # Python is mandatory for CentralReport
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    displayError "Error, Python must be installed on your host to execute CentralReport."
+    writeError "Error, Python must be installed on your host to execute CentralReport."
     exit 1
 fi
 
@@ -47,14 +49,14 @@ if [ "install" == ${ACTUAL_MODE} ]; then
     # Right now, it only works on MacOS.
     # Support for Linux distrib coming soon.
     if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-        echo " "
-        echo -e "\033[1;31mERROR"
-        echo -e "\033[0;31mThe install is only designed for Mac OS, Debian and Ubuntu."
-        echo -e "Other Linux distros support coming soon! \033[0m"
+        writeError " "
+        writeError "ERROR"
+        writeError "The install is only designed for Mac OS, Debian and Ubuntu."
+        writeError "Other Linux distros support coming soon!"
     else
 
-        echo " "
-        echo "Install mode enabled"
+        writeConsole " "
+        writeConsole "Install mode enabled"
         read -p "You will install CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
 
         # Are you sure to install CR ?
@@ -67,14 +69,14 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             bit_error=0
 
             if [ ${CURRENT_OS} == ${OS_MAC} ]; then
-                echo "Ok, I continue. I will install CentralReport on a mac"
+                writeInfo "Ok, I continue. I will install CentralReport on a mac"
                 macos_install
                 if [ $? -ne 0 ]; then
                     bit_error=1
                 fi
 
             elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
-                echo "Ok. I continue. I will install CentralReport on Debian"
+                writeInfo "Ok. I continue. I will install CentralReport on Debian"
                 debian_install
                 if [ $? -ne 0 ]; then
                     bit_error=1
@@ -85,21 +87,21 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
             if [ ${bit_error} -eq 1 ]; then
 
-                displayError "Error during CentralReport installation!"
-                displayError "CentralReport isn't installed on this host."
+                writeError "Error during CentralReport installation!"
+                writeError "CentralReport isn't installed on this host."
 
             else
 
                 # Displays the success text!
-                echo -e "\033[1;32m"
-                echo " "
-                echo "CentralReport is now installed!"
-                echo "For more options, you can edit the config file at /etc/centralreport.cfg"
-                echo " "
-                echo "More help at http://github.com/miniche/CentralReport"
-                echo "Have fun!"
-                echo " "
-                echo -e "\033[0m"
+                writeConsole "\033[1;32m"
+                writeConsole " "
+                writeInfo "CentralReport is now installed!"
+                writeInfo "For more options, you can edit the config file at /etc/centralreport.cfg"
+                writeConsole " "
+                writeInfo "More help at http://github.com/miniche/CentralReport"
+                writeInfo "Have fun!"
+                writeConsole " "
+                writeConsole "\033[0m"
 
             fi
 
@@ -108,13 +110,13 @@ if [ "install" == ${ACTUAL_MODE} ]; then
     fi
 
 else
-    echo " "
-    echo "ERROR!"
-    echo "Unknown argument"
-    echo "Use : install.sh [install]"
+    writeError " "
+    writeError "ERROR!"
+    writeError "Unknown argument"
+    writeError "Use : install.sh [install]"
 fi
 
 
 # End of program
-echo " "
-echo " -- End of program -- "
+writeConsole " "
+writeInfo " -- End of program -- "

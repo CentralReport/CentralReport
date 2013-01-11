@@ -28,23 +28,6 @@ function getPythonIsInstalled {
 
 }
 
-# Displays a message on the standard out
-function displayMessage() {
-    echo "$*"
-}
-
-# Displays a title
-function displayTitle() {
-    displayMessage "------------------------------------------------------------------------------"
-    displayMessage "$*"
-    displayMessage "------------------------------------------------------------------------------"
-}
-
-# Displays an error
-function displayError() {
-    displayMessage "$*" >&2
-}
-
 # Displays an error message and exit the current function or program
 # First parameter: ERROR CODE
 # Second parameter: MESSAGE
@@ -52,27 +35,30 @@ function displayErrorAndExit() {
     local exitcode=$1
     shift
     displayerror "$*"
-    exit $exitcode
+    exit ${exitcode}
 }
 
+# Displays the message with current statut (.../ERR/OK), while executing the command.
 # First parameter: MESSAGE
 # Others parameters: COMMAND (! not |)
 function displayAndExec() {
     local message=$1
-    echo -n "[...] $message"
+    echo -n "[...] ${message}"
     shift
 
     echo ">>> $*" >> /dev/null 2>&1
     sh -c "$*" >> /dev/null 2>&1
     local ret=$?
 
-    if [ $ret -ne 0 ]; then
-        echo -e "\r\033[0;31m [ERR]\033[0m $message"
+    if [ ${ret} -ne 0 ]; then
+        writeLog "[ERR] ${message}"
+        echo -e "\r\033[0;31m [ERR]\033[0m ${message}"
     else
-        echo -e "\r\033[0;32m [OK ]\033[0m $message"
+        writeLog "[OK ] ${message}"
+        echo -e "\r\033[0;32m [OK ]\033[0m ${message}"
     fi
 
-    return $ret
+    return ${ret}
 }
 
 
