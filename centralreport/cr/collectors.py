@@ -21,7 +21,6 @@ from os import getloadavg
 
 
 class _Collector:
-
     def get_infos(self):
         raise NameError('Method not implemented yet')
 
@@ -55,7 +54,8 @@ class MacCollector(_Collector):
         """
 
         subprocessPIPE = subprocess.PIPE
-        hostname = crUtilsText.removeSpecialsCharacters(subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
+        hostname = crUtilsText.removeSpecialsCharacters(
+            subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
 
         architecture = subprocess.Popen(['sysctl', '-n', 'hw.machine'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
@@ -68,7 +68,8 @@ class MacCollector(_Collector):
         model = subprocess.Popen(['sysctl', '-n', 'hw.model'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
         ncpu = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        cpu_model = subprocess.Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        cpu_model = subprocess.Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=subprocessPIPE,
+            close_fds=True).communicate()[0]
 
         # Using new HostEntity
         hostEntity = crEntitiesHost.Infos()
@@ -118,7 +119,9 @@ class MacCollector(_Collector):
         mem_resident = int(tabmemoire[5][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
         mem_swap = int(tabmemoire[11][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
-        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(tabmemoire[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_total = (
+                    int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(
+                        tabmemoire[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
         # Preparing return entity...
         memoryCheck = crEntitiesChecks.Memory()
@@ -223,7 +226,6 @@ class MacCollector(_Collector):
         listDisks = crEntitiesHost.Disks()
 
         for i in range(1, len(df_split)):
-
             if(df_split[i].startswith('/dev/')):
                 line_split = df_split[i].split()
                 line_dict = dict(zip(header, line_split))
@@ -238,9 +240,11 @@ class MacCollector(_Collector):
                 #
                 # Full command : diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
                 disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout=subprocess.PIPE)
-                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin=disk_name_p1.stdout, stdout=subprocess.PIPE)
+                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin=disk_name_p1.stdout,
+                    stdout=subprocess.PIPE)
                 disk_name_p1.stdout.close()
-                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin=disk_name_p2.stdout, stdout=subprocess.PIPE).communicate()[0]
+                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin=disk_name_p2.stdout,
+                    stdout=subprocess.PIPE).communicate()[0]
                 disk_name_p2.stdout.close()
 
                 # Using new check entity
@@ -290,7 +294,6 @@ class DebianCollector(_Collector):
 
             # Looking for the "DISTRIB_RELEASE" key
             for i in range(0, len(os_version_lines)):
-
                 if os_version_lines[i].startswith("DISTRIB_RELEASE"):
                     try:
                         os_version = os_version_lines[i].split("=")[1].replace(' ', '')
@@ -317,7 +320,6 @@ class DebianCollector(_Collector):
         hostEntity.kernelVersion = kernel_v
         hostEntity.osName = os_name
         hostEntity.osVersion = os_version
-
 
         return hostEntity
 
@@ -434,7 +436,6 @@ class DebianCollector(_Collector):
         listDisks = crEntitiesHost.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
-
             if(df_split[i].startswith('/dev/')):
                 line_split = df_split[i].split()
 

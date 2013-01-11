@@ -6,11 +6,9 @@
 # This file contain all functions to manage CR install/unistall on a Mac.
 
 
-
 # --
 # CentralReport daemon functions
 # --
-
 function macos_start_cr {
 
     logFile "Starting CentralReport..."
@@ -52,7 +50,6 @@ function macos_stop_cr {
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
             logError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
-
         else
             logInfo "CentralReport stopped"
             return 0
@@ -267,7 +264,7 @@ function macos_install {
     logInfo " (Please consult http://github.com/miniche/CentralReport for licenses)"
 
     # First, we install CherryPy...
-    displayAndExec "CherryPy" sudo easy_install CherryPy
+    displayAndExec "Installing CherryPy..." sudo easy_install CherryPy
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -275,7 +272,7 @@ function macos_install {
 
 
     # Then, installing Jinja2 Templates...
-    displayAndExec "Jinja" sudo easy_install Jinja2
+    displayAndExec "Installing Jinja 2..." sudo easy_install Jinja2
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -283,7 +280,7 @@ function macos_install {
 
 
     # Finally, installing Routes library...
-    displayAndExec "Routes" sudo easy_install routes
+    displayAndExec "Installing Routes..." sudo easy_install routes
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}

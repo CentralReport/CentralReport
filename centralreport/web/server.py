@@ -34,7 +34,8 @@ class WebServer(threading.Thread):
         cherrypy.engine.subscribe('graceful', self.stop)
 
         # Update the configuration...
-        cherrypy.config.update({'server.socket_host': Config.getConfigValue('Webserver', 'interface'), 'server.socket_port': int(Config.getConfigValue('Webserver', 'port'))})
+        cherrypy.config.update({'server.socket_host': Config.getConfigValue('Webserver', 'interface'),
+                                'server.socket_port': int(Config.getConfigValue('Webserver', 'port'))})
         cherrypy.config.update({'tools.staticdir.root': WebServer.current_dir})
         cherrypy.config.update({'log.screen': False})
         #        cherrypy.config.update({'engine.timeout_monitor.on' : False})
@@ -73,7 +74,6 @@ class WebServer(threading.Thread):
             cherrypy.log.error_log.propagate = False
             cherrypy.log.access_log.propagate = False
 
-
         self.start()
 
     def setupRoutes(self):
@@ -102,7 +102,6 @@ class WebServer(threading.Thread):
 
 
 class Pages:
-
     def __init__(self, env_template):
         self.env = env_template
 
@@ -123,7 +122,6 @@ class Pages:
             tmpl_vars['host_os'] = 'UBUNTU'
         elif Config.HOST_CURRENT == Config.HOST_DEBIAN:
             tmpl_vars['host_os'] = 'DEBIAN'
-
 
         tmpl_vars['CR_version'] = Config.CR_VERSION
         tmpl_vars['CR_version_name'] = Config.CR_VERSION_NAME
@@ -148,12 +146,13 @@ class Pages:
 
         # Memory and swap stats
         if Checks.last_check_memory is not None:
-
             # First : Memory stats
-            tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
+            tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(
+                Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
             tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
             tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
-            tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
+            tmpl_vars['memory_used'] = crUtilsText.convertByte(
+                float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
 
             # Memory status
             if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_alert')):
@@ -166,7 +165,8 @@ class Pages:
 
             # Last : swap stats
             if 0 != int(Checks.last_check_memory.swapSize):
-                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
+                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
+                    Checks.last_check_memory.swapSize)
                 tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
 
                 tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
@@ -197,7 +197,8 @@ class Pages:
         # Load average stats
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
-            tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
+            tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
+                Checks.hostEntity.cpuCount)
 
             if int(tmpl_vars['loadaverage_percent']) >= int(Config.getConfigValue('Alerts', 'load_alert')):
                 tmpl_vars['load_alert'] = True
@@ -211,7 +212,9 @@ class Pages:
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
             tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
-            tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+            tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(
+                crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(
+                    Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
 
         # DIsks stats
@@ -234,7 +237,6 @@ class Pages:
 
     @cherrypy.expose
     def dashboard(self):
-
         tmpl = self.env.get_template("dashboard_mac.tpl")
         tmpl_vars = dict()
 
@@ -253,11 +255,12 @@ class Pages:
         """
 
         return "Oups... Error %s - Well, I'm very sorry but this page doesn't really exist!" % status
+
     cherrypy.config.update({'error_page.404': error_page_404})
 
     @cherrypy.expose()
     def api_date_check(self):
-        tmpl =  self.env.get_template('json/date_check.json')
+        tmpl = self.env.get_template('json/date_check.json')
         cherrypy.response.headers['Content-Type'] = "application/json"
         tmpl_vars = dict()
 
@@ -309,10 +312,12 @@ class Pages:
             else:
                 tmpl_vars['memory_check_enabled'] = "True"
 
-                tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
+                tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(
+                    Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
                 tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
                 tmpl_vars['memory_total'] = crUtilsText.convertByte(Checks.last_check_memory.total)
-                tmpl_vars['memory_used'] = crUtilsText.convertByte(float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
+                tmpl_vars['memory_used'] = crUtilsText.convertByte(
+                    float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
 
                 if int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_alert')):
                     tmpl_vars['memory_state'] = "alert"
@@ -323,7 +328,8 @@ class Pages:
 
                     # Last : swap stats
                 if 0 != int(Checks.last_check_memory.swapSize):
-                    tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(Checks.last_check_memory.swapSize)
+                    tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
+                        Checks.last_check_memory.swapSize)
                     tmpl_vars['swap_used'] = crUtilsText.convertByte(Checks.last_check_memory.swapUsed)
 
                     tmpl_vars['swap_free'] = crUtilsText.convertByte(Checks.last_check_memory.swapFree)
@@ -356,7 +362,8 @@ class Pages:
                 tmpl_vars['load_check_enabled'] = "True"
 
                 tmpl_vars['load_last_one'] = Checks.last_check_loadAverage.last1m
-                tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(Checks.hostEntity.cpuCount)
+                tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
+                    Checks.hostEntity.cpuCount)
 
                 if int(tmpl_vars['load_percent']) >= int(Config.getConfigValue('Alerts', 'load_alert')):
                     tmpl_vars['load_state'] = "alert"
@@ -365,15 +372,18 @@ class Pages:
                 else:
                     tmpl_vars['load_state'] = "ok"
 
-                tmpl_vars['uptime_full_text'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
+                tmpl_vars['uptime_full_text'] = crUtilsText.secondsToPhraseTime(
+                    int(Checks.last_check_loadAverage.uptime))
                 tmpl_vars['uptime_seconds'] = crUtilsText.numberSeparators(str(Checks.last_check_loadAverage.uptime))
-                tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+                tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(
+                    crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(
+                        Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
         return tmpl.render(tmpl_vars)
 
     @cherrypy.expose()
     def api_disks_check(self):
-        tmpl =  self.env.get_template('blocks/disks.block.tpl')
+        tmpl = self.env.get_template('blocks/disks.block.tpl')
         tmpl_vars = dict()
 
         if None != Checks.last_check_disk:

@@ -41,8 +41,8 @@ function debian_stop_cr {
     printTitle "Stopping CentralReport..."
 
     if [ ! -f ${PID_FILE} ]; then
-            logInfo "CentralReport is already stopped!"
-            return 0
+        logInfo "CentralReport is already stopped!"
+        return 0
     else
         python ${INSTALL_DIR}/centralreport.py stop
         RETURN_CODE="$?"
@@ -51,9 +51,6 @@ function debian_stop_cr {
             logError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
-            # Waiting three seconds before all CR threads really stopped.
-            sleep 3
-
             logInfo "CentralReport stopped"
             return 0
         fi
@@ -283,7 +280,7 @@ function debian_install {
     fi
 
     # Jinja2 (Templates for CherryPy)
-    displayAndExec "Installing Jinj2..." easy_install Jinja2
+    displayAndExec "Installing Jinja 2..." easy_install Jinja2
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -296,7 +293,8 @@ function debian_install {
         return ${RETURN_CODE}
     fi
 
-    # ----
+    # Cleaning screen
+    clear
 
     # CR config assistant
     debian_config_assistant
