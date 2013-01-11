@@ -217,7 +217,7 @@ function macos_install {
     logConsole "\n\nPlease use your administrator password to install CentralReport on this Mac."
     sudo -v
     if [ $? -ne 0 ]; then
-        logError "Impossible to use root privileges!"
+        logError "Unable to use root privileges!"
         return 1
     fi
 
