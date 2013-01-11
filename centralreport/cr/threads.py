@@ -27,7 +27,12 @@ class Checks(threading.Thread):
 
     performChecks = True  # True = perform checks...
     tickCount = 60  # Initial Count (Perform a check when starting)
-    tickPerformCheck = 60  # Perform a check every xx ticks (1 tick = 1 second)
+
+    # Perform a check every xx ticks (1 tick = 1 second)
+    try:
+        tickPerformCheck = int(Config.getConfigValue('Checks', 'interval'))
+    except:
+        tickPerformCheck = 60
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -51,7 +56,7 @@ class Checks(threading.Thread):
         Checks.hostEntity = self.MyCollector.get_infos()
 
         while Checks.performChecks:
-            if self.tickCount == self.tickPerformCheck:
+            if self.tickCount >= self.tickPerformCheck:
                 crLog.writeDebug('---- New check -----')
 
                 # Checking CPU

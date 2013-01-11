@@ -60,6 +60,7 @@ class Config:
             },
         'Checks':
             {
+                'interval': '5',
                 'enable_cpu_check': 'True',
                 'enable_memory_check': 'True',
                 'enable_load_check': 'True',

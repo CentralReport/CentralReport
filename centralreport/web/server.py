@@ -267,11 +267,16 @@ class Pages:
         if Checks.last_check_date is None:
             tmpl_vars['last_timestamp'] = '0'
             tmpl_vars['last_fulldate'] = 'Never'
-            tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
         else:
             tmpl_vars['last_timestamp'] = crUtilsDate.datetimeToTimestamp(Checks.last_check_date)
             tmpl_vars['last_fulldate'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
-            tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
+
+        tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
+
+        try:
+            tmpl_vars['checks_interval'] = int(Config.getConfigValue('Checks','interval'))
+        except:
+            tmpl_vars['checks_interval'] = 60
 
         return tmpl.render(tmpl_vars)
 

@@ -10,6 +10,7 @@
 var actualClientTimestamp = 0;  // Client timestamp
 var lastTimestamp = 0;  // Last check timestamp (server side)
 var nextCheckAt = 0;  // Next check will be occur at this timestamp (client side)
+var checksInterval = 60; // Interval between two checks
 
 /**
  * Refresh the next check counter
@@ -57,6 +58,10 @@ var verifyIsNewCheckIsAvailable = function () {
 
     $.ajax('/api/check/date')
         .done(function(data) {
+
+            // Getting interval between two checks
+            checksInterval = parseInt(data["checks_interval"]);
+
             // If lastTimestamp=0, CR hasn't done any checks yet...
             if (0 === data['last_timestamp']) {
                 $('#last_check_date').text('No check available');
@@ -84,7 +89,7 @@ var verifyIsNewCheckIsAvailable = function () {
                     }
 
                     // All checks are done every 60 seconds by the agent
-                    nextCheckAt = lastTimestamp + 60 + diff_timestamp_client_server;
+                    nextCheckAt = lastTimestamp + checksInterval + diff_timestamp_client_server;
 
                     updateLastCheck();
                 }
