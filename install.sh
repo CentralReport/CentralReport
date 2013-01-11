@@ -2,7 +2,7 @@
 
 # CentralReport Unix/Linux installer.
 # For CentralReport Indev version.
-# By careful! Don't use in production environment!
+# Be careful! Don't use in production environment!
 
 # Importing scripts...
 source bash/vars.sh
@@ -22,10 +22,10 @@ writeConsole "\033[44m\033[1;37m"
 writeConsole "  -------------- CentralReport installer --------------"
 writeConsole "\033[0;44m"
 writeConsole "  Welcome! This script will install CentralReport on your host."
-writeConsole "  If you wants more details, please visit http://github.com/miniche/CentralReport."
+writeConsole "  If you want more details, please visit http://github.com/miniche/CentralReport."
 writeConsole " "
-writeConsole " During installation, we can ask an administrator password. It permit CentralReport "
-writeConsole " to write in some directories and remove old CR installations."
+writeConsole " When installing CentralReport, we may ask for your password. It will allow CentralReport to write files
+            and directories such as the project binaries, logs, etc."
 writeConsole "\033[0m"
 
 # In the future, it will be possible to have different modes.
@@ -69,14 +69,14 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             bit_error=0
 
             if [ ${CURRENT_OS} == ${OS_MAC} ]; then
-                writeInfo "Ok, I continue. I will install CentralReport on a mac"
+                writeInfo "Processing... CentralReport will be installed on this Mac."
                 macos_install
                 if [ $? -ne 0 ]; then
                     bit_error=1
                 fi
 
             elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
-                writeInfo "Ok. I continue. I will install CentralReport on Debian"
+                writeInfo "Processing... CentralReport will be installed on this Linux."
                 debian_install
                 if [ $? -ne 0 ]; then
                     bit_error=1
@@ -87,7 +87,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
             if [ ${bit_error} -eq 1 ]; then
 
-                writeError "Error during CentralReport installation!"
+                writeError "Something went wrong when installing CentralReport!"
                 writeError "CentralReport isn't installed on this host."
 
             else

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CentralReport Unix/Linux Indev version.
-# By careful! Don't use in production environment!
+# Be careful! Don't use in production environment!
 
 # This file contain all functions to manage CR install/unistall on a Mac.
 
@@ -24,7 +24,7 @@ function macos_start_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            writeError "Error on starting CentralReport (Error code : ${RETURN_CODE})"
+            writeError "Error when starting CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really started.
@@ -50,7 +50,7 @@ function macos_stop_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
-            writeError "Error on stopping CentralReport (Error code : ${RETURN_CODE})"
+            writeError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
 
         else
@@ -68,7 +68,7 @@ function macos_stop_cr {
 function macos_config_assistant {
 
     writeConsole "\033[1;32m"
-    writeInfo "Lauching CentralReport configuration assistant..."
+    writeInfo "Lauching CentralReport configuration wizard..."
     writeConsole "\033[0m"
 
     sudo python ${CONFIG_ASSISTANT} < /dev/tty
@@ -100,7 +100,7 @@ function macos_remove_bin {
             return 0
         fi
     else
-        writeInfo "CentralReport bin directory doesn't exist."
+        writeInfo "CentralReport bin directory doesn't exist!"
         return 0
     fi
 }
@@ -121,7 +121,7 @@ function macos_remove_config {
             return 0
         fi
     else
-        writeInfo "CentralReport config file not found."
+        writeInfo "CentralReport config file not found!"
         return 0
     fi
 }
@@ -142,7 +142,7 @@ function macos_remove_startup_plist {
             return 0
         fi
     else
-        writeInfo "Startup plist file not found."
+        writeInfo "Startup plist file not found!"
         return 0
     fi
 }
@@ -263,7 +263,7 @@ function macos_install {
 
 
 
-    writeTitle "Installing thirparties software..."
+    writeTitle "Installing third-party softwares..."
     writeInfo " (Please consult http://github.com/miniche/CentralReport for licenses)"
 
     # First, we install CherryPy...

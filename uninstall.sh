@@ -2,7 +2,7 @@
 
 # CentralReport Unix/Linux installer.
 # For CentralReport Indev version.
-# By careful! Don't use in production environment!
+# Be careful! Don't use in production environment!
 
 # Importing some scripts
 source bash/vars.sh
@@ -19,37 +19,37 @@ unistall_confirm="yes"
 getOS
 
 # Go!
+writeLog "-------------- Starting CentralReport uninstaller  --------------"
 
-echo -e "\033[44m\033[1;37m"
-echo " "
-echo "-------------- CentralReport uninstaller --------------"
-echo " "
-echo "Welcome! This script will uninstall CentralReport on your host."
-echo "If you wants more details, please visit http://github.com/miniche/CentralReport"
-echo -e "\033[0m"
+writeConsole "\033[44m\033[1;37m"
+writeConsole " "
+writeConsole "-------------- CentralReport uninstaller --------------"
+writeConsole " "
+writeConsole "Welcome! This script will uninstall CentralReport on your host."
+writeConsole "If you want more details, please visit http://github.com/miniche/CentralReport"
+writeConsole "\033[0m"
 
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    displayError "Error, Python must be installed on your host to remove CentralReport."
+    writeError "Error, Python must be installed on your host to remove CentralReport."
     exit 1
 fi
 
-echo " "
-echo "Uninstall"
+writeConsole " "
 read -p "You will uninstall CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
 
 
 # Are you sure to uninstall CR ?
 verifyYesNoAnswer ${RESP}
 if [ $? -eq 0 ]; then
-    echo "OK, continue"
-    echo " "
+    writeConsole "Processing..."
+    writeConsole " "
 
     if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-        echo " "
-        echo -e "\033[1;31mERROR"
-        echo -e "\033[0;31mThe uninstall is only designed for Mac OS and Debian"
-        echo -e "Other Linux distros support coming soon! \033[0m"
+        writeConsole " "
+        writeError "ERROR"
+        writeError "The uninstall is only designed for Mac OS and Debian"
+        writeError "Other Linux distros support coming soon!"
 
     else
         # 0 = no
@@ -77,25 +77,25 @@ if [ $? -eq 0 ]; then
 
         if [ ${bit_error} -eq 1 ]; then
 
-            displayError "Error during CentralReport uninstall..."
-            displayError "CentralReport may still be installed on this host"
+            writeError "Error during CentralReport uninstall..."
+            writeError "CentralReport may still be installed on this host"
 
         else
             # Ok, it's done !
-            echo -e "\033[1;32m"
-            echo " "
-            echo "CentralReport might be deleted on your host."
-            echo "It's sad, but you're welcome ! :-)"
-            echo " "
-            echo "PS : You can write to developers if you found bad things in CentralReport."
-            echo "You can find them at http://github.com/miniche/CentralReport"
-            echo "Thanks!"
-            echo -e "\033[0m"
+            writeConsole "\033[1;32m"
+            writeConsole " "
+            writeInfo "CentralReport might be deleted on your host."
+            writeInfo "It's sad, but you're welcome ! :-)"
+            writeConsole " "
+            writeInfo "PS : You can write to developers if you found bad things in CentralReport."
+            writeInfo "You can find them at http://github.com/miniche/CentralReport"
+            writeInfo "Thanks!"
+            writeConsole "\033[0m"
 
         fi
     fi
 fi
 
 # End of program
-echo " "
-echo " -- End of program -- "
+writeConsole " "
+writeInfo " -- End of program -- "

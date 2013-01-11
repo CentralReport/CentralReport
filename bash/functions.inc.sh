@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # CentralReport Unix/Linux Indev version.
-# By careful! Don't use in production environment!
+# Be careful! Don't use in production environment!
 
-# Gets actual OS (Linux distrib or Unix OS)
+# Gets current OS (Linux distrib or Unix OS)
 function getOS(){
 
     if [ $(uname -s) == "Darwin" ]; then
@@ -28,7 +28,7 @@ function getPythonIsInstalled {
 
 }
 
-# Displays an error message and exit the current function or program
+# Displays an error message and exits the current function or program
 # First parameter: ERROR CODE
 # Second parameter: MESSAGE
 function displayErrorAndExit() {
@@ -38,7 +38,7 @@ function displayErrorAndExit() {
     exit ${exitcode}
 }
 
-# Displays the message with current statut (.../ERR/OK), while executing the command.
+# Displays the message with current status (.../ERR/OK), while executing the command.
 # First parameter: MESSAGE
 # Others parameters: COMMAND (! not |)
 function displayAndExec() {
