@@ -276,7 +276,7 @@ class Pages:
         try:
             tmpl_vars['checks_interval'] = int(Config.getConfigValue('Checks','interval'))
         except:
-            tmpl_vars['checks_interval'] = 60
+            tmpl_vars['checks_interval'] = int(Config.CR_CONFIG_DEFAULT_CHECKS_INTERVAL)
 
         return tmpl.render(tmpl_vars)
 

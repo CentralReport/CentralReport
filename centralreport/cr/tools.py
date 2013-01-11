@@ -27,6 +27,9 @@ class Config:
     CR_CONFIG_ENABLE_DEBUG_MODE = False  # False = Production environment. True = debug/test/develop environment.
     CR_HOST_UUID = ''  # Universal Unique IDentifier for the current host. '' = not defined yet.
 
+    # Default interval between two checks (use this if not available in the config file)
+    CR_CONFIG_DEFAULT_CHECKS_INTERVAL=int(60)
+
     # Current host
     HOST_CURRENT = ''
 

@@ -12,6 +12,8 @@ var lastTimestamp = 0;  // Last check timestamp (server side)
 var nextCheckAt = 0;  // Next check will be occur at this timestamp (client side)
 var checksInterval = 60; // Interval between two checks
 
+var CHECKS_INTERVAL_DEFAULT = 60; // Default interval between two checks
+
 /**
  * Refresh the next check counter
  */
@@ -60,7 +62,11 @@ var verifyIsNewCheckIsAvailable = function () {
         .done(function(data) {
 
             // Getting interval between two checks
-            checksInterval = parseInt(data["checks_interval"]);
+            if (isNaN(data["checks_interval"])) {
+                checksInterval = CHECKS_INTERVAL_DEFAULT
+            } else {
+                checksInterval = parseInt(data["checks_interval"]);
+            }
 
             // If lastTimestamp=0, CR hasn't done any checks yet...
             if (0 === data['last_timestamp']) {
