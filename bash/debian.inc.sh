@@ -87,7 +87,7 @@ function debian_remove_bin {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error when deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport bin files removed"
@@ -108,7 +108,7 @@ function debian_remove_config {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
+            logError "Error when deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport config file deleted"
@@ -129,15 +129,15 @@ function debian_remove_startup_script {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error on deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
+            logError "Error when deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
             return 1
         else
 
-            displayAndExec "Removing startup service" update-rc.d -f centralreport.sh remove
+            displayAndExec "Removing startup service..." update-rc.d -f centralreport.sh remove
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error on removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
+                logError "Error when removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
                 logFile "Startup script deleted"
@@ -159,14 +159,14 @@ function debian_cp_bin {
     mkdir ${INSTALL_DIR}
 
     if [ $? -ne "0" ]; then
-          logError "Error on creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
+          logError "Error when creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
           return 1
     else
         displayAndExec "Copy CentralReport in the good directory..." cp -R -f -v centralreport ${PARENT_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error on copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error when copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             return 0
@@ -181,7 +181,7 @@ function debian_cp_startup_plist {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-      logError "Error on copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+      logError "Error when copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
       return ${RETURN_CODE}
     else
         chmod 755 ${STARTUP_DEBIAN}
@@ -190,7 +190,7 @@ function debian_cp_startup_plist {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-          logError "Error on registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
+          logError "Error when registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
           return ${RETURN_CODE}
         else
             return 0

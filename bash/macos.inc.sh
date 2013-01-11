@@ -93,7 +93,7 @@ function macos_remove_bin {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error on deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error when deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport bin files removed"
@@ -114,7 +114,7 @@ function macos_remove_config {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error on deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
+            logError "Error when deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport config file removed"
@@ -135,7 +135,7 @@ function macos_remove_startup_plist {
         RETURN_CODE="$?"
 
         if [ $? -ne "0" ]; then
-            logError "Error on deleting startup plist file at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+            logError "Error when deleting startup plist file at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "Startup plist removed"
@@ -171,14 +171,14 @@ function macos_cp_bin {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-          displayError "Error on creating CentralReport dir at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+          displayError "Error when creating CentralReport dir at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
           return ${RETURN_CODE}
     else
         displayAndExec "Copying CentralReport in the good directory..." sudo cp -R -f -v centralreport ${PARENT_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            displayError "Error on copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
+            displayError "Error when copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             return 0
@@ -193,7 +193,7 @@ function macos_cp_startup_plist {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-      displayError "Error on copying startup plist at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+      displayError "Error when copying startup plist at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
       return ${RETURN_CODE}
     else
         return 0
