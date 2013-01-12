@@ -56,7 +56,7 @@ class Checks(threading.Thread):
         Checks.hostEntity = self.MyCollector.get_infos()
 
         while Checks.performChecks:
-            if self.tickCount >= self.tickPerformCheck:
+            if self.tickPerformCheck <= self.tickCount:
                 crLog.writeDebug('---- New check -----')
 
                 # Checking CPU

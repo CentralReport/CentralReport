@@ -62,11 +62,7 @@ var verifyIsNewCheckIsAvailable = function () {
         .done(function(data) {
 
             // Getting interval between two checks
-            if (isNaN(data["checks_interval"])) {
-                checksInterval = CHECKS_INTERVAL_DEFAULT
-            } else {
-                checksInterval = parseInt(data["checks_interval"]);
-            }
+            checksInterval = isNaN(data["checks_interval"]) ? CHECKS_INTERVAL_DEFAULT : parseInt(data["checks_interval"], 10);
 
             // If lastTimestamp=0, CR hasn't done any checks yet...
             if (0 === data['last_timestamp']) {

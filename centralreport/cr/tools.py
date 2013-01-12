@@ -28,7 +28,7 @@ class Config:
     CR_HOST_UUID = ''  # Universal Unique IDentifier for the current host. '' = not defined yet.
 
     # Default interval between two checks (use this if not available in the config file)
-    CR_CONFIG_DEFAULT_CHECKS_INTERVAL=int(60)
+    CR_CONFIG_DEFAULT_CHECKS_INTERVAL = int(60)
 
     # Current host
     HOST_CURRENT = ''
@@ -63,11 +63,11 @@ class Config:
             },
         'Checks':
             {
-                'interval': '60',
                 'enable_cpu_check': 'True',
                 'enable_memory_check': 'True',
                 'enable_load_check': 'True',
-                'enable_disks_check': 'True'
+                'enable_disks_check': 'True',
+                'interval': '60'
             },
         'Alerts':
             {
