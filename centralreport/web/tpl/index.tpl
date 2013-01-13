@@ -35,6 +35,11 @@
         This is an indev version. Only for developers right now. You can meet bug everywhere, say hello to them ;-)
     </div>
 
+    <div class="alert">
+        <strong>Alpha Version</strong><br />
+        This is an alpha version. Only for testing purposes. You can meet bug everywhere, you can write to develop to eliminate them.
+    </div>
+
     <noscript>
         <div id="div_ajax_available_alert" class="alert alert-info">
             <a href="#" class="close" data-dismiss="alert">&times;</a>

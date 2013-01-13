@@ -20,8 +20,8 @@ class Config:
     CR_VERSION_MINOR = 1
     CR_VERSION_REVISION = 0
     CR_VERSION = str(CR_VERSION_MAJOR) + "." + str(CR_VERSION_MINOR) + "." + str(CR_VERSION_REVISION)
-    CR_VERSION_NAME = 'Indev Version'
-    CR_CONFIG_PATH = '/etc'  # Condig file location
+    CR_VERSION_NAME = 'Alpha Version'
+    CR_CONFIG_PATH = '/etc'  # Config file location
     CR_CONFIG_FILE = 'centralreport.cfg'
     CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH, CR_CONFIG_FILE)
     CR_CONFIG_ENABLE_DEBUG_MODE = False  # False = Production environment. True = debug/test/develop environment.
