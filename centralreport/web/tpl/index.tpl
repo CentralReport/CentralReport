@@ -307,7 +307,7 @@
         </div>
     </div>
 
-    <div class="headhand headhand-center clearfix">
+    <div class="headhand headhand-center clearfix hide">
         <a href="dashboard">Go to old full report</a>
     </div>
 {% endblock %}
