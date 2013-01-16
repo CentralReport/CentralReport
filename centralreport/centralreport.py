@@ -87,11 +87,11 @@ class CentralReport(Daemon):
         crLog.writeInfo("Stopping CentralReport...")
         self.isRunning = False
 
-        if None != CentralReport.webserver_thread:
+        if CentralReport.webserver_thread is not None:
             crLog.writeInfo('Stopping Webserver...')
             CentralReport.webserver_thread.stop()
 
-        if None != self.checks_thread:
+        if CentralReport.checks_thread is not None:
             crLog.writeInfo('Stopping checks thread...')
             crThreads.Checks.performChecks = False
 
@@ -104,7 +104,7 @@ class CentralReport(Daemon):
 
         # In test mode, we only return 0 (exit can be personalized by others scripts)
         # But in production, we kill immediately the process.
-        if Config.CR_CONFIG_ENABLE_DEBUG_MODE == False:
+        if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
             os.system('kill %d' % os.getpid())
 
         return 0
