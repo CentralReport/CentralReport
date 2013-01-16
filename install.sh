@@ -118,4 +118,4 @@ fi
 
 # End of program
 logConsole " "
-logInfo " -- End of program -- "
+logInfo " -- End of the program -- "

@@ -3,7 +3,7 @@
 # CentralReport Unix/Linux Indev version.
 # Be careful! Don't use in production environment!
 
-# This file contain all functions to manage CR install/unistall on a Mac.
+# This file contains all functions to manage CR install/unistall on a Mac.
 
 
 # --
@@ -22,7 +22,7 @@ function macos_start_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when starting CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error starting CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really started.
@@ -32,8 +32,6 @@ function macos_start_cr {
             return 0
         fi
     fi
-
-
 }
 
 function macos_stop_cr {
@@ -48,7 +46,7 @@ function macos_stop_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
-            logError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error stopping CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logInfo "CentralReport stopped"
@@ -65,13 +63,12 @@ function macos_stop_cr {
 function macos_config_assistant {
 
     logConsole "\033[1;32m"
-    logInfo "Lauching CentralReport configuration wizard..."
+    logInfo "Launching CentralReport configuration wizard..."
     logConsole "\033[0m"
 
     sudo python ${CONFIG_ASSISTANT} < /dev/tty
 
     return 0
-
 }
 
 
@@ -86,14 +83,14 @@ function macos_remove_bin {
     logFile "Removing CentralReport bin files..."
 
     if [ -d ${INSTALL_DIR} ]; then
-        displayAndExec "Remove existing install directory..." sudo rm -rfv ${INSTALL_DIR}
+        displayAndExec "Removing existing installation directory..." sudo rm -rfv ${INSTALL_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
-            logFile "CentralReport bin files removed"
+            logFile "CentralReport bin files have been removed"
             return 0
         fi
     else
@@ -107,11 +104,11 @@ function macos_remove_config {
     logFile "Removing CentralReport config file..."
 
     if [ -f ${CONFIG_FILE} ]; then
-        displayAndExec "Remove existing config file..." sudo rm -fv ${CONFIG_FILE}
+        displayAndExec "Removing existing config file..." sudo rm -fv ${CONFIG_FILE}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
+            logError "Error deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport config file removed"
@@ -128,11 +125,11 @@ function macos_remove_startup_plist {
     logFile "Removing startup plist..."
 
     if [ -f ${STARTUP_PLIST} ]; then
-        displayAndExec "Remove existing startup plist file..." sudo rm -fv ${STARTUP_PLIST}
+        displayAndExec "Removing existing startup plist file..." sudo rm -fv ${STARTUP_PLIST}
         RETURN_CODE="$?"
 
         if [ $? -ne "0" ]; then
-            logError "Error when deleting startup plist file at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+            logError "Error deleting startup plist file at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "Startup plist removed"
@@ -143,11 +140,6 @@ function macos_remove_startup_plist {
         return 0
     fi
 }
-
-
-
-
-
 
 # --
 # Install functions
@@ -168,14 +160,14 @@ function macos_cp_bin {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-          displayError "Error when creating CentralReport dir at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+          displayError "Error creating CentralReport dir at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
           return ${RETURN_CODE}
     else
         displayAndExec "Copying CentralReport in the good directory..." sudo cp -R -f -v centralreport ${PARENT_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            displayError "Error when copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
+            displayError "Error copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             return 0
@@ -190,19 +182,12 @@ function macos_cp_startup_plist {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-      displayError "Error when copying startup plist at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+      displayError "Error copying startup plist at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
       return ${RETURN_CODE}
     else
         return 0
     fi
 }
-
-
-
-
-
-
-
 
 # --
 # Install procedure
@@ -241,8 +226,6 @@ function macos_install {
         return ${RETURN_CODE}
     fi
 
-
-
     printTitle "Installing CentralReport..."
 
     macos_cp_bin
@@ -257,9 +240,6 @@ function macos_install {
         return ${RETURN_CODE}
     fi
 
-
-
-
     printTitle "Installing third-party softwares..."
     logInfo " (Please consult http://github.com/miniche/CentralReport for licenses)"
 
@@ -270,7 +250,6 @@ function macos_install {
         return ${RETURN_CODE}
     fi
 
-
     # Then, installing Jinja2 Templates...
     displayAndExec "Installing Jinja 2..." sudo easy_install Jinja2
     RETURN_CODE="$?"
@@ -278,14 +257,12 @@ function macos_install {
         return ${RETURN_CODE}
     fi
 
-
     # Finally, installing Routes library...
     displayAndExec "Installing Routes..." sudo easy_install routes
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
-
 
     # Cleaning screen
     clear
@@ -306,11 +283,6 @@ function macos_install {
 
     return 0
 }
-
-
-
-
-
 
 # --
 # Uninstall procedure

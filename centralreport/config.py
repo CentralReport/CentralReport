@@ -25,7 +25,7 @@ if __name__ == '__main__':
         time.sleep(1)
 
         daemon = CentralReport(Config.CR_PID_FILE)
-        if 0 == daemon.status():
+        if not daemon.status():
             print('CentralReport is not running')
             centralReportRunningBefore = False
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         # Enable or disable internal web server
         print('\n\n')
         print('-- Internal web server options --')
-        print('CentralReport have a small internal web server to display checks datas, with a simple web browser.')
+        print('CentralReport has a small internal web server to display checks datas, with a simple web browser.')
         print('With this web server, you can monitor this host without account on centralreport.net')
 
         validEnableWebServer = False
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
             validPort = False
             while(not validPort):
-                resultPort = raw_input('Use this port : ')
+                resultPort = raw_input('Use this port: ')
                 resultPortInt = 0
 
                 try:

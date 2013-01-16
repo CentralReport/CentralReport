@@ -67,6 +67,6 @@ echo "Jinja2 is installed!"
 
 sudo -k
 
-echo " --- End of program ---"
+echo " --- End of the program ---"
 
 exit 0

@@ -3,7 +3,7 @@
 # CentralReport Unix/Linux Indev version.
 # Be careful! Don't use in production environment!
 
-# This file contain all functions to manage CR install/unistall on a Debian/Ubuntu distribution.
+# This file contains all functions to manage CR install/unistall on a Debian/Ubuntu distribution.
 
 
 # --
@@ -22,7 +22,7 @@ function debian_start_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when starting CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error starting CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really started.
@@ -32,8 +32,6 @@ function debian_start_cr {
             return 0
         fi
     fi
-
-
 }
 
 function debian_stop_cr {
@@ -48,7 +46,7 @@ function debian_stop_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
-            logError "Error when stopping CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error stopping CentralReport (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logInfo "CentralReport stopped"
@@ -60,6 +58,7 @@ function debian_stop_cr {
 # --
 # CentralReport config assistant
 # --
+
 function debian_config_assistant {
 
     logConsole "\033[44m\033[1;37m"
@@ -80,11 +79,11 @@ function debian_remove_bin {
     logFile "Removing CentralReport bin files..."
 
     if [ -d ${INSTALL_DIR} ]; then
-        displayAndExec "Remove existing install directory..." rm -rfv $INSTALL_DIR
+        displayAndExec "Removing existing install directory..." rm -rfv $INSTALL_DIR
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport bin files removed"
@@ -101,11 +100,11 @@ function debian_remove_config {
     logFile "Removing CentralReport config file..."
 
     if [ -f ${CONFIG_FILE} ]; then
-        displayAndExec "Remove existing config file..." rm -fv $CONFIG_FILE
+        displayAndExec "Removing existing config file..." rm -fv $CONFIG_FILE
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
+            logError "Error deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport config file deleted"
@@ -122,11 +121,11 @@ function debian_remove_startup_script {
     logFile "Removing startup script..."
 
     if [ -f ${STARTUP_DEBIAN} ]; then
-        displayAndExec "Remove existing startup script..." rm -rfv $STARTUP_DEBIAN
+        displayAndExec "Removing existing startup script..." rm -rfv $STARTUP_DEBIAN
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
+            logError "Error deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
             return 1
         else
 
@@ -134,7 +133,7 @@ function debian_remove_startup_script {
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error when removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
+                logError "Error removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
                 logFile "Startup script deleted"
@@ -151,19 +150,20 @@ function debian_remove_startup_script {
 # --
 # Install functions
 # --
+
 function debian_cp_bin {
     # Copy CentralReport files in the right directory.
     mkdir ${INSTALL_DIR}
 
     if [ $? -ne "0" ]; then
-          logError "Error when creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
+          logError "Error creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
           return 1
     else
-        displayAndExec "Copy CentralReport in the good directory..." cp -R -f -v centralreport ${PARENT_DIR}
+        displayAndExec "Copying CentralReport in the good directory..." cp -R -f -v centralreport ${PARENT_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error when copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             return 0
@@ -174,11 +174,11 @@ function debian_cp_bin {
 function debian_cp_startup_plist {
     # Copy startup plist for launchd in the right directory.
 
-    displayAndExec "Copy startup script in the good directory..." cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
+    displayAndExec "Copying startup script in the good directory..." cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-      logError "Error when copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+      logError "Error copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
       return ${RETURN_CODE}
     else
         chmod 755 ${STARTUP_DEBIAN}
@@ -187,7 +187,7 @@ function debian_cp_startup_plist {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-          logError "Error when registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
+          logError "Error registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
           return ${RETURN_CODE}
         else
             return 0
@@ -198,12 +198,13 @@ function debian_cp_startup_plist {
 # --
 # Install procedure
 # --
+
 function debian_install {
 
-    # Install only can perform if current user is root (or have administrative privileges)
+    # Install only can perform if current user has administrative privileges
     if [[ $EUID -ne 0 ]]; then
         echo " "
-        logError "You must be root to run CentralReport installer!"
+        logError "Installation can only be performed if the current user has administrative privileges!"
         exit 1
     fi
 
@@ -248,7 +249,7 @@ function debian_install {
 
     # Setuptools (easy_install included)
     printTitle "Installing Setuptools..."
-    displayAndExec "Untar Setuptools..." tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
+    displayAndExec "Untaring Setuptools..." tar -xzvf ${SETUPTOOLS_TAR} -C thirdparties/
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -262,7 +263,7 @@ function debian_install {
         return ${RETURN_CODE}
     fi
 
-    displayAndExec "Deleting install files..." rm -Rf ${SETUPTOOLS_DIR}
+    displayAndExec "Deleting installation files..." rm -Rf ${SETUPTOOLS_DIR}
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -308,10 +309,10 @@ function debian_install {
     return 0
 }
 
-
 # --
 # Uninstall procedure
 # --
+
 function debian_uninstall {
 
     # Uninstall only can perform if current user is root (or have administrative privileges)

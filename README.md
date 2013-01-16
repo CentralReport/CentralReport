@@ -1,12 +1,12 @@
 # CentralReport
 
-**Central Report is designed to monitor very easily computers and servers, runs on many current operating systems.**
+**Central Report is designed to monitor very easily computers and servers, and runs on many current operating systems.**
 
-Right now, CentralReport can monitor :
+Right now, CentralReport monitors :
 
 * CPU
 * Physical Memory (RAM)
-* Swap
+* Virtual Memory (Swap)
 * Load Average
 * Uptime
 * Disks
@@ -23,7 +23,7 @@ We have many ideas to simplify server monitoring:
 * Cross platform (Unix, Linux, Windows)
 * Standalone or Cloud conception
 * Alerts (mobile push, mail, etc…)
-* High customizable dashboard
+* Highly customizable dashboard
 * Plugins support
 * For public or Pros
 
@@ -36,15 +36,15 @@ Please visit [Wiki installation page](https://github.com/miniche/CentralReport/w
 **The first public alpha version is very close!**
 
 CentralReport runs on **Debian, Ubuntu and Mac OS X**.
-Right now, it's just a standalone version. It's free and very easy : install CentralReport and active the small web server included. You can monitor your host with a simple web browser : 
+Right now, it's just a standalone version. It's free and very easy to use : install CentralReport and active the small web server included. You can monitor your host with a simple web browser :
 
 ![Mac Screenshot](https://raw.github.com/miniche/CentralReport/develop/tools/screenshots/Capture_Mac.png)
 
 
 
-__We are working on the cloud solution : you will be able to view all yours computers and servers, and set some email or push alerts.__
+__We are working on a cloud solution : you will be able to view all yours computers and servers, and set some email or push alerts.__
 
 
 ## Get in touch
-We are open to the world. If you want others informations, or if you want to help us, you can contact us.
+We are open to the world. If you want more information or you are in a mood to collaborate, feel free to contact us.
 We will gladly answer to every email :-)

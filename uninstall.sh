@@ -87,8 +87,8 @@ if [ $? -eq 0 ]; then
             logInfo "CentralReport might be deleted on your host."
             logInfo "It's sad, but you're welcome ! :-)"
             logConsole " "
-            logInfo "PS : You can write to developers if you found bad things in CentralReport."
-            logInfo "You can find them at http://github.com/miniche/CentralReport"
+            logInfo "PS : Thanks for your interest in CentralReport ! One of the best ways you can help us improve CentralReport is to let us know about any problems you find with it."
+            logInfo "You can find the developers at http://github.com/miniche/CentralReport"
             logInfo "Thanks!"
             logConsole "\033[0m"
 
@@ -98,4 +98,4 @@ fi
 
 # End of program
 logConsole " "
-logInfo " -- End of program -- "
+logInfo " -- End of the program -- "

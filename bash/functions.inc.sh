@@ -6,7 +6,7 @@
 # Gets current OS (Linux distrib or Unix OS)
 function getOS(){
 
-    if [ $(uname -s) == "Darwin" ]; then
+    if [ "Darwin" == $(uname -s) ]; then
         CURRENT_OS=${OS_MAC}
     elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
         CURRENT_OS=${OS_DEBIAN}
@@ -14,7 +14,7 @@ function getOS(){
 }
 
 # Displays the python version (if python is available)
-# Return 0 is python is available, or 1 if an error occured
+# Returns 0 if python is available, 1 otherwise.
 function getPythonIsInstalled {
 
     echo " "
@@ -64,7 +64,7 @@ function displayAndExec() {
 
 # Verifies if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
 # PARAMETER : a string
-# RETURN : If true, this function return 0 (no error), else return 1 for any other answer.
+# Returns 0 if true, 1 otherwise
 function verifyYesNoAnswer() {
 
     case "$1" in

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CentralReport Unix/Linux Indev version.
-# By careful! Don't use in production environment!
+# Be careful! Don't use in production environment!
 
 # Folders
 PARENT_DIR=/usr/local/bin/

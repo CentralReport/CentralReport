@@ -138,7 +138,7 @@ class MacCollector(_Collector):
 
     def get_cpu(self):
         """
-            Gets actual CPU utilization.
+            Gets current CPU usage.
         """
 
         # iostat - entrees / sorties

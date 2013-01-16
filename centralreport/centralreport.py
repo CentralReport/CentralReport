@@ -16,8 +16,7 @@ from web.server import WebServer
 
 
 class CentralReport(Daemon):
-    configuration = None  # Configuration object
-    isRunning = True  # Bool : True = daemon is running.
+    isRunning = True  # Deamon status
     startingDate = None
 
     # Threads
@@ -60,8 +59,8 @@ class CentralReport(Daemon):
             while CentralReport.isRunning:
                 try:
 
-                    if Config.CR_CONFIG_ENABLE_DEBUG_MODE == False:
-                        # If .pid file is not found, we must stop CR (only in production environement)
+                    if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
+                        # If .pid file is not found, we must stop CR (only in production environment)
                         try:
                             pf = file(self.pidfile, 'r')
                             pf.close()
@@ -82,7 +81,7 @@ class CentralReport(Daemon):
 
     def stop(self):
         """
-            Called when the scripts will be stopped
+            Stops all threads, Daemon and kill CentralReport instance.
         """
 
         crLog.writeInfo("Stopping CentralReport...")
