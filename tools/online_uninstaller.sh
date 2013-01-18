@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux uninstaller.
-# For CentralReport Indev version.
-# By careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux online uninstaller
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # This script will download latest CentralReport version, and begin uninstall on current host.
 # It works for Mac OS X, Debian and Ubuntu

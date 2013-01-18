@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux Indev version.
-# Be careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux bash functions
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # Gets current OS (Linux distrib or Unix OS)
 function getOS(){

@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux packager.
-# For CentralReport Indev version.
-# By careful! Don't use in production environment!
-
+# ------------------------------------------------------------
+# CentralReport Unix/Linux packager
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # This script package CentralReport in one archive (.tar.gz)
 # This archive is to be placed on the CR website and working with "online_installer" and "online_uninstaller"

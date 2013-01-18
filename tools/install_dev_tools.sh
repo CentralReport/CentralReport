@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux.
-# For CentralReport Indev version.
-# By careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux dev tools installer
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # This script will install all thirdparties tools (CherryPy, Jinja, etc...) on the current host.
 # It's be very helpfull on a dev host.

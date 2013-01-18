@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux installer.
-# For CentralReport Indev version.
-# By careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux online installer
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # This script will download latest CentralReport version, and begin installation.
 # It works for Mac OS X, Debian and Ubuntu

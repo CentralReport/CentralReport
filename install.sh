@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux installer.
-# For CentralReport Indev version.
-# Be careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux bash installer
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # Importing scripts...
 source bash/vars.sh
