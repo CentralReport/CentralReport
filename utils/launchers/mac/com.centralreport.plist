@@ -2,22 +2,26 @@
 
 <plist version="1.0">
 <dict>
-        <key>Disabled</key>
-        <false/>
-        <key>Label</key>
-        <string>com.centralreport</string>
-        <key>KeepAlive</key>
-        <dict>
-            <key>SuccessfulExit</key>
-            <true/>
-        </dict>
-        <key>RunAtLoad</key>
+    <key>Disabled</key>
+    <false/>
+
+    <key>Label</key>
+    <string>com.centralreport</string>
+
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
         <true/>
-        <key>ProgramArguments</key>
-        <array>
-            <string>python</string>
-            <string>/usr/local/bin/centralreport/centralreport.py</string>
-            <string>start</string>
-        </array>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>python</string>
+        <string>/usr/local/bin/centralreport/centralreport.py</string>
+        <string>start</string>
+    </array>
 </dict>
 </plist>

@@ -5,11 +5,11 @@
 # Be careful! Don't use in production environment!
 
 # Importing some scripts
-source bash/vars.sh
-source bash/log.inc.sh
-source bash/functions.inc.sh
-source bash/macos.inc.sh
 source bash/debian.inc.sh
+source bash/functions.inc.sh
+source bash/log.inc.sh
+source bash/macos.inc.sh
+source bash/vars.sh
 
 # Vars
 ACTUAL_MODE=install     # Modes : install, check
