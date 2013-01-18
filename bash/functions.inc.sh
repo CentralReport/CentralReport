@@ -62,10 +62,10 @@ function displayAndExec() {
 }
 
 
-# Verifies if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
+# Checks if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
 # PARAMETER : a string
 # Returns 0 if true, 1 otherwise
-function verifyYesNoAnswer() {
+function checkYesNoAnswer() {
 
     case "$1" in
         y|Y|yes|YES|Yes) return 0 ;;

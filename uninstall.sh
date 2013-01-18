@@ -11,14 +11,10 @@ source bash/log.inc.sh
 source bash/macos.inc.sh
 source bash/vars.sh
 
-# Vars
-ACTUAL_MODE=install     # Modes : install, check
-unistall_confirm="yes"
-
-# Getting current OS
+# Getting current OS to check if uninstall will works for this host
 getOS
 
-# Go!
+# We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
 
 logConsole "\033[44m\033[1;37m"
@@ -31,16 +27,16 @@ logConsole "\033[0m"
 
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    logError "Error, Python must be installed on your host to remove CentralReport."
+    logError "Error! Python must be installed on your host to remove CentralReport."
     exit 1
 fi
 
 logConsole " "
-read -p "You will uninstall CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
+read -p "You will uninstall CentralReport. Are you sure you want to continue (y/N) : " RESP < /dev/tty
 
 
 # Are you sure to uninstall CR ?
-verifyYesNoAnswer ${RESP}
+checkYesNoAnswer ${RESP}
 if [ $? -eq 0 ]; then
     logConsole "Processing..."
     logConsole " "
@@ -49,7 +45,7 @@ if [ $? -eq 0 ]; then
         logConsole " "
         logError "ERROR"
         logError "The uninstall is only designed for Mac OS and Debian"
-        logError "Other Linux distros support coming soon!"
+        logError "Support for other OS will come soon!"
 
     else
         # 0 = no
@@ -77,7 +73,7 @@ if [ $? -eq 0 ]; then
 
         if [ ${bit_error} -eq 1 ]; then
 
-            logError "Error during CentralReport uninstall..."
+            logError "Error uninstalling CentralReport!"
             logError "CentralReport may still be installed on this host"
 
         else

@@ -35,7 +35,7 @@ elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
 
 else
     echo " "
-    echo "Sorry, your distro isn't supported yet..."
+    echo "Sorry, your OS isn't supported yet..."
     exit 1
 fi
 

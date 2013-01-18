@@ -11,11 +11,10 @@ source bash/functions.inc.sh
 source bash/macos.inc.sh
 source bash/debian.inc.sh
 
-# Vars
-ACTUAL_MODE=install                         # Modes : install, check
-install_confirm="yes"
+# Modes : only "install" yet ("check" mode will be added soon)
+ACTUAL_MODE=install
 
-# Go!
+# We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
 
 logConsole "\033[44m\033[1;37m"
@@ -35,11 +34,11 @@ fi
 # Python is mandatory for CentralReport
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    logError "Error, Python must be installed on your host to execute CentralReport."
+    logError "Error! Python must be installed on your host to execute CentralReport."
     exit 1
 fi
 
-# Getting current OS - from common_functions.sh
+# Getting current OS to check if uninstall will works for this host
 getOS
 
 # Check the actual mode.
@@ -51,15 +50,15 @@ if [ "install" == ${ACTUAL_MODE} ]; then
         logError " "
         logError "ERROR"
         logError "The install is only designed for Mac OS, Debian and Ubuntu."
-        logError "Other Linux distros support coming soon!"
+        logError "Support for other OS will come soon!"
     else
 
         logConsole " "
         logConsole "Install mode enabled"
-        read -p "You will install CentralReport. Are you sure to continue (y/n) : " RESP < /dev/tty
+        read -p "You will install CentralReport. Are you sure you want to continue (y/N) : " RESP < /dev/tty
 
         # Are you sure to install CR ?
-        verifyYesNoAnswer ${RESP}
+        checkYesNoAnswer ${RESP}
         if [ $? -eq 0 ]; then
 
             # It's an indev version. At each install, we delete everything.
