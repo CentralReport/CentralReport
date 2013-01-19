@@ -37,7 +37,7 @@
 
     <div class="alert">
         <strong>Alpha Version</strong><br />
-        This is an alpha version. Only for testing purposes. You can meet bug everywhere, you can write to develop to eliminate them.
+        This is an alpha version. Only for testing purposes. You can meet bug everywhere, you can write to developers to eliminate them.
     </div>
 
     <noscript>
