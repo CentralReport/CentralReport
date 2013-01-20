@@ -28,11 +28,7 @@ class Checks(threading.Thread):
     performChecks = True  # True = perform checks...
     tickCount = 60  # Initial Count (Perform a check when starting)
 
-    # Perform a check every xx ticks (1 tick = 1 second)
-    try:
-        tickPerformCheck = int(Config.getConfigValue('Checks', 'interval'))
-    except:
-        tickPerformCheck = 60
+
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -44,6 +40,14 @@ class Checks(threading.Thread):
         elif(Config.HOST_CURRENT == Config.HOST_DEBIAN)\
             | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
             self.MyCollector = crCollectors.DebianCollector()
+
+        # Perform a check every xx ticks (1 tick = 1 second)
+        try:
+            self.tickPerformCheck = int(Config.getConfigValue('Checks', 'interval'))
+        except:
+            self.tickPerformCheck = 60
+
+        crLog.writeDebug('Interval between two checks : ' + str(self.tickPerformCheck) + ' seconds')
 
         self.start()
 
