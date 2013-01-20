@@ -221,6 +221,20 @@ var updateLastCheck = function () {
                 case 'unlimited':
                     $("#span_swap_used_value").text(data['swap_used']);
                     $("#span_swap_percent_value").text(data['swap_percent']);
+
+                    switch (data['swap_state']) {
+                        case 'ok':
+                            newSwapClass = 'dashboard-box-status-ok';
+                            break;
+                        case 'warning':
+                            newSwapClass = 'dashboard-box-status-warning';
+                            break;
+                        case 'alert':
+                            newSwapClass = 'dashboard-box-status-alert';
+                            break;
+                    }
+                    $('#div_swap_status').removeClass().addClass(newSwapClass);
+
                     break;
                 case 'limited':
                     $("#span_swap_used_value").text(data['swap_used']);

@@ -304,7 +304,7 @@ class Pages:
                 tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
                 tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
 
-                if int(Config.getConfigValue('Alerts', 'cpu_alert') <= int(tmpl_vars['cpu_percent'])):
+                if int(Config.getConfigValue('Alerts', 'cpu_alert')) <= int(tmpl_vars['cpu_percent']):
                     tmpl_vars['cpu_state'] = "alert"
                 elif int(Config.getConfigValue('Alerts', 'cpu_warning')) <= int(tmpl_vars['cpu_percent']):
                     tmpl_vars['cpu_state'] = "warning"
