@@ -102,26 +102,24 @@ class MacCollector(_Collector):
 
         memoire_complet = subprocess.Popen(['vm_stat'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
-        # On decoupe notre tableau
+        # Each line have a different data
         tabmemoire = memoire_complet.splitlines()
 
-        # Puis on va le formater, de la ligne 1 a la ligne 11
+        # Formating each line
         for i in range(1, 12):
             tabmemoire[i] = tabmemoire[i].replace(' ', '')
             tabmemoire[i] = tabmemoire[i].replace('.', '')
             tabmemoire[i] = tabmemoire[i].split(':')
 
-        # Variables specifiques
+        # Getting desired values
         mem_free = (int(tabmemoire[1][1]) + int(tabmemoire[4][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        #mem_free = (int(tabmemoire[1][1]) + int(tabmemoire[4][1])) * 0.0039
         mem_active = int(tabmemoire[2][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
         mem_inactive = int(tabmemoire[3][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
         mem_resident = int(tabmemoire[5][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
         mem_swap = int(tabmemoire[11][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
-        mem_total = (
-                    int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1]) + int(
-                        tabmemoire[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1])
+                     + int(tabmemoire[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
         # Preparing return entity...
         memoryCheck = crEntitiesChecks.Memory()
@@ -210,7 +208,7 @@ class MacCollector(_Collector):
         except:
             timestamp_boot = time.time()
 
-        return int(int(time.time()) - int(timestamp_boot))
+        return int(time.time()) - int(timestamp_boot)
 
     def get_disks(self):
         """

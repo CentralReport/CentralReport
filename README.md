@@ -22,7 +22,7 @@ We have many ideas to simplify server monitoring:
 * Very simple installation (one line in a terminal)
 * Cross platform (Unix, Linux, Windows)
 * Standalone or Cloud conception
-* Alerts (mobile push, mail, etc…)
+* Alerts (mobile push, mail, etc.)
 * Highly customizable dashboard
 * Plugins support
 * For public or Pros
@@ -36,7 +36,7 @@ Please visit [Wiki installation page](https://github.com/miniche/CentralReport/w
 **The first public alpha version is very close!**
 
 CentralReport runs on **Debian, Ubuntu and Mac OS X**.
-Right now, it's just a standalone version. It's free and very easy to use : install CentralReport and active the small web server included. You can monitor your host with a simple web browser :
+Right now, it's just a standalone version. It's free and very easy to use : install CentralReport and active the small web server included. You can monitor your host with a simple web browser:
 
 ![Mac Screenshot](https://raw.github.com/miniche/CentralReport/develop/tools/screenshots/Capture_Mac.png)
 
@@ -46,5 +46,5 @@ __We are working on a cloud solution : you will be able to view all yours comput
 
 
 ## Get in touch
-We are open to the world. If you want more information or you are in a mood to collaborate, feel free to contact us.
+We are open to the world. If you want more information or if you are in a mood to collaborate, feel free to contact us.
 We will gladly answer to every email :-)
