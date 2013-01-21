@@ -126,7 +126,10 @@ class Pages:
         tmpl_vars['CR_version'] = Config.CR_VERSION
         tmpl_vars['CR_version_name'] = Config.CR_VERSION_NAME
 
-        tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+        if Checks.last_check_date is None:
+            tmpl_vars['last_check'] = 'Never'
+        else:
+            tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
 
 
         # CPU stats
@@ -254,7 +257,7 @@ class Pages:
             Returns the 404 error.
         """
 
-        return "Oups... Error %s - Well, I'm very sorry but this page doesn't really exist!" % status
+        return "Oups... Error %s - Well, I'm so sorry but this page doesn't really exist!" % status
 
     cherrypy.config.update({'error_page.404': error_page_404})
 
