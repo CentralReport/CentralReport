@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
