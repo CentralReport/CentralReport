@@ -18,8 +18,6 @@ from jinja2 import Environment, FileSystemLoader
 
 class WebServer(threading.Thread):
 
-# class WebServer():
-
     current_dir = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(os.path.join(current_dir, 'tpl')))
 
@@ -30,11 +28,7 @@ class WebServer(threading.Thread):
 
         threading.Thread.__init__(self)
 
-        # Start home
-        # cherrypy.tree.graft(WebHomePages(), '/')
-
         # Register events...
-
         cherrypy.engine.subscribe('graceful', self.stop)
 
         # Update the configuration...
@@ -43,10 +37,7 @@ class WebServer(threading.Thread):
         cherrypy.config.update({'tools.staticdir.root': WebServer.current_dir})
         cherrypy.config.update({'log.screen': False})
 
-        #        cherrypy.config.update({'engine.timeout_monitor.on' : False})
-
         # Serving static content
-
         confStaticContent = {
             '/statics': {
                 'tools.staticdir.dir': 'statics',
@@ -124,7 +115,6 @@ class Pages:
         tmpl_vars = dict()
 
         # Host informations
-
         tmpl_vars['hostname'] = Checks.hostEntity.hostname
         tmpl_vars['os_name'] = Checks.hostEntity.osName
         tmpl_vars['os_version'] = Checks.hostEntity.osVersion
@@ -145,7 +135,6 @@ class Pages:
             tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
 
         # CPU stats
-
         if Checks.last_check_cpu is not None:
             tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
             tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
@@ -160,7 +149,6 @@ class Pages:
                 tmpl_vars['cpu_ok'] = True
 
         # Memory and swap stats
-
         if Checks.last_check_memory is not None:
 
             # First : Memory stats
@@ -180,7 +168,6 @@ class Pages:
                 tmpl_vars['memory_ok'] = True
 
             # Last : swap stats
-
             if 0 != int(Checks.last_check_memory.swapSize):
                 tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
                     Checks.last_check_memory.swapSize)
@@ -313,7 +300,6 @@ class Pages:
             tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
 
             # CPU Check informations
-
             if Checks.last_check_cpu is None:
                 tmpl_vars['cpu_check_enabled'] = 'False'
             else:
@@ -331,7 +317,6 @@ class Pages:
                     tmpl_vars['cpu_state'] = 'ok'
 
             # Memory check informations
-
             if Checks.last_check_memory is None:
                 tmpl_vars['memory_check_enabled'] = 'False'
             else:
@@ -351,8 +336,7 @@ class Pages:
                 else:
                     tmpl_vars['memory_state'] = 'ok'
 
-                    # Last : swap stats
-
+                # Last : swap stats
                 if 0 != int(Checks.last_check_memory.swapSize):
                     tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
                         Checks.last_check_memory.swapSize)
@@ -381,11 +365,9 @@ class Pages:
                 else:
 
                     # No swap available on this host
-
                     tmpl_vars['swap_configuration'] = 'undefined'
 
             # Load average
-
             if Checks.last_check_loadAverage is None:
                 tmpl_vars['load_check_enabled'] = 'False'
             else:

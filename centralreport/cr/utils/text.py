@@ -112,15 +112,11 @@ def convertByte(byte_to_convert):
 
     if byte_to_convert / TBYTE >= 1:
         return str(round(byte_to_convert / TBYTE, 2)) + " TB"
-
     elif byte_to_convert / GBYTE >= 1:
         return str(round(byte_to_convert / GBYTE, 2)) + " GB"
-
     elif byte_to_convert / MBYTE >= 1:
         return str(round(byte_to_convert / MBYTE, 2)) + " MB"
-
     elif byte_to_convert / KBYTE >= 1:
         return str(round(byte_to_convert / KBYTE, 2)) + " KB"
-
     else:
         return str(round(byte_to_convert, 0)) + " B"

@@ -62,7 +62,7 @@ class Infos:
             'language': self.language,
             'os': self.os,
             'type': 'host',
-            'uuid': self.uuid,
+            'uuid': self.uuid
             })
 
 
@@ -81,5 +81,7 @@ class Disks:
             Serializes this entity in JSON.
         """
 
-        return json.dumps({'date': self.date.strftime('%s'),
-                          'disks': self.checks})
+        return json.dumps({
+            'date': self.date.strftime('%s'),
+            'disks': self.checks
+            })

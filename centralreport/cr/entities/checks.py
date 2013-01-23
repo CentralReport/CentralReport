@@ -30,7 +30,7 @@ class Cpu:
             'date': self.date.strftime('%s'),
             'idle': self.idle,
             'system': self.system,
-            'user': self.user,
+            'user': self.user
             })
 
 
@@ -59,7 +59,7 @@ class Disk:
             'name': self.name,
             'size': self.size,
             'unix_name': self.unix_name,
-            'used': self.used,
+            'used': self.used
             })
 
 
@@ -86,7 +86,7 @@ class LoadAverage:
             'last1m': self.last1m,
             'last5m': self.last5m,
             'last15m': self.last15m,
-            'uptime': self.uptime,
+            'uptime': self.uptime
             })
 
 
@@ -121,5 +121,5 @@ class Memory:
             'swap_free': self.swapFree,
             'swap_size': self.swapSize,
             'swap_used': self.swapUsed,
-            'total': self.total,
+            'total': self.total
             })

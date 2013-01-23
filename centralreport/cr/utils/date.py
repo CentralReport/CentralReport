@@ -14,10 +14,7 @@ def datetimeToTimestamp(datetime):
     timestamp = 0
 
     try:
-        # First solution : timestamp UTC
-        #timestamp = int(calendar.timegm(datetime.timetuple()))
-
-        # Second solution : local timestamp
+        # Uses the local timestamp
         timestamp = int(time.mktime(datetime.timetuple()))
     except:
         crLog.writeError('Error convert datetime to timestamp')

@@ -4,6 +4,10 @@
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
+#
+# Warning : Not used. Only for testing purposes.
+#
+
 import urllib
 import urllib2
 from cr.tools import Config

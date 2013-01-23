@@ -78,22 +78,17 @@ class MacCollector(_Collector):
             close_fds=True).communicate()[0]
 
         # Using new HostEntity
-
         hostEntity = crEntitiesHost.Infos()
 
         hostEntity.uuid = Config.CR_HOST_UUID
-
         hostEntity.os = Config.HOST_CURRENT
         hostEntity.hostname = hostname
         hostEntity.architecture = architecture
-
         hostEntity.model = model
-
         hostEntity.kernelName = kernel
         hostEntity.kernelVersion = kernel_v
         hostEntity.osName = os_name
         hostEntity.osVersion = os_version
-
         hostEntity.cpuModel = cpu_model
         hostEntity.cpuCount = ncpu
 
@@ -106,33 +101,28 @@ class MacCollector(_Collector):
 
         subprocessPIPE = subprocess.PIPE
 
-        # memsize = subprocess.Popen(['sysctl', '-n', 'hw.memsize'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-
-        memoire_complet = subprocess.Popen(['vm_stat'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        memory_cmd = subprocess.Popen(['vm_stat'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
 
         # Each line have a different data
-
-        tabmemoire = memoire_complet.splitlines()
+        dict_memory = memory_cmd.splitlines()
 
         # Formating each line
-
         for i in range(1, 12):
-            tabmemoire[i] = tabmemoire[i].replace(' ', '')
-            tabmemoire[i] = tabmemoire[i].replace('.', '')
-            tabmemoire[i] = tabmemoire[i].split(':')
+            dict_memory[i] = dict_memory[i].replace(' ', '')
+            dict_memory[i] = dict_memory[i].replace('.', '')
+            dict_memory[i] = dict_memory[i].split(':')
 
         # Getting desired values
-        mem_free = (int(tabmemoire[1][1]) + int(tabmemoire[4][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_active = int(tabmemoire[2][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_inactive = int(tabmemoire[3][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_resident = int(tabmemoire[5][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_swap = int(tabmemoire[11][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_free = (int(dict_memory[1][1]) + int(dict_memory[4][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_active = int(dict_memory[2][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_inactive = int(dict_memory[3][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_resident = int(dict_memory[5][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_swap = int(dict_memory[11][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
-        mem_total = (int(tabmemoire[1][1]) + int(tabmemoire[4][1]) + int(tabmemoire[2][1]) + int(tabmemoire[3][1])
-                     + int(tabmemoire[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_total = (int(dict_memory[1][1]) + int(dict_memory[4][1]) + int(dict_memory[2][1]) + int(dict_memory[3][1])
+                     + int(dict_memory[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
         # Preparing return entity...
-
         memoryCheck = crEntitiesChecks.Memory()
         memoryCheck.total = mem_total
         memoryCheck.free = mem_free
@@ -151,21 +141,17 @@ class MacCollector(_Collector):
         """
 
         # iostat - entrees / sorties
-
         iostat = subprocess.Popen(['iostat', '-c', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         # Formatage de iostat
-
         iostat_split = iostat.splitlines()
         headers = iostat_split[1].split()
         values = iostat_split[3].split()
 
         # Dictionnaire de valeur
-
         dict_iostat = dict(zip(headers, values))
 
         # Use your new CpuCheckEntity!
-
         cpuCheck = crEntitiesChecks.Cpu()
         cpuCheck.idle = dict_iostat['id']
         cpuCheck.system = dict_iostat['sy']
@@ -181,7 +167,6 @@ class MacCollector(_Collector):
         dict_iostat = self.getIOStat()
 
         # Prepare return entity
-
         loadAverageEntity = crEntitiesChecks.LoadAverage()
         loadAverageEntity.last1m = dict_iostat['1m']
         loadAverageEntity.last5m = dict_iostat['5m']
@@ -197,17 +182,14 @@ class MacCollector(_Collector):
         """
 
         # iostat - entrees / sorties
-
         iostat = subprocess.Popen(['iostat', '-c', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         # Formatage de iostat
-
         iostat_split = iostat.splitlines()
         headers = iostat_split[1].split()
         values = iostat_split[3].split()
 
         # Dictionnaire de valeur
-
         dict_iostat = dict(zip(headers, values))
 
         return dict_iostat
@@ -220,7 +202,6 @@ class MacCollector(_Collector):
 
         # Getting the split dict. The last command return this pattern : { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
         # We want to use the first value
-
         dict_uptime = uptime_cmd.split(' ')
 
         try:
@@ -241,7 +222,6 @@ class MacCollector(_Collector):
         header = df_split[0].split()
 
         # New return entity
-
         listDisks = crEntitiesHost.Disks()
 
         for i in range(1, len(df_split)):
@@ -292,32 +272,28 @@ class DebianCollector(_Collector):
             Gets information about this host.
         """
 
-        # subprocessPIPE = subprocess.PIPE
-
         hostname = socket.gethostname()
         kernel = platform.system()
         kernel_v = platform.release()
 
         # Getting OS Name and OS version
         # Default values
-
         os_name = 'Linux'
         os_version = ''
 
         if Config.HOST_DEBIAN == Config.HOST_CURRENT:
             os_name = 'Debian'
             os_version = subprocess.Popen(['cat', '/etc/debian_version'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+
         elif Config.HOST_UBUNTU == Config.HOST_CURRENT:
             os_name = 'Ubuntu'
 
             # OS version for Ubuntu
-
             os_version = 'Unknown'
             os_version_full = subprocess.Popen(['cat', '/etc/lsb-release'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
             os_version_lines = os_version_full.splitlines()
 
             # Looking for the "DISTRIB_RELEASE" key
-
             for i in range(0, len(os_version_lines)):
                 if os_version_lines[i].startswith('DISTRIB_RELEASE'):
                     try:
@@ -330,7 +306,6 @@ class DebianCollector(_Collector):
         hostEntity.uuid = Config.CR_HOST_UUID
 
         # Number of CPU/CPU cores
-
         try:
             ncpu = multiprocessing.cpu_count()
         except (ImportError, NotImplementedError):
@@ -358,17 +333,14 @@ class DebianCollector(_Collector):
         iostat = subprocess.Popen(['vmstat', '1', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         # Formatage de vmstat
-
         iostat_split = iostat.splitlines()
         headers = iostat_split[1].split()
         values = iostat_split[3].split()
 
         # Dictionnaire de valeur
-
         dict_iostat = dict(zip(headers, values))
 
         # Use your new CpuCheckEntity!
-
         cpuCheck = crEntitiesChecks.Cpu()
         cpuCheck.idle = dict_iostat['id']
         cpuCheck.system = dict_iostat['sy']
@@ -384,36 +356,29 @@ class DebianCollector(_Collector):
         memory_result = subprocess.Popen(['cat', '/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         # On decoupe toutes les lignes
-
         memory_result_split = memory_result.splitlines()
 
         # On prepare nos deux listes qui vont servir de modele "cle-valeur"
-
         list_headers = []
         list_values = []
 
         # On va parcourir toutes les lignes afin d'obtenir le detail
-
         for current_line in memory_result_split:
             current_line = current_line.split(':')
 
             # Suppression des caracteres indesirables
-
             current_line_values = current_line[1].replace(' ', '')
             current_line_values = current_line_values.replace('kB', '')
 
             # Ajout dans nos listes
-
             list_headers.append(current_line[0])
             list_values.append(current_line_values)
 
         # Creation de notre dictionnaire
-
         dict_memory = dict(zip(list_headers, list_values))
 
         # Preparing return entity...
         # Debian return memory sizes in KB.
-
         memoryCheck = crEntitiesChecks.Memory()
         memoryCheck.total = int(dict_memory['MemTotal']) * 1024
         memoryCheck.free = int(dict_memory['MemFree']) * 1024
@@ -434,11 +399,9 @@ class DebianCollector(_Collector):
         loadavg_result = getloadavg()
 
         # On va spliter en fonction des espaces
-
         dict_loadavg = loadavg_result
 
         # Prepare return entity
-
         loadAverageEntity = crEntitiesChecks.LoadAverage()
         loadAverageEntity.last1m = dict_loadavg[0]
         loadAverageEntity.last5m = dict_loadavg[1]
@@ -470,8 +433,6 @@ class DebianCollector(_Collector):
         df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
         df_split = df_dict.splitlines()
 
-        # header = df_split[0].split()
-
         listDisks = crEntitiesHost.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
@@ -479,13 +440,11 @@ class DebianCollector(_Collector):
                 line_split = df_split[i].split()
 
                 # Getting info in MB (Linux count with '1K block' unit)
-
                 disk_free = int(line_split[3]) * 1024
                 disk_total = int(line_split[1]) * 1024
                 disk_used = int(line_split[2]) * 1024
 
                 # Using new check entity
-
                 checkDisk = crEntitiesChecks.Disk()
                 checkDisk.date = datetime.datetime.now()
                 checkDisk.free = disk_free
