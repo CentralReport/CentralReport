@@ -290,9 +290,9 @@
                             <tbody>
                                 {% for disk in disks %}
                                     <tr>
-                                        <td width="33%"><strong>{{ disk.name }}</strong></td>
-                                        <td width="33%">{{ disk.free }} free / {{ disk.total }} total ({{ disk.percent }} % used)</td>
-                                        <td width="33%">
+                                        <td class="span4"><strong>{{ disk.name }}</strong></td>
+                                        <td class="span4">{{ disk.free }} free / {{ disk.total }} total ({{ disk.percent }} % used)</td>
+                                        <td class="span4">
                                             <div class="progress progress-striped progress-success">
                                                 <div class="bar" style="width:{{ disk.percent }}%;"></div>
                                             </div>

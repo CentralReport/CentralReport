@@ -14,7 +14,7 @@
 
     <div class="footer">
         {% block footer_version %}CentralReport Unix/Linux{% endblock %}<br />
-        Visit <a href="http://www.github.com/miniche/CentralReport" target="_blank">Github</a> for more informations
+        Visit <a href="http://www.github.com/miniche/CentralReport" target="_blank">Github</a> for more information
     </div>
 {% endblock %}
 

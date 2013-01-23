@@ -34,7 +34,7 @@ fi
 cd ../
 
 echo "Installing CherryPy"
-echo "Untar CherryPy..."
+echo "Untaring CherryPy..."
 tar -xzvf ${CHERRYPY_TAR} -C thirdparties/
 
 echo "Installing CherryPy..."
@@ -49,10 +49,9 @@ echo "CherryPy is installed!"
 echo " "
 
 
-
 # Then, installing Jinja2 Templates...
 echo "Installing Jinja2"
-echo "Untar Jinja2..."
+echo "Untaring Jinja2..."
 tar -xzvf ${JINJA_TAR} -C thirdparties/
 
 echo "Installing Jinja2..."
@@ -64,8 +63,6 @@ echo "Deleting install files..."
 sudo rm -Rf ${JINJA_DIR}
 
 echo "Jinja2 is installed!"
-
-
 
 
 sudo -k

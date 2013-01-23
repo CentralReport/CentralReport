@@ -40,7 +40,7 @@ else
     exit 1
 fi
 
-# Download full package...
+# Downloading full package...
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
 else

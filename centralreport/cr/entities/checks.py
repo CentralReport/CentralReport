@@ -19,7 +19,7 @@ class Cpu:
 
     def jsonSerialize(self):
         """
-        Serializes this entity in JSON
+            Serializes this entity in JSON
         """
 
         return json.dumps({
@@ -45,7 +45,7 @@ class Disk:
 
     def jsonSerialize(self):
         """
-        Serializes this entity in JSON
+            Serializes this entity in JSON
         """
 
         return json.dumps({
@@ -72,7 +72,7 @@ class LoadAverage:
 
     def jsonSerialize(self):
         """
-        Serializes this entity in JSON
+            Serializes this entity in JSON
         """
 
         return json.dumps({

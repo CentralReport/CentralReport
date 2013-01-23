@@ -14,7 +14,7 @@ source bash/functions.inc.sh
 source bash/macos.inc.sh
 source bash/debian.inc.sh
 
-# Modes : only "install" yet ("check" mode will be added soon)
+# Modes: only "install" yet ("check" mode will be added soon)
 ACTUAL_MODE=install
 
 # We are ready to uninstall CentralReport. Log this and print the header.
