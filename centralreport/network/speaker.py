@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
@@ -7,6 +10,7 @@ from cr.tools import Config
 
 
 class Speaker:
+
     """
         PS : This class is not used for the moment.
         It has been created for testing purpose only.
@@ -23,16 +27,18 @@ class Speaker:
         url = 'http://%s/CentralReport/%s' % (str(config_server_addr), str(page))
         error = False
 
-        #DEBUG
-        print('URL : ' + url)
-        #values = list(stats)
+        # DEBUG
+
+        print 'URL : ' + url
+
+        # values = list(stats)
 
         try:
             data = urllib.urlencode(datas)
             req = urllib2.Request(url, data)
             response = urllib2.urlopen(req)
             the_page = response.read()
-            print(the_page)
+            print the_page
 
             return the_page
         except Exception as inst:

@@ -1,8 +1,10 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # CentralReport - Indev version
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
 import cherrypy
-import cr.log as crLog
 import cr.utils.date as crUtilsDate
 import cr.utils.text as crUtilsText
 import datetime
@@ -15,7 +17,8 @@ from jinja2 import Environment, FileSystemLoader
 
 
 class WebServer(threading.Thread):
-#class WebServer():
+
+# class WebServer():
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(os.path.join(current_dir, 'tpl')))
@@ -28,9 +31,10 @@ class WebServer(threading.Thread):
         threading.Thread.__init__(self)
 
         # Start home
-        #cherrypy.tree.graft(WebHomePages(), '/')
+        # cherrypy.tree.graft(WebHomePages(), '/')
 
         # Register events...
+
         cherrypy.engine.subscribe('graceful', self.stop)
 
         # Update the configuration...
@@ -38,38 +42,43 @@ class WebServer(threading.Thread):
                                 'server.socket_port': int(Config.getConfigValue('Webserver', 'port'))})
         cherrypy.config.update({'tools.staticdir.root': WebServer.current_dir})
         cherrypy.config.update({'log.screen': False})
+
         #        cherrypy.config.update({'engine.timeout_monitor.on' : False})
 
         # Serving static content
+
         confStaticContent = {
             '/statics': {
-                'tools.staticdir.dir': 'statics', 'tools.staticdir.on': True
-            },
+                'tools.staticdir.dir': 'statics',
+                'tools.staticdir.on': True
+                },
             '/css': {
                 'tools.staticdir.dir': 'css',
                 'tools.staticdir.on': True
-            },
+                },
             '/img': {
                 'tools.staticdir.dir': 'img',
                 'tools.staticdir.on': True
-            },
+                },
             '/js': {
                 'tools.staticdir.dir': 'js',
                 'tools.staticdir.on': True
-            },
+                },
             '/media': {
                 'tools.staticdir.dir': 'media',
                 'tools.staticdir.on': True
-            },
+                },
             '/api/check': {
                 'request.dispatch': self.setupRoutes()
+                }
             }
-        }
 
         # Using Pages class (see below)
+
         webApplication = cherrypy.tree.mount(Pages(self.env), '/', confStaticContent)
 
         # Disable screen log (standard out)
+
         if False == Config.CR_CONFIG_ENABLE_DEBUG_MODE:
             cherrypy.log.error_log.propagate = False
             cherrypy.log.access_log.propagate = False
@@ -91,6 +100,7 @@ class WebServer(threading.Thread):
 
         # Go go go!
         # cherrypy.engine.start() --> Consumes lot of CPU, updated with cherrypy.server.start()
+
         cherrypy.server.start()
         cherrypy.engine.block()
 
@@ -98,10 +108,12 @@ class WebServer(threading.Thread):
         """
             Stops the web server.
         """
+
         cherrypy.engine.stop()
 
 
 class Pages:
+
     def __init__(self, env_template):
         self.env = env_template
 
@@ -112,6 +124,7 @@ class Pages:
         tmpl_vars = dict()
 
         # Host informations
+
         tmpl_vars['hostname'] = Checks.hostEntity.hostname
         tmpl_vars['os_name'] = Checks.hostEntity.osName
         tmpl_vars['os_version'] = Checks.hostEntity.osVersion
@@ -131,8 +144,8 @@ class Pages:
         else:
             tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
 
-
         # CPU stats
+
         if Checks.last_check_cpu is not None:
             tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
             tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
@@ -146,9 +159,10 @@ class Pages:
             else:
                 tmpl_vars['cpu_ok'] = True
 
-
         # Memory and swap stats
+
         if Checks.last_check_memory is not None:
+
             # First : Memory stats
             tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(
                 Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
@@ -165,8 +179,8 @@ class Pages:
             else:
                 tmpl_vars['memory_ok'] = True
 
-
             # Last : swap stats
+
             if 0 != int(Checks.last_check_memory.swapSize):
                 tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
                     Checks.last_check_memory.swapSize)
@@ -177,6 +191,7 @@ class Pages:
 
                 # On Mac, the swap is unlimited (only limited by the available hard drive size)
                 if Checks.last_check_memory.swapSize == Checks.last_check_memory.total:
+
                     tmpl_vars['swap_configuration'] = 'unlimited'
                 else:
                     tmpl_vars['swap_configuration'] = 'limited'
@@ -185,17 +200,17 @@ class Pages:
                     if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_alert')):
                         tmpl_vars['swap_alert'] = True
                     elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_warning')):
+
                         tmpl_vars['swap_warning'] = True
                     else:
                         tmpl_vars['swap_ok'] = True
                 else:
                     tmpl_vars['swap_ok'] = True
-
             else:
+
                 # No swap available on this host
-                tmpl_vars['swap_configuration'] = "undefined"
 
-
+                tmpl_vars['swap_configuration'] = 'undefined'
 
         # Load average stats
         if Checks.last_check_loadAverage is not None:
@@ -210,7 +225,6 @@ class Pages:
             else:
                 tmpl_vars['load_ok'] = True
 
-
         # Uptime stats (checked in load average collector)
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['uptime'] = crUtilsText.secondsToPhraseTime(int(Checks.last_check_loadAverage.uptime))
@@ -219,13 +233,14 @@ class Pages:
                 crUtilsDate.datetimeToTimestamp(Checks.last_check_date) - int(
                     Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
-
         # DIsks stats
+
         if Checks.last_check_disk is not None:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:
                 checkDisk = {}
+
                 # TODO : Find a better solution to decode UTF8
                 checkDisk['name'] = str.replace(disk.name, '/dev/', '').decode('utf-8')
                 checkDisk['free'] = crUtilsText.convertByte(disk.free)
@@ -240,7 +255,7 @@ class Pages:
 
     @cherrypy.expose
     def dashboard(self):
-        tmpl = self.env.get_template("dashboard_mac.tpl")
+        tmpl = self.env.get_template('dashboard_mac.tpl')
         tmpl_vars = dict()
 
         tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
@@ -264,7 +279,7 @@ class Pages:
     @cherrypy.expose()
     def api_date_check(self):
         tmpl = self.env.get_template('json/date_check.json')
-        cherrypy.response.headers['Content-Type'] = "application/json"
+        cherrypy.response.headers['Content-Type'] = 'application/json'
         tmpl_vars = dict()
 
         if Checks.last_check_date is None:
@@ -277,7 +292,7 @@ class Pages:
         tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
 
         try:
-            tmpl_vars['checks_interval'] = int(Config.getConfigValue('Checks','interval'))
+            tmpl_vars['checks_interval'] = int(Config.getConfigValue('Checks', 'interval'))
         except:
             tmpl_vars['checks_interval'] = int(Config.CR_CONFIG_DEFAULT_CHECKS_INTERVAL)
 
@@ -286,7 +301,7 @@ class Pages:
     @cherrypy.expose()
     def api_full_check(self):
         tmpl = self.env.get_template('json/full_check.json')
-        cherrypy.response.headers['Content-Type'] = "application/json"
+        cherrypy.response.headers['Content-Type'] = 'application/json'
         tmpl_vars = dict()
 
         if Checks.last_check_date is None:
@@ -298,10 +313,11 @@ class Pages:
             tmpl_vars['current_timestamp'] = crUtilsDate.datetimeToTimestamp(datetime.datetime.now())
 
             # CPU Check informations
+
             if Checks.last_check_cpu is None:
-                tmpl_vars['cpu_check_enabled'] = "False"
+                tmpl_vars['cpu_check_enabled'] = 'False'
             else:
-                tmpl_vars['cpu_check_enabled'] = "True"
+                tmpl_vars['cpu_check_enabled'] = 'True'
 
                 tmpl_vars['cpu_percent'] = int(Checks.last_check_cpu.user) + int(Checks.last_check_cpu.system)
                 tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
@@ -312,11 +328,12 @@ class Pages:
                 elif int(Config.getConfigValue('Alerts', 'cpu_warning')) <= int(tmpl_vars['cpu_percent']):
                     tmpl_vars['cpu_state'] = "warning"
                 else:
-                    tmpl_vars['cpu_state'] = "ok"
+                    tmpl_vars['cpu_state'] = 'ok'
 
             # Memory check informations
+
             if Checks.last_check_memory is None:
-                tmpl_vars['memory_check_enabled'] = "False"
+                tmpl_vars['memory_check_enabled'] = 'False'
             else:
                 tmpl_vars['memory_check_enabled'] = "True"
 
@@ -332,9 +349,10 @@ class Pages:
                 elif int(tmpl_vars['memory_percent']) >= int(Config.getConfigValue('Alerts', 'memory_warning')):
                     tmpl_vars['memory_state'] = "warning"
                 else:
-                    tmpl_vars['memory_state'] = "ok"
+                    tmpl_vars['memory_state'] = 'ok'
 
                     # Last : swap stats
+
                 if 0 != int(Checks.last_check_memory.swapSize):
                     tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
                         Checks.last_check_memory.swapSize)
@@ -345,6 +363,7 @@ class Pages:
 
                     # On Mac, the swap is unlimited (only limited by the available hard drive size)
                     if Checks.last_check_memory.swapSize == Checks.last_check_memory.total:
+
                         tmpl_vars['swap_configuration'] = 'unlimited'
                     else:
                         tmpl_vars['swap_configuration'] = 'limited'
@@ -353,19 +372,22 @@ class Pages:
                         if int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_alert')):
                             tmpl_vars['swap_state'] = 'alert'
                         elif int(tmpl_vars['swap_percent']) >= int(Config.getConfigValue('Alerts', 'swap_warning')):
+
                             tmpl_vars['swap_state'] = 'warning'
                         else:
                             tmpl_vars['swap_state'] = 'ok'
                     else:
                         tmpl_vars['swap_state'] = 'ok'
-
                 else:
+
                     # No swap available on this host
-                    tmpl_vars['swap_configuration'] = "undefined"
+
+                    tmpl_vars['swap_configuration'] = 'undefined'
 
             # Load average
+
             if Checks.last_check_loadAverage is None:
-                tmpl_vars['load_check_enabled'] = "False"
+                tmpl_vars['load_check_enabled'] = 'False'
             else:
                 tmpl_vars['load_check_enabled'] = "True"
 
@@ -378,7 +400,7 @@ class Pages:
                 elif int(tmpl_vars['load_percent']) >= int(Config.getConfigValue('Alerts', 'load_warning')):
                     tmpl_vars['load_state'] = "warning"
                 else:
-                    tmpl_vars['load_state'] = "ok"
+                    tmpl_vars['load_state'] = 'ok'
 
                 tmpl_vars['uptime_full_text'] = crUtilsText.secondsToPhraseTime(
                     int(Checks.last_check_loadAverage.uptime))

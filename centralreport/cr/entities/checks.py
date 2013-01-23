@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 #
 # CentralReport - Indev version
 #
@@ -7,6 +10,7 @@ import json
 
 
 class Cpu:
+
     """
         Entity representing a cpu check for the current host.
     """
@@ -26,11 +30,12 @@ class Cpu:
             'date': self.date.strftime('%s'),
             'idle': self.idle,
             'system': self.system,
-            'user': self.user
-        })
+            'user': self.user,
+            })
 
 
 class Disk:
+
     """
         Entity representing a disk check for the current host.
     """
@@ -54,11 +59,12 @@ class Disk:
             'name': self.name,
             'size': self.size,
             'unix_name': self.unix_name,
-            'used': self.used
-        })
+            'used': self.used,
+            })
 
 
 class LoadAverage:
+
     """
         Entity representing a load average check for the current host.
     """
@@ -68,7 +74,7 @@ class LoadAverage:
         self.last1m = float(0)
         self.last5m = float(0)
         self.last15m = float(0)
-        self.uptime = int(0)    # Uptime in seconds
+        self.uptime = int(0)  # Uptime in seconds
 
     def jsonSerialize(self):
         """
@@ -80,11 +86,12 @@ class LoadAverage:
             'last1m': self.last1m,
             'last5m': self.last5m,
             'last15m': self.last15m,
-            'uptime': self.uptime
-        })
+            'uptime': self.uptime,
+            })
 
 
 class Memory:
+
     """
         Entity representing a memory check for the current host.
     """
@@ -114,5 +121,5 @@ class Memory:
             'swap_free': self.swapFree,
             'swap_size': self.swapSize,
             'swap_used': self.swapUsed,
-            'total': self.total
-        })
+            'total': self.total,
+            })

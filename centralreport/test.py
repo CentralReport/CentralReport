@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import centralreport
@@ -11,20 +11,20 @@ import os
 # This test file can launch CentralReport on dev host, without installation.
 # Please verify CR is not installed on your host before launch this script.
 
-print('--- CentralReport debug mode. ---')
-print('This tool is only for debug purpose. For running CR in production env, '
-      'use python centralreport.py start instead.')
-print('---------------------------------')
-print('')
+print '--- CentralReport debug mode. ---'
+print 'This tool is only for debug purpose. For running CR in production env, use python centralreport.py start instead.'
+print '---------------------------------'
+print ''
 
-cr = centralreport.CentralReport("/tmp/centralreport_debug.pid")
+cr = centralreport.CentralReport('/tmp/centralreport_debug.pid')
 return_value = cr.debug()
 
-print('')
-print('---------------------------------')
-print('Ending debug mode')
-print('---------------------------------')
+print ''
+print '---------------------------------'
+print 'Ending debug mode'
+print '---------------------------------'
 
 # Ok !
+
 os.system('kill %d' % os.getpid())
 sys.exit(0)
