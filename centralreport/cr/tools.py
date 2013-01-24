@@ -28,7 +28,6 @@ class Config:
     CR_CONFIG_FILE = 'centralreport.cfg'
     CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH, CR_CONFIG_FILE)
     CR_CONFIG_ENABLE_DEBUG_MODE = False  # False = Production environment. True = debug/test/develop environment.
-    CR_HOST_UUID = ''  # Universal Unique IDentifier for the current host. '' = not defined yet.
 
     # Default interval between two checks (use this if not available in the config file)
     CR_CONFIG_DEFAULT_CHECKS_INTERVAL = int(60)
@@ -147,8 +146,8 @@ class Config:
         crLog.writeInfo('Writing the config file...')
 
         # Generating uuid if empty
-        if '' == Config.CR_HOST_UUID:
-            Config.CR_HOST_UUID = uuid.uuid1()
+        if '' == Config.getConfigValue('General', 'uuid'):
+            Config.setConfigValue('General', 'uuid', uuid.uuid1())
 
         # Writing conf file. Reading all sections defined in the config...
         for config_section in Config._CR_CONFIG_VALUES:

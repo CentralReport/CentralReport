@@ -47,11 +47,11 @@ if __name__ == '__main__':
 
         validEnableWebServer = False
         while (not validEnableWebServer):
-            resultEnableWebServer = raw_input('Do you want to enable the internal web server? [yes/no] ')
-            if('yes' == resultEnableWebServer.lower()):
+            resultEnableWebServer = raw_input('Do you want to enable the internal web server? [y/n] ')
+            if('y' == resultEnableWebServer.lower()[:1]):
                 validEnableWebServer = True
                 Config.setConfigValue('Webserver', 'enable', True)
-            elif 'no' == resultEnableWebServer.lower():
+            elif 'n' == resultEnableWebServer.lower()[:1]:
 
                 validEnableWebServer = True
                 Config.config_webserver_enable = False
