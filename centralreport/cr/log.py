@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
-__author__ = 'che'
+"""
+    CentralReport - Log module
+        Contains log function to work with Python logging modules
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import logging
 import sys
-
 
 def configLog(enable_debug_mode=False):
     """

@@ -1,8 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# CentralReport - Indev version
-# Project by Charles-Emmanuel CAMUS - Avril 2012
+"""
+    CentralReport - Main
+        Entry point of the application. Can be executed with "python centralreport.py start|stop|status"
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import cr.log as crLog
 import cr.threads as crThreads
@@ -15,14 +19,12 @@ from cr.daemon import Daemon
 from cr.tools import Config
 from web.server import WebServer
 
-
 class CentralReport(Daemon):
 
     isRunning = True  # Deamon status
     startingDate = None
 
     # Threads
-
     checks_thread = None
     webserver_thread = None
 
@@ -34,8 +36,8 @@ class CentralReport(Daemon):
         isError = False  # If True, there are one or more errors when CentralReport is trying to start
 
         # Preparing Logs
-
         crLog.configLog(Config.CR_CONFIG_ENABLE_DEBUG_MODE)
+
         crLog.writeInfo('CentralReport is starting...')
 
         CentralReport.startingDate = datetime.datetime.now()  # Starting date
@@ -64,9 +66,7 @@ class CentralReport(Daemon):
                 try:
 
                     if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
-
                         # If .pid file is not found, we must stop CR (only in production environment)
-
                         try:
                             pf = file(self.pidfile, 'r')
                             pf.close()
@@ -74,17 +74,14 @@ class CentralReport(Daemon):
                             crLog.writeError('Pid file is not found. CentralReport must stop itself.')
                             CentralReport.isRunning = False
                             self.stop()
-
                     time.sleep(1)
+
                 except KeyboardInterrupt:
-
                     # Stopping CR
-
                     crLog.writeFatal('KeyboardInterrupt exception. Stopping CentralReport...')
                     CentralReport.isRunning = False
                     self.stop()
         else:
-
             crLog.writeError('Error launching CentralReport!')
 
     def stop(self):

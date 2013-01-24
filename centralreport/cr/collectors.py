@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#
-# CentralReport - Indev version
-#
+"""
+    CentralReport - Collectors modules
+        Contains collectors for Debian/Ubuntu and OS X.
+
+    https://github.com/miniche/CentralReport/
+"""
 
 # Summary of this module :
 # Collector abstract class
@@ -79,7 +82,7 @@ class MacCollector(_Collector):
         # Using new HostEntity
         hostEntity = crEntitiesHost.Infos()
 
-        hostEntity.uuid = Config.CR_HOST_UUID
+        hostEntity.uuid = Config.getConfigValue('General', 'uuid')
         hostEntity.os = Config.HOST_CURRENT
         hostEntity.hostname = hostname
         hostEntity.architecture = architecture

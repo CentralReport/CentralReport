@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#
-# CentralReport - Indev version
-#
+"""
+    CentralReport - Checks module
+        Contains all check entities
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import datetime
 import json

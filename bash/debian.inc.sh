@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux Indev version.
-# Be careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux - Debian functions
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
 # This file contains all functions to manage CR install/unistall on a Debian/Ubuntu distribution.
-
 
 # --
 # CentralReport daemon functions

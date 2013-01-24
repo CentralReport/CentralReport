@@ -1,15 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+    CentralReport - Test script
+        Launchs CentralReport in debug mode, without installation.
+        Please verify CR is not installed on your host before launch this script.
+
+    https://github.com/miniche/CentralReport/
+"""
+
 import centralreport
 import sys
 import os
-
-# CentralReport - Indev version
-# Project by Charles-Emmanuel CAMUS - Avril 2012
-
-# This test file can launch CentralReport on dev host, without installation.
-# Please verify CR is not installed on your host before launch this script.
 
 print '--- CentralReport debug mode. ---'
 print 'This tool is only for debug purpose. For running CR in production env, use python centralreport.py start instead.'
@@ -24,7 +26,6 @@ print '---------------------------------'
 print 'Ending debug mode'
 print '---------------------------------'
 
-# Ok !
-
+# CentralReport is now stopped, we can kill current process
 os.system('kill %d' % os.getpid())
 sys.exit(0)

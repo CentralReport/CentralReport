@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# CentralReport - Indev version
-# Project by Charles-Emmanuel CAMUS - Avril 2012
+"""
+    CentralReport - Server module
+        Manages internal web server
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import cherrypy
 import cr.utils.date as crUtilsDate

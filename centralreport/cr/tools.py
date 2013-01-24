@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#
-# CentralReport - Indev version
-#
+"""
+    CentralReport - Tools module
+        Contrains Config class
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import ConfigParser
 import os

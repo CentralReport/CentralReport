@@ -1,6 +1,11 @@
-#
-# CentralReport - Indev version
-#
+# -*- coding: utf-8 -*-
+
+"""
+    CentralReport - Date module
+        Contains useful functions to working with dates
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import cr.log as crLog
 import time

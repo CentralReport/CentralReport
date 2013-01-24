@@ -1,8 +1,13 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux Indev version.
-# Be careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux - Log function
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
 
+# Logs will be written in this file. Installer or Uninstaller have administrative privileges, we can write in /var/log.
 ERROR_FILE="/var/log/centralreport.log"
 
 # Writes a message in the log file

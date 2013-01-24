@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#
-# CentralReport - Indev version
-#
+"""
+    CentralReport - Threads module
+        Contains threads used by CentralReport to perform periodic actions
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import cr.collectors as crCollectors
 import cr.log as crLog

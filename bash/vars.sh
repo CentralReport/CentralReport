@@ -1,7 +1,13 @@
 #!/bin/bash
 
-# CentralReport Unix/Linux Indev version.
-# Be careful! Don't use in production environment!
+# ------------------------------------------------------------
+# CentralReport Unix/Linux - bash vars
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/miniche/CentralReport/
+# ------------------------------------------------------------
+
+# This file contains all variables used by bash scripts
 
 # Folders
 PARENT_DIR=/usr/local/bin/
@@ -25,15 +31,7 @@ STARTUP_PLIST_INSTALL=utils/launchers/mac/com.centralreport.plist
 STARTUP_DEBIAN=/etc/init.d/centralreport.sh
 STARTUP_DEBIAN_INSTALL=utils/launchers/debian/centralreport.sh
 
-# Temp install directories.
-CHERRYPY_TAR=thirdparties/CherryPy.tar.gz
-JINJA_TAR=thirdparties/Jinja2.tar.gz
+# Libraries directories
 SETUPTOOLS_TAR=thirdparties/setuptools.tar.gz
-SETPROCTITLE_TAR=thirdparties/setproctitle.tar.gz
-ROUTES_TAR=thirdparties/Routes.tar.gz
 
-CHERRYPY_DIR=thirdparties/CherryPy-3.2.2
-JINJA_DIR=thirdparties/Jinja2-2.6
 SETUPTOOLS_DIR=thirdparties/setuptools-0.6c11
-SETPROCTITLE_DIR=thirdparties/setproctitle-1.1.6
-ROUTES_DIR=thirdparties/Routes-1.13

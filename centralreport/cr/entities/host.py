@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-#
-# CentralReport - Indev version
-#
+"""
+    CentralReport - Host module
+        Contains all entities about current host (infos and disks)
 
-# This module contains all entities about the current host:
-# infos (caracteristics)
-# disks
+    https://github.com/miniche/CentralReport/
+"""
+
 
 import datetime
 import json

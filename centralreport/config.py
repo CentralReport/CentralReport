@@ -1,8 +1,12 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-#
-# CentralReport - Indev version
-#
+"""
+    CentralReport - Config script
+        First config assistant, used during installation.
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import socket
 import sys

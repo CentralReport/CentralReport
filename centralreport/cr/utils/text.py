@@ -1,6 +1,11 @@
-#
-# CentralReport - Indev version
-#
+# -*- coding: utf-8 -*-
+
+"""
+    CentralReport - Text module
+        Contains useful functions to working with strings
+
+    https://github.com/miniche/CentralReport/
+"""
 
 import math
 
