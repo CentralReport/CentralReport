@@ -60,7 +60,7 @@ def textToBool(text):
 
 def secondsToPhraseTime(seconds):
     """
-        Converts seconds to a phrase time (ex : 65 = 1 minute 5 seconds).
+        Converts seconds to a phrase time (ex: 65 = 1 minute 5 seconds).
     """
 
     ONE_DAY = 60 * 60 * 24

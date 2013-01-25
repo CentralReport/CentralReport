@@ -39,7 +39,7 @@ class Checks(threading.Thread):
         threading.Thread.__init__(self)
         crLog.writeDebug('ThreadChecks is starting...')  # Standard output
 
-        # What is the current os ?
+        # What is the current os?
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
             self.MyCollector = crCollectors.MacCollector()
@@ -54,7 +54,7 @@ class Checks(threading.Thread):
         except:
             self.tickPerformCheck = 60
 
-        crLog.writeDebug('Interval between two checks : ' + str(self.tickPerformCheck) + ' seconds')
+        crLog.writeDebug('Interval between two checks: ' + str(self.tickPerformCheck) + ' seconds')
 
         self.start()
 

@@ -8,7 +8,7 @@
 {% block content %}
 
     <div class="headhand clearfix">
-        Last check : <span id="last_check_date">{{ last_check }}</span>
+        Last check: <span id="last_check_date">{{ last_check }}</span>
         <small id="ajax_enabled"></small>
     </div>
 
@@ -267,7 +267,7 @@
                             <span id="span_uptime_full_text">{{ uptime }}</span> <small>(<span id="span_uptime_seconds_value">{{ uptime_seconds }}</span> seconds)</small>
                         </div>
                         <div class="subtitle">
-                            Boot date : <span id="span_uptime_start_date_value">{{ start_date }}</span>
+                            Boot date: <span id="span_uptime_start_date_value">{{ start_date }}</span>
                         </div>
                     {% endif %}
                 </div>

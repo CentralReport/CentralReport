@@ -4,7 +4,7 @@
 # Project by Charles-Emmanuel CAMUS - Avril 2012
 
 #
-# Warning : Not used. Only for testing purposes.
+# Warning: Not used. Only for testing purposes.
 #
 
 import urllib
@@ -15,7 +15,7 @@ from cr.tools import Config
 class Speaker:
 
     """
-        PS : This class is not used for the moment.
+        PS: This class is not used for the moment.
         It has been created for testing purpose only.
     """
 
@@ -32,7 +32,7 @@ class Speaker:
 
         # DEBUG
 
-        print 'URL : ' + url
+        print 'URL: ' + url
 
         # values = list(stats)
 
@@ -46,4 +46,4 @@ class Speaker:
             return the_page
         except Exception as inst:
             error = True
-            print('ERREUR : Connexion impossible au serveur : ' + str(inst))
+            print('ERREUR: Connexion impossible au serveur: ' + str(inst))

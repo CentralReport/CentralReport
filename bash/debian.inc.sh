@@ -25,7 +25,7 @@ function debian_start_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error starting CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error starting CentralReport (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really started.
@@ -49,7 +49,7 @@ function debian_stop_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
-            logError "Error stopping CentralReport (Error code : ${RETURN_CODE})"
+            logError "Error stopping CentralReport (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logInfo "CentralReport stopped"
@@ -86,7 +86,7 @@ function debian_remove_bin {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error deleting CentralReport bin directory at ${INSTALL_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error deleting CentralReport bin directory at ${INSTALL_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport bin files removed"
@@ -107,7 +107,7 @@ function debian_remove_config {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error deleting CentralReport config file at ${CONFIG_FILE} (Error code : ${RETURN_CODE})"
+            logError "Error deleting CentralReport config file at ${CONFIG_FILE} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             logFile "CentralReport config file deleted"
@@ -128,7 +128,7 @@ function debian_remove_startup_script {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error deleting startup script at ${STARTUP_DEBIAN} (Error code : ${RETURN_CODE})"
+            logError "Error deleting startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
             return 1
         else
 
@@ -136,7 +136,7 @@ function debian_remove_startup_script {
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error removing startup script with update-rc.d (Error code : ${RETURN_CODE})"
+                logError "Error removing startup script with update-rc.d (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
                 logFile "Startup script deleted"
@@ -159,14 +159,14 @@ function debian_cp_bin {
     mkdir ${INSTALL_DIR}
 
     if [ $? -ne "0" ]; then
-          logError "Error creating CentralReport dir at ${INSTALL_DIR} (Error code : $?)"
+          logError "Error creating CentralReport dir at ${INSTALL_DIR} (Error code: $?)"
           return 1
     else
         displayAndExec "Copying CentralReport in the good directory..." cp -R -f -v centralreport ${PARENT_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error copying CentralReport bin files in ${PARENT_DIR} (Error code : ${RETURN_CODE})"
+            logError "Error copying CentralReport bin files in ${PARENT_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
             return 0
@@ -181,7 +181,7 @@ function debian_cp_startup_plist {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-      logError "Error copying startup script at ${STARTUP_PLIST} (Error code : ${RETURN_CODE})"
+      logError "Error copying startup script at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
       return ${RETURN_CODE}
     else
         chmod 755 ${STARTUP_DEBIAN}
@@ -190,7 +190,7 @@ function debian_cp_startup_plist {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-          logError "Error registering startup script with update-rc.d (Error code : ${RETURN_CODE})"
+          logError "Error registering startup script with update-rc.d (Error code: ${RETURN_CODE})"
           return ${RETURN_CODE}
         else
             return 0

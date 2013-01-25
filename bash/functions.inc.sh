@@ -67,7 +67,7 @@ function displayAndExec() {
 
 
 # Checks if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
-# PARAMETER : a string
+# PARAMETER: a string
 # Returns 0 if true, 1 otherwise
 function checkYesNoAnswer() {
 

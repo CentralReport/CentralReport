@@ -154,7 +154,7 @@ class Pages:
         # Memory and swap stats
         if Checks.last_check_memory is not None:
 
-            # First : Memory stats
+            # First: Memory stats
             tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(
                 Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
             tmpl_vars['memory_free'] = crUtilsText.convertByte(Checks.last_check_memory.free)
@@ -170,7 +170,7 @@ class Pages:
             else:
                 tmpl_vars['memory_ok'] = True
 
-            # Last : swap stats
+            # Last: swap stats
             if 0 != int(Checks.last_check_memory.swapSize):
                 tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
                     Checks.last_check_memory.swapSize)
@@ -231,7 +231,7 @@ class Pages:
             for disk in Checks.last_check_disk.checks:
                 checkDisk = {}
 
-                # TODO : Find a better solution to decode UTF8
+                # TODO: Find a better solution to decode UTF8
                 checkDisk['name'] = str.replace(disk.name, '/dev/', '').decode('utf-8')
                 checkDisk['free'] = crUtilsText.convertByte(disk.free)
                 checkDisk['total'] = crUtilsText.convertByte(disk.size)
@@ -339,7 +339,7 @@ class Pages:
                 else:
                     tmpl_vars['memory_state'] = 'ok'
 
-                # Last : swap stats
+                # Last: swap stats
                 if 0 != int(Checks.last_check_memory.swapSize):
                     tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swapUsed) * 100 / int(
                         Checks.last_check_memory.swapSize)
@@ -401,7 +401,7 @@ class Pages:
         tmpl = self.env.get_template('blocks/disks.block.tpl')
         tmpl_vars = dict()
 
-        if None != Checks.last_check_disk:
+        if Checks.last_check_disk is not None:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:

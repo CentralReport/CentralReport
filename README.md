@@ -2,7 +2,7 @@
 
 **Central Report is designed to monitor very easily computers and servers, and runs on many current operating systems.**
 
-Right now, CentralReport monitors :
+Right now, CentralReport monitors:
 
 * CPU
 * Physical Memory (RAM)
@@ -11,7 +11,7 @@ Right now, CentralReport monitors :
 * Uptime
 * Disks
 
-**It's developed by three students : @Guimove, @Ninir and @miniche. It's only the beginning : we have many ideas for CentralReport and others exciting and related projets.**
+**It's developed by three students: @Guimove, @Ninir and @miniche. It's only the beginning: we have many ideas for CentralReport and others exciting and related projets.**
 
 ****
 
@@ -41,9 +41,9 @@ Right now, it's just a standalone version. It's free and very easy to use: insta
 ![Mac Screenshot](https://raw.github.com/miniche/CentralReport/develop/tools/screenshots/Capture_Mac.png)
 
 
-__We are working on a cloud solution : you will be able to view all yours computers and servers, and set some email or push alerts.__
+__We are working on a cloud solution: you will be able to view all yours computers and servers, and set some email or push alerts.__
 
 
 ## Get in touch
 We are open to the world. If you want more information or if you are in a mood to collaborate, feel free to contact us.
-We will gladly answer to every email :-)
+We will gladly answer to every email

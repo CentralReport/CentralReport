@@ -21,7 +21,7 @@ class Infos:
     def __init__(self):
         self.architecture = ''
 
-        # TODO : move it in CPU check.
+        # TODO: move it in CPU check.
 
         self.cpuModel = ''
         self.cpuCount = 1

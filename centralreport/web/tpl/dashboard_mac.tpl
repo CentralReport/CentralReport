@@ -100,7 +100,7 @@
                 <tbody>
                 <tr>
                     <td>Kernel</td>
-                    <td>{{ host.kernelName }} (Version : {{ host.kernelVersion }})</td>
+                    <td>{{ host.kernelName }} (Version: {{ host.kernelVersion }})</td>
                 </tr>
                 <tr>
                     <td>Model</td>
@@ -114,9 +114,9 @@
             <div class="row-fluid">
                 <div class="span6">
 
-                    <h5>Last check : {{ last_check }}</h5>
-                    <p class="custom_margin_top_plus_20">Model : {{ host.cpuModel }}</p>
-                    <p>Number of cores : {{ host.cpuCount }}</p>
+                    <h5>Last check: {{ last_check }}</h5>
+                    <p class="custom_margin_top_plus_20">Model: {{ host.cpuModel }}</p>
+                    <p>Number of cores: {{ host.cpuCount }}</p>
 
                 </div>
                 <div class="span6">
@@ -130,7 +130,7 @@
             <div class="row-fluid">
                 <div class="span6">
 
-                    <h5>Last check : {{ last_check }}</h5>
+                    <h5>Last check: {{ last_check }}</h5>
 
                     <div class="custom_margin_top_plus_20">
                         <table class="table table-striped">
@@ -178,7 +178,7 @@
 
             <div class="row-fluid">
                 <div class="span6">
-                    <h5>Last check : {{ last_check }}</h5>
+                    <h5>Last check: {{ last_check }}</h5>
                     <div class="custom_margin_top_plus_20">
                         <table class="table table-striped">
                             <tbody>

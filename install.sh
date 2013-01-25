@@ -58,7 +58,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         logConsole " "
         logConsole "Install mode enabled"
-        read -p "You will install CentralReport. Are you sure you want to continue (y/N) : " RESP < /dev/tty
+        read -p "You will install CentralReport. Are you sure you want to continue (y/N): " RESP < /dev/tty
 
         # Are you sure to install CR ?
         checkYesNoAnswer ${RESP}
@@ -114,7 +114,7 @@ else
     logError " "
     logError "ERROR!"
     logError "Unknown argument"
-    logError "Use : install.sh [install]"
+    logError "Use: install.sh [install]"
 fi
 
 

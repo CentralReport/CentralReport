@@ -99,10 +99,10 @@ class Config:
 
         # Managing config file
         if os.path.isfile(Config.CR_CONFIG_FULL_PATH):
-            crLog.writeDebug('Configuration file : Found. Reading it.')
+            crLog.writeDebug('Configuration file: Found. Reading it.')
             self.readConfigFile()
         else:
-            crLog.writeInfo('Configuration file : Not found. Creating it.')
+            crLog.writeInfo('Configuration file: Not found. Creating it.')
             self.writeConfigFile()
 
     def readConfigFile(self):
@@ -116,7 +116,7 @@ class Config:
         Config.config.read(Config.CR_CONFIG_FULL_PATH)
 
         # False = all sections and options are found.
-        # True = config must be updated : some options or sections are mising (outdated config file ?)
+        # True = config must be updated: some options or sections are mising (outdated config file?)
         config_must_be_updated = False
 
         # Getting all values...
@@ -127,15 +127,15 @@ class Config:
 
                 except ConfigParser.NoSectionError:
                     config_must_be_updated = True
-                    crLog.writeError('Config section does not exist in the file : ' + config_section)
+                    crLog.writeError('Config section does not exist in the file: ' + config_section)
 
                 except ConfigParser.NoOptionError:
                     config_must_be_updated = True
-                    crLog.writeError('Config value does not exist in the file : ' + config_value)
+                    crLog.writeError('Config value does not exist in the file: ' + config_value)
 
                 except:
                     config_must_be_updated = True
-                    crLog.writeError('Error getting a config value : ' + config_section + '/' + config_value)
+                    crLog.writeError('Error getting a config value: ' + config_section + '/' + config_value)
 
         # In this case, config file have been written by a last version of CR. We must update it to include new sections or options.
         if config_must_be_updated:
@@ -157,9 +157,9 @@ class Config:
             try:
                 Config.config.add_section(config_section)
             except ConfigParser.DuplicateSectionError:
-                crLog.writeDebug('Section already exist : ' + config_section)
+                crLog.writeDebug('Section already exist: ' + config_section)
             except:
-                crLog.writeError('Error creating new section : ' + config_section + ' : ' + Exception.message)
+                crLog.writeError('Error creating new section: ' + config_section + ': ' + Exception.message)
 
             # Reading all values in this section
             config_section_vars = Config._CR_CONFIG_VALUES[config_section]
@@ -168,7 +168,7 @@ class Config:
                 try:
                     Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
-                    crLog.writeError('Error writing config value : ' + config_section + '/' + config_value)
+                    crLog.writeError('Error writing config value: ' + config_section + '/' + config_value)
 
         try:
             Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))  # Writing the config file on filesystem...
@@ -185,7 +185,7 @@ class Config:
         try:
             return Config._CR_CONFIG_VALUES[section][variable]
         except:
-            raise NameError('Section or Variable not found ! (' + section + '/' + variable + ')')
+            raise NameError('Section or Variable not found! (' + section + '/' + variable + ')')
 
     @staticmethod
     def setConfigValue(section, variable, value):
@@ -196,7 +196,7 @@ class Config:
         try:
             Config._CR_CONFIG_VALUES[section][variable] = value
         except:
-            raise NameError('Section or Variable not found ! (' + section + '/' + variable + ')')
+            raise NameError('Section or Variable not found! (' + section + '/' + variable + ')')
 
     @staticmethod
     def determine_current_host():
@@ -217,14 +217,14 @@ class Config:
             # http://www.novell.com/coolsolutions/feature/11251.html
 
             if os.path.isfile('/etc/lsb-release'):
-                # Ubuntu !
+                # Ubuntu!
                 Config.HOST_CURRENT = Config.HOST_UBUNTU
             elif os.path.isfile('/etc/debian_version'):
-                # Une Debian pure et dure dans ce cas !
+                # Une Debian pure et dure dans ce cas!
                 Config.HOST_CURRENT = Config.HOST_DEBIAN
             elif os.path.isfile('/etc/fedora-release'):
-                # Fedora !
+                # Fedora!
                 Config.HOST_CURRENT = Config.HOST_FEDORA
             elif os.path.isfile('/etc/redhat_version'):
-                # RedHat !
+                # RedHat!
                 Config.HOST_CURRENT = Config.HOST_REDHAT

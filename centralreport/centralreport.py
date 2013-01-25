@@ -52,7 +52,7 @@ class CentralReport(Daemon):
             isError = True
             crLog.writeCritical('Sorry, but your OS is not supported yet...')
 
-        # Is webserver enabled ?
+        # Is webserver enabled?
         if not isError & crUtilsText.textToBool(Config.getConfigValue('Webserver', 'enable')):
             crLog.writeInfo('Enabling the webserver')
             CentralReport.webserver_thread = WebServer()
@@ -118,7 +118,7 @@ class CentralReport(Daemon):
     def status(self):
         """
             Checks the status of Central Report and returns the demon PID.
-            @return Int : Unix daemon pid ID
+            @return Int: Unix daemon pid ID
         """
 
         try:
@@ -133,7 +133,7 @@ class CentralReport(Daemon):
     def debug(self):
         """
             Function used to launch CentralReport without running the daemon.
-            Very useful to run CR in a IDE console :)
+            Very useful to run CR in a IDE console
         """
 
         Config.CR_CONFIG_ENABLE_DEBUG_MODE = True

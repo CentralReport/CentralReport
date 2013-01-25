@@ -7,7 +7,7 @@
     https://github.com/miniche/CentralReport/
 """
 
-# Summary of this module :
+# Summary of this module:
 # Collector abstract class
 # MacCollector class
 # DebianCollector class
@@ -202,7 +202,7 @@ class MacCollector(_Collector):
         """
         uptime_cmd = subprocess.Popen(['sysctl', '-n', 'kern.boottime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-        # Getting the split dict. The last command return this pattern : { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
+        # Getting the split dict. The last command return this pattern: { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
         # We want to use the first value
         dict_uptime = uptime_cmd.split(' ')
 
@@ -239,7 +239,7 @@ class MacCollector(_Collector):
                 # Getting user friendly name
                 # Read http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline for more informations about shell pipe in Python
                 #
-                # Full command : diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
+                # Full command: diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
                 disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout=subprocess.PIPE)
                 disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin=disk_name_p1.stdout,
                     stdout=subprocess.PIPE)
