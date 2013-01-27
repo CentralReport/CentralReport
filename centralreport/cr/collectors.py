@@ -305,7 +305,6 @@ class DebianCollector(_Collector):
                         os_version = ''
 
         hostEntity = crEntitiesHost.Infos()
-        hostEntity.uuid = Config.CR_HOST_UUID
 
         # Number of CPU/CPU cores
         try:
