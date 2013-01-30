@@ -1,0 +1,34 @@
+{
+    "last_timestamp": "{{ last_timestamp }}",
+    "last_fulldate": "{{ last_fulldate }}",
+    "current_timestamp": "{{ current_timestamp }}",
+
+    "cpu_check_enabled": "{{ cpu_check_enabled }}",
+    "cpu_percent": "{{ cpu_percent }}",
+    "cpu_user": "{{ cpu_user }}",
+    "cpu_system": "{{ cpu_system }}",
+    "cpu_state": "{{ cpu_state }}",
+
+    "memory_check_enabled": "{{ memory_check_enabled }}",
+    "memory_percent": "{{ memory_percent }}",
+    "memory_free": "{{ memory_free }}",
+    "memory_total": "{{ memory_total }}",
+    "memory_used": "{{ memory_used }}",
+    "memory_state": "{{ memory_state }}",
+
+    "swap_configuration": "{{ swap_configuration }}",
+    "swap_percent": "{{ swap_percent }}",
+    "swap_free": "{{ swap_free }}",
+    "swap_used": "{{ swap_used }}",
+    "swap_total": "{{ swap_size }}",
+    "swap_state": "{{ swap_state }}",
+
+    "load_check_enabled": "{{ load_check_enabled }}",
+    "load_percent": "{{ load_percent }}",
+    "load_state": "{{ load_state }}",
+    "load_last_one": "{{ load_last_one }}",
+
+    "uptime_full_text": "{{ uptime_full_text }}",
+    "uptime_seconds": "{{ uptime_seconds }}",
+    "start_date": "{{ start_date }}"
+}

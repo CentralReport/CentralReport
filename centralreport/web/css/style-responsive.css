@@ -1,0 +1,110 @@
+/*!
+ * CentralReport custom style - Indev version *
+ * To use with Bootstrap
+ *
+ * Please visit https://github.com/miniche/CentralReport for more informations
+ */
+
+@media (max-width: 767px) {
+
+    .page-header {
+        margin: 0;
+
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .dashboard-box {
+        margin-top: 20px;
+    }
+
+    .row {
+        margin-top: 0;
+    }
+
+    .host-name,
+    .host-logo {
+        text-align: center;
+    }
+
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+    .page-header {
+        margin-left: -20px;
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .host-name,
+    .host-logo {
+        text-align: left;
+    }
+}
+
+@media (min-width: 980px) and (max-width: 1023px) {
+
+    .page-header {
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0,.15);
+        -moz-box-shadow: 0 1px 2px rgba(0, 0, 0,.15);
+        box-shadow: 0 1px 2px rgba(0, 0, 0,.15);
+    }
+
+    .host-name,
+    .host-logo {
+        text-align: left;
+    }
+}
+
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+
+    .page-header {
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+        -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    }
+
+    .host-name,
+    .host-logo {
+        text-align: left;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .page-header {
+        -webkit-border-radius: 0 0 10px 10px;
+        -moz-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+
+        -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+        -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    }
+
+    .host-name,
+    .host-logo {
+        text-align: left;
+    }
+}
+
