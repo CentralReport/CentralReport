@@ -29,17 +29,21 @@ printLightBox blue " "
 # Getting current OS to check if uninstall will works for this host
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-    logConsole " "
-    logError "ERROR"
-    logError "The uninstall is only designed for Mac OS and Debian"
-    logError "Support for other OS will come soon!"
+    printLightBox red " "
+    printLightBox red " ERROR!"
+    printLightBox red " The install is only designed for Mac OS, Debian and Ubuntu."
+    printLightBox red " Support for other OS will come soon!"
+    printLightBox red " "
 
     exit 1
 fi
 
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    logError "Error! Python must be installed on your host to remove CentralReport."
+    printLightBox red " "
+    printLightBox red " Error! Python must be installed on your host to remove CentralReport."
+    printLightBox red " "
+
     exit 1
 fi
 
@@ -50,7 +54,6 @@ read -p "You will uninstall CentralReport. Are you sure you want to continue (y/
 checkYesNoAnswer ${RESP}
 if [ $? -eq 0 ]; then
     logConsole "Processing..."
-    logConsole " "
 
     # 0 = no error during uninstall
     bit_error=0
@@ -71,26 +74,35 @@ if [ $? -eq 0 ]; then
         if [ $? -ne 0 ]; then
             bit_error=1
         fi
-
     fi
 
     if [ ${bit_error} -eq 1 ]; then
-        logError "Error uninstalling CentralReport!"
-        logError "CentralReport may still be installed on this host"
+        logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
+
+        printLightBox red " "
+        printLightBox red " Error uninstalling CentralReport!"
+        printLightBox red " CentralReport may still be installed on this host"
+        printLightBox red " "
 
     else
         # Ok, it's done !
-        logConsole "\033[1;32m"
-        logConsole " "
-        logInfo "CentralReport might be deleted on your host."
-        logInfo "It's sad, but you're welcome!"
-        logConsole " "
-        logInfo "PS: Thanks for your interest in CentralReport! One of the best ways you can help us improve CentralReport is to let us know about any problems you find with it."
-        logInfo "You can find the developers at http://github.com/miniche/CentralReport"
-        logInfo "Thanks!"
-        logConsole "\033[0m"
+        logFile "CentralReport has been deleted on your host."
+
+        printLightBox green " "
+        printLightBox green " CentralReport has been deleted on your host."
+        printLightBox green " It's sad, but you're welcome!"
+        printLightBox green " "
+        printLightBox green " PS: Thanks for your interest in CentralReport!"
+        printLightBox green " "
+        printLightBox green " One of the best ways you can help us improve CentralReport is to let us know "
+        printLightBox green " about any problems you find with it."
+        printLightBox green " You can find the developers at http://github.com/miniche/CentralReport"
+        printLightBox green " Thanks!"
+        printLightBox green " "
 
     fi
+else
+    logInfo "Uninstall aborded by user."
 fi
 
 # End of program

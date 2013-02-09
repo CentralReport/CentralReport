@@ -42,10 +42,11 @@ fi
 # Others Linux distributions coming soon.
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-    logError " "
-    logError "ERROR"
-    logError "The install is only designed for Mac OS, Debian and Ubuntu."
-    logError "Support for other OS will come soon!"
+    printLightBox red " "
+    printLightBox red " ERROR!"
+    printLightBox red " The install is only designed for Mac OS, Debian and Ubuntu."
+    printLightBox red " Support for other OS will come soon!"
+    printLightBox red " "
 
     exit 1
 fi
@@ -53,7 +54,10 @@ fi
 # Python is mandatory for CentralReport
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    logError "Error! Python must be installed on your host to execute CentralReport."
+    printLightBox red " "
+    printLightBox red " Error! Python must be installed on your host to execute CentralReport."
+    printLightBox red " "
+
     exit 1
 fi
 
@@ -85,28 +89,36 @@ if [ "install" == ${ACTUAL_MODE} ]; then
         fi
 
         if [ ${bit_error} -eq 1 ]; then
-            logError "Something went wrong when installing CentralReport!"
-            logError "CentralReport isn't installed on this host."
+            printLightBox red " "
+            printLightBox red  " Something went wrong when installing CentralReport!"
+            printLightBox red  " CentralReport isn't installed on this host."
+            printLightBox red " "
+
+            logFile "Something went wrong when installing CentralReport, consult previous log."
 
         else
             # Displays the success text!
-            logConsole "\033[1;32m"
-            logConsole " "
-            logInfo "CentralReport is now installed!"
-            logInfo "For more options, you can edit the config file at /etc/centralreport.cfg"
-            logConsole " "
-            logInfo "More help at http://github.com/miniche/CentralReport"
-            logInfo "Have fun!"
-            logConsole " "
-            logConsole "\033[0m"
+            logFile "CentralReport is now installed! For more options, you can edit the config file at /etc/centralreport.cfg"
+            logFile "More help at http://github.com/miniche/CentralReport. Have fun!"
+
+            printLightBox green " "
+            printLightBox green " CentralReport is now installed!"
+            printLightBox green " For more options, you can edit the config file at /etc/centralreport.cfg"
+            printLightBox green " "
+            printLightBox green " You can find more help at http://github.com/miniche/CentralReport."
+            printLightBox green " Have fun!"
+            printLightBox green " "
 
         fi
+     else
+        logInfo "Installation aborded by user demand."
     fi
 else
-    logError " "
-    logError "ERROR!"
-    logError "Unknown argument"
-    logError "Use: install.sh [install]"
+    printLightBox red  " "
+    printLightBox red  " ERROR!"
+    printLightBox red  " Unknown argument"
+    printLightBox red  " Use: install.sh [install]"
+    printLightBox red  " "
 fi
 
 # End of program

@@ -48,7 +48,11 @@ function printLightBox() {
     done
 
     if [ ${LIGHTBOX_COLOR} == "blue" ]; then
-        LIGHTBOX_TEXT="\033[0;44m${LIGHTBOX_TEXT}\033[0m"
+        LIGHTBOX_TEXT="\033[0;44m\033[37m${LIGHTBOX_TEXT}\033[0m"
+    elif [ ${LIGHTBOX_COLOR} == "red" ]; then
+        LIGHTBOX_TEXT="\033[0;41m\033[37m${LIGHTBOX_TEXT}\033[0m"
+    elif [ ${LIGHTBOX_COLOR} == "green" ]; then
+        LIGHTBOX_TEXT="\033[0;42m\033[37m${LIGHTBOX_TEXT}\033[0m"
     fi
 
     logConsole "${LIGHTBOX_TEXT}"
