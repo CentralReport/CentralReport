@@ -22,7 +22,7 @@ function getOS(){
 function getPythonIsInstalled {
 
     echo " "
-    python -V
+    python -V &> /dev/null
 
     if [ $? -ne 0 ]; then
         return 1

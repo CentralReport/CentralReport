@@ -13,7 +13,6 @@ ERROR_FILE="/var/log/centralreport.log"
 # Writes a message in the log file
 function logFile() {
     CURRENT_DATE=$(date '+%d/%m/%Y %H:%M:%S')
-
     echo -e "INSTALL\t ${CURRENT_DATE}\t $*" >> ${ERROR_FILE}
 }
 
@@ -38,5 +37,5 @@ function printTitle() {
 # Writes a message on the error output and in the log file
 function logError() {
     echo -e "\033[0;31m$*\033[0m" >&2
-    logInfo "$*"
+    logFile "$*"
 }
