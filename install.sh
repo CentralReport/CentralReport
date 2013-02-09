@@ -20,15 +20,18 @@ ACTUAL_MODE=install
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
 
-logConsole "\033[44m\033[1;37m"
-logConsole "-------------- CentralReport installer --------------"
-logConsole "\033[0;44m"
-logConsole "Welcome! This script will install CentralReport on your host."
-logConsole "If you want more details, please visit http://github.com/miniche/CentralReport."
-logConsole " "
-logConsole "When installing CentralReport, we may ask for your password."
-logConsole "It will allow CentralReport to write files and directories such as the project binaries, logs, etc."
-logConsole "\033[0m"
+# Cleaning console and display the lightbox
+clear
+
+printLightBox blue  "--------------------------- CentralReport installer ----------------------------"
+printLightBox blue  " "
+printLightBox blue  " Welcome! This script will install CentralReport on your host."
+printLightBox blue  " If you want more details, please visit http://github.com/miniche/CentralReport"
+printLightBox blue  " "
+printLightBox blue  " When installing CentralReport, we may ask for your password."
+printLightBox blue  " It will allow CentralReport to write files and directories such as"
+printLightBox blue  " the project binaries, logs, etc."
+printLightBox blue  " "
 
 # In the future, it will be possible to have different modes.
 if [ -n "$1" ]; then

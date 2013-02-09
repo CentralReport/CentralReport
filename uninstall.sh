@@ -17,12 +17,14 @@ source bash/vars.sh
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
 
-logConsole "\033[44m\033[1;37m"
-logConsole "-------------- CentralReport uninstaller --------------"
-logConsole "\033[0;44m"
-logConsole "Welcome! This script will uninstall CentralReport on your host."
-logConsole "If you want more details, please visit http://github.com/miniche/CentralReport"
-logConsole "\033[0m"
+# Cleaning console and display the header lightbox
+clear
+
+printLightBox blue "-------------------------- CentralReport uninstaller ---------------------------"
+printLightBox blue " "
+printLightBox blue " Welcome! This script will uninstall CentralReport on your host."
+printLightBox blue " If you want more details, please visit http://github.com/miniche/CentralReport"
+printLightBox blue " "
 
 # Getting current OS to check if uninstall will works for this host
 getOS
