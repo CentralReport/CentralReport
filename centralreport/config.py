@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
                 # Default value
                 if "" == resultPort:
-                    resultPort = 0
+                    resultPort = 8080
 
                 try:
                     resultPortInt = int(resultPort)
