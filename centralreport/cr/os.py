@@ -7,29 +7,38 @@
     https://github.com/miniche/CentralReport/
 """
 
+import shlex
 import subprocess
 
 
 def WIP_executeCommand(str_command):
     """
         This function executes an os command. Command can contains pipes, executed as subcommands.
+        If your command contains vars with a space, use " " to escape words (eg: "Volume Name")
+        If you want to use an double quote (") in your command, escape it with \\ (eg: \\":\\" return ":")
+
         Returns the result of the command (string).
     """
-    # Command can contains pipes. At each pipe, we execute a "subcommand".
-    list_pipes = str_command.split("|")
 
-    # Catch all commands result in a list. Used for subcommands
+    # Command can contains pipes. At each pipe, we execute a "subcommand".
+    list_pipes = str_command.split('|')
+
+    # Catch all commands result in a list. Used for subcommands stdout/stdin
     list_results = []
 
     for i in range(0, len(list_pipes)):
-        list_pipes[i] = list_pipes[i].strip()
-        list_command = list_pipes[i].split(" ")
-
+        list_command = shlex.split(list_pipes[i])
+        print list_command
         # If it's not the first occurence, stdin is the last command executed.
         if 0 == i:
-            list_results.append(subprocess.Popen(list_command, stdout=subprocess.PIPE))
+            list_results.append(subprocess
+                                .Popen(list_command, stdout=subprocess.PIPE))
         else:
-            list_results.append(subprocess.Popen(list_command, stdout=subprocess.PIPE, stdin=list_results[i - 1].stdout))
+            list_results.append(subprocess
+                                .Popen(list_command, stdout=subprocess.PIPE, stdin=list_results[i - 1]
+                                .stdout))
+            # End the previous subprocess (http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline)
+            list_results[len(list_results) - 2].stdout.close()
 
     # Getting result of the last command, and return it.
     return list_results[len(list_results) - 1].communicate()[0]
