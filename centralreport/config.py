@@ -6,6 +6,9 @@
         First config assistant, used during installation.
         This assistant ask some questions to the administrator to writing values in config file.
 
+        Important: All console outputs must contains at most 80 characters.
+        It's the default width of major consoles.
+
     https://github.com/miniche/CentralReport/
 """
 
