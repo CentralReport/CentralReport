@@ -77,6 +77,7 @@ if [ $? -eq 0 ]; then
     fi
 
     if [ ${bit_error} -eq 1 ]; then
+        # We display a generic message: previous logs already the specific error message.
         logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
 
         printLightBox red " "
@@ -85,8 +86,8 @@ if [ $? -eq 0 ]; then
         printLightBox red " "
 
     else
-        # Ok, it's done !
-        logFile "CentralReport has been deleted on your host."
+        # No error append during uninstall. We log this, and then we display the "sad" green lightbox.
+        logFile "CentralReport has been deleted from your host."
 
         printLightBox green " "
         printLightBox green " CentralReport has been deleted from your host."
