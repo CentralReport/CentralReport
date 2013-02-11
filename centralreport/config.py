@@ -4,9 +4,9 @@
 """
     CentralReport - Config script
         First config assistant, used during installation.
-        This assistant ask some questions to the administrator to writing values in config file.
+        This assistant asks some questions to the administrator to then write values in config file.
 
-        Important: All console outputs must contains at most 80 characters.
+        Important: Every console outputs must contains at most 80 characters.
         It's the default width of major consoles.
 
     https://github.com/miniche/CentralReport/
@@ -47,16 +47,17 @@ if __name__ == '__main__':
         # Enable or disable internal web server
         print '\n'
         print '-- Internal web server options --'
-        print 'CentralReport has a small internal web server to display checks datas,'
-        print 'with a simple web browser. With it, you can monitor this host without'
-        print 'an account on centralreport.net.'
+        print 'CentralReport has a small internal web server to display checks data,'
+        print 'with a simple web browser. This web server allows you to check your data'
+        print 'locally, without being registered on our online platform'
+        print '(http://centralreport.net)'
 
         validEnableWebServer = False
         while (not validEnableWebServer):
             resultEnableWebServer = raw_input('Do you want to enable the internal web server? [Y/n] ')
 
             # Default value, if empty
-            if "" == resultEnableWebServer:
+            if len(resultEnableWebServer) == 0:
                 resultEnableWebServer = "y"
 
             # Config setters
@@ -83,7 +84,7 @@ if __name__ == '__main__':
                 resultPortInt = 0
 
                 # Default value
-                if "" == resultPort:
+                if len(resultPort) == 0:
                     resultPort = 8080
 
                 try:

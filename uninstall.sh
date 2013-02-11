@@ -26,12 +26,12 @@ printLightBox blue " Welcome! This script will uninstall CentralReport on your h
 printLightBox blue " If you want more details, please visit http://github.com/miniche/CentralReport"
 printLightBox blue " "
 
-# Getting current OS to check if uninstall will works for this host
+# Getting current OS to check if uninstall will work for this host
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
     printLightBox red " "
     printLightBox red " ERROR!"
-    printLightBox red " The install is only designed for Mac OS, Debian and Ubuntu."
+    printLightBox red " The uninstall is only designed for Mac OS, Debian and Ubuntu."
     printLightBox red " Support for other OS will come soon!"
     printLightBox red " "
 
@@ -59,7 +59,7 @@ if [ $? -eq 0 ]; then
     bit_error=0
 
     if [ ${CURRENT_OS} = ${OS_MAC} ]; then
-        # Remove CR from this Mac
+        # Removes CR from this Mac
         macos_uninstall
         if [ $? -ne 0 ]; then
             bit_error=1
@@ -69,7 +69,7 @@ if [ $? -eq 0 ]; then
         sudo -k
 
     elif [ ${CURRENT_OS} = ${OS_DEBIAN} ]; then
-        # Remove CR from this computer
+        # Removes CR from this Debian/Ubuntu distribution
         debian_uninstall
         if [ $? -ne 0 ]; then
             bit_error=1
@@ -89,20 +89,20 @@ if [ $? -eq 0 ]; then
         logFile "CentralReport has been deleted on your host."
 
         printLightBox green " "
-        printLightBox green " CentralReport has been deleted on your host."
+        printLightBox green " CentralReport has been deleted from your host."
         printLightBox green " It's sad, but you're welcome!"
         printLightBox green " "
         printLightBox green " PS: Thanks for your interest in CentralReport!"
         printLightBox green " "
         printLightBox green " One of the best ways you can help us improve CentralReport is to let us know "
-        printLightBox green " about any problems you find with it."
-        printLightBox green " You can find the developers at http://github.com/miniche/CentralReport"
+        printLightBox green " about any problems you could have found."
+        printLightBox green " You can find CR developers at http://github.com/miniche/CentralReport"
         printLightBox green " Thanks!"
         printLightBox green " "
 
     fi
 else
-    logInfo "Uninstall aborded by user."
+    logInfo "Uninstall aborted on user demand."
 fi
 
 # End of program

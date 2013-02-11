@@ -20,7 +20,7 @@ ACTUAL_MODE=install
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
 
-# Cleaning console and display the lightbox
+# Cleaning console and then display the lightbox
 clear
 
 printLightBox blue  "--------------------------- CentralReport installer ----------------------------"
@@ -64,9 +64,9 @@ fi
 # Check the actual mode.
 if [ "install" == ${ACTUAL_MODE} ]; then
     logConsole " "
-    read -p "You will install CentralReport. Are you sure you want to continue (y/N): " RESP < /dev/tty
+    read -p "You will install CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
 
-    # Are you sure to install CR ?
+    # Are you sure to install CR?
     checkYesNoAnswer ${RESP}
     if [ $? -eq 0 ]; then
         # O=no error / 1=one or more errors
@@ -90,11 +90,11 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         if [ ${bit_error} -eq 1 ]; then
             printLightBox red " "
-            printLightBox red  " Something went wrong when installing CentralReport!"
-            printLightBox red  " CentralReport isn't installed on this host."
+            printLightBox red " Something went wrong when installing CentralReport!"
+            printLightBox red " CentralReport isn't installed on this host."
             printLightBox red " "
 
-            logFile "Something went wrong when installing CentralReport, consult previous log."
+            logFile "Something went wrong when installing CentralReport, please consult previous logs."
 
         else
             # Displays the success text!
@@ -111,14 +111,14 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         fi
      else
-        logInfo "Installation aborded by user demand."
+        logInfo "Installation aborted on user demand."
     fi
 else
-    printLightBox red  " "
-    printLightBox red  " ERROR!"
-    printLightBox red  " Unknown argument"
-    printLightBox red  " Use: install.sh [install]"
-    printLightBox red  " "
+    printLightBox red " "
+    printLightBox red " ERROR!"
+    printLightBox red " Unknown argument"
+    printLightBox red " Use: install.sh [install]"
+    printLightBox red " "
 fi
 
 # End of program
