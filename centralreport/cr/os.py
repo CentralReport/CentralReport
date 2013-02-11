@@ -13,14 +13,14 @@ import subprocess
 
 def WIP_executeCommand(str_command):
     """
-        This function executes an os command. Command can contains pipes, executed as subcommands.
+        This function executes an os command. str_command can contain pipes, executed as subcommands.
         If your command contains vars with a space, use " " to escape words (eg: "Volume Name")
-        If you want to use an double quote (") in your command, escape it with \\ (eg: \\":\\" return ":")
+        If you want to use a double quote (") in your command, escape it with \\ (eg: \\":\\" return ":")
 
         Returns the result of the command (string).
     """
 
-    # Command can contains pipes. At each pipe, we execute a "subcommand".
+    # Command can contain pipes. At each pipe, we execute a "subcommand".
     list_pipes = str_command.split('|')
 
     # Catch all commands result in a list. Used for subcommands stdout/stdin
@@ -37,7 +37,7 @@ def WIP_executeCommand(str_command):
             list_results.append(subprocess
                                 .Popen(list_command, stdout=subprocess.PIPE, stdin=list_results[i - 1]
                                 .stdout))
-            # End the previous subprocess (http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline)
+            # Ends the previous subprocess (http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline)
             list_results[len(list_results) - 2].stdout.close()
 
     # Getting result of the last command, and return it.
