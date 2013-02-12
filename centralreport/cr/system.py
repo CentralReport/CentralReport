@@ -11,7 +11,7 @@ import shlex
 import subprocess
 
 
-def WIP_executeCommand(str_command):
+def executeCommand(str_command):
     """
         This function executes an os command. str_command can contain pipes, executed as subcommands.
         If your command contains vars with a space, use " " to escape words (eg: "Volume Name")
@@ -28,7 +28,7 @@ def WIP_executeCommand(str_command):
 
     for i in range(0, len(list_pipes)):
         list_command = shlex.split(list_pipes[i])
-        print list_command
+
         # If it's not the first occurence, stdin is the last command executed.
         if 0 == i:
             list_results.append(subprocess

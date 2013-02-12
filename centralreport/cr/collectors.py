@@ -15,12 +15,12 @@
 import cr.entities.checks as crEntitiesChecks
 import cr.entities.host as crEntitiesHost
 import cr.log as crLog
+import cr.system as crSystem
 import cr.utils.text as crUtilsText
 import datetime
 import multiprocessing
 import platform
 import socket
-import subprocess
 import time
 from cr.tools import Config
 from os import getloadavg
@@ -61,23 +61,20 @@ class MacCollector(_Collector):
             Gets information about this Mac.
         """
 
-        subprocessPIPE = subprocess.PIPE
-        hostname = crUtilsText.removeSpecialsCharacters(
-            subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
+        hostname = crUtilsText.removeSpecialsCharacters(crSystem.executeCommand('hostname -s'))
 
-        architecture = subprocess.Popen(['sysctl', '-n', 'hw.machine'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        architecture = crSystem.executeCommand('sysctl -n hw.machine')
 
-        kernel = subprocess.Popen(['sysctl', '-n', 'kern.ostype'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        kernel_v = subprocess.Popen(['uname', '-r'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        kernel = crSystem.executeCommand('sysctl -n kern.ostype')
+        kernel_v = crSystem.executeCommand('uname -r')
 
-        os_name = subprocess.Popen(['sw_vers', '-productName'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        os_version = subprocess.Popen(['sw_vers', '-productVersion'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        os_name = crSystem.executeCommand('sw_vers -productName')
+        os_version = crSystem.executeCommand('sw_vers -productVersion')
 
-        model = subprocess.Popen(['sysctl', '-n', 'hw.model'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        model = crSystem.executeCommand('sysctl -n hw.model')
 
-        ncpu = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        cpu_model = subprocess.Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=subprocessPIPE,
-            close_fds=True).communicate()[0]
+        ncpu = crSystem.executeCommand('sysctl -n hw.ncpu')
+        cpu_model = crSystem.executeCommand('sysctl -n machdep.cpu.brand_string')
 
         # Using new HostEntity
         hostEntity = crEntitiesHost.Infos()
@@ -101,9 +98,7 @@ class MacCollector(_Collector):
             Gets memory information.
         """
 
-        subprocessPIPE = subprocess.PIPE
-
-        memory_cmd = subprocess.Popen(['vm_stat'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        memory_cmd = crSystem.executeCommand('vm_stat')
 
         # Each line have a different data
         dict_memory = memory_cmd.splitlines()
@@ -143,7 +138,7 @@ class MacCollector(_Collector):
         """
 
         # iostat - entrees / sorties
-        iostat = subprocess.Popen(['iostat', '-c', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        iostat = crSystem.executeCommand('iostat -c 2')
 
         # Formatage de iostat
         iostat_split = iostat.splitlines()
@@ -184,7 +179,7 @@ class MacCollector(_Collector):
         """
 
         # iostat - entrees / sorties
-        iostat = subprocess.Popen(['iostat', '-c', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        iostat = crSystem.executeCommand('iostat -c 2')
 
         # Formatage de iostat
         iostat_split = iostat.splitlines()
@@ -200,10 +195,11 @@ class MacCollector(_Collector):
         """
             Gets the number of seconds since the last boot.
         """
-        uptime_cmd = subprocess.Popen(['sysctl', '-n', 'kern.boottime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        uptime_cmd = crSystem.executeCommand('sysctl -n kern.boottime')
 
-        # Getting the split dict. The last command return this pattern: { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
-        # We want to use the first value
+        # Getting the split dict.
+        # The last command return this pattern: { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
+        # We want to use the first value.
         dict_uptime = uptime_cmd.split(' ')
 
         try:
@@ -218,7 +214,7 @@ class MacCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-        df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        df_dict = crSystem.executeCommand('df')
 
         df_split = df_dict.splitlines()
         header = df_split[0].split()
@@ -237,22 +233,12 @@ class MacCollector(_Collector):
                 disk_free = int(line_dict['Available']) * MacCollector.BLOCKBYTES_TO_BYTES
 
                 # Getting user friendly name
-                # Read http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline for more informations about shell pipe in Python
-                #
-                # Full command: diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
-                disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout=subprocess.PIPE)
-                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin=disk_name_p1.stdout,
-                    stdout=subprocess.PIPE)
-                disk_name_p1.stdout.close()
-                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin=disk_name_p2.stdout,
-                    stdout=subprocess.PIPE).communicate()[0]
-                disk_name_p2.stdout.close()
+                disk_name = crSystem.executeCommand('diskutil info "' + line_dict['Filesystem'] + '" | grep "Volume Name" | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
 
                 # Using new check entity
-
                 checkDisk = crEntitiesChecks.Disk()
                 checkDisk.date = datetime.datetime.now()
-                checkDisk.name = disk_name_p3.lstrip()
+                checkDisk.name = disk_name.lstrip()
                 checkDisk.unix_namename = line_dict['Filesystem']
                 checkDisk.size = disk_total
                 checkDisk.used = disk_used
@@ -285,14 +271,14 @@ class DebianCollector(_Collector):
 
         if Config.HOST_DEBIAN == Config.HOST_CURRENT:
             os_name = 'Debian'
-            os_version = subprocess.Popen(['cat', '/etc/debian_version'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+            os_version = crSystem.executeCommand('cat /etc/debian_version')
 
         elif Config.HOST_UBUNTU == Config.HOST_CURRENT:
             os_name = 'Ubuntu'
 
             # OS version for Ubuntu
             os_version = 'Unknown'
-            os_version_full = subprocess.Popen(['cat', '/etc/lsb-release'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+            os_version_full = crSystem.executeCommand('cat /etc/lsb-release')
             os_version_lines = os_version_full.splitlines()
 
             # Looking for the "DISTRIB_RELEASE" key
@@ -331,7 +317,7 @@ class DebianCollector(_Collector):
         """
 
         # vmstat - input / output
-        iostat = subprocess.Popen(['vmstat', '1', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        iostat = crSystem.executeCommand('vmstat 1 2')
 
         # Formatage de vmstat
         iostat_split = iostat.splitlines()
@@ -354,7 +340,7 @@ class DebianCollector(_Collector):
             Gets memory usage.
         """
 
-        memory_result = subprocess.Popen(['cat', '/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        memory_result = crSystem.executeCommand('cat /proc/meminfo')
 
         # On decoupe toutes les lignes
         memory_result_split = memory_result.splitlines()
@@ -416,7 +402,7 @@ class DebianCollector(_Collector):
         """
             Gets the number of seconds since the last boot.
         """
-        uptime_cmd = subprocess.Popen(['cat', '/proc/uptime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        uptime_cmd = crSystem.executeCommand('cat /proc/uptime')
         uptime_dict = uptime_cmd.split(' ')
 
         try:
@@ -431,7 +417,7 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-        df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        df_dict = crSystem.executeCommand('df')
         df_split = df_dict.splitlines()
 
         listDisks = crEntitiesHost.Disks()  # Return new entity
