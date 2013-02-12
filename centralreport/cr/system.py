@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-    CentralReport - os module
+    CentralReport - system module
         Contains functions to interact with the operating system
 
     https://github.com/miniche/CentralReport/
