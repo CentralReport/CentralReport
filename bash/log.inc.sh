@@ -34,7 +34,7 @@ function printTitle() {
     logConsole "--------------------------------------------------------------------------------"
 }
 
-# Writes a light box on console. Available color: blue, green and red.
+# Writes a light box on console. Available colors: blue, green and red.
 function printLightBox() {
 
     LIGHTBOX_COLOR="$1"

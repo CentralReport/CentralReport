@@ -99,7 +99,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             logFile "Something went wrong when installing CentralReport, please consult previous logs."
 
         else
-            # No error append during installation. We log this, and then we display the beautiful green lightbox.
+            # Nothing wrong happened while installing. We log this, and then we display the beautiful green lightbox.
             logFile "CentralReport is now installed! For more options, you can edit the config file at /etc/centralreport.cfg"
             logFile "More help at http://github.com/miniche/CentralReport. Have fun!"
 

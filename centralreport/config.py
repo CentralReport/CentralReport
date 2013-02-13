@@ -4,9 +4,9 @@
 """
     CentralReport - Config script
         First config assistant, used during installation.
-        This assistant asks some questions to the administrator to then write values in config file.
+        This assistant asks some questions to the administrator to then write values in the config file.
 
-        Important: Every console outputs must contains at most 80 characters.
+        Important: Every console outputs must contain at most 80 characters.
         It's the default width of major consoles.
 
     https://github.com/miniche/CentralReport/
