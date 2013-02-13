@@ -22,7 +22,7 @@ function getOS(){
 function getPythonIsInstalled {
 
     echo " "
-    python -V
+    python -V &> /dev/null
 
     if [ $? -ne 0 ]; then
         return 1
@@ -73,7 +73,7 @@ function checkYesNoAnswer() {
 
     case "$1" in
         y|Y|yes|YES|Yes) return 0 ;;
-        *) echo Exiting; return 1 ;;
+        *)  return 1 ;;
     esac
 
 }

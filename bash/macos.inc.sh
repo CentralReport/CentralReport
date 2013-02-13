@@ -296,7 +296,7 @@ function macos_uninstall {
     echo -e "\n\nPlease use your administrator password to uninstall CentralReport on this Mac."
     sudo -v
     if [ $? -ne 0 ]; then
-        displayError "Impossible to use root privileges"
+        logError "Enable to use root privileges"
         return 1
     fi
 
