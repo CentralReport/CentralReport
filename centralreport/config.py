@@ -115,7 +115,7 @@ if __name__ == '__main__':
             print '\n'
             print 'Restarting CentralReport...'
             daemon.start()
-            
+
         sys.exit(0)
 
     elif 'update' == sys.argv[1]:

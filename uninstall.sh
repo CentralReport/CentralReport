@@ -86,9 +86,11 @@ if [ $? -eq 0 ]; then
         printLightBox red " "
 
     else
-        # No error append during uninstall. We log this, and then we display the "sad" green lightbox.
+        # Nothing wrong happened while uninstalling. We log this, and then we display the "sad" green lightbox.
         logFile "CentralReport has been deleted from your host."
 
+        # Adding a space before the lightbox to separate previous logs with the success message.
+        logConsole " "
         printLightBox blue " "
         printLightBox blue " CentralReport has been deleted from your host."
         printLightBox blue " It's sad, but you're welcome!"
