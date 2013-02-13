@@ -116,11 +116,6 @@ if __name__ == '__main__':
             print 'Restarting CentralReport...'
             daemon.start()
 
-        print '\n'
-        print '--------------------------------------------------------------------------------'
-        print '                          End of the config script                              '
-        print '--------------------------------------------------------------------------------'
-
         sys.exit(0)
 
     elif 'update' == sys.argv[1]:

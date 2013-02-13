@@ -65,9 +65,11 @@ function macos_stop_cr {
 # --
 function macos_config_assistant {
 
-    logConsole "\033[1;32m"
-    logInfo "Launching CentralReport configuration wizard..."
-    logConsole "\033[0m"
+    logFile "Launching CentralReport configuration wizard..."
+
+    printLightBox blue " "
+    printLightBox blue " Launching CentralReport configuration wizard..."
+    printLightBox blue " "
 
     sudo python ${CONFIG_ASSISTANT} < /dev/tty
 

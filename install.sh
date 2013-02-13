@@ -103,13 +103,15 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             logFile "CentralReport is now installed! For more options, you can edit the config file at /etc/centralreport.cfg"
             logFile "More help at http://github.com/miniche/CentralReport. Have fun!"
 
-            printLightBox green " "
-            printLightBox green " CentralReport is now installed!"
-            printLightBox green " For more options, you can edit the config file at /etc/centralreport.cfg"
-            printLightBox green " "
-            printLightBox green " You can find more help at http://github.com/miniche/CentralReport."
-            printLightBox green " Have fun!"
-            printLightBox green " "
+            # Adding a space before the lightbox to separate previous logs with the success message.
+            logConsole " "
+            printLightBox blue " "
+            printLightBox blue " CentralReport is now installed!"
+            printLightBox blue " For more options, you can edit the config file at /etc/centralreport.cfg"
+            printLightBox blue " "
+            printLightBox blue " You can find more help at http://github.com/miniche/CentralReport."
+            printLightBox blue " Have fun!"
+            printLightBox blue " "
 
         fi
      else

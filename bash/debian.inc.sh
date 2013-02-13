@@ -64,9 +64,11 @@ function debian_stop_cr {
 
 function debian_config_assistant {
 
-    logConsole "\033[44m\033[1;37m"
-    printTitle "Lauching CentralReport configuration wizard..."
-    logConsole "\033[0m"
+    logFile "Launching CentralReport configuration wizard..."
+
+    printLightBox blue " "
+    printLightBox blue " Launching CentralReport configuration wizard..."
+    printLightBox blue " "
 
     python ${CONFIG_ASSISTANT} < /dev/tty
 
