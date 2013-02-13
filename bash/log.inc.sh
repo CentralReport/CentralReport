@@ -34,7 +34,7 @@ function printTitle() {
     logConsole "--------------------------------------------------------------------------------"
 }
 
-# Writes a light box on console. Available colors: blue, green and red.
+# Writes a light box on console. Available colors: blue and red.
 function printLightBox() {
 
     LIGHTBOX_COLOR="$1"
@@ -51,8 +51,6 @@ function printLightBox() {
         LIGHTBOX_TEXT="\033[0;44m\033[37m${LIGHTBOX_TEXT}\033[0m"
     elif [ ${LIGHTBOX_COLOR} == "red" ]; then
         LIGHTBOX_TEXT="\033[0;41m\033[37m${LIGHTBOX_TEXT}\033[0m"
-    elif [ ${LIGHTBOX_COLOR} == "green" ]; then
-        LIGHTBOX_TEXT="\033[0;42m\033[37m${LIGHTBOX_TEXT}\033[0m"
     fi
 
     logConsole "${LIGHTBOX_TEXT}"

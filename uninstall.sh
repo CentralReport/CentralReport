@@ -89,17 +89,17 @@ if [ $? -eq 0 ]; then
         # No error append during uninstall. We log this, and then we display the "sad" green lightbox.
         logFile "CentralReport has been deleted from your host."
 
-        printLightBox green " "
-        printLightBox green " CentralReport has been deleted from your host."
-        printLightBox green " It's sad, but you're welcome!"
-        printLightBox green " "
-        printLightBox green " PS: Thanks for your interest in CentralReport!"
-        printLightBox green " "
-        printLightBox green " One of the best ways you can help us improve CentralReport is to let us know "
-        printLightBox green " about any problems you could have found."
-        printLightBox green " You can find CR developers at http://github.com/miniche/CentralReport"
-        printLightBox green " Thanks!"
-        printLightBox green " "
+        printLightBox blue " "
+        printLightBox blue " CentralReport has been deleted from your host."
+        printLightBox blue " It's sad, but you're welcome!"
+        printLightBox blue " "
+        printLightBox blue " PS: Thanks for your interest in CentralReport!"
+        printLightBox blue " "
+        printLightBox blue " One of the best ways you can help us improve CentralReport is to let us know "
+        printLightBox blue " about any problems you could have found."
+        printLightBox blue " You can find CR developers at http://github.com/miniche/CentralReport"
+        printLightBox blue " Thanks!"
+        printLightBox blue " "
 
     fi
 else
