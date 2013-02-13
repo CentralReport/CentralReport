@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
             validPort = False
             while not validPort:
-                resultPort = raw_input('Use this port [8080]: ')
+                resultPort = raw_input('Web server port: [8080] ')
                 resultPortInt = 0
 
                 # Default value
