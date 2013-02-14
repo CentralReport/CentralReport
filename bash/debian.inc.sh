@@ -25,7 +25,7 @@ function debian_start_cr {
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error starting CentralReport (Error code: ${RETURN_CODE})"
+            logError "Error starting CentralReport (Error code: ${RETURN_CODE})!"
             return ${RETURN_CODE}
         else
             # Waiting three seconds before all CR threads really started.
