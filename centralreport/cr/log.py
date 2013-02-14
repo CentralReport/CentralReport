@@ -8,6 +8,7 @@
 """
 
 import logging
+import logging.handlers
 import sys
 
 
@@ -16,17 +17,22 @@ def configLog(enable_debug_mode=False):
         Configures the logging system (executed on time when CentralReport is starting).
     """
 
-    if not enable_debug_mode:
+    LOG_FILENAME = '/var/log/centralreport.log'
 
+    if not enable_debug_mode:
         # Writing only "INFO" or more important messages in a log file (production environement)
-        logging.basicConfig(filename='/var/log/centralreport.log',
+        # TODO: Replace "DEBUG" in production
+        logging.basicConfig(filename=LOG_FILENAME,
                             format='%(levelname)s \t %(asctime)s \t %(message)s',
-                            level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S')
+                            level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S')
+
+        # Using python rotating log function
+        crLogging = logging.getLogger('centralreport')
+        handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=5, backupCount=5)
+        crLogging.addHandler(crLogging)
 
     else:
-
         # In debug mode, we only display message on standard output.
-
         logging.basicConfig(stream=sys.stdout,
                             format='%(levelname)s \t %(asctime)s \t %(message)s',
                             level=logging.DEBUG, datefmt='%m/%d/%Y %H:%M:%S')
