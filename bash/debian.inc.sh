@@ -31,7 +31,7 @@ function debian_start_cr {
             # Waiting three seconds before all CR threads really started.
             sleep 3
 
-            logInfo "CentralReport started"
+            logInfo "CentralReport started!"
             return 0
         fi
     fi
