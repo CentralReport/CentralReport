@@ -7,13 +7,11 @@
     https://github.com/miniche/CentralReport/
 """
 
-
 import datetime
 import json
 
 
 class Infos:
-
     """
         Entity containing datas about actual host.
     """
@@ -62,11 +60,10 @@ class Infos:
             'os': self.os,
             'type': 'host',
             'uuid': self.uuid
-            })
+        })
 
 
 class Disks:
-
     """
         Entity containing checks for all the disks.
     """
@@ -83,4 +80,4 @@ class Disks:
         return json.dumps({
             'date': self.date.strftime('%s'),
             'disks': self.checks
-            })
+        })

@@ -10,12 +10,13 @@
 import ConfigParser
 import os
 import platform
-import cr.log as crLog
+
 import uuid
+
+import cr.log as crLog
 
 
 class Config:
-
     """
         Manages CentralReport configuration.
     """
@@ -60,19 +61,19 @@ class Config:
     _CR_CONFIG_VALUES = {
         'General': {
             'uuid': ''
-            },
+        },
         'Webserver': {
             'enable': 'True',
             'interface': '0.0.0.0',
             'port': '8080'
-            },
+        },
         'Checks': {
             'enable_cpu_check': 'True',
             'enable_memory_check': 'True',
             'enable_load_check': 'True',
             'enable_disks_check': 'True',
             'interval': '60'
-            },
+        },
         'Alerts': {
             'cpu_warning': '75',
             'cpu_alert': '90',
@@ -82,8 +83,8 @@ class Config:
             'swap_alert': '75',
             'load_warning': '75',
             'load_alert': '90'
-            },
-        }
+        },
+    }
 
     def __init__(self):
         """
@@ -123,7 +124,8 @@ class Config:
         for config_section in Config._CR_CONFIG_VALUES:
             for config_value in Config._CR_CONFIG_VALUES[config_section]:
                 try:
-                    Config._CR_CONFIG_VALUES[config_section][config_value] = Config.config.get(config_section, config_value)
+                    Config._CR_CONFIG_VALUES[config_section][config_value] = \
+                        Config.config.get(config_section, config_value)
 
                 except ConfigParser.NoSectionError:
                     config_must_be_updated = True
@@ -137,7 +139,8 @@ class Config:
                     config_must_be_updated = True
                     crLog.writeError('Error getting a config value: ' + config_section + '/' + config_value)
 
-        # In this case, config file have been written by a last version of CR. We must update it to include new sections or options.
+        # In this case, config file have been written by a last version of CR.
+        # We must update it to include new sections or options.
         if config_must_be_updated:
             self.writeConfigFile()
 
@@ -166,7 +169,8 @@ class Config:
 
             for config_value in config_section_vars:
                 try:
-                    Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
+                    Config.config.set(config_section, config_value,
+                                      Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
                     crLog.writeError('Error writing config value: ' + config_section + '/' + config_value)
 

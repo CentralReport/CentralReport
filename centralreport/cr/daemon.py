@@ -15,12 +15,12 @@ from signal import SIGTERM
 
 
 class Daemon:
-
     """
         A generic daemon class.
 
         Usage: subclass the Daemon class and override the run() method
     """
+
     def __init__(self, pidfile, stdin='/dev/null', stdout='/tmp/cr', stderr='/tmp/cr'):
 
         self.stdin = stdin
@@ -38,7 +38,6 @@ class Daemon:
         try:
             pid = os.fork()
             if pid > 0:
-
                 # exit first parent
 
                 sys.exit(0)
@@ -57,7 +56,6 @@ class Daemon:
         try:
             pid = os.fork()
             if pid > 0:
-
                 # exit from second parent
 
                 sys.exit(0)
@@ -127,7 +125,7 @@ class Daemon:
             message = 'pidfile %s does not exist. Daemon not running?\n'
             sys.stderr.write(message % self.pidfile)
 
-            return   # not an error in a restart
+            return # not an error in a restart
 
         # Try killing the daemon process
 

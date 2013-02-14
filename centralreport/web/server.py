@@ -7,20 +7,20 @@
     https://github.com/miniche/CentralReport/
 """
 
-import cherrypy
-import cr.utils.date as crUtilsDate
-import cr.utils.text as crUtilsText
 import datetime
 import os
-import routes
 import threading
+
+import cherrypy
+from jinja2 import Environment, FileSystemLoader
+
+import cr.utils.date as crUtilsDate
+import cr.utils.text as crUtilsText
 from cr.threads import Checks
 from cr.tools import Config
-from jinja2 import Environment, FileSystemLoader
 
 
 class WebServer(threading.Thread):
-
     current_dir = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(os.path.join(current_dir, 'tpl')))
 
@@ -45,27 +45,27 @@ class WebServer(threading.Thread):
             '/statics': {
                 'tools.staticdir.dir': 'statics',
                 'tools.staticdir.on': True
-                },
+            },
             '/css': {
                 'tools.staticdir.dir': 'css',
                 'tools.staticdir.on': True
-                },
+            },
             '/img': {
                 'tools.staticdir.dir': 'img',
                 'tools.staticdir.on': True
-                },
+            },
             '/js': {
                 'tools.staticdir.dir': 'js',
                 'tools.staticdir.on': True
-                },
+            },
             '/media': {
                 'tools.staticdir.dir': 'media',
                 'tools.staticdir.on': True
-                },
+            },
             '/api/check': {
                 'request.dispatch': self.setupRoutes()
-                }
             }
+        }
 
         # Using Pages class (see below)
 
@@ -73,7 +73,7 @@ class WebServer(threading.Thread):
 
         # Disable screen log (standard out)
 
-        if False == Config.CR_CONFIG_ENABLE_DEBUG_MODE:
+        if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
             cherrypy.log.error_log.propagate = False
             cherrypy.log.access_log.propagate = False
 
@@ -107,7 +107,6 @@ class WebServer(threading.Thread):
 
 
 class Pages:
-
     def __init__(self, env_template):
         self.env = env_template
 
@@ -229,13 +228,12 @@ class Pages:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:
-                checkDisk = {}
+                checkDisk = {'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                             'free': crUtilsText.convertByte(disk.free),
+                             'total': crUtilsText.convertByte(disk.size),
+                             'percent': int(round(disk.used, 0) * 100 / int(disk.size))}
 
                 # TODO: Find a better solution to decode UTF8
-                checkDisk['name'] = str.replace(disk.name, '/dev/', '').decode('utf-8')
-                checkDisk['free'] = crUtilsText.convertByte(disk.free)
-                checkDisk['total'] = crUtilsText.convertByte(disk.size)
-                checkDisk['percent'] = int(round(disk.used, 0) * 100 / int(disk.size))
 
                 allChecksDisk.append(checkDisk)
 
@@ -405,11 +403,10 @@ class Pages:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:
-                checkDisk = {}
-                checkDisk['name'] = str.replace(disk.name, '/dev/', '').decode('utf-8')
-                checkDisk['free'] = crUtilsText.convertByte(disk.free)
-                checkDisk['total'] = crUtilsText.convertByte(disk.size)
-                checkDisk['percent'] = int(round(disk.used, 0) * 100 / int(disk.size))
+                checkDisk = {'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                             'free': crUtilsText.convertByte(disk.free),
+                             'total': crUtilsText.convertByte(disk.size),
+                             'percent': int(round(disk.used, 0) * 100 / int(disk.size))}
 
                 allChecksDisk.append(checkDisk)
 

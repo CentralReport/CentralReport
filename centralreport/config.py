@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 resultEnableWebServer = "y"
 
             # Config setters
-            if('y' == resultEnableWebServer.lower()[:1]):
+            if ('y' == resultEnableWebServer.lower()[:1]):
                 validEnableWebServer = True
                 Config.setConfigValue('Webserver', 'enable', True)
 
