@@ -53,7 +53,7 @@ if __name__ == '__main__':
         print '(http://centralreport.net)'
 
         validEnableWebServer = False
-        while (not validEnableWebServer):
+        while not validEnableWebServer:
             resultEnableWebServer = raw_input('Do you want to enable the internal web server? [Y/n] ')
 
             # Default value, if empty
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 resultEnableWebServer = "y"
 
             # Config setters
-            if ('y' == resultEnableWebServer.lower()[:1]):
+            if 'y' == resultEnableWebServer.lower()[:1]:
                 validEnableWebServer = True
                 Config.setConfigValue('Webserver', 'enable', True)
 
@@ -79,9 +79,10 @@ if __name__ == '__main__':
             print 'Default port is 8080. You can choose a custom port if you want.'
 
             validPort = False
+            resultPortInt = 0
+
             while not validPort:
                 resultPort = raw_input('Web server port: [8080] ')
-                resultPortInt = 0
 
                 # Default value
                 if len(resultPort) == 0:
@@ -96,8 +97,8 @@ if __name__ == '__main__':
                     except socket.error, e:
                         validPort = True
                     else:
-                        s.close
-                        print('Port ' + resultPort + ' is already used on this host. Please define a free port.')
+                        s.close()
+                        print('Port ' + str(resultPort) + ' is already used on this host. Please define a free port.')
                         validPort = False
 
                 except ValueError:

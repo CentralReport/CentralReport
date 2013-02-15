@@ -161,7 +161,7 @@ class Config:
             except ConfigParser.DuplicateSectionError:
                 crLog.writeDebug('Section already exist: ' + config_section)
             except:
-                crLog.writeError('Error creating new section: ' + config_section + ': ' + Exception.message)
+                crLog.writeError('Error creating new section: ' + config_section + ': ' + str(Exception.message))
 
             # Reading all values in this section
             config_section_vars = Config._CR_CONFIG_VALUES[config_section]

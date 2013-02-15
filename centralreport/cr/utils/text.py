@@ -75,7 +75,7 @@ def secondsToPhraseTime(seconds):
         years = remaining_seconds / ONE_YEAR
         years = math.floor(years)
 
-        remaining_seconds = remaining_seconds - years * ONE_YEAR
+        remaining_seconds -= years * ONE_YEAR
 
         result_string += '1 year ' if 1 == years else str(int(years)) + ' years '
 
@@ -83,21 +83,21 @@ def secondsToPhraseTime(seconds):
         days = remaining_seconds / ONE_DAY
         days = math.floor(days)
 
-        remaining_seconds = remaining_seconds - days * ONE_DAY
+        remaining_seconds -= days * ONE_DAY
         result_string += '1 day ' if 1 == days else str(int(days)) + ' days '
 
     if ONE_HOUR < remaining_seconds:
         hours = remaining_seconds / ONE_HOUR
         hours = math.floor(hours)
 
-        remaining_seconds = remaining_seconds - hours * ONE_HOUR
+        remaining_seconds -= hours * ONE_HOUR
         result_string += '1 hour ' if 1 == hours else str(int(hours)) + ' hours '
 
     if ONE_MINUTE < remaining_seconds:
         minutes = remaining_seconds / ONE_MINUTE
         minutes = math.floor(minutes)
 
-        remaining_seconds = remaining_seconds - minutes * ONE_MINUTE
+        remaining_seconds -= minutes * ONE_MINUTE
         result_string += '1 minute ' if 1 == minutes else str(int(minutes)) + ' minutes '
 
     result_string += '1 second ' if 1 == remaining_seconds else str(int(remaining_seconds)) + ' seconds '
