@@ -47,7 +47,7 @@ class CentralReport(Daemon):
         # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
-            crLog.writeInfo(Config.HOST_CURRENT + ' detected. Starting ThreadChecks...')
+            crLog.writeInfo('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = crThreads.Checks()  # Launching checks thread
         else:
             isError = True
@@ -151,25 +151,25 @@ if '__main__' == __name__:
     if 2 == len(sys.argv):
         if 'start' == sys.argv[1]:
             daemon.start()
+
         elif 'stop' == sys.argv[1]:
-
             daemon.stop()
+
         elif 'restart' == sys.argv[1]:
-
             daemon.restart()
-        elif 'status' == sys.argv[1]:
 
+        elif 'status' == sys.argv[1]:
             pid = daemon.status()
 
             if 0 == pid:
                 print 'CentralReport is not running'
             else:
-                print 'CentralReport is running with pid ' + str(pid)
+                print 'CentralReport is running with pid %s' % pid
         else:
-
-            crLog.writeError('Unknown command')
+            crLog.writeError("usage: %s start|stop|restart|status" % sys.argv[0])
             sys.exit(2)
         sys.exit(0)
+
     else:
         crLog.writeError("usage: %s start|stop|restart|status" % sys.argv[0])
         sys.exit(2)

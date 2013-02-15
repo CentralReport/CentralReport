@@ -32,7 +32,7 @@ class Speaker:
 
         # DEBUG
 
-        print 'URL: ' + url
+        print 'URL: %s' % url
 
         # values = list(stats)
 
@@ -46,4 +46,4 @@ class Speaker:
             return the_page
         except Exception as inst:
             error = True
-            print('ERREUR: Connexion impossible au serveur: ' + str(inst))
+            print('ERREUR: Connexion impossible au serveur: %s' % inst)

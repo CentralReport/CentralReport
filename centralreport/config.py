@@ -98,7 +98,7 @@ if __name__ == '__main__':
                         validPort = True
                     else:
                         s.close()
-                        print('Port ' + str(resultPort) + ' is already used on this host. Please define a free port.')
+                        print 'Port %s is already used on this host. Please define a free port.' % resultPort
                         validPort = False
 
                 except ValueError:
