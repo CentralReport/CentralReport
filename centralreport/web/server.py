@@ -228,12 +228,13 @@ class Pages:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:
-                checkDisk = {'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
-                             'free': crUtilsText.convertByte(disk.free),
-                             'total': crUtilsText.convertByte(disk.size),
-                             'percent': int(round(disk.used, 0) * 100 / int(disk.size))}
-
-                # TODO: Find a better solution to decode UTF8
+            # TODO: Find a better solution to decode UTF8
+                checkDisk = {
+                    'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                    'free': crUtilsText.convertByte(disk.free),
+                    'total': crUtilsText.convertByte(disk.size),
+                    'percent': int(round(disk.used, 0) * 100 / int(disk.size))
+                }
 
                 allChecksDisk.append(checkDisk)
 
@@ -403,10 +404,12 @@ class Pages:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:
-                checkDisk = {'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
-                             'free': crUtilsText.convertByte(disk.free),
-                             'total': crUtilsText.convertByte(disk.size),
-                             'percent': int(round(disk.used, 0) * 100 / int(disk.size))}
+                checkDisk = {
+                    'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                    'free': crUtilsText.convertByte(disk.free),
+                    'total': crUtilsText.convertByte(disk.size),
+                    'percent': int(round(disk.used, 0) * 100 / int(disk.size))
+                }
 
                 allChecksDisk.append(checkDisk)
 

@@ -33,8 +33,7 @@ def executeCommand(str_command):
         if 0 == i:
             list_results.append(subprocess.Popen(list_command, stdout=subprocess.PIPE))
         else:
-            list_results.append(
-                subprocess.Popen(list_command, stdout=subprocess.PIPE, stdin=list_results[i - 1].stdout))
+            list_results.append(subprocess.Popen(list_command, stdout=subprocess.PIPE, stdin=list_results[i - 1].stdout))
             # Ends the previous subprocess (http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline)
             list_results[len(list_results) - 2].stdout.close()
 

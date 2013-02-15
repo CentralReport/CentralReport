@@ -293,6 +293,8 @@ class DebianCollector(_Collector):
         hostEntity = crEntitiesHost.Infos()
 
         # Number of CPU/CPU cores
+        ncpu = 1
+
         try:
             ncpu = multiprocessing.cpu_count()
         except (ImportError, NotImplementedError):
