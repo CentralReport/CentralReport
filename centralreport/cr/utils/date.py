@@ -7,8 +7,9 @@
     https://github.com/miniche/CentralReport/
 """
 
-import cr.log as crLog
 import time
+
+import cr.log as crLog
 
 
 def datetimeToTimestamp(datetime):

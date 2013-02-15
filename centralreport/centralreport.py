@@ -8,19 +8,20 @@
     https://github.com/miniche/CentralReport/
 """
 
-import cr.log as crLog
-import cr.threads as crThreads
-import cr.utils.text as crUtilsText
 import datetime
 import sys
 import time
 import os
+
+import cr.log as crLog
+import cr.threads as crThreads
+import cr.utils.text as crUtilsText
 from cr.daemon import Daemon
 from cr.tools import Config
 from web.server import WebServer
 
-class CentralReport(Daemon):
 
+class CentralReport(Daemon):
     isRunning = True  # Deamon status
     startingDate = None
 
@@ -45,7 +46,7 @@ class CentralReport(Daemon):
 
         # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
-        Config.HOST_CURRENT == Config.HOST_UBUNTU):
+                Config.HOST_CURRENT == Config.HOST_UBUNTU):
             crLog.writeInfo(Config.HOST_CURRENT + ' detected. Starting ThreadChecks...')
             CentralReport.checks_thread = crThreads.Checks()  # Launching checks thread
         else:

@@ -7,17 +7,17 @@
     https://github.com/miniche/CentralReport/
 """
 
-import cr.collectors as crCollectors
-import cr.log as crLog
-import cr.utils.text as crUtilsText
 import datetime
 import threading
 import time
+
+import cr.collectors as crCollectors
+import cr.log as crLog
+import cr.utils.text as crUtilsText
 from cr.tools import Config
 
 
 class Checks(threading.Thread):
-
     """
         Thread performing periodically checks.
     """
@@ -43,8 +43,7 @@ class Checks(threading.Thread):
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
             self.MyCollector = crCollectors.MacCollector()
-        elif (Config.HOST_CURRENT == Config.HOST_DEBIAN) \
-            | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
+        elif (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (Config.HOST_CURRENT == Config.HOST_UBUNTU):
             self.MyCollector = crCollectors.DebianCollector()
 
         # Perform a check every xx ticks (1 tick = 1 second)

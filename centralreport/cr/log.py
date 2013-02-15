@@ -10,6 +10,7 @@
 import logging
 import sys
 
+
 def configLog(enable_debug_mode=False):
     """
         Configures the logging system (executed on time when CentralReport is starting).

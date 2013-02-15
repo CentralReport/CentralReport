@@ -12,22 +12,23 @@
 # MacCollector class
 # DebianCollector class
 
+import datetime
+
+import multiprocessing
+import platform
+import socket
+import time
+from os import getloadavg
+
 import cr.entities.checks as crEntitiesChecks
 import cr.entities.host as crEntitiesHost
 import cr.log as crLog
 import cr.system as crSystem
 import cr.utils.text as crUtilsText
-import datetime
-import multiprocessing
-import platform
-import socket
-import time
 from cr.tools import Config
-from os import getloadavg
 
 
 class _Collector:
-
     def get_infos(self):
         raise NameError('Method not implemented yet')
 
@@ -48,7 +49,6 @@ class _Collector:
 
 
 class MacCollector(_Collector):
-
     """
         Collector executing Mac OS commands and getting useful values.
     """
@@ -233,7 +233,9 @@ class MacCollector(_Collector):
                 disk_free = int(line_dict['Available']) * MacCollector.BLOCKBYTES_TO_BYTES
 
                 # Getting user friendly name
-                disk_name = crSystem.executeCommand('diskutil info "' + line_dict['Filesystem'] + '" | grep "Volume Name" | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
+                disk_name = crSystem.executeCommand('diskutil info "' + line_dict['Filesystem'] + '"'
+                                                    ' | grep "Volume Name"'
+                                                    ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
 
                 # Using new check entity
                 checkDisk = crEntitiesChecks.Disk()
@@ -250,7 +252,6 @@ class MacCollector(_Collector):
 
 
 class DebianCollector(_Collector):
-
     """
         Collector executing Debian/Ubuntu commands and getting useful values.
     """
@@ -293,6 +294,8 @@ class DebianCollector(_Collector):
         hostEntity = crEntitiesHost.Infos()
 
         # Number of CPU/CPU cores
+        ncpu = 1
+
         try:
             ncpu = multiprocessing.cpu_count()
         except (ImportError, NotImplementedError):
