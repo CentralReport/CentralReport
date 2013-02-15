@@ -228,7 +228,7 @@ class Pages:
             allChecksDisk = []
 
             for disk in Checks.last_check_disk.checks:
-            # TODO: Find a better solution to decode UTF8
+                # TODO: Find a better solution to decode UTF8
                 checkDisk = {
                     'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
                     'free': crUtilsText.convertByte(disk.free),

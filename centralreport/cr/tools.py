@@ -124,7 +124,8 @@ class Config:
         for config_section in Config._CR_CONFIG_VALUES:
             for config_value in Config._CR_CONFIG_VALUES[config_section]:
                 try:
-                    Config._CR_CONFIG_VALUES[config_section][config_value] = Config.config.get(config_section, config_value)
+                    Config._CR_CONFIG_VALUES[config_section][config_value] = \
+                        Config.config.get(config_section, config_value)
 
                 except ConfigParser.NoSectionError:
                     config_must_be_updated = True
@@ -168,9 +169,7 @@ class Config:
 
             for config_value in config_section_vars:
                 try:
-                    Config.config.set(config_section,
-                                      config_value,
-                                      Config._CR_CONFIG_VALUES[config_section][config_value])
+                    Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
                     crLog.writeError('Error writing config value: ' + config_section + '/' + config_value)
 
