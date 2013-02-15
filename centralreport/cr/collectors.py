@@ -233,8 +233,9 @@ class MacCollector(_Collector):
                 disk_free = int(line_dict['Available']) * MacCollector.BLOCKBYTES_TO_BYTES
 
                 # Getting user friendly name
-                disk_name = crSystem.executeCommand('diskutil info "' + line_dict[
-                    'Filesystem'] + '" | grep "Volume Name" | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
+                disk_name = crSystem.executeCommand('diskutil info "' + line_dict['Filesystem'] + '"'
+                                                    ' | grep "Volume Name"'
+                                                    ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
 
                 # Using new check entity
                 checkDisk = crEntitiesChecks.Disk()
