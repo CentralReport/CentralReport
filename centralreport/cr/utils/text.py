@@ -40,7 +40,7 @@ def numberSeparators(number, separator=' '):
 
     # Verify if the var "number" have a decimal part.
     if len(str_number) > 1:
-        return str_number[0] + '.' + str_number[1]
+        return "%s.%s" % (str_number[0], str_number[1])
 
     return str_number[0]
 

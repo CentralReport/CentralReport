@@ -26,7 +26,7 @@ class Config:
     CR_VERSION_MAJOR = 0
     CR_VERSION_MINOR = 1
     CR_VERSION_REVISION = 0
-    CR_VERSION = str(CR_VERSION_MAJOR) + "." + str(CR_VERSION_MINOR) + "." + str(CR_VERSION_REVISION)
+    CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
     CR_CONFIG_PATH = '/etc'  # Config file location
     CR_CONFIG_FILE = 'centralreport.cfg'
@@ -129,15 +129,15 @@ class Config:
 
                 except ConfigParser.NoSectionError:
                     config_must_be_updated = True
-                    crLog.writeError('Config section does not exist in the file: ' + config_section)
+                    crLog.writeError('Config section does not exist in the file: %s' % config_section)
 
                 except ConfigParser.NoOptionError:
                     config_must_be_updated = True
-                    crLog.writeError('Config value does not exist in the file: ' + config_value)
+                    crLog.writeError('Config value does not exist in the file: %s' % config_value)
 
                 except:
                     config_must_be_updated = True
-                    crLog.writeError('Error getting a config value: ' + config_section + '/' + config_value)
+                    crLog.writeError('Error getting a config value: %s/%s' % (config_section, config_value))
 
         # In this case, config file have been written by a last version of CR.
         # We must update it to include new sections or options.
@@ -160,9 +160,9 @@ class Config:
             try:
                 Config.config.add_section(config_section)
             except ConfigParser.DuplicateSectionError:
-                crLog.writeDebug('Section already exist: ' + config_section)
+                crLog.writeDebug('Section already exist: %s' % config_section)
             except:
-                crLog.writeError('Error creating new section: ' + config_section + ': ' + str(Exception.message))
+                crLog.writeError('Error creating new section: %s:%s' % (config_section, Exception.message))
 
             # Reading all values in this section
             config_section_vars = Config._CR_CONFIG_VALUES[config_section]
@@ -171,7 +171,7 @@ class Config:
                 try:
                     Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
-                    crLog.writeError('Error writing config value: ' + config_section + '/' + config_value)
+                    crLog.writeError('Error writing config value: %s/%s' % (config_section, config_value))
 
         try:
             Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))  # Writing the config file on filesystem...
@@ -188,7 +188,7 @@ class Config:
         try:
             return Config._CR_CONFIG_VALUES[section][variable]
         except:
-            raise NameError('Section or Variable not found! (' + section + '/' + variable + ')')
+            raise NameError('Section or Variable not found! (%s/%s)' % (section, variable))
 
     @staticmethod
     def setConfigValue(section, variable, value):
@@ -199,7 +199,7 @@ class Config:
         try:
             Config._CR_CONFIG_VALUES[section][variable] = value
         except:
-            raise NameError('Section or Variable not found! (' + section + '/' + variable + ')')
+            raise NameError('Section or Variable not found! (%s/%s)' % (section, variable))
 
     @staticmethod
     def determine_current_host():

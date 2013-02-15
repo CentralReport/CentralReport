@@ -53,7 +53,7 @@ class Checks(threading.Thread):
         except:
             self.tickPerformCheck = 60
 
-        crLog.writeDebug('Interval between two checks: ' + str(self.tickPerformCheck) + ' seconds')
+        crLog.writeDebug('Interval between two checks: %s seconds' % self.tickPerformCheck)
 
         self.start()
 
@@ -97,7 +97,7 @@ class Checks(threading.Thread):
                 # Wait 60 seconds before next checks...
 
                 crLog.writeDebug('All checks are done')
-                crLog.writeDebug('Next checks in ' + str(self.tickPerformCheck) + ' seconds...')
+                crLog.writeDebug('Next checks in %s seconds...' % self.tickPerformCheck)
 
                 self.tickCount = 0
 
