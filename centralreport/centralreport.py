@@ -138,6 +138,8 @@ class CentralReport(Daemon):
         """
 
         Config.CR_CONFIG_ENABLE_DEBUG_MODE = True
+        crLog.enable_debug_mode = True
+
         self.run()
 
 
