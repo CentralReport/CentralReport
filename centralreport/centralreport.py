@@ -36,9 +36,6 @@ class CentralReport(Daemon):
 
         isError = False  # If True, there are one or more errors when CentralReport is trying to start
 
-        # Preparing Logs
-        crLog.configLog(Config.CR_CONFIG_ENABLE_DEBUG_MODE)
-
         crLog.writeInfo('CentralReport is starting...')
 
         CentralReport.startingDate = datetime.datetime.now()  # Starting date
@@ -138,7 +135,7 @@ class CentralReport(Daemon):
         """
 
         Config.CR_CONFIG_ENABLE_DEBUG_MODE = True
-        crLog.enable_debug_mode = True
+        crLog.debug_mode_enabled = True
 
         self.run()
 

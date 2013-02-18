@@ -13,29 +13,36 @@ import sys
 
 # Our custom logger object. Initialized on the first use.
 crLogger = None
-enable_debug_mode = False
+debug_mode_enabled = False
 
 
 def getCrLogger():
+    """
+        Gets the Logger object. This function initializes it if it's the first call.
+    """
 
     global crLogger
-    global enable_debug_mode
+    global debug_mode_enabled
 
     if crLogger is None:
         # Using python rotating log function
         crLogger = logging.getLogger()
 
-        # In debug mode, log file must be in "/tmp", due to system permissions.
-        logFilename = '/var/log/centralreport.log' if enable_debug_mode is False else '/tmp/centralreport.log'
+        logLevel = logging.INFO if debug_mode_enabled is False else logging.DEBUG
+        crLogger.setLevel(logLevel)
 
-        crLogger.setLevel(logging.DEBUG)
-        customRotatingFileHandler = logging.handlers.RotatingFileHandler(logFilename, maxBytes=6000, backupCount=5)
+        # In debug mode, log file must be in "/tmp", due to system permissions.
+        logFilename = '/var/log/centralreport.log' if debug_mode_enabled is False else '/tmp/centralreport.log'
+
+        # Max size per log file: 5 MB (1024 * 1024 * 5). Max log files: 2.
+        customRotatingFileHandler = logging.handlers.RotatingFileHandler(logFilename, maxBytes=5242880, backupCount=2)
         customRotatingFileHandler.setFormatter(logging.Formatter(fmt='%(levelname)s \t %(asctime)s \t %(message)s',
                                                                  datefmt='%m/%d/%Y %I:%M:%S'))
 
         crLogger.addHandler(customRotatingFileHandler)
 
-        if enable_debug_mode:
+        if debug_mode_enabled:
+            # In debug mode, we display logs on the standard output too.
             customConsoleHandler = logging.StreamHandler(stream=sys.stdout)
             customConsoleHandler.setLevel(logging.DEBUG)
             customConsoleHandler.setFormatter(logging.Formatter(fmt='%(levelname)s \t %(asctime)s \t %(message)s',
@@ -44,30 +51,6 @@ def getCrLogger():
             crLogger.addHandler(customConsoleHandler)
 
     return crLogger
-
-
-def configLog(enable_debug_mode=False):
-    """
-        Configures the logging system (executed on time when CentralReport is starting).
-    """
-
-    LOG_FILENAME = '/var/log/centralreport.log'
-
-    # if not enable_debug_mode:
-    #     # Writing only "INFO" or more important messages in a log file (production environement)
-    #     # TODO: Replace "DEBUG" in production
-    #     # logging.basicConfig(filename=LOG_FILENAME,
-    #     #                     format='%(levelname)s \t %(asctime)s \t %(message)s',
-    #     #                     level=logging.DEBUG,
-    #     #                     datefmt='%m/%d/%Y %I:%M:%S')
-    #
-    #
-    # else:
-    #     # In debug mode, we only display message on standard output.
-    #     logging.basicConfig(stream=sys.stdout,
-    #                         format='%(levelname)s \t %(asctime)s \t %(message)s',
-    #                         level=logging.DEBUG,
-    #                         datefmt='%m/%d/%Y %H:%M:%S')
 
 
 def writeDebug(text):
