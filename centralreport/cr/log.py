@@ -34,7 +34,7 @@ def get_cr_logger():
         # In debug mode, log file must be in "/tmp", due to system permissions.
         log_filename = '/var/log/centralreport.log' if debug_mode_enabled is False else '/tmp/centralreport.log'
 
-        # Max size per log file: 5 MB (1024 * 1024 * 5). Number of log files will be kept for archive: 2.
+        # Max size per log file: 5 MB (1024 * 1024 * 5). 2 files will be kept as archive.
         custom_rotating_fileHandler = logging.handlers.RotatingFileHandler(log_filename,
                                                                            maxBytes=5242880,
                                                                            backupCount=2)
@@ -59,6 +59,7 @@ def get_cr_logger():
 def writeDebug(text):
     """
         Writes a debug message. Only useful for testing and debugging purposes.
+        Only written in config file and stdout when debug mode is enabled.
     """
     get_cr_logger().debug(text)
 
@@ -72,7 +73,7 @@ def writeInfo(text):
 
 def writeError(text):
     """
-        Writes an error message: an anormal situation, but non-critical.
+        Writes an error message: an abnormal situation, but non-critical.
         Will be written in the current log file.
     """
     get_cr_logger().error(text)
