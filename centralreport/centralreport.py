@@ -76,7 +76,7 @@ class CentralReport(Daemon):
 
                 except KeyboardInterrupt:
                     # Stopping CR
-                    crLog.log_fatal('KeyboardInterrupt exception. Stopping CentralReport...')
+                    crLog.log_critical('KeyboardInterrupt exception. Stopping CentralReport...')
                     CentralReport.isRunning = False
                     self.stop()
         else:

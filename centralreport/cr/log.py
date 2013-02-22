@@ -39,8 +39,7 @@ def get_cr_logger():
                                                                            maxBytes=5242880,
                                                                            backupCount=2)
 
-        custom_rotating_fileHandler.setFormatter(logging.Formatter(fmt='%(levelname)s \t %(asctime)s \t %(message)s',
-                                                                   datefmt='%m/%d/%Y %I:%M:%S'))
+        custom_rotating_fileHandler.setFormatter(_formatLogger())
 
         cr_logger.addHandler(custom_rotating_fileHandler)
 
@@ -48,8 +47,7 @@ def get_cr_logger():
             # In debug mode, we display logs on the standard output too.
             custom_console_handler = logging.StreamHandler(stream=sys.stdout)
             custom_console_handler.setLevel(logging.DEBUG)
-            custom_console_handler.setFormatter(logging.Formatter(fmt='%(levelname)s \t %(asctime)s \t %(message)s',
-                                                                  datefmt='%m/%d/%Y %I:%M:%S'))
+            custom_console_handler.setFormatter(_formatLogger())
 
             cr_logger.addHandler(custom_console_handler)
 
@@ -58,38 +56,47 @@ def get_cr_logger():
 
 def log_debug(text):
     """
-        Writes a debug message. Only useful for testing and debugging purposes.
-        Only written in config file and stdout when debug mode is enabled.
+        Adds a record at the DEBUG level.
+        Useful to write in the config file and on the stdout when debug mode is enabled.
     """
     get_cr_logger().debug(text)
 
 
 def log_info(text):
     """
-        Writes a standard message. Will be written in the current log file.
+        Adds a record at the INFO level.
+        Useful at anytime.
     """
     get_cr_logger().info(text)
 
 
+def log_warning(text):
+    """
+        Adds a record at the WARNING level.
+        Useful when the current process is not breaking the application but requires some attention.
+    """
+    get_cr_logger().warning(text)
+
+
 def log_error(text):
     """
-        Writes an error message: an abnormal situation, but non-critical.
-        Will be written in the current log file.
+        Adds a record at the ERROR level.
+        Useful when the current process has to stop but does not require the application to stop too.
     """
     get_cr_logger().error(text)
 
 
 def log_critical(text):
     """
-        Writes a critical error. This error requires to stop the current action.
-        Will be written in the current log file.
+        Adds a record at the CRITICAL level.
+        Useful when the current process forces the application to stop.
     """
     get_cr_logger().critical(text)
 
 
-def log_fatal(text):
+def _formatLogger():
     """
-        Writes a fatal error. This error requires to stop current application.
-        Will be written in the current log file.
+        Returns the format of the Logger.
     """
-    get_cr_logger().fatal(text)
+
+    return logging.Formatter(fmt='[%(asctime)s] %(levelname)s: \t %(message)s', datefmt='%m/%d/%Y %I:%M:%S')
