@@ -12,6 +12,7 @@
 
 source ../bash/vars.sh
 source ../bash/functions.inc.sh
+source ../bash/log.inc.sh
 
 echo "------------------------------------------"
 echo "CentralReport dev tools installer"
@@ -31,39 +32,26 @@ if [ $? -ne 0 ]; then
     exit
 fi
 
-cd ../
-
-echo "Installing CherryPy"
-echo "Untaring CherryPy..."
-tar -xzvf ${CHERRYPY_TAR} -C thirdparties/
-
-echo "Installing CherryPy..."
-cd ${CHERRYPY_DIR};
-sudo python setup.py install
-cd ../../;
-
-echo "Deleting install files..."
-sudo rm -Rf ${CHERRYPY_DIR}
-
-echo "CherryPy is installed!"
-echo " "
-
+# First, we install CherryPy...
+displayAndExec "Installing CherryPy..." sudo easy_install CherryPy
+RETURN_CODE="$?"
+if [ ${RETURN_CODE} -ne 0 ]; then
+    return ${RETURN_CODE}
+fi
 
 # Then, installing Jinja2 Templates...
-echo "Installing Jinja2"
-echo "Untaring Jinja2..."
-tar -xzvf ${JINJA_TAR} -C thirdparties/
+displayAndExec "Installing Jinja 2..." sudo easy_install Jinja2
+RETURN_CODE="$?"
+if [ ${RETURN_CODE} -ne 0 ]; then
+    return ${RETURN_CODE}
+fi
 
-echo "Installing Jinja2..."
-cd ${JINJA_DIR};
-sudo python setup.py install
-cd ../../;
-
-echo "Deleting install files..."
-sudo rm -Rf ${JINJA_DIR}
-
-echo "Jinja2 is installed!"
-
+# Finally, installing Routes library...
+displayAndExec "Installing Routes..." sudo easy_install routes
+RETURN_CODE="$?"
+if [ ${RETURN_CODE} -ne 0 ]; then
+    return ${RETURN_CODE}
+fi
 
 sudo -k
 
