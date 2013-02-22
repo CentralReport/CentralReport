@@ -23,6 +23,6 @@ def datetimeToTimestamp(datetime):
         # Uses the local timestamp
         timestamp = int(time.mktime(datetime.timetuple()))
     except:
-        crLog.writeError('Error convert datetime to timestamp')
+        crLog.log_error('Error convert datetime to timestamp')
 
     return timestamp

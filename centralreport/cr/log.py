@@ -56,7 +56,7 @@ def get_cr_logger():
     return cr_logger
 
 
-def writeDebug(text):
+def log_debug(text):
     """
         Writes a debug message. Only useful for testing and debugging purposes.
         Only written in config file and stdout when debug mode is enabled.
@@ -64,14 +64,14 @@ def writeDebug(text):
     get_cr_logger().debug(text)
 
 
-def writeInfo(text):
+def log_info(text):
     """
         Writes a standard message. Will be written in the current log file.
     """
     get_cr_logger().info(text)
 
 
-def writeError(text):
+def log_error(text):
     """
         Writes an error message: an abnormal situation, but non-critical.
         Will be written in the current log file.
@@ -79,7 +79,7 @@ def writeError(text):
     get_cr_logger().error(text)
 
 
-def writeCritical(text):
+def log_critical(text):
     """
         Writes a critical error. This error requires to stop the current action.
         Will be written in the current log file.
@@ -87,7 +87,7 @@ def writeCritical(text):
     get_cr_logger().critical(text)
 
 
-def writeFatal(text):
+def log_fatal(text):
     """
         Writes a fatal error. This error requires to stop current application.
         Will be written in the current log file.

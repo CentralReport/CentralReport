@@ -36,7 +36,7 @@ class CentralReport(Daemon):
 
         isError = False  # If True, there are one or more errors when CentralReport is trying to start
 
-        crLog.writeInfo('CentralReport is starting...')
+        crLog.log_info('CentralReport is starting...')
 
         CentralReport.startingDate = datetime.datetime.now()  # Starting date
         CentralReport.configuration = Config()  # Getting config object
@@ -44,21 +44,21 @@ class CentralReport(Daemon):
         # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
-            crLog.writeInfo('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
+            crLog.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = crThreads.Checks()  # Launching checks thread
         else:
             isError = True
-            crLog.writeCritical('Sorry, but your OS is not supported yet...')
+            crLog.log_critical('Sorry, but your OS is not supported yet...')
 
         # Is webserver enabled?
         if not isError & crUtilsText.textToBool(Config.getConfigValue('Webserver', 'enable')):
-            crLog.writeInfo('Enabling the webserver')
+            crLog.log_info('Enabling the webserver')
             CentralReport.webserver_thread = WebServer()
         else:
-            crLog.writeInfo('Webserver is disabled by configuration file')
+            crLog.log_info('Webserver is disabled by configuration file')
 
         if not isError:
-            crLog.writeInfo('CentralReport started!')
+            crLog.log_info('CentralReport started!')
 
             while CentralReport.isRunning:
                 try:
@@ -69,41 +69,41 @@ class CentralReport(Daemon):
                             pf = file(self.pidfile, 'r')
                             pf.close()
                         except IOError:
-                            crLog.writeError('Pid file is not found. CentralReport must stop itself.')
+                            crLog.log_error('Pid file is not found. CentralReport must stop itself.')
                             CentralReport.isRunning = False
                             self.stop()
                     time.sleep(1)
 
                 except KeyboardInterrupt:
                     # Stopping CR
-                    crLog.writeFatal('KeyboardInterrupt exception. Stopping CentralReport...')
+                    crLog.log_fatal('KeyboardInterrupt exception. Stopping CentralReport...')
                     CentralReport.isRunning = False
                     self.stop()
         else:
-            crLog.writeError('Error launching CentralReport!')
+            crLog.log_error('Error launching CentralReport!')
 
     def stop(self):
         """
             Stops all threads, Daemon and kill CentralReport instance.
         """
 
-        crLog.writeInfo('Stopping CentralReport...')
+        crLog.log_info('Stopping CentralReport...')
         self.isRunning = False
 
         if CentralReport.webserver_thread is not None:
-            crLog.writeInfo('Stopping Webserver...')
+            crLog.log_info('Stopping Webserver...')
             CentralReport.webserver_thread.stop()
 
         if CentralReport.checks_thread is not None:
-            crLog.writeInfo('Stopping checks thread...')
+            crLog.log_info('Stopping checks thread...')
             crThreads.Checks.performChecks = False
 
-        crLog.writeInfo('Stopping daemon...')
+        crLog.log_info('Stopping daemon...')
 
         try:
             Daemon.stop(self)
         except:
-            crLog.writeInfo('PID file not found.')
+            crLog.log_info('PID file not found.')
 
         # In test mode, we only return 0 (exit can be personalized by others scripts)
         # But in production, we kill immediately the process.
@@ -165,10 +165,10 @@ if '__main__' == __name__:
             else:
                 print 'CentralReport is running with pid %s' % pid
         else:
-            crLog.writeError("usage: %s start|stop|restart|status" % sys.argv[0])
+            crLog.log_error("usage: %s start|stop|restart|status" % sys.argv[0])
             sys.exit(2)
         sys.exit(0)
 
     else:
-        crLog.writeError("usage: %s start|stop|restart|status" % sys.argv[0])
+        crLog.log_error("usage: %s start|stop|restart|status" % sys.argv[0])
         sys.exit(2)

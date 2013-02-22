@@ -288,7 +288,7 @@ class DebianCollector(_Collector):
                     try:
                         os_version = os_version_lines[i].split("=")[1].replace(' ', '')
                     except:
-                        crLog.writeError('Error getting Ubuntu version')
+                        crLog.log_error('Error getting Ubuntu version')
                         os_version = ''
 
         hostEntity = crEntitiesHost.Infos()
