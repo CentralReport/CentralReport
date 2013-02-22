@@ -91,9 +91,12 @@ if [ "install" == ${ACTUAL_MODE} ]; then
         if [ ${bit_error} -eq 1 ]; then
             # One or more error(s) append during installation.
             # We display a generic message: previous logs already the specific error message.
+            logConsole " "
             printLightBox red " "
             printLightBox red " Something went wrong when installing CentralReport!"
             printLightBox red " CentralReport isn't installed on this host."
+            printLightBox red " "
+            printLightBox red " Some logs have been written in ${ERROR_FILE}"
             printLightBox red " "
 
             logFile "Something went wrong when installing CentralReport, please consult previous logs."
@@ -127,6 +130,6 @@ fi
 
 # End of program
 logConsole " "
-logInfo " -- End of the program -- "
+logInfo " -- End of the install program -- "
 
 exit 0

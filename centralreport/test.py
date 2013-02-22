@@ -14,7 +14,6 @@ import os
 
 import centralreport
 
-
 print '--- CentralReport debug mode. ---'
 print 'This tool is only for debug purpose. For running CR in production env, use python centralreport.py start instead.'
 print '---------------------------------'

@@ -80,9 +80,12 @@ if [ $? -eq 0 ]; then
         # We display a generic message: previous logs already the specific error message.
         logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
 
+        logConsole " "
         printLightBox red " "
         printLightBox red " Error uninstalling CentralReport!"
         printLightBox red " CentralReport may still be installed on this host"
+        printLightBox red " "
+        printLightBox red " Some logs have been written in ${ERROR_FILE}"
         printLightBox red " "
 
     else
@@ -95,8 +98,8 @@ if [ $? -eq 0 ]; then
         printLightBox blue " CentralReport has been deleted from your host."
         printLightBox blue " It's sad, but you're welcome!"
         printLightBox blue " "
-        printLightBox blue " PS: Thanks for your interest in CentralReport!"
-        printLightBox blue " "
+        printLightBox blue " PS:"
+        printLightBox blue " Thanks for your interest in CentralReport!"
         printLightBox blue " One of the best ways you can help us improve CentralReport is to let us know "
         printLightBox blue " about any problems you could have found."
         printLightBox blue " You can find CR developers at http://github.com/miniche/CentralReport"
@@ -110,6 +113,6 @@ fi
 
 # End of program
 logConsole " "
-logInfo " -- End of the program -- "
+logInfo " -- End of the uninstall program -- "
 
 exit 0

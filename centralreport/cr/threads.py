@@ -37,7 +37,7 @@ class Checks(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        crLog.writeDebug('ThreadChecks is starting...')  # Standard output
+        crLog.log_debug('ThreadChecks is starting...')  # Standard output
 
         # What is the current os?
 
@@ -53,7 +53,7 @@ class Checks(threading.Thread):
         except:
             self.tickPerformCheck = 60
 
-        crLog.writeDebug('Interval between two checks: %s seconds' % self.tickPerformCheck)
+        crLog.log_debug('Interval between two checks: %s seconds' % self.tickPerformCheck)
 
         self.start()
 
@@ -68,26 +68,26 @@ class Checks(threading.Thread):
 
         while Checks.performChecks:
             if self.tickPerformCheck <= self.tickCount:
-                crLog.writeDebug('---- New check -----')
+                crLog.log_debug('---- New check -----')
 
                 # Checking CPU
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_cpu_check')):
-                    crLog.writeDebug('Doing a CPU check...')
+                    crLog.log_debug('Doing a CPU check...')
                     Checks.last_check_cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_memory_check')):
-                    crLog.writeDebug('Doing a memory check...')
+                    crLog.log_debug('Doing a memory check...')
                     Checks.last_check_memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_load_check')):
-                    crLog.writeDebug('Doing a load average check...')
+                    crLog.log_debug('Doing a load average check...')
                     Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
                 # Checking disks informations
                 if crUtilsText.textToBool(Config.getConfigValue('Checks', 'enable_disks_check')):
-                    crLog.writeDebug('Doing a disk check....')
+                    crLog.log_debug('Doing a disk check....')
                     Checks.last_check_disk = self.MyCollector.get_disks()
 
                 # Updating last check date...
@@ -96,8 +96,8 @@ class Checks(threading.Thread):
 
                 # Wait 60 seconds before next checks...
 
-                crLog.writeDebug('All checks are done')
-                crLog.writeDebug('Next checks in %s seconds...' % self.tickPerformCheck)
+                crLog.log_debug('All checks are done')
+                crLog.log_debug('Next checks in %s seconds...' % self.tickPerformCheck)
 
                 self.tickCount = 0
 
