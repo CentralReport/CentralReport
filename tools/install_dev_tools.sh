@@ -11,8 +11,8 @@
 # It's be very helpfull on a dev host.
 
 source ../bash/vars.sh
-source ../bash/functions.inc.sh
 source ../bash/log.inc.sh
+source ../bash/functions.inc.sh
 
 echo "------------------------------------------"
 echo "CentralReport dev tools installer"
