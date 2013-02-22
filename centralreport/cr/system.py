@@ -11,7 +11,7 @@ import shlex
 import subprocess
 
 
-def executeCommand(str_command):
+def execute_command(str_command):
     """
         This function executes an os command. str_command can contain pipes, executed as subcommands.
         If your command contains vars with a space, use " " to escape words (eg: "Volume Name")

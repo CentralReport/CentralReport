@@ -23,7 +23,7 @@ class Cpu:
         self.system = float(0)
         self.user = float(0)
 
-    def jsonSerialize(self):
+    def json_serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -50,7 +50,7 @@ class Disk:
         self.unix_name = ''
         self.used = float(0)
 
-    def jsonSerialize(self):
+    def json_serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -78,7 +78,7 @@ class LoadAverage:
         self.last15m = float(0)
         self.uptime = int(0)  # Uptime in seconds
 
-    def jsonSerialize(self):
+    def json_serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -104,12 +104,12 @@ class Memory:
         self.free = float(0)
         self.inactive = float(0)
         self.resident = float(0)
-        self.swapFree = float(0)
-        self.swapSize = float(0)
-        self.swapUsed = float(0)
+        self.swap_free = float(0)
+        self.swap_size = float(0)
+        self.swap_used = float(0)
         self.total = float(0)
 
-    def jsonSerialize(self):
+    def json_serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -120,8 +120,8 @@ class Memory:
             'free': self.free,
             'inactive': self.inactive,
             'resident': self.resident,
-            'swap_free': self.swapFree,
-            'swap_size': self.swapSize,
-            'swap_used': self.swapUsed,
+            'swap_free': self.swap_free,
+            'swap_size': self.swap_size,
+            'swap_used': self.swap_used,
             'total': self.total
             })

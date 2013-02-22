@@ -21,40 +21,40 @@ class Infos:
 
         # TODO: move it in CPU check.
 
-        self.cpuModel = ''
-        self.cpuCount = 1
+        self.cpu_model = ''
+        self.cpu_count = 1
 
         self.date = datetime.datetime.now()
         self.hostname = ''
 
         # Unix/Linux attributes
 
-        self.kernelName = ''
-        self.kernelVersion = ''
+        self.kernel_name = ''
+        self.kernel_version = ''
 
         # OS informations
 
-        self.osName = ''
-        self.osVersion = ''
+        self.os_name = ''
+        self.os_version = ''
 
         self.language = 'Python'  # CentralReport app language
         self.model = ''  # Only for Mac OS
         self.os = ''
         self.uuid = ''
 
-    def jsonSerialize(self):
+    def json_serialize(self):
         """
             Serializes this entity in JSON.
         """
 
         return json.dumps({
             'architecture': self.architecture,
-            'cpuCount': self.cpuCount,
-            'cpuModel': self.cpuModel,
+            'cpu_count': self.cpu_count,
+            'cpu_model': self.cpu_model,
             'date': self.date.strftime('%s'),
             'hostname': self.hostname,
-            'kernel_name': self.kernelName,
-            'kernel_version': self.kernelVersion,
+            'kernel_name': self.kernel_name,
+            'kernel_version': self.kernel_version,
             'model': self.model,
             'language': self.language,
             'os': self.os,
@@ -72,7 +72,7 @@ class Disks:
         self.checks = list()
         self.date = datetime.datetime.now()
 
-    def jsonSerialize(self):
+    def json_serialize(self):
         """
             Serializes this entity in JSON.
         """

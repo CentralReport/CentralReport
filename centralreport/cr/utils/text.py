@@ -10,7 +10,7 @@
 import math
 
 
-def removeSpecialsCharacters(text):
+def remove_specials_characters(text):
     """
         Removes specials characters in string (\n, \r and \l).
     """
@@ -22,7 +22,7 @@ def removeSpecialsCharacters(text):
     return text
 
 
-def numberSeparators(number, separator=' '):
+def add_number_separators(number, separator=' '):
     """
         Adds a separator every 3 digits in the number.
     """
@@ -36,7 +36,7 @@ def numberSeparators(number, separator=' '):
     if len(str_number[0]) <= 3:
         str_number[0] = str_number[0]
     else:
-        str_number[0] = numberSeparators(str_number[0][:-3]) + separator + str_number[0][-3:]
+        str_number[0] = add_number_separators(str_number[0][:-3]) + separator + str_number[0][-3:]
 
     # Verify if the var "number" have a decimal part.
     if len(str_number) > 1:
@@ -45,7 +45,7 @@ def numberSeparators(number, separator=' '):
     return str_number[0]
 
 
-def textToBool(text):
+def convert_text_to_bool(text):
     """
         Converts a text to a boolean.
     """
@@ -58,7 +58,7 @@ def textToBool(text):
     return False
 
 
-def secondsToPhraseTime(seconds):
+def convert_seconds_to_phrase_time(seconds):
     """
         Converts seconds to a phrase time (ex: 65 = 1 minute 5 seconds).
     """
@@ -105,7 +105,7 @@ def secondsToPhraseTime(seconds):
     return str(result_string)
 
 
-def convertByte(byte_to_convert):
+def convert_byte(byte_to_convert):
     """
         Converts byte to most biggest unit.
     """
