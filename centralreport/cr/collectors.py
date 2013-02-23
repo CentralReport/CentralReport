@@ -234,8 +234,8 @@ class MacCollector(_Collector):
 
                 # Getting user friendly name
                 disk_name = system.execute_command('diskutil info "' + line_dict['Filesystem'] + '"'
-                                                                                                 ' | grep "Volume Name"'
-                                                                                                 ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
+                                                   ' | grep "Volume Name"'
+                                                   ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
 
                 # Using new check entity
                 check_disk = checks.Disk()
