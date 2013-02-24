@@ -7,33 +7,30 @@
 Version Alpha 0.2.0 (not released yet)
     In development
 
-    - #25: Improved install and uninstall
+    - Feature #27: Added "cr.system" module
+
+    - Feature #35: [WIP] Webservices
+
+    - Feature #40: Added this changelog :-)
+
+    - Improvement #25: Improved install and uninstall
             * All lines in the console doesn't exceed 80 columns width
               (bash and config.py)
             * Added default values in config.py script
             * Added new "lightbox" feature to display beautiful messages in bash
 
-    - #27: Added "cr.system" module
-        * Added function to execute system commands with subprocess.Popen.
-          Now, all commands are parsed before execution and are cut if necessary.
-          For example, you can write: system.execute_command('ls -l | grep toto')
-          directly, without cutting this command to many subcommands.
 
-    - #30: Updated Bootstrap from 2.2.1 to 2.3.0
+    - Improvement #30: Updated Bootstrap from 2.2.1 to 2.3.0
 
-    - #33: Improved log functions
+    - Improvement #33: Improved log functions
         * Python Logger is now automatically configured on the first call of
           one logging function
         * Added support for rotating log files. Each log files can't exceed 5 MB,
           and we retain a single backup.
 
-    - #35: [WIP] Webservices
+    - Improvement #38: [WIP] PEP 8 refactors
 
-    - #38: [WIP] PEP 8 refactors
-
-    - #39: [WIP] Improved install dev tools
-
-    - #40: And... added this changelog :-)
+    - Fix #39: [WIP] Improved install dev tools
 
 
 --------------------------------------------------------------
