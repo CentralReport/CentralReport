@@ -278,7 +278,7 @@ function debian_user_verify {
 function debian_user_new {
     # Adds the CentralReport user for security purposes
 
-    useradd --system --home /usr/local/bin/centralreport/ --shell /bin/sh --user-group --comment "CentralReport Daemon" centralreport
+    useradd --system --home /usr/local/lib/centralreport/ --shell /bin/sh --user-group --comment "CentralReport Daemon" centralreport
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne 0 ]; then
