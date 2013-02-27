@@ -11,7 +11,7 @@
 ### END INIT INFO
 
 # Path to centralreport executable
-CENTRALREPORT_BIN=/usr/local/bin/centralreport/centralreport.py
+CENTRALREPORT_BIN=/usr/local/bin/centralreport
 
 # Carry out specific functions when asked to by the system
 case "$1" in
@@ -34,7 +34,7 @@ case "$1" in
         python ${CENTRALREPORT_BIN} status
         ;;
     *)
-        echo "Usage: /etc/init.d/centralreport.sh {start|stop|restart|status}"
+        echo "Usage: /etc/init.d/centralreport {start|stop|restart|status}"
         exit 1
         ;;
 esac

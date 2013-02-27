@@ -151,7 +151,7 @@ function macos_remove_startup_plist {
 function macos_cp_bin {
     # Copy CentralReport files in the right directory.
 
-    # It's possible that /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
+    # In some cases, /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
     if [ ! -d "/usr/local" ]; then
         sudo mkdir /usr/local
     fi
@@ -191,6 +191,54 @@ function macos_cp_startup_plist {
         return 0
     fi
 }
+
+# --
+# Related to CentralReport user
+# --
+
+function macos_user_verify {
+    # Checks if the CentralReport user already exist, or not
+    # Returns 0 if the CR user doesn't exist
+
+    RETURN_USER=""
+    dscl . -list /Users | grep centralreport >> ${RETURN_USER}
+    if [ ${RETURN_USER} == "" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function macos_user_new {
+    # Adds the CentralReport user for security purposes
+
+    useradd --system --home /usr/local/bin/centralreport/ --shell /bin/sh --user-group --comment "CentralReport Daemon" centralreport
+    RETURN_CODE="$?"
+
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        logConsole " "
+        logError "Error creating the CentralReport user (Error code: ${RETURN_CODE}"
+        exit 1
+    fi
+
+    exit 0
+}
+
+function macos_user_del {
+    # Deletes the CentralReport user
+
+    userdel centralreport
+    RETURN_CODE="$?"
+
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        logConsole " "
+        logError "Error deleting the CentralReport user (Error code: ${RETURN_CODE}"
+        exit 1
+    fi
+
+    exit 0
+}
+
 
 # --
 # Install procedure
