@@ -19,6 +19,7 @@ source ../bash/functions.inc.sh
 # Can be updated as your needs
 declare -a LISTE='([0]="CherryPy" [1]="Jinja2" [2]="Routes")'
 #=============================================================================
+clear
 
 printLightBox blue "---------------------- CentralReport dev tools installer -----------------------"
 printLightBox blue  " "
@@ -39,12 +40,12 @@ fi
 
 if [ ${CURRENT_OS} == ${OS_MAC} ]; then
     echo " "
-    echo "Please use an administrator password to install all tools on this Mac"
+    echo " Please use an administrator password to install all tools on this Mac"
     sudo -v
 
     if [ $? -ne 0 ]; then
         printLightBox red " "
-        printLightBox red "ERROR - Incorrect root password. Script aborted."
+        printLightBox red " ERROR - Incorrect root password. Script aborted."
         printLightBox red " "
         exit
     fi
@@ -57,8 +58,8 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
         RETURN_CODE="$?"
         if [ ${RETURN_CODE} -ne 0 ]; then
             printLightBox red " "
-            printLightBox red "Woops... Something went wrong installing ${LISTE[${i}]}"
-            printLightBox red "Read the log file in ${ERROR_FILE} for further informations"
+            printLightBox red " Woops... Something went wrong installing ${LISTE[${i}]}"
+            printLightBox red " Read the log file in ${ERROR_FILE} for further informations"
             printLightBox red " "
             sudo -k
             exit
@@ -72,7 +73,7 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
 elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     if [[ $EUID -ne 0 ]]; then
         printLightBox red " "
-        printLightBox red "You must be root to install development tools!"
+        printLightBox red " You must be root to install development tools!"
         printLightBox red " "
         exit 1
     fi
@@ -83,7 +84,7 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         printLightBox red " "
-        printLightBox red "Woops... Something went wrong untaring Setuptools"
+        printLightBox red " Woops... Something went wrong untaring Setuptools"
         printLightBox red " "
         exit
     fi
@@ -94,7 +95,7 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     cd ../../;
     if [ ${RETURN_CODE} -ne 0 ]; then
         printLightBox red " "
-        printLightBox red "Woops... Something went wrong installing Setuptools"
+        printLightBox red " Woops... Something went wrong installing Setuptools"
         printLightBox red " "
         exit
     fi
@@ -103,7 +104,7 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         printLightBox red " "
-        printLightBox red "Woops... Something went wrong deleting installation files"
+        printLightBox red " Woops... Something went wrong deleting installation files"
         printLightBox red " "
         exit
     fi
@@ -116,8 +117,8 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
         RETURN_CODE="$?"
         if [ ${RETURN_CODE} -ne 0 ]; then
             printLightBox red " "
-            printLightBox red "Woops... Something went wrong installing ${LISTE[${i}]}"
-            printLightBox red "Read the log file in ${ERROR_FILE} for further informations"
+            printLightBox red " Woops... Something went wrong installing ${LISTE[${i}]}"
+            printLightBox red " Read the log file in ${ERROR_FILE} for further informations"
             printLightBox red " "
             exit
         fi
