@@ -45,7 +45,7 @@ def get_cr_logger():
 
         if debug_mode_enabled:
             # In debug mode, we display logs on the standard output too.
-            custom_console_handler = logging.StreamHandler(stream=sys.stdout)
+            custom_console_handler = logging.StreamHandler(sys.stdout)
             custom_console_handler.setLevel(logging.DEBUG)
             custom_console_handler.setFormatter(_formatLogger())
 
