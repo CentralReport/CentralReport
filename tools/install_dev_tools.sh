@@ -72,7 +72,7 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
 elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     if [[ $EUID -ne 0 ]]; then
         printLightBox red " "
-        printLightBox red "You must be root to uninstall CentralReport!"
+        printLightBox red "You must be root to install development tools!"
         printLightBox red " "
         exit 1
     fi
