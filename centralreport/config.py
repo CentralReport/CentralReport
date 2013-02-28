@@ -31,9 +31,9 @@ if __name__ == '__main__':
 
         daemon = CentralReport(Config.CR_PID_FILE)
         if not daemon.status():
-            centralReportRunningBefore = False
+            central_report_running_before = False
         else:
-            centralReportRunningBefore = True
+            central_report_running_before = True
 
             try:
                 print 'Stopping CentralReport...'
@@ -52,67 +52,67 @@ if __name__ == '__main__':
         print 'locally, without being registered on our online platform'
         print '(http://centralreport.net)'
 
-        validEnableWebServer = False
-        while not validEnableWebServer:
-            resultEnableWebServer = raw_input('Do you want to enable the internal web server? [Y/n] ')
+        valid_enable_webserver = False
+        while not valid_enable_webserver:
+            result_enable_webserver = raw_input('Do you want to enable the internal web server? [Y/n] ')
 
             # Default value, if empty
-            if len(resultEnableWebServer) == 0:
-                resultEnableWebServer = "y"
+            if len(result_enable_webserver) == 0:
+                result_enable_webserver = "y"
 
             # Config setters
-            if 'y' == resultEnableWebServer.lower()[:1]:
-                validEnableWebServer = True
-                Config.setConfigValue('Webserver', 'enable', True)
+            if 'y' == result_enable_webserver.lower()[:1]:
+                valid_enable_webserver = True
+                Config.set_config_value('Webserver', 'enable', True)
 
-            elif 'n' == resultEnableWebServer.lower()[:1]:
-                validEnableWebServer = True
+            elif 'n' == result_enable_webserver.lower()[:1]:
+                valid_enable_webserver = True
                 Config.config_webserver_enable = False
-                Config.setConfigValue('Webserver', 'enable', False)
+                Config.set_config_value('Webserver', 'enable', False)
 
             else:
                 print 'We do not understand your answer. Please use "yes" or "no"'
 
         # If the webserver is enabled, we can ask the default port for it.
-        if bool(Config.getConfigValue('Webserver', 'enable')):
+        if bool(Config.get_config_value('Webserver', 'enable')):
             print '\n'
             print 'Default port is 8080. You can choose a custom port if you want.'
 
-            validPort = False
-            resultPortInt = 0
+            valid_port = False
+            result_port_int = 0
 
-            while not validPort:
-                resultPort = raw_input('Web server port: [8080] ')
+            while not valid_port:
+                result_port = raw_input('Web server port: [8080] ')
 
                 # Default value
-                if len(resultPort) == 0:
-                    resultPort = 8080
+                if len(result_port) == 0:
+                    result_port = 8080
 
                 try:
-                    resultPortInt = int(resultPort)
+                    result_port_int = int(result_port)
                     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
                     try:
-                        s.connect(('127.0.0.1', int(resultPort)))
+                        s.connect(('127.0.0.1', int(result_port)))
                     except socket.error, e:
-                        validPort = True
+                        valid_port = True
                     else:
                         s.close()
-                        print 'Port %s is already used on this host. Please define a free port.' % resultPort
-                        validPort = False
+                        print 'Port %s is already used on this host. Please define a free port.' % result_port
+                        valid_port = False
 
                 except ValueError:
-                    validPort = False
+                    valid_port = False
                     print 'You must enter a valid number!'
 
-            Config.setConfigValue('Webserver', 'port', resultPortInt)
+            Config.set_config_value('Webserver', 'port', result_port_int)
 
         print '\n'
         print 'Thanks! Writing the new config file...'
-        config.writeConfigFile()
+        config.write_config_file()
 
         # Checking if CentralReport was previously running.
-        if centralReportRunningBefore:
+        if central_report_running_before:
             print '\n'
             print 'Restarting CentralReport...'
             daemon.start()

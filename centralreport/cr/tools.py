@@ -13,7 +13,7 @@ import platform
 
 import uuid
 
-import cr.log as crLog
+from cr import log
 
 
 class Config:
@@ -94,24 +94,24 @@ class Config:
         Config.determine_current_host()
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
-            crLog.log_debug('Mac config')
+            log.log_debug('Mac config')
         else:
-            crLog.log_debug('Linux config')
+            log.log_debug('Linux config')
 
         # Managing config file
         if os.path.isfile(Config.CR_CONFIG_FULL_PATH):
-            crLog.log_debug('Configuration file: Found. Reading it.')
-            self.readConfigFile()
+            log.log_debug('Configuration file: Found. Reading it.')
+            self.read_config_file()
         else:
-            crLog.log_info('Configuration file: Not found. Creating it.')
-            self.writeConfigFile()
+            log.log_info('Configuration file: Not found. Creating it.')
+            self.write_config_file()
 
-    def readConfigFile(self):
+    def read_config_file(self):
         """
             Reads the configuration file.
         """
 
-        crLog.log_debug('Reading the config file...')
+        log.log_debug('Reading the config file...')
 
         # Using Python ConfigParser module to read the file
         Config.config.read(Config.CR_CONFIG_FULL_PATH)
@@ -129,40 +129,40 @@ class Config:
 
                 except ConfigParser.NoSectionError:
                     config_must_be_updated = True
-                    crLog.log_error('Config section does not exist in the file: %s' % config_section)
+                    log.log_error('Config section does not exist in the file: %s' % config_section)
 
                 except ConfigParser.NoOptionError:
                     config_must_be_updated = True
-                    crLog.log_error('Config value does not exist in the file: %s' % config_value)
+                    log.log_error('Config value does not exist in the file: %s' % config_value)
 
                 except:
                     config_must_be_updated = True
-                    crLog.log_error('Error getting a config value: %s/%s' % (config_section, config_value))
+                    log.log_error('Error getting a config value: %s/%s' % (config_section, config_value))
 
         # In this case, config file have been written by a last version of CR.
         # We must update it to include new sections or options.
         if config_must_be_updated:
-            self.writeConfigFile()
+            self.write_config_file()
 
-    def writeConfigFile(self):
+    def write_config_file(self):
         """
             Writes the actual configuration into the config file.
         """
 
-        crLog.log_info('Writing the config file...')
+        log.log_info('Writing the config file...')
 
         # Generating uuid if empty
-        if '' == Config.getConfigValue('General', 'uuid'):
-            Config.setConfigValue('General', 'uuid', uuid.uuid1())
+        if '' == Config.get_config_value('General', 'uuid'):
+            Config.set_config_value('General', 'uuid', uuid.uuid1())
 
         # Writing conf file. Reading all sections defined in the config...
         for config_section in Config._CR_CONFIG_VALUES:
             try:
                 Config.config.add_section(config_section)
             except ConfigParser.DuplicateSectionError:
-                crLog.log_debug('Section already exist: %s' % config_section)
+                log.log_debug('Section already exist: %s' % config_section)
             except:
-                crLog.log_error('Error creating new section: %s:%s' % (config_section, Exception.message))
+                log.log_error('Error creating new section: %s:%s' % (config_section, Exception.message))
 
             # Reading all values in this section
             config_section_vars = Config._CR_CONFIG_VALUES[config_section]
@@ -171,16 +171,16 @@ class Config:
                 try:
                     Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
-                    crLog.log_error('Error writing config value: %s/%s' % (config_section, config_value))
+                    log.log_error('Error writing config value: %s/%s' % (config_section, config_value))
 
         try:
             Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))  # Writing the config file on filesystem...
 
         except IOError:
-            crLog.log_error('/!\ Error writing config file. Using the default config')
+            log.log_error('/!\ Error writing config file. Using the default config')
 
     @staticmethod
-    def getConfigValue(section, variable):
+    def get_config_value(section, variable):
         """
             Gets a config value.
         """
@@ -191,7 +191,7 @@ class Config:
             raise NameError('Section or Variable not found! (%s/%s)' % (section, variable))
 
     @staticmethod
-    def setConfigValue(section, variable, value):
+    def set_config_value(section, variable, value):
         """
             Adds a new value to a config variable, in a defined section
         """
