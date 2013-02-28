@@ -9,7 +9,6 @@
 
 # This file contains all functions to manage CR install/unistall on a Debian/Ubuntu distribution.
 
-source vars.sh
 
 # --
 # CentralReport daemon functions
@@ -217,7 +216,7 @@ function debian_cp_lib {
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-          displayError "Error creating CentralReport lib dir at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
+          logError "Error creating CentralReport lib dir at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
           return ${RETURN_CODE}
     else
         displayAndExec "Copying CentralReport libraries in the good directory..." cp -f -R centralreport ${CR_LIB_DIR_RELATIVE}
@@ -284,10 +283,10 @@ function debian_user_new {
     if [ ${RETURN_CODE} -ne 0 ]; then
         logConsole " "
         logError "Error creating the CentralReport user (Error code: ${RETURN_CODE}"
-        exit 1
+        return 1
     fi
 
-    exit 0
+    return 0
 }
 
 function debian_user_del {
@@ -299,10 +298,10 @@ function debian_user_del {
     if [ ${RETURN_CODE} -ne 0 ]; then
         logConsole " "
         logError "Error deleting the CentralReport user (Error code: ${RETURN_CODE}"
-        exit 1
+        return 1
     fi
 
-    exit 0
+    return 0
 }
 
 # --
@@ -315,7 +314,7 @@ function debian_install {
     if [[ $EUID -ne 0 ]]; then
         logConsole " "
         logError "Installation can only be performed if the current user has administrative privileges!"
-        exit 1
+        return 1
     fi
 
     # Uninstall previsous installation, if exist.
