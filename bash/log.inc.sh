@@ -57,6 +57,26 @@ function printLightBox() {
 
 }
 
+function printBox(){
+
+    LIGHTBOX_COLOR="$1"
+    LIGHTBOX_TEXT="$2"
+
+    OIFS=$IFS
+    IFS='| '
+    IFS=${IFS:0:1}
+    TEXT_ARRAY=( ${LIGHTBOX_TEXT} )
+
+    printLightBox ${LIGHTBOX_COLOR} " "
+    for LIGNE in "${TEXT_ARRAY[@]}"
+    do
+        printLightBox ${LIGHTBOX_COLOR} " ${LIGNE}"
+    done
+    printLightBox ${LIGHTBOX_COLOR} " "
+
+    IFS=${OIFS};
+}
+
 # Writes a message on the error output and in the log file
 function logError() {
     logConsole " "

@@ -21,20 +21,13 @@ declare -a LISTE='([0]="CherryPy" [1]="Jinja2" [2]="Routes")'
 #=============================================================================
 clear
 
-printLightBox blue "---------------------- CentralReport dev tools installer -----------------------"
-printLightBox blue  " "
-printLightBox blue  " Welcome! This script will install development tools on your host."
-printLightBox blue  " If you want more details, please visit http://github.com/miniche/CentralReport"
-printLightBox blue  " "
+printBox blue "--------------------- CentralReport dev tools installer -----------------------|  | Welcome! This script will install development tools on your host.| If you want more details, please visit http://github.com/miniche/CentralReport"
 
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-    printLightBox red " "
-    printLightBox red " ERROR!"
-    printLightBox red " The install is only designed for Mac OS, Debian and Ubuntu."
-    printLightBox red " Support for other OS will come soon!"
-    printLightBox red " "
-
+    printBox red " ERROR!
+    The install is only designed for Mac OS, Debian and Ubuntu.
+    Support for other OS will come soon!"
     exit 1
 fi
 
@@ -44,9 +37,7 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
     sudo -v
 
     if [ $? -ne 0 ]; then
-        printLightBox red " "
-        printLightBox red " ERROR - Incorrect root password. Script aborted."
-        printLightBox red " "
+        printBox red "ERROR - Incorrect root password. Script aborted."
         exit
     fi
 
@@ -57,10 +48,7 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
         displayAndExec "Installing ${LISTE[${i}]}..." sudo easy_install ${LISTE[${i}]}
         RETURN_CODE="$?"
         if [ ${RETURN_CODE} -ne 0 ]; then
-            printLightBox red " "
-            printLightBox red " Woops... Something went wrong installing ${LISTE[${i}]}"
-            printLightBox red " Read the log file in ${ERROR_FILE} for further informations"
-            printLightBox red " "
+            printBox red "Woops... Something went wrong installing ${LISTE[${i}]}| Read the log file in ${ERROR_FILE} for further informations"
             sudo -k
             exit
         fi
@@ -72,9 +60,7 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
 
 elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     if [[ $EUID -ne 0 ]]; then
-        printLightBox red " "
-        printLightBox red " You must be root to install development tools!"
-        printLightBox red " "
+        printBox red "You must be root to install development tools!"
         exit 1
     fi
 
@@ -83,9 +69,7 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     displayAndExec "Untaring Setuptools..." tar -xzvf ../${SETUPTOOLS_TAR} -C ../thirdparties/
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
-        printLightBox red " "
-        printLightBox red " Woops... Something went wrong untaring Setuptools"
-        printLightBox red " "
+        printBox red "Woops... Something went wrong untaring Setuptools"
         exit
     fi
 
@@ -94,18 +78,14 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     RETURN_CODE="$?"
     cd ../../;
     if [ ${RETURN_CODE} -ne 0 ]; then
-        printLightBox red " "
-        printLightBox red " Woops... Something went wrong installing Setuptools"
-        printLightBox red " "
+        printBox red "Woops... Something went wrong installing Setuptools"
         exit
     fi
 
     displayAndExec "Deleting installation files..." rm -Rf ${SETUPTOOLS_DIR}
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
-        printLightBox red " "
-        printLightBox red " Woops... Something went wrong deleting installation files"
-        printLightBox red " "
+        printBox red "Woops... Something went wrong deleting installation files"
         exit
     fi
 
@@ -116,10 +96,7 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
         displayAndExec "Installing ${LISTE[${i}]}..." easy_install ${LISTE[${i}]}
         RETURN_CODE="$?"
         if [ ${RETURN_CODE} -ne 0 ]; then
-            printLightBox red " "
-            printLightBox red " Woops... Something went wrong installing ${LISTE[${i}]}"
-            printLightBox red " Read the log file in ${ERROR_FILE} for further informations"
-            printLightBox red " "
+            printLightBox red "Woops... Something went wrong installing ${LISTE[${i}]}| Read the log file in ${ERROR_FILE} for further informations"
             exit
         fi
     done
