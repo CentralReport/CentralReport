@@ -23,15 +23,14 @@ logFile "-------------- Starting CentralReport installer  --------------"
 # Cleaning console and then display the lightbox
 clear
 
-printLightBox blue  "--------------------------- CentralReport installer ----------------------------"
-printLightBox blue  " "
-printLightBox blue  " Welcome! This script will install CentralReport on your host."
-printLightBox blue  " If you want more details, please visit http://github.com/miniche/CentralReport"
-printLightBox blue  " "
-printLightBox blue  " When installing CentralReport, we may ask for your password."
-printLightBox blue  " It will allow CentralReport to write files and directories such as"
-printLightBox blue  " the project binaries, logs, etc."
-printLightBox blue  " "
+printBox blue  "-------------------------- CentralReport installer ----------------------------| \
+| \
+Welcome! This script will install CentralReport on your host.| \
+If you want more details, please visit http://github.com/miniche/CentralReport| \
+| \
+When installing CentralReport, we may ask for your password.| \
+It will allow CentralReport to write files and directories such as| \
+the project binaries, logs, etc."
 
 # In the future, it will be possible to have different modes.
 if [ -n "$1" ]; then
@@ -42,11 +41,9 @@ fi
 # Others Linux distributions coming soon.
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-    printLightBox red " "
-    printLightBox red " ERROR!"
-    printLightBox red " The install is only designed for Mac OS, Debian and Ubuntu."
-    printLightBox red " Support for other OS will come soon!"
-    printLightBox red " "
+    printBox red " ERROR!| \
+The install is only designed for Mac OS, Debian and Ubuntu.| \
+Support for other OS will come soon!"
 
     exit 1
 fi
@@ -54,9 +51,7 @@ fi
 # Python is mandatory for CentralReport
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    printLightBox red " "
-    printLightBox red " Error! Python must be installed on your host to execute CentralReport."
-    printLightBox red " "
+    printBox red " Error! Python must be installed on your host to execute CentralReport."
 
     exit 1
 fi
@@ -92,12 +87,10 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             # One or more error(s) append during installation.
             # We display a generic message: previous logs already the specific error message.
             logConsole " "
-            printLightBox red " "
-            printLightBox red " Something went wrong when installing CentralReport!"
-            printLightBox red " CentralReport isn't installed on this host."
-            printLightBox red " "
-            printLightBox red " Some logs have been written in ${ERROR_FILE}"
-            printLightBox red " "
+            printBox red " Something went wrong when installing CentralReport!| \
+CentralReport isn't installed on this host.| \
+| \
+Some logs have been written in ${ERROR_FILE}"
 
             logFile "Something went wrong when installing CentralReport, please consult previous logs."
 
@@ -108,24 +101,20 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
             # Adding a space before the lightbox to separate previous logs with the success message.
             logConsole " "
-            printLightBox blue " "
-            printLightBox blue " CentralReport is now installed!"
-            printLightBox blue " For more options, you can edit the config file at /etc/centralreport.cfg"
-            printLightBox blue " "
-            printLightBox blue " You can find more help at http://github.com/miniche/CentralReport."
-            printLightBox blue " Have fun!"
-            printLightBox blue " "
+            printBox blue " CentralReport is now installed!| \
+For more options, you can edit the config file at /etc/centralreport.cfg| \
+| \
+You can find more help at http://github.com/miniche/CentralReport.| \
+Have fun!"
 
         fi
      else
         logInfo "Installation aborted on user demand."
     fi
 else
-    printLightBox red " "
-    printLightBox red " ERROR!"
-    printLightBox red " Unknown argument"
-    printLightBox red " Use: install.sh [install]"
-    printLightBox red " "
+    printBox red " ERROR!| \
+Unknown argument| \
+Use: install.sh [install]"
 fi
 
 # End of program

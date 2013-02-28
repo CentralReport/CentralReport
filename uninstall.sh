@@ -20,29 +20,25 @@ logFile "-------------- Starting CentralReport uninstaller  --------------"
 # Cleaning console and display the header lightbox
 clear
 
-printLightBox blue "-------------------------- CentralReport uninstaller ---------------------------"
-printLightBox blue " "
-printLightBox blue " Welcome! This script will uninstall CentralReport on your host."
-printLightBox blue " If you want more details, please visit http://github.com/miniche/CentralReport"
-printLightBox blue " "
+printBox blue "------------------------- CentralReport uninstaller ---------------------------| \
+| \
+Welcome! This script will uninstall CentralReport on your host.| \
+If you want more details, please visit http://github.com/miniche/CentralReport"
 
 # Getting current OS to check if uninstall will work for this host
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-    printLightBox red " "
-    printLightBox red " ERROR!"
-    printLightBox red " The uninstall is only designed for Mac OS, Debian and Ubuntu."
-    printLightBox red " Support for other OS will come soon!"
-    printLightBox red " "
+
+    printBox red "ERROR!| \
+The uninstall is only designed for Mac OS, Debian and Ubuntu.| \
+Support for other OS will come soon!"
 
     exit 1
 fi
 
 getPythonIsInstalled
 if [ $? -ne 0 ]; then
-    printLightBox red " "
-    printLightBox red " Error! Python must be installed on your host to remove CentralReport."
-    printLightBox red " "
+    printBox red "Error! Python must be installed on your host to remove CentralReport."
 
     exit 1
 fi
@@ -81,12 +77,10 @@ if [ $? -eq 0 ]; then
         logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
 
         logConsole " "
-        printLightBox red " "
-        printLightBox red " Error uninstalling CentralReport!"
-        printLightBox red " CentralReport may still be installed on this host"
-        printLightBox red " "
-        printLightBox red " Some logs have been written in ${ERROR_FILE}"
-        printLightBox red " "
+        printBox red " Error uninstalling CentralReport!| \
+CentralReport may still be installed on this host| \
+| \
+Some logs have been written in ${ERROR_FILE}"
 
     else
         # Nothing wrong happened while uninstalling. We log this, and then we display the "sad" green lightbox.
@@ -94,17 +88,15 @@ if [ $? -eq 0 ]; then
 
         # Adding a space before the lightbox to separate previous logs with the success message.
         logConsole " "
-        printLightBox blue " "
-        printLightBox blue " CentralReport has been deleted from your host."
-        printLightBox blue " It's sad, but you're welcome!"
-        printLightBox blue " "
-        printLightBox blue " PS:"
-        printLightBox blue " Thanks for your interest in CentralReport!"
-        printLightBox blue " One of the best ways you can help us improve CentralReport is to let us know "
-        printLightBox blue " about any problems you could have found."
-        printLightBox blue " You can find CR developers at http://github.com/miniche/CentralReport"
-        printLightBox blue " Thanks!"
-        printLightBox blue " "
+        printBox blue "CentralReport has been deleted from your host.| \
+It's sad, but you're welcome!| \
+| \
+PS:| \
+Thanks for your interest in CentralReport!| \
+One of the best ways you can help us improve CentralReport is to let us know| \
+about any problems you could have found.| \
+You can find CR developers at http://github.com/miniche/CentralReport| \
+Thanks!"
 
     fi
 else
