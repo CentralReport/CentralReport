@@ -58,16 +58,16 @@ function printLightBox() {
 }
 
 function trim() {
-    local var=$1
-    var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
-    var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
-    echo -n "$var"
+    local TEXT="$1"
+    TEXT="${TEXT#"${TEXT%%[![:space:]]*}"}"   # remove leading whitespace characters
+    TEXT="${TEXT%"${TEXT##*[![:space:]]}"}"   # remove trailing whitespace characters
+    echo -n "${TEXT}"
 }
 
 function printBox(){
 
-    LIGHTBOX_COLOR=$1
-    LIGHTBOX_TEXT=$2
+    LIGHTBOX_COLOR="$1"
+    LIGHTBOX_TEXT="$2"
 
     OIFS=$IFS
     IFS='| '
@@ -77,8 +77,8 @@ function printBox(){
     printLightBox ${LIGHTBOX_COLOR} " "
     for LIGNE in "${TEXT_ARRAY[@]}"
     do
-        trimmed=$(trim ${LIGNE})
-        printLightBox ${LIGHTBOX_COLOR} " ${trimmed}"
+        TRIMMED=$(trim ${LIGNE})
+        printLightBox ${LIGHTBOX_COLOR} " ${TRIMMED}"
     done
     printLightBox ${LIGHTBOX_COLOR} " "
 
