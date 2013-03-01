@@ -13,12 +13,12 @@
 # DebianCollector class
 
 import datetime
-
 import multiprocessing
 import platform
+import re
 import socket
 import time
-from os import getloadavg
+import os
 
 from cr.entities import checks
 from cr.entities import host
@@ -63,35 +63,69 @@ class MacCollector(_Collector):
 
         hostname = text.remove_specials_characters(system.execute_command('hostname -s'))
 
-        architecture = system.execute_command('sysctl -n hw.machine')
+        architecture = platform.machine()
 
-        kernel = system.execute_command('sysctl -n kern.ostype')
-        kernel_v = system.execute_command('uname -r')
+        kernel = platform.system()
+        kernel_v = platform.release()
 
         os_name = system.execute_command('sw_vers -productName')
         os_version = system.execute_command('sw_vers -productVersion')
 
         model = system.execute_command('sysctl -n hw.model')
 
-        ncpu = system.execute_command('sysctl -n hw.ncpu')
+        # Number of CPU/CPU cores
+        ncpu = 1
+
+        try:
+            ncpu = multiprocessing.cpu_count()
+        except (ImportError, NotImplementedError):
+            try:
+                ncpu = system.execute_command('sysctl -n hw.ncpu')
+            except IOError:
+                pass
+
         cpu_model = system.execute_command('sysctl -n machdep.cpu.brand_string')
 
         # Using new HostEntity
-        hostEntity = host.Infos()
+        host_entity = host.Infos()
 
-        hostEntity.uuid = Config.get_config_value('General', 'uuid')
-        hostEntity.os = Config.HOST_CURRENT
-        hostEntity.hostname = hostname
-        hostEntity.architecture = architecture
-        hostEntity.model = model
-        hostEntity.kernel_name = kernel
-        hostEntity.kernel_version = kernel_v
-        hostEntity.os_name = os_name
-        hostEntity.os_version = os_version
-        hostEntity.cpu_model = cpu_model
-        hostEntity.cpu_count = ncpu
+        host_entity.uuid = Config.get_config_value('General', 'uuid')
+        host_entity.os = Config.HOST_CURRENT
+        host_entity.hostname = hostname
+        host_entity.architecture = architecture
+        host_entity.model = model
+        host_entity.kernel_name = kernel
+        host_entity.kernel_version = kernel_v
+        host_entity.os_name = os_name
+        host_entity.os_version = os_version
+        host_entity.cpu_model = cpu_model
+        host_entity.cpu_count = ncpu
 
-        return hostEntity
+        return host_entity
+
+    def get_cpu(self):
+        """
+            Gets current CPU usage.
+        """
+
+        # iostat - entrees / sorties
+        iostat = system.execute_command('iostat -c 2')
+
+        # Formatage de iostat
+        iostat_split = iostat.splitlines()
+        headers = iostat_split[1].split()
+        values = iostat_split[3].split()
+
+        # Dictionnaire de valeur
+        dict_iostat = dict(zip(headers, values))
+
+        # Use your new CpuCheckEntity!
+        cpu_check = checks.Cpu()
+        cpu_check.idle = dict_iostat['id']
+        cpu_check.system = dict_iostat['sy']
+        cpu_check.user = dict_iostat['us']
+
+        return cpu_check
 
     def get_memory(self):
         """
@@ -132,64 +166,26 @@ class MacCollector(_Collector):
 
         return memory_check
 
-    def get_cpu(self):
-        """
-            Gets current CPU usage.
-        """
-
-        # iostat - entrees / sorties
-        iostat = system.execute_command('iostat -c 2')
-
-        # Formatage de iostat
-        iostat_split = iostat.splitlines()
-        headers = iostat_split[1].split()
-        values = iostat_split[3].split()
-
-        # Dictionnaire de valeur
-        dict_iostat = dict(zip(headers, values))
-
-        # Use your new CpuCheckEntity!
-        cpu_check = checks.Cpu()
-        cpu_check.idle = dict_iostat['id']
-        cpu_check.system = dict_iostat['sy']
-        cpu_check.user = dict_iostat['us']
-
-        return cpu_check
-
     def get_loadaverage(self):
         """
-            Gets the host load average.
+            Gets load average.
         """
 
-        dict_iostat = self.get_IO_stats()
+        loadavg_result = os.getloadavg()
+
+        # On va spliter en fonction des espaces
+        dict_loadavg = loadavg_result
 
         # Prepare return entity
         load_average_entity = checks.LoadAverage()
-        load_average_entity.last1m = dict_iostat['1m']
-        load_average_entity.last5m = dict_iostat['5m']
-        load_average_entity.last15m = dict_iostat['15m']
+        # Split after 2 decimals
+        load_average_entity.last1m = "%.2f" % dict_loadavg[0]
+        load_average_entity.last5m = "%.2f" % dict_loadavg[1]
+        load_average_entity.last15m = "%.2f" % dict_loadavg[2]
 
         load_average_entity.uptime = self.get_uptime()
 
         return load_average_entity
-
-    def get_IO_stats(self):
-        """
-            Gets IOStat dictionary.
-        """
-
-        # iostat - entrees / sorties
-        iostat = system.execute_command('iostat -c 2')
-
-        # Formatage de iostat
-        iostat_split = iostat.splitlines()
-        headers = iostat_split[1].split()
-        values = iostat_split[3].split()
-
-        # Dictionnaire de valeur
-        dict_iostat = dict(zip(headers, values))
-
-        return dict_iostat
 
     def get_uptime(self):
         """
@@ -241,7 +237,7 @@ class MacCollector(_Collector):
                 check_disk = checks.Disk()
                 check_disk.date = datetime.datetime.now()
                 check_disk.name = disk_name.lstrip()
-                check_disk.unix_namename = line_dict['Filesystem']
+                check_disk.unix_name = line_dict['Filesystem']
                 check_disk.size = disk_total
                 check_disk.used = disk_used
                 check_disk.free = disk_free
@@ -262,6 +258,9 @@ class DebianCollector(_Collector):
         """
 
         hostname = socket.gethostname()
+
+        architecture = platform.machine()
+
         kernel = platform.system()
         kernel_v = platform.release()
 
@@ -291,7 +290,8 @@ class DebianCollector(_Collector):
                         log.log_error('Error getting Ubuntu version')
                         os_version = ''
 
-        host_entity = host.Infos()
+        # TODO Find a way to find the computer model
+        #model = system.execute_command('sysctl -n hw.model')
 
         # Number of CPU/CPU cores
         ncpu = 1
@@ -304,13 +304,26 @@ class DebianCollector(_Collector):
             except IOError:
                 pass
 
+        cpu_infos = system.execute_command('cat /proc/cpuinfo | grep "model name"')
+        if "model name" in cpu_infos:
+            cpu_model = re.sub(".*model name.*:", "", cpu_infos, 1)
+        else:
+            cpu_model = 'CPU model unknown'
+
+        # Using new HostEntity
+        host_entity = host.Infos()
+
+        host_entity.uuid = Config.get_config_value('General', 'uuid')
         host_entity.os = Config.HOST_CURRENT
         host_entity.hostname = hostname
-        host_entity.cpu_count = ncpu
+        host_entity.architecture = architecture
+        #host_entity.model = model
         host_entity.kernel_name = kernel
         host_entity.kernel_version = kernel_v
         host_entity.os_name = os_name
         host_entity.os_version = os_version
+        host_entity.cpu_model = cpu_model
+        host_entity.cpu_count = ncpu
 
         return host_entity
 
@@ -386,7 +399,7 @@ class DebianCollector(_Collector):
             Gets load average.
         """
 
-        loadavg_result = getloadavg()
+        loadavg_result = os.getloadavg()
 
         # On va spliter en fonction des espaces
         dict_loadavg = loadavg_result
@@ -437,11 +450,11 @@ class DebianCollector(_Collector):
                 # Using new check entity
                 check_disk = checks.Disk()
                 check_disk.date = datetime.datetime.now()
-                check_disk.free = disk_free
                 check_disk.name = line_split[0]
-                check_disk.size = disk_total
                 check_disk.unix_name = line_split[0]
+                check_disk.size = disk_total
                 check_disk.used = disk_used
+                check_disk.free = disk_free
 
                 list_disks.checks.append(check_disk)
 
