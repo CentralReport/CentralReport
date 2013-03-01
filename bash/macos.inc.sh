@@ -12,6 +12,15 @@
 # --
 # CentralReport daemon functions
 # --
+
+#
+# Starts the CentralReport daemon
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_start_cr {
 
     logFile "Starting CentralReport..."
@@ -37,6 +46,14 @@ function macos_start_cr {
     fi
 }
 
+#
+# Stops the CentralReport daemon
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_stop_cr {
 
     logFile "Stopping CentralReport..."
@@ -63,7 +80,15 @@ function macos_stop_cr {
 # --
 # CentralReport config assistant
 # --
-function macos_config_assistant {
+
+#
+# Launchs the CentralReport configuration wizard
+#
+# PARAMETERS: None
+# RETURN:
+#   0 in all case
+#
+function macos_launch_config_assistant {
 
     logFile "Launching CentralReport configuration wizard..."
 
@@ -81,6 +106,14 @@ function macos_config_assistant {
 # Uninstall functions
 # --
 
+#
+# Removes the binary file
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_remove_bin {
 
     logFile "Removing CentralReport binary script..."
@@ -102,6 +135,14 @@ function macos_remove_bin {
     fi
 }
 
+#
+# Removes the CentralReport library
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_remove_lib {
 
     logFile "Removing CentralReport lib files..."
@@ -123,6 +164,14 @@ function macos_remove_lib {
     fi
 }
 
+#
+# Removes the configuration directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_remove_config {
 
     logFile "Removing CentralReport config file..."
@@ -144,6 +193,14 @@ function macos_remove_config {
     fi
 }
 
+#
+# Removes the CentralReport startup plist
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_remove_startup_plist {
 
     logFile "Removing startup plist..."
@@ -165,7 +222,14 @@ function macos_remove_startup_plist {
     return 0
 }
 
-
+#
+# Removes the directory which store the PID.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_remove_pid_directory {
 
     logFile "Removing PID directory..."
@@ -187,6 +251,14 @@ function macos_remove_pid_directory {
     return 0
 }
 
+#
+# Removes the directory which store log files.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_remove_log_directory {
 
     logFile "Removing log directory..."
@@ -212,8 +284,16 @@ function macos_remove_log_directory {
 # Install functions
 # --
 
+
+#
+# Copies the binary script is the good directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_cp_bin {
-    # Copy CentralReport binary script in the right directory.
     # In some cases, /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
     if [ ! -d "/usr/local" ]; then
         sudo mkdir /usr/local
@@ -242,8 +322,16 @@ function macos_cp_bin {
     fi
 }
 
+#
+# Copies the CentralReport library
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_cp_lib {
-    # Copy CentralReport libraries in the right directory.
+
     # In some cases, /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
     if [ ! -d "/usr/local" ]; then
         sudo mkdir /usr/local
@@ -272,9 +360,15 @@ function macos_cp_lib {
 
 }
 
-
+#
+# Copies the CentralReport startup plist for Launchd.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_cp_startup_plist {
-    # Copy startup plist for launchd in the right directory.
 
     sudo cp -f -v ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
     RETURN_CODE="$?"
@@ -287,10 +381,16 @@ function macos_cp_startup_plist {
     fi
 }
 
-
+#
+# Creates the directory which will store the PID directory
+# Important: CentralReport user and group must have already been created!
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function  macos_create_pid_directory {
-    # This function creates the directory used to store CR .pid file on the system.
-    # Important: CentralReport user and group must have already been created!
 
     if [ -d ${CR_PID_DIR} ]; then
         logFile "PID directory already exist!"
@@ -315,10 +415,16 @@ function  macos_create_pid_directory {
     return 0
 }
 
-
+#
+# Creates the directory which will store the logs
+# Important: CentralReport user and group must have already been created!
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function macos_create_log_directory {
-    # This function creates the directory used to store CR log files on the system.
-    # Important: CentralReport user and group must have already been created!
 
     if [ -d ${CR_LOG_DIR} ]; then
         logFile "Log directory already exist!"
@@ -347,21 +453,30 @@ function macos_create_log_directory {
 # Related to CentralReport user
 # --
 
+#
+# Adds the CentralReport user for security purposes
+# This function verifies if CR already exist or not and will also create a dedicated group.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport user now available
+#   The error code otherwise
+#
 function macos_user_new {
-    # Adds the CentralReport user for security purposes
-    # PS: This function will also create a dedicated group.
 
-    # Next: _centralreport user already exits?
-    # Next:     -> if not: find a UniqueID available in 0-499 (otherwise, exit)
-    # Next:         -> Be sure that the UniqueID found is really unique (otherwise, exit)
-    # Next:         -> _centralreport group already exists?
-    # Next:             -> if not, UniqueID is available in groups?
-    # Next:                -> if not, find a PrimaryGroupID available in 0-499
-    # Next:                -> Be sure the PrimaryGroupID found is really unique
-    # Next:             -> Create a new group with UGID or UID
-    # Next:             -> Be sure that the group is created
-    # Next:     -> Create a new user with UID
-    # Next:     -> Be sure that the user is created
+    # Scheme of this (big) function:
+
+    #   _centralreport user already exits?
+    #       -> if not: find a UniqueID available in 0-499 (otherwise, exit)
+    #           -> Be sure that the UniqueID found is really unique (otherwise, exit)
+    #           -> _centralreport group already exists?
+    #               -> if not, UniqueID is available in groups?
+    #                   -> if not, find a PrimaryGroupID available in 0-499
+    #                   -> Be sure the PrimaryGroupID found is really unique
+    #               -> Create a new group with UGID or UID
+    #               -> Be sure that the group is created
+    #       -> Create a new user with UID
+    #       -> Be sure that the user is created
 
 
     macos_user_verify
@@ -504,9 +619,16 @@ function macos_user_new {
     return 0
 }
 
-
+#
+# Deletes the CentralReport user from this host.
+# This function verifies if CR already exist or not.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport user deleted
+#   The error code otherwise
+#
 function macos_user_del {
-    # Deletes the CentralReport user
 
     macos_user_verify
     RETURN_CODE="$?"
@@ -520,10 +642,15 @@ function macos_user_del {
     return 0
 }
 
-
+#
+# Verifies if the CentralReport user is already available on this host.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport user doesn't exist
+#   1 = CentralReport user already exist
+#
 function macos_user_verify {
-    # Checks if the CentralReport user already exist, or not
-    # Returns 0 if the CR user doesn't exist. Returns the UniqueID otherwise.
 
     USER_UNIQUE_ID=$(dscl . -list /Users UniqueID | grep _centralreport | awk '{print $2}')
     if [ -z ${USER_UNIQUE_ID} ]; then
@@ -537,24 +664,14 @@ function macos_user_verify {
 # Related to CentralReport group
 # --
 
-function macos_group_new {
-    # Adds the CentralReport user for security purposes
-
-    RETURN_CODE="$?"
-    sudo dscl . -create /Groups/_centralreport
-    sudo dscl . -create /Groups/_centralreport PrimaryGroupID 1000
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        logConsole " "
-        logError "Error creating the CentralReport user (Error code: ${RETURN_CODE}"
-        return 1
-    fi
-
-    return 0
-}
-
-
+#
+# Deletes the CentralReport group from this host.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#
 function macos_group_del {
-    # Deletes the CentralReport group
 
     macos_group_verify
     RETURN_CODE="$?"
@@ -568,10 +685,15 @@ function macos_group_del {
     return 0
 }
 
-
+#
+# Verifies if the CentralReport group is already available on this host.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport group doesn't exist
+#   1 = CentralReport group already exist
+#
 function macos_group_verify {
-    # Checks if the CentralReport group already exist, or not
-    # Returns 0 if the CR group doesn't exist. Returns the PrimaryGroupID otherwise.
 
     UGID=$(dscl . -list /Groups PrimaryGroupID | grep _centralreport | awk '{print $2}')
     if [ -z ${UGID} ]; then
@@ -583,9 +705,17 @@ function macos_group_verify {
 }
 
 # --
-# Install procedure
+# Install/Uninstall procedures
 # --
 
+#
+# Launchs the CentralReport installer for Mac OS X.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport has been installed
+#   The error code otherwise
+#
 function macos_install {
 
     # Use root privileges with sudo.
@@ -708,10 +838,14 @@ function macos_install {
     return 0
 }
 
-# --
-# Uninstall procedure
-# --
-
+#
+# Launchs the CentralReport uninstall for Mac OS X.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport has been installed
+#   The error code otherwise
+#
 function macos_uninstall {
 
     echo -e "\n\nPlease use your administrator password to uninstall CentralReport on this Mac."

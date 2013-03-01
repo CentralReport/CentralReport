@@ -7,7 +7,13 @@
 # https://github.com/miniche/CentralReport/
 # ------------------------------------------------------------
 
-# Gets current OS (Linux distrib or Unix OS)
+#
+# Determines the current OS.
+# The current OS will be stored in "CURRENT_OS" var.
+#
+# PARAMETERS: None
+# RETURN: None
+#
 function getOS(){
 
     if [ "Darwin" == $(uname -s) ]; then
@@ -17,8 +23,14 @@ function getOS(){
     fi
 }
 
+#
 # Displays the python version (if python is available)
-# Returns 0 if python is available, 1 otherwise.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Python is not available on this host
+#   1 = Python is available
+#
 function getPythonIsInstalled {
 
     echo " "
@@ -32,9 +44,14 @@ function getPythonIsInstalled {
 
 }
 
+#
 # Displays an error message and exits the current function or program
-# First parameter: ERROR CODE
-# Second parameter: MESSAGE
+#
+# PARAMETERS:
+#   $1 = The error code
+#   $2 = The message
+# RETURN: None
+#
 function displayErrorAndExit() {
     local exitcode=$1
     shift
@@ -42,9 +59,14 @@ function displayErrorAndExit() {
     exit ${exitcode}
 }
 
+#
 # Displays the message with current status (.../ERR/OK), while executing the command.
-# First parameter: MESSAGE
-# Others parameters: COMMAND (! not |)
+#
+# PARAMETERS:
+#   $1 = The message to display
+#   $2..n = COMMAND (! not |)
+# RETURN: None
+#
 function displayAndExec() {
     local message=$1
     echo -n "[...] ${message}"
@@ -64,9 +86,15 @@ function displayAndExec() {
     return ${ret}
 }
 
+#
 # Checks if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
-# PARAMETER: a string
-# Returns 0 if true, 1 otherwise
+#
+# PARAMETERS:
+#   $1 = A string to test.
+# RETURN:
+#   0 = The answer is TRUE
+#   1 = The answer is NOT TRUE
+#
 function checkYesNoAnswer() {
 
     case "$1" in

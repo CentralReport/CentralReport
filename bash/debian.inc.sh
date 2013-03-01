@@ -13,6 +13,15 @@
 # --
 # CentralReport daemon functions
 # --
+
+#
+# Starts the CentralReport daemon
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_start_cr {
 
     printTitle "Starting CentralReport..."
@@ -38,6 +47,14 @@ function debian_start_cr {
     fi
 }
 
+#
+# Stops the CentralReport daemon
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_stop_cr {
 
     printTitle "Stopping CentralReport..."
@@ -62,7 +79,15 @@ function debian_stop_cr {
 # --
 # CentralReport config assistant
 # --
-function debian_config_assistant {
+
+#
+# Launchs the CentralReport configuration wizard
+#
+# PARAMETERS: None
+# RETURN:
+#   0 in all case
+#
+function debian_launch_config_assistant {
 
     logFile "Launching CentralReport configuration wizard..."
 
@@ -76,6 +101,15 @@ function debian_config_assistant {
 # --
 # Uninstall functions
 # --
+
+#
+# Removes the binary file
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_remove_bin {
 
     logFile "Removing CentralReport binary file..."
@@ -97,12 +131,20 @@ function debian_remove_bin {
     fi
 }
 
+#
+# Removes the CentralReport library
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_remove_lib {
 
-    logFile "Removing CentralReport lib files..."
+    logFile "Removing CentralReport library..."
 
     if [ -d ${CR_LIB_DIR} ]; then
-        displayAndExec "Removing existing CentralReport libraries..." rm -rf ${CR_LIB_DIR}
+        displayAndExec "Removing existing CentralReport library..." rm -rf ${CR_LIB_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -118,6 +160,14 @@ function debian_remove_lib {
     fi
 }
 
+#
+# Removes the configuration directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_remove_config {
 
     logFile "Removing CentralReport config dir..."
@@ -139,6 +189,14 @@ function debian_remove_config {
     fi
 }
 
+#
+# Removes the startup script
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_remove_startup_script {
 
     logFile "Removing startup script..."
@@ -170,6 +228,15 @@ function debian_remove_startup_script {
     fi
 }
 
+
+#
+# Removes the directory which store the PID.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_remove_pid_directory {
 
     logFile "Removing PID directory..."
@@ -191,6 +258,14 @@ function debian_remove_pid_directory {
     return 0
 }
 
+#
+# Removes the directory which store log files
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_remove_log_directory {
 
     logFile "Removing log directory..."
@@ -215,8 +290,17 @@ function debian_remove_log_directory {
 # --
 # Install functions
 # --
+
+#
+# Copies the binary script is the good directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_cp_bin {
-    # Copy CentralReport binary file in the right directory.
+
     # In some cases, /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
     if [ ! -d "/usr/local" ]; then
         mkdir /usr/local
@@ -244,6 +328,14 @@ function debian_cp_bin {
     fi
 }
 
+#
+# Copies the CentralReport library
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_cp_lib {
     # Copy CentralReport libraries in the right directory.
     # In some cases, /usr/local and /usr/local/bin doesn't exist. We will creating them in this case.
@@ -274,8 +366,15 @@ function debian_cp_lib {
 
 }
 
+#
+# Copies the CentralReport init.d script
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_cp_startup_script {
-    # Copy startup plist for launchd in the right directory.
 
     cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
     RETURN_CODE="$?"
@@ -298,9 +397,16 @@ function debian_cp_startup_script {
     fi
 }
 
+#
+# Creates the directory which will store the PID directory
+# Important: CentralReport user and group must have already been created!
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function  debian_create_pid_directory {
-    # This function creates the directory used to store CR .pid file on the system.
-    # Important: CentralReport user and group must have already been created!
 
     if [ -d ${CR_PID_DIR} ]; then
         logFile "PID directory already exist!"
@@ -325,10 +431,16 @@ function  debian_create_pid_directory {
     return 0
 }
 
-
+#
+# Creates the directory which will store the logs
+# Important: CentralReport user and group must have already been created!
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Success
+#   The error code otherwise
+#
 function debian_create_log_directory {
-    # This function creates the directory used to store CR log files on the system.
-    # Important: CentralReport user and group must have already been created!
 
     if [ -d ${CR_LOG_DIR} ]; then
         logFile "Log directory already exist!"
@@ -358,53 +470,95 @@ function debian_create_log_directory {
 # Related to CentralReport user
 # --
 
+#
+# Verifies if the CentralReport user is already available on this host.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport user doesn't exist
+#   1 = CentralReport user already exist
+#
 function debian_user_verify {
-    # Checks if the CentralReport user already exist, or not
-    # Returns 0 if the CR user doesn't exist
 
     RETURN_USER=""
     cat /etc/passwd | grep 'centralreport' >> ${RETURN_USER}
-    if [ ${RETURN_USER} == "" ]; then
+    if [ -z ${RETURN_USER} ]; then
         return 0
     else
         return 1
     fi
 }
 
+#
+# Adds the CentralReport user to his host.
+# This function verifies if CR already exist or not.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport user now available
+#   The error code otherwise
+#
 function debian_user_new {
-    # Adds the CentralReport user for security purposes
 
-    useradd --system --home /usr/local/lib/centralreport/ --shell /bin/sh --user-group --comment "CentralReport Daemon" centralreport
+    debian_user_verify
     RETURN_CODE="$?"
-
     if [ ${RETURN_CODE} -ne 0 ]; then
-        logConsole " "
-        logError "Error creating the CentralReport user (Error code: ${RETURN_CODE}"
-        return 1
+        logFile "CentralReport user already exist. Skipping this step."
+    else
+        useradd --system --home /usr/local/lib/centralreport/ --shell /bin/sh --user-group --comment "CentralReport Daemon" centralreport
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne 0 ]; then
+            logConsole " "
+            logError "Error creating the CentralReport user (Error code: ${RETURN_CODE}"
+            return ${RETURN_CODE}
+        fi
     fi
 
     return 0
 }
 
+#
+# Deletes the CentralReport user from this host.
+# This function verifies if CR already exist or not.
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport user deleted
+#   The error code otherwise
+#
 function debian_user_del {
-    # Deletes the CentralReport user
 
-    userdel centralreport
+    debian_user_verify
     RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -eq 0 ]; then
+        logFile "CentralReport user already deleted. Skipping this step."
+    else
+        userdel centralreport
+        RETURN_CODE="$?"
 
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        logConsole " "
-        logError "Error deleting the CentralReport user (Error code: ${RETURN_CODE}"
-        return 1
+        if [ ${RETURN_CODE} -ne 0 ]; then
+            logConsole " "
+            logError "Error deleting the CentralReport user (Error code: ${RETURN_CODE}"
+            return ${RETURN_CODE}
+        fi
     fi
 
     return 0
 }
 
 # --
-# Install procedure
+# Install/Uninstall procedure
 # --
 
+#
+# Launchs the CentralReport installer for Debian
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport has been installed
+#   The error code otherwise
+#
 function debian_install {
 
     # Install only can perform if current user has administrative privileges
@@ -522,7 +676,7 @@ function debian_install {
     clear
 
     # CR config assistant
-    debian_config_assistant
+    debian_launch_config_assistant
 
     debian_start_cr
     RETURN_CODE="$?"
@@ -532,11 +686,14 @@ function debian_install {
 
     return 0
 }
-
-# --
-# Uninstall procedure
-# --
-
+#
+# Launchs the CentralReport unistall for Debian
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport has been deleted from this host
+#   The error code otherwise
+#
 function debian_uninstall {
 
     # Uninstall only can perform if current user is root (or have administrative privileges)
