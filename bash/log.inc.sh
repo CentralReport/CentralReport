@@ -57,6 +57,51 @@ function printLightBox() {
 
 }
 
+#
+# Remove leading and trailing whitespace of a string
+#
+# PARAMETERS:
+#     $1 = text to trim
+# RETURN:
+#     The trimmed text
+#
+function trim() {
+    local TEXT="$1"
+    TEXT="${TEXT#"${TEXT%%[![:space:]]*}"}"  # remove leading whitespace characters
+    TEXT="${TEXT%"${TEXT##*[![:space:]]}"}"  # remove trailing whitespace characters
+    echo -n "${TEXT}"
+}
+
+#
+# Displays a pretty block of text in the color choised
+#
+# PARAMETERS:
+#     $1 = color of the box (red or blue)
+#     $2 = message to display
+# RETURN:
+#     The block of text in the standard output
+#
+function printBox(){
+
+    LIGHTBOX_COLOR="$1"
+    LIGHTBOX_TEXT="$2"
+
+    OIFS=$IFS
+    IFS='| '
+    IFS=${IFS:0:1}
+    TEXT_ARRAY=( ${LIGHTBOX_TEXT} )
+
+    printLightBox ${LIGHTBOX_COLOR} " "
+    for LIGNE in "${TEXT_ARRAY[@]}"
+    do
+        TRIMMED=$(trim ${LIGNE})
+        printLightBox ${LIGHTBOX_COLOR} " ${TRIMMED}"
+    done
+    printLightBox ${LIGHTBOX_COLOR} " "
+
+    IFS=${OIFS};
+}
+
 # Writes a message on the error output and in the log file
 function logError() {
     logConsole " "
