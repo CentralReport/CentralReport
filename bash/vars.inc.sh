@@ -19,7 +19,10 @@ CR_CONFIG_DIR=/etc/centralreport/
 
 CONFIG_ASSISTANT=/usr/local/lib/centralreport/config.py
 
-PID_FILE=/var/run/centralreport/centralreport.pid
+CR_PID_DIR=/var/run/centralreport
+CR_PID_FILE=/var/run/centralreport/centralreport.pid
+
+CR_LOG_DIR=/var/log/centralreport
 
 # OS
 CURRENT_OS=

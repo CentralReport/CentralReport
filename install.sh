@@ -8,11 +8,12 @@
 # ------------------------------------------------------------
 
 # Importing scripts...
-source bash/vars.sh
+source bash/vars.inc.sh
 source bash/log.inc.sh
 source bash/functions.inc.sh
-source bash/macos.inc.sh
+
 source bash/debian.inc.sh
+source bash/macos.inc.sh
 
 # Modes: only "install" yet ("check" mode will be added soon)
 ACTUAL_MODE=install

@@ -17,7 +17,7 @@ function debian_start_cr {
 
     printTitle "Starting CentralReport..."
 
-    if [ -f ${PID_FILE} ]; then
+    if [ -f ${CR_PID_FILE} ]; then
         logInfo "CentralReport is already running!"
         return 0
 
@@ -42,7 +42,7 @@ function debian_stop_cr {
 
     printTitle "Stopping CentralReport..."
 
-    if [ ! -f ${PID_FILE} ]; then
+    if [ ! -f ${CR_PID_FILE} ]; then
         logInfo "CentralReport is already stopped!"
         return 0
     else
@@ -170,6 +170,48 @@ function debian_remove_startup_script {
     fi
 }
 
+function debian_remove_pid_directory {
+
+    logFile "Removing PID directory..."
+
+    if [ -d ${CR_PID_DIR} ]; then
+        sudo rm -R -f ${CR_PID_DIR}
+        RETURN_CODE="$?"
+
+        if [ $? -ne "0" ]; then
+            logError "Error deleting pid directory at ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        else
+            logFile "PID directory deleted"
+        fi
+    else
+        logInfo "PID directory already deleted!"
+    fi
+
+    return 0
+}
+
+function debian_remove_log_directory {
+
+    logFile "Removing log directory..."
+
+    if [ -d ${CR_LOG_DIR} ]; then
+        sudo rm -R -f ${CR_LOG_DIR}
+        RETURN_CODE="$?"
+
+        if [ $? -ne "0" ]; then
+            logError "Error deleting log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        else
+            logFile "Log directory deleted"
+        fi
+    else
+        logInfo "Log directory already deleted!"
+    fi
+
+    return 0
+}
+
 # --
 # Install functions
 # --
@@ -219,7 +261,7 @@ function debian_cp_lib {
           logError "Error creating CentralReport lib dir at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
           return ${RETURN_CODE}
     else
-        displayAndExec "Copying CentralReport libraries in the good directory..." cp -f -R centralreport ${CR_LIB_DIR_RELATIVE}
+        cp -f -R centralreport ${CR_LIB_DIR_RELATIVE}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -235,7 +277,7 @@ function debian_cp_lib {
 function debian_cp_startup_script {
     # Copy startup plist for launchd in the right directory.
 
-    displayAndExec "Copying startup script in the good directory..." cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
+    cp -f -v ${STARTUP_DEBIAN_INSTALL} ${STARTUP_DEBIAN}
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
@@ -244,7 +286,7 @@ function debian_cp_startup_script {
     else
         chmod 755 ${STARTUP_DEBIAN}
 
-        displayAndExec "Registering startup script" update-rc.d centralreport defaults
+        update-rc.d centralreport defaults
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -254,6 +296,61 @@ function debian_cp_startup_script {
             return 0
         fi
     fi
+}
+
+function  debian_create_pid_directory {
+    # This function creates the directory used to store CR .pid file on the system.
+    # Important: CentralReport user and group must have already been created!
+
+    if [ -d ${CR_PID_DIR} ]; then
+        logFile "PID directory already exist!"
+    else
+        sudo mkdir ${CR_PID_DIR}
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne "0" ]; then
+            logError "Error creating the PID directory at ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        fi
+    fi
+
+    sudo chown -R _centralreport:daemon ${CR_PID_DIR}
+    RETURN_CODE="$?"
+
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error updating owner of ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
+        return ${RETURN_CODE}
+    fi
+
+    return 0
+}
+
+
+function debian_create_log_directory {
+    # This function creates the directory used to store CR log files on the system.
+    # Important: CentralReport user and group must have already been created!
+
+    if [ -d ${CR_LOG_DIR} ]; then
+        logFile "Log directory already exist!"
+    else
+        sudo mkdir ${CR_LOG_DIR}
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne "0" ]; then
+            logError "Error creating the log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        fi
+    fi
+
+    sudo chown -R _centralreport:wheel ${CR_LOG_DIR}
+    RETURN_CODE="$?"
+
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error updating owner of ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+        return ${RETURN_CODE}
+    fi
+
+    return 0
 }
 
 
@@ -318,21 +415,21 @@ function debian_install {
     fi
 
     # Uninstall previsous installation, if exist.
-    debian_stop_cr
+    displayAndExec "Stopping CentralReport..." debian_stop_cr
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
     # Delete CR bin files
-    debian_remove_bin
+    displayAndExec "Removing CentralReport binary script..." debian_remove_bin
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
     # Delete startup plist file
-    debian_remove_startup_script
+    displayAndExec "Removing CentralReport init.d script..." debian_remove_startup_script
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -340,13 +437,31 @@ function debian_install {
 
     printTitle "Starting installation..."
 
-    debian_cp_bin
+    displayAndExec "Copying CentralReport binary script..." debian_cp_bin
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
-    debian_cp_startup_script
+    displayAndExec "Copying CentralReport library..." debian_cp_lib
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    displayAndExec "Creating log directory..." debian_create_log_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    displayAndExec "Creating PID directory..." debian_create_pid_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    displayAndExec "Copying CentralReport init.d script..." debian_cp_startup_script
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -432,28 +547,42 @@ function debian_uninstall {
     fi
 
     # Check if CentralReport is already running, and stop it.
-    debian_stop_cr
-    RETURN_CODE="$?"
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        return ${RETURN_CODE}
-    fi
-
-    # Delete CR bin files
-    debian_remove_bin
-    RETURN_CODE="$?"
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        return ${RETURN_CODE}
-    fi
-
-    # Delete CR config file
-    debian_remove_config
+    displayAndExec "Stopping CentralReport..." debian_stop_cr
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
     # Delete startup plist file
-    debian_remove_startup_script
+    displayAndExec "Removing CentralReport init.d script..." debian_remove_startup_script
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CR bin files
+    displayAndExec "Removing CentralReport binary file..." debian_remove_bin
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CR config file
+    displayAndExec "Removing CentralReport config directory..." debian_remove_log_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CR config file
+    displayAndExec "Removing CentralReport PID directory..." debian_remove_pid_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CR config file
+    displayAndExec "Removing CentralReport user..." debian_user_del
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}

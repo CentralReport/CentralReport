@@ -16,7 +16,7 @@ function macos_start_cr {
 
     logFile "Starting CentralReport..."
 
-    if [ -f ${PID_FILE} ]; then
+    if [ -f ${CR_PID_FILE} ]; then
         logInfo "CentralReport is already running!"
         return 0
 
@@ -41,7 +41,7 @@ function macos_stop_cr {
 
     logFile "Stopping CentralReport..."
 
-    if [ ! -f ${PID_FILE} ]; then
+    if [ ! -f ${CR_PID_FILE} ]; then
         logInfo "CentralReport is already stopped!"
         return 0
     else
@@ -85,8 +85,8 @@ function macos_remove_bin {
 
     logFile "Removing CentralReport binary script..."
 
-    if [ -d ${CR_BIN_FILE} ]; then
-        displayAndExec "Removing existing binary script..." sudo rm -f ${CR_BIN_FILE}
+    if [ -f ${CR_BIN_FILE} ]; then
+        sudo rm -f ${CR_BIN_FILE}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -107,7 +107,7 @@ function macos_remove_lib {
     logFile "Removing CentralReport lib files..."
 
     if [ -d ${CR_LIB_DIR} ]; then
-        displayAndExec "Removing existing CentralReport libraries..." rm -rf ${CR_LIB_DIR}
+        sudo rm -rf ${CR_LIB_DIR}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -128,7 +128,7 @@ function macos_remove_config {
     logFile "Removing CentralReport config file..."
 
     if [ -f ${CONFIG_FILE} ]; then
-        displayAndExec "Removing existing config file..." sudo rm -f ${CONFIG_FILE}
+        sudo rm -f ${CONFIG_FILE}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -149,7 +149,7 @@ function macos_remove_startup_plist {
     logFile "Removing startup plist..."
 
     if [ -f ${STARTUP_PLIST} ]; then
-        displayAndExec "Removing existing startup plist file..." sudo rm -f ${STARTUP_PLIST}
+        sudo rm -f ${STARTUP_PLIST}
         RETURN_CODE="$?"
 
         if [ $? -ne "0" ]; then
@@ -157,12 +157,55 @@ function macos_remove_startup_plist {
             return ${RETURN_CODE}
         else
             logFile "Startup plist removed"
-            return 0
         fi
     else
         logInfo "Startup plist file not found!"
-        return 0
     fi
+
+    return 0
+}
+
+
+function macos_remove_pid_directory {
+
+    logFile "Removing PID directory..."
+
+    if [ -d ${CR_PID_DIR} ]; then
+        sudo rm -R -f ${CR_PID_DIR}
+        RETURN_CODE="$?"
+
+        if [ $? -ne "0" ]; then
+            logError "Error deleting pid directory at ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        else
+            logFile "PID directory deleted"
+        fi
+    else
+        logInfo "PID directory already deleted!"
+    fi
+
+    return 0
+}
+
+function macos_remove_log_directory {
+
+    logFile "Removing log directory..."
+
+    if [ -d ${CR_LOG_DIR} ]; then
+        sudo rm -R -f ${CR_LOG_DIR}
+        RETURN_CODE="$?"
+
+        if [ $? -ne "0" ]; then
+            logError "Error deleting log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        else
+            logFile "Log directory deleted"
+        fi
+    else
+        logInfo "Log directory already deleted!"
+    fi
+
+    return 0
 }
 
 # --
@@ -180,7 +223,7 @@ function macos_cp_bin {
     fi
 
 
-    displayAndExec "Copying CentralReport binary script in the good directory..." sudo cp -f utils/bin/centralreport ${CR_BIN_FILE}
+    sudo cp -f utils/bin/centralreport ${CR_BIN_FILE}
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
@@ -216,7 +259,7 @@ function macos_cp_lib {
           logError "Error creating CentralReport library directory at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
           return ${RETURN_CODE}
     else
-        displayAndExec "Copying CentralReport libraries in the good directory..." sudo cp -R -f centralreport ${CR_LIB_DIR}
+        sudo cp -R -f centralreport ${CR_LIB_DIR_RELATIVE}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -233,7 +276,7 @@ function macos_cp_lib {
 function macos_cp_startup_plist {
     # Copy startup plist for launchd in the right directory.
 
-    displayAndExec "Copying startup plist in the good directory..." sudo cp -f -v ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
+    sudo cp -f -v ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
@@ -242,6 +285,62 @@ function macos_cp_startup_plist {
     else
         return 0
     fi
+}
+
+
+function  macos_create_pid_directory {
+    # This function creates the directory used to store CR .pid file on the system.
+    # Important: CentralReport user and group must have already been created!
+
+    if [ -d ${CR_PID_DIR} ]; then
+        logFile "PID directory already exist!"
+    else
+        sudo mkdir ${CR_PID_DIR}
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne "0" ]; then
+            logError "Error creating the PID directory at ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        fi
+    fi
+
+    sudo chown -R _centralreport:daemon ${CR_PID_DIR}
+    RETURN_CODE="$?"
+
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error updating owner of ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
+        return ${RETURN_CODE}
+    fi
+
+    return 0
+}
+
+
+function macos_create_log_directory {
+    # This function creates the directory used to store CR log files on the system.
+    # Important: CentralReport user and group must have already been created!
+
+    if [ -d ${CR_LOG_DIR} ]; then
+        logFile "Log directory already exist!"
+    else
+        sudo mkdir ${CR_LOG_DIR}
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne "0" ]; then
+            logError "Error creating the log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        fi
+    fi
+
+    sudo chown -R _centralreport:wheel ${CR_LOG_DIR}
+    RETURN_CODE="$?"
+
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error updating owner of ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+        return ${RETURN_CODE}
+    fi
+
+    return 0
 }
 
 # --
@@ -500,21 +599,28 @@ function macos_install {
     printTitle "Removing any existing installation..."
 
     # Uninstall existing previous installation, if exist
-    macos_stop_cr
+    displayAndExec "Stopping CentralReport..." macos_stop_cr
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
-    # Delete CR bin files
-    macos_remove_bin
+    # Delete CR binary script
+    displayAndExec "Removing binary file..." macos_remove_bin
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CR lib files
+    displayAndExec "Removing CentralReport library..." macos_remove_lib
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
     # Delete startup plist file
-    macos_remove_startup_plist
+    displayAndExec "Removing startup plist..." macos_remove_startup_plist
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -522,25 +628,37 @@ function macos_install {
 
     printTitle "Installing CentralReport..."
 
-    macos_user_new
+    displayAndExec "Creating system user..." macos_user_new
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
-    macos_cp_bin
+    displayAndExec "Copying CentralReport binary file..." macos_cp_bin
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
-    macos_cp_lib
+    displayAndExec "Copying CentralReport library..." macos_cp_lib
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
-    macos_cp_startup_plist
+    displayAndExec "Creating log directory..." macos_create_log_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    displayAndExec "Creating PID directory..." macos_create_pid_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    displayAndExec "Copying CentralReport startup plist..." macos_cp_startup_plist
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
@@ -574,15 +692,15 @@ function macos_install {
     clear
 
     # CR config assistant
-    macos_config_assistant
-
-    logConsole " "
-    logInfo " ** Starting CentralReport... ** "
-    macos_start_cr
-    RETURN_CODE="$?"
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        return ${RETURN_CODE}
-    fi
+#    macos_config_assistant
+#
+#    logConsole " "
+#    logInfo " ** Starting CentralReport... ** "
+#    macos_start_cr
+#    RETURN_CODE="$?"
+#    if [ ${RETURN_CODE} -ne 0 ]; then
+#        return ${RETURN_CODE}
+#    fi
 
     # Deleting sudo privileges for this session...
     sudo -k
@@ -606,28 +724,63 @@ function macos_uninstall {
     printTitle "Removing CentralReport files and directories..."
 
     # Check if CentralReport is already running, and stop it.
-    macos_stop_cr
+    displayAndExec "Stopping CentralReport..." macos_stop_cr
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete startup plist file
+    displayAndExec "Removing CentralReport startup plist..." macos_remove_startup_plist
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
     # Delete CR bin files
-    macos_remove_bin
+    displayAndExec "Removing CentralReport binary script..." macos_remove_bin
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CR lib files
+    displayAndExec "Removing CentralReport library..." macos_remove_lib
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
 
     # Delete CR config file
-    macos_remove_config
+    displayAndExec "Removing CentralReport configuration files..." macos_remove_config
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return 1
     fi
 
-    # Delete startup plist file
-    macos_remove_startup_plist
+    # Delete startup log directory
+    displayAndExec "Removing CentralReport log directory..." macos_remove_log_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete startup pid directory
+    displayAndExec "Removing CentralReport PID directory..." macos_remove_pid_directory
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CentralReport user...
+    displayAndExec "Removing CentralReport user..." macos_user_del
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne 0 ]; then
+        return ${RETURN_CODE}
+    fi
+
+    # Delete CentralReport group...
+    displayAndExec "Removing CentralReport group..." macos_group_del
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}

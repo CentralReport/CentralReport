@@ -50,8 +50,7 @@ function displayAndExec() {
     echo -n "[...] ${message}"
     shift
 
-    echo ">>> $*" >> /dev/null 2>&1
-    sh -c "$*" >> /dev/null 2>&1
+    $* 1>/dev/null 2>ERROR_FILE>/dev/null
     local ret=$?
 
     if [ ${ret} -ne 0 ]; then
@@ -64,7 +63,6 @@ function displayAndExec() {
 
     return ${ret}
 }
-
 
 # Checks if the answer is "Yes" (y/Y/yes/YES/Yes) or not.
 # PARAMETER: a string

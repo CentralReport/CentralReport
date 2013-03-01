@@ -8,11 +8,12 @@
 # ------------------------------------------------------------
 
 # Importing some scripts
-source bash/debian.inc.sh
-source bash/functions.inc.sh
+source bash/vars.inc.sh
 source bash/log.inc.sh
+source bash/functions.inc.sh
+
+source bash/debian.inc.sh
 source bash/macos.inc.sh
-source bash/vars.sh
 
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
