@@ -5,7 +5,6 @@
  * Please visit https://github.com/miniche/CentralReport for more informations
  */
 
-
 /**
  * Layout
  */
@@ -21,24 +20,23 @@ html, body {
     margin: 0 -20px;
     padding: 15px 20px;
 
-    font-size:20px;
+    font-size: 20px;
     color: #FFF;
 
-    background: rgb(125,126,125); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(125,126,125,1) 0%, rgba(14,14,14,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(125,126,125,1)), color-stop(100%,rgba(14,14,14,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+    background: rgb(125, 126, 125); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(125, 126, 125, 1) 0%, rgba(14, 14, 14, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(125, 126, 125, 1)), color-stop(100%, rgba(14, 14, 14, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(125, 126, 125, 1) 0%, rgba(14, 14, 14, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(125, 126, 125, 1) 0%, rgba(14, 14, 14, 1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(125, 126, 125, 1) 0%, rgba(14, 14, 14, 1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(125, 126, 125, 1) 0%, rgba(14, 14, 14, 1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#7d7e7d', endColorstr = '#0e0e0e', GradientType = 0); /* IE6-9 */
 }
 
 .page-header small {
     font-size: 20px;
     float: right;
 }
-
 
 /* The white background content wrapper */
 .container > .content {
@@ -48,9 +46,9 @@ html, body {
     -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
     border-radius: 0 0 6px 6px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-    box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 }
 
 /* Each row must be marged top with 20px */
@@ -72,14 +70,14 @@ html, body {
     margin-bottom: 20px;
     padding: 5px 20px;
 
-    background: rgb(234,234,234); /* Old browsers */
-    background: -moz-linear-gradient(top,  rgba(234,234,234,1) 0%, rgba(214,214,214,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(234,234,234,1)), color-stop(100%,rgba(214,214,214,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(234,234,234,1) 0%,rgba(214,214,214,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(234,234,234,1) 0%,rgba(214,214,214,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(234,234,234,1) 0%,rgba(214,214,214,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(234,234,234,1) 0%,rgba(214,214,214,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#d6d6d6',GradientType=0 ); /* IE6-9 */
+    background: rgb(234, 234, 234); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(234, 234, 234, 1) 0%, rgba(214, 214, 214, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(234, 234, 234, 1)), color-stop(100%, rgba(214, 214, 214, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(234, 234, 234, 1) 0%, rgba(214, 214, 214, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(234, 234, 234, 1) 0%, rgba(214, 214, 214, 1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(234, 234, 234, 1) 0%, rgba(214, 214, 214, 1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(234, 234, 234, 1) 0%, rgba(214, 214, 214, 1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#eaeaea', endColorstr = '#d6d6d6', GradientType = 0); /* IE6-9 */
 }
 
 .headhand-center {
@@ -89,7 +87,6 @@ html, body {
 .headhand small {
     float: right;
 }
-
 
 /* Host header */
 #host-header .hostname {
@@ -102,7 +99,6 @@ html, body {
 #host-header .hostversion {
     font-weight: bold;
 }
-
 
 /* The dashboard box */
 .dashboard-box {
@@ -121,15 +117,14 @@ html, body {
 .dashboard-box-headhand {
     height: 24px;
 
-    background: rgb(255,255,255); /* Old browsers */
-    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(219,219,219,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(219,219,219,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(219,219,219,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(219,219,219,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(219,219,219,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(219,219,219,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dbdbdb',GradientType=0 ); /* IE6-9 */
-
+    background: rgb(255, 255, 255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(219, 219, 219, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(50%, rgba(241, 241, 241, 1)), color-stop(51%, rgba(225, 225, 225, 1)), color-stop(100%, rgba(219, 219, 219, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(219, 219, 219, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(219, 219, 219, 1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(219, 219, 219, 1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(241, 241, 241, 1) 50%, rgba(225, 225, 225, 1) 51%, rgba(219, 219, 219, 1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#dbdbdb', GradientType = 0); /* IE6-9 */
 
 }
 
@@ -141,9 +136,7 @@ html, body {
     float: left;
     text-align: center;
 
-    background-image: url(/img/check_18x18.png);
-    background-repeat: no-repeat;
-    background-position: center center;
+    background: url(../img/check_18x18.png) no-repeat center;
 }
 
 .dashboard-box-headhand .dashboard-box-status-alert {
@@ -153,9 +146,7 @@ html, body {
     float: left;
     text-align: center;
 
-    background-image: url(/img/error_18x18.png);
-    background-repeat: no-repeat;
-    background-position: center center;
+    background: url(../img/error_18x18.png) no-repeat center center;
 }
 
 .dashboard-box-headhand .dashboard-box-status-warning {
@@ -165,11 +156,8 @@ html, body {
     float: left;
     text-align: center;
 
-    background-image: url(/img/warning_18x18.png);
-    background-repeat: no-repeat;
-    background-position: center center;
+    background: url(../img/warning_18x18.png) no-repeat center center;
 }
-
 
 .dashboard-box-headhand .dashboard-box-title {
     height: 22px;
@@ -181,7 +169,6 @@ html, body {
     padding-left: 0;
 
 }
-
 
 /* Div data */
 .dashboard-box .dashboard-box-datas {
@@ -231,8 +218,6 @@ html, body {
     margin: 35px 10px 0;
 }
 
-
-
 /* Text box (to display more informations than the "data box" */
 .dashboard-box .dashboard-box-text {
     min-height: 120px;
@@ -255,8 +240,6 @@ html, body {
     font-weight: bold;
     line-height: 1.5;
 }
-
-
 
 /* Page footer */
 .footer {
