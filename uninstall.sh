@@ -21,17 +21,17 @@ logFile "-------------- Starting CentralReport uninstaller  --------------"
 clear
 
 printBox blue "------------------------- CentralReport uninstaller ---------------------------| \
-| \
-Welcome! This script will uninstall CentralReport on your host.| \
-If you want more details, please visit http://github.com/miniche/CentralReport"
+               | \
+               Welcome! This script will uninstall CentralReport on your host.| \
+               If you want more details, please visit http://github.com/miniche/CentralReport"
 
 # Getting current OS to check if uninstall will work for this host
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
 
     printBox red "ERROR!| \
-The uninstall is only designed for Mac OS, Debian and Ubuntu.| \
-Support for other OS will come soon!"
+                  The uninstall is only designed for Mac OS, Debian and Ubuntu.| \
+                  Support for other OS will come soon!"
 
     exit 1
 fi
@@ -78,9 +78,9 @@ if [ $? -eq 0 ]; then
 
         logConsole " "
         printBox red " Error uninstalling CentralReport!| \
-CentralReport may still be installed on this host| \
-| \
-Some logs have been written in ${ERROR_FILE}"
+                       CentralReport may still be installed on this host| \
+                       | \
+                       Some logs have been written in ${ERROR_FILE}"
 
     else
         # Nothing wrong happened while uninstalling. We log this, and then we display the "sad" green lightbox.
@@ -89,14 +89,14 @@ Some logs have been written in ${ERROR_FILE}"
         # Adding a space before the lightbox to separate previous logs with the success message.
         logConsole " "
         printBox blue "CentralReport has been deleted from your host.| \
-It's sad, but you're welcome!| \
-| \
-PS:| \
-Thanks for your interest in CentralReport!| \
-One of the best ways you can help us improve CentralReport is to let us know| \
-about any problems you could have found.| \
-You can find CR developers at http://github.com/miniche/CentralReport| \
-Thanks!"
+                       It's sad, but you're welcome!| \
+                       | \
+                       PS:| \
+                       Thanks for your interest in CentralReport!| \
+                       One of the best ways you can help us improve CentralReport is to let us know| \
+                       about any problems you could have found.| \
+                       You can find CR developers at http://github.com/miniche/CentralReport| \
+                       Thanks!"
 
     fi
 else

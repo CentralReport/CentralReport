@@ -24,13 +24,13 @@ logFile "-------------- Starting CentralReport installer  --------------"
 clear
 
 printBox blue  "-------------------------- CentralReport installer ----------------------------| \
-| \
-Welcome! This script will install CentralReport on your host.| \
-If you want more details, please visit http://github.com/miniche/CentralReport| \
-| \
-When installing CentralReport, we may ask for your password.| \
-It will allow CentralReport to write files and directories such as| \
-the project binaries, logs, etc."
+                | \
+                Welcome! This script will install CentralReport on your host.| \
+                If you want more details, please visit http://github.com/miniche/CentralReport| \
+                | \
+                When installing CentralReport, we may ask for your password.| \
+                It will allow CentralReport to write files and directories such as| \
+                the project binaries, logs, etc."
 
 # In the future, it will be possible to have different modes.
 if [ -n "$1" ]; then
@@ -41,9 +41,9 @@ fi
 # Others Linux distributions coming soon.
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-    printBox red " ERROR!| \
-The install is only designed for Mac OS, Debian and Ubuntu.| \
-Support for other OS will come soon!"
+    printBox red "ERROR!| \
+                  The install is only designed for Mac OS, Debian and Ubuntu.| \
+                  Support for other OS will come soon!"
 
     exit 1
 fi
@@ -87,10 +87,10 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             # One or more error(s) append during installation.
             # We display a generic message: previous logs already the specific error message.
             logConsole " "
-            printBox red " Something went wrong when installing CentralReport!| \
-CentralReport isn't installed on this host.| \
-| \
-Some logs have been written in ${ERROR_FILE}"
+            printBox red "Something went wrong when installing CentralReport!| \
+                          CentralReport isn't installed on this host.| \
+                          | \
+                          Some logs have been written in ${ERROR_FILE}"
 
             logFile "Something went wrong when installing CentralReport, please consult previous logs."
 
@@ -101,20 +101,20 @@ Some logs have been written in ${ERROR_FILE}"
 
             # Adding a space before the lightbox to separate previous logs with the success message.
             logConsole " "
-            printBox blue " CentralReport is now installed!| \
-For more options, you can edit the config file at /etc/centralreport.cfg| \
-| \
-You can find more help at http://github.com/miniche/CentralReport.| \
-Have fun!"
+            printBox blue "CentralReport is now installed!| \
+                           For more options, you can edit the config file at /etc/centralreport.cfg| \
+                           | \
+                           You can find more help at http://github.com/miniche/CentralReport.| \
+                           Have fun!"
 
         fi
      else
         logInfo "Installation aborted on user demand."
     fi
 else
-    printBox red " ERROR!| \
-Unknown argument| \
-Use: install.sh [install]"
+    printBox red "ERROR!| \
+                  Unknown argument| \
+                  Use: install.sh [install]"
 fi
 
 # End of program
