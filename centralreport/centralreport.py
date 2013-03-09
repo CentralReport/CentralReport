@@ -9,6 +9,7 @@
 """
 
 import datetime
+import getpass
 import sys
 import time
 import os
@@ -18,7 +19,6 @@ from cr import threads
 from cr.utils import text
 from cr.daemon import Daemon
 from cr.tools import Config
-from web.server import WebServer
 
 
 class CentralReport(Daemon):
@@ -38,6 +38,8 @@ class CentralReport(Daemon):
 
         log.log_info('CentralReport is starting...')
 
+        log.log_info('Current user: ' + getpass.getuser())
+
         CentralReport.starting_date = datetime.datetime.now()  # Starting date
         CentralReport.configuration = Config()  # Getting config object
 
@@ -52,6 +54,8 @@ class CentralReport(Daemon):
 
         # Is webserver enabled?
         if not is_error & text.convert_text_to_bool(Config.get_config_value('Webserver', 'enable')):
+            from web.server import WebServer
+
             log.log_info('Enabling the webserver')
             CentralReport.webserver_thread = WebServer()
         else:
@@ -165,10 +169,10 @@ if '__main__' == __name__:
             else:
                 print 'CentralReport is running with pid %s' % pid
         else:
-            log.log_error("usage: %s start|stop|restart|status" % sys.argv[0])
+            print 'usage: %s start|stop|restart|status' % sys.argv[0]
             sys.exit(2)
         sys.exit(0)
 
     else:
-        log.log_error("usage: %s start|stop|restart|status" % sys.argv[0])
+        print 'usage: %s start|stop|restart|status' % sys.argv[0]
         sys.exit(2)

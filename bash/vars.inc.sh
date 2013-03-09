@@ -14,6 +14,7 @@ CR_BIN_FILE=/usr/local/bin/centralreport
 
 CR_LIB_DIR_RELATIVE=/usr/local/lib/
 CR_LIB_DIR=/usr/local/lib/centralreport/
+CR_LIB_DAEMON=/usr/local/lib/centralreport/centralreport.py
 
 CR_CONFIG_DIR=/etc/centralreport/
 

@@ -28,7 +28,7 @@ class Config:
     CR_VERSION_REVISION = 0
     CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
-    CR_CONFIG_PATH = '/etc'  # Config file location
+    CR_CONFIG_PATH = '/etc/centralreport'  # Config file location
     CR_CONFIG_FILE = 'centralreport.cfg'
     CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH, CR_CONFIG_FILE)
     CR_CONFIG_ENABLE_DEBUG_MODE = False  # False = Production environment. True = debug/test/develop environment.
@@ -52,7 +52,7 @@ class Config:
         CR_PID_FILE = '/tmp/centralreport.pid'
 
     else:
-        CR_PID_FILE = '/var/run/centralreport.pid'
+        CR_PID_FILE = '/var/run/centralreport/centralreport.pid'
 
     # Customizable values. This values are stored in the config file.
     # Values are default values and can by updated by config file content.

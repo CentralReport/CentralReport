@@ -9,10 +9,19 @@
 
 import datetime
 import os
+import sys
 import threading
 
+# By che: Temporary section. Will be improved soon.
+# Testing importing zip libraries...
+sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/jinja2-2.6.zip'))
+sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/cherrypy-3.2.2.zip'))
+sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/repoze-lru-0.6.zip'))
+sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/routes-1.13.zip'))
+
 import cherrypy
-from jinja2 import Environment, FileSystemLoader
+import jinja2
+# End of temporary section by che.
 
 from cr.utils.date import datetime_to_timestamp
 from cr.utils import text
@@ -21,8 +30,9 @@ from cr.tools import Config
 
 
 class WebServer(threading.Thread):
+
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    env = Environment(loader=FileSystemLoader(os.path.join(current_dir, 'tpl')))
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(current_dir, 'tpl')))
 
     def __init__(self):
         """
