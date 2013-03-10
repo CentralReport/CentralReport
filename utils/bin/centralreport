@@ -10,20 +10,22 @@
 # This script launchs CentralReport with the right user.
 # It can be added to the PATH.
 
-if [ "Darwin" == $(uname -s) ]; then
+CR_DIR_PID=/var/run/centralreport
+
+if [ $(uname -s) == "Darwin" ]; then
     # Mac OS X
 
     # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
     USER_UNIQUE_ID=$(dscl . -list /Users UniqueID | grep _centralreport | awk '{print $2}')
-    if [ -z ${USER_UNIQUE_ID} ]; then
+    if [ -z "${USER_UNIQUE_ID}" ]; then
         echo "Error: The _centralreport system user doesn't exist."
         echo "For security reasons, CentralReport can't be launched."
     else
 
         # Checking if the /var/run/centralreport/ directory already exist
-        if [ ! -d '/var/run/centralreport' ]; then
-            sudo mkdir /var/run/centralreport
-            sudo chown -R _centralreport:_centralreport /var/run/centralreport
+        if [ ! -d ${CR_DIR_PID} ]; then
+            sudo mkdir ${CR_DIR_PID}
+            sudo chown -R _centralreport:_centralreport ${CR_DIR_PID}
         fi
 
         sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
@@ -34,17 +36,18 @@ elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
 
     # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
     CR_USER_FOUND=$(cat /etc/passwd | grep 'centralreport')
-    if [ -z ${CR_USER_FOUND} ]; then
+    if [ -z "${CR_USER_FOUND}" ]; then
         echo "Error: The _centralreport system user doesn't exist."
         echo "For security reasons, CentralReport can't be launched."
     else
-    # Checking if the /var/run/centralreport/ directory already exist
-        if [ ! -d '/var/run/centralreport' ]; then
-            mkdir /var/run/centralreport
-            chown -R centralreport:centralreport /var/run/centralreport
+
+        # Checking if the /var/run/centralreport/ directory already exist
+        if [ ! -d ${CR_DIR_PID} ]; then
+            mkdir ${CR_DIR_PID}
+            chown -R centralreport:centralreport ${CR_DIR_PID}
         fi
 
-        su centralreport -c "/usr/local/lib/centralreport/centralreport.py $*"
+        su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
     fi
 
 else

@@ -683,7 +683,7 @@ function debian_install {
     clear
 
     # CR config assistant
-    debian_launch_config_assistant
+#    debian_launch_config_assistant
 
     debian_start_cr
     RETURN_CODE="$?"

@@ -17,21 +17,21 @@ CENTRALREPORT_BIN=/usr/local/bin/centralreport
 case "$1" in
     start)
         echo "Starting CentralReport"
-        python ${CENTRALREPORT_BIN} start
+        ${CENTRALREPORT_BIN} start
         ;;
     stop)
         echo "Stopping CentralReport"
-        python ${CENTRALREPORT_BIN} stop
+        ${CENTRALREPORT_BIN} stop
         ;;
     restart)
         echo "Restarting CentralReport"
-        python ${CENTRALREPORT_BIN} stop
+        ${CENTRALREPORT_BIN} stop
         sleep 3
-        python ${CENTRALREPORT_BIN} start
+        ${CENTRALREPORT_BIN} start
         echo "CentralReport started"
         ;;
     status)
-        python ${CENTRALREPORT_BIN} status
+        ${CENTRALREPORT_BIN} status
         ;;
     *)
         echo "Usage: /etc/init.d/centralreport {start|stop|restart|status}"
