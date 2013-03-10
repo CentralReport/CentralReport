@@ -19,6 +19,13 @@ if [ "Darwin" == $(uname -s) ]; then
         echo "Error: The _centralreport system user doesn't exist."
         echo "For security reasons, CentralReport can't be launched."
     else
+
+        # Checking if the /var/run/centralreport/ directory already exist
+        if [ ! -d '/var/run/centralreport' ]; then
+            sudo mkdir /var/run/centralreport
+            sudo chown -R _centralreport:_centralreport /var/run/centralreport
+        fi
+
         sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
     fi
 
@@ -31,6 +38,12 @@ elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
         echo "Error: The _centralreport system user doesn't exist."
         echo "For security reasons, CentralReport can't be launched."
     else
+    # Checking if the /var/run/centralreport/ directory already exist
+        if [ ! -d '/var/run/centralreport' ]; then
+            mkdir /var/run/centralreport
+            chown -R centralreport:centralreport /var/run/centralreport
+        fi
+
         su centralreport -c "/usr/local/lib/centralreport/centralreport.py $*"
     fi
 

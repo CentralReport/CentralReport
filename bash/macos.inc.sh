@@ -30,7 +30,8 @@ function macos_start_cr {
         return 0
 
     else
-        centralreport start
+#        centralreport start
+        sudo launchctl load -w ${STARTUP_PLIST}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ]; then
@@ -62,7 +63,8 @@ function macos_stop_cr {
         logInfo "CentralReport is already stopped!"
         return 0
     else
-        centralreport stop
+#        centralreport stop
+        sudo launchctl unload -w ${STARTUP_PLIST}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
@@ -176,10 +178,19 @@ function macos_remove_startup_plist {
     logFile "Removing startup plist..."
 
     if [ -f ${STARTUP_PLIST} ]; then
+
+        sudo launchctl unload -w ${STARTUP_PLIST}
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne "0" ]; then
+            logError "Error unloading startup plist file with launchctl (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
+        fi
+
         sudo rm -f ${STARTUP_PLIST}
         RETURN_CODE="$?"
 
-        if [ $? -ne "0" ]; then
+        if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting startup plist file at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
@@ -384,15 +395,22 @@ function macos_copy_lib {
 #
 function macos_copy_startup_plist {
 
-    sudo cp -f -v ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
+    sudo cp -f ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error copying startup plist at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
         return ${RETURN_CODE}
-    else
-        return 0
     fi
+
+#    sudo launchctl load -w ${STARTUP_PLIST}
+#    RETURN_CODE="$?"
+#    if [ ${RETURN_CODE} -ne "0" ]; then
+#        logError "Error loading startup plist with launchctl (Error code: ${RETURN_CODE})"
+#        return ${RETURN_CODE}
+#    fi
+
+    return 0
 }
 
 #
