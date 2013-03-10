@@ -9,10 +9,7 @@
     <string>com.centralreport</string>
 
     <key>KeepAlive</key>
-    <dict>
-        <key>SuccessfulExit</key>
-        <true/>
-    </dict>
+    <false/>
 
     <key>RunAtLoad</key>
     <true/>

@@ -395,6 +395,9 @@ function macos_copy_lib {
 #
 function macos_copy_startup_plist {
 
+    # More details about the plist here:
+    # https://developer.apple.com/library/mac/#documentation/darwin/reference/manpages/man5/launchd.plist.5.html
+
     sudo cp -f ${STARTUP_PLIST_INSTALL} ${STARTUP_PLIST}
     RETURN_CODE="$?"
 
@@ -402,13 +405,6 @@ function macos_copy_startup_plist {
         logError "Error copying startup plist at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
         return ${RETURN_CODE}
     fi
-
-#    sudo launchctl load -w ${STARTUP_PLIST}
-#    RETURN_CODE="$?"
-#    if [ ${RETURN_CODE} -ne "0" ]; then
-#        logError "Error loading startup plist with launchctl (Error code: ${RETURN_CODE})"
-#        return ${RETURN_CODE}
-#    fi
 
     return 0
 }
@@ -677,9 +673,12 @@ function macos_create_user {
     sudo dscl . -create /Users/_centralreport RealName "CentralReport daemon"
     sudo dscl . -create /Users/_centralreport UniqueID ${user_id}
     sudo dscl . -create /Users/_centralreport PrimaryGroupID ${GROUP_UNIQUE_ID}
-#    sudo dscl . -create /Users/_centralreport PrimaryGroupID 20
     sudo dscl . -create /Users/_centralreport NFSHomeDirectory /usr/local/lib/centralreport
-    sudo dscl . -passwd /Users/_centralreport "*"
+
+    # Hidding the user
+    # http://superuser.com/questions/70156/hide-users-from-mac-os-x-snow-leopard-logon-screen
+    sudo dscl . -delete /Users/_centralreport AuthenticationAuthority
+    sudo dscl . -create /Users/_centralreport Password "*"
 
     # Registring the _centralreport user in the _centralreport group
     sudo dscl . -append /Groups/_centralreport GroupMembership _centralreport
