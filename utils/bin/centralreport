@@ -11,6 +11,7 @@
 # It can be added to the PATH.
 
 CR_DIR_PID=/var/run/centralreport
+CR_DIR_LOG=/var/log/centralreport
 
 if [ $(uname -s) == "Darwin" ]; then
     # Mac OS X
@@ -25,9 +26,16 @@ if [ $(uname -s) == "Darwin" ]; then
         # Checking if the /var/run/centralreport/ directory already exist
         if [ ! -d ${CR_DIR_PID} ]; then
             sudo mkdir ${CR_DIR_PID}
-            sudo chown -R _centralreport:_centralreport ${CR_DIR_PID}
         fi
+        sudo chown -R _centralreport:_centralreport ${CR_DIR_PID}
 
+        # Checking if the directory which will contain logs is avalaible
+        if [ ! -d ${CR_DIR_LOG} ]; then
+            sudo mkdir ${CR_DIR_LOG}
+        fi
+        sudo chown -R _centralreport:_centralreport ${CR_DIR_LOG}
+
+        # Launching CR with the right user...
         sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
     fi
 
@@ -44,9 +52,15 @@ elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
         # Checking if the /var/run/centralreport/ directory already exist
         if [ ! -d ${CR_DIR_PID} ]; then
             mkdir ${CR_DIR_PID}
-            chown -R centralreport:centralreport ${CR_DIR_PID}
         fi
+        chown -R centralreport:centralreport ${CR_DIR_PID}
 
+        if [ ! -d ${CR_DIR_LOG} ]; then
+            mkdir ${CR_DIR_LOG}
+        fi
+        chown -R centralreport:centralreport ${CR_DIR_LOG}
+
+        # Launching CR with the right user...
         su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
     fi
 
