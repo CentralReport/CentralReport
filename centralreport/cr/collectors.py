@@ -23,7 +23,6 @@ import sys
 
 from cr.entities import checks
 from cr.entities import host
-from cr import log
 from cr import system
 from cr.utils import text
 from cr.tools import Config
@@ -172,10 +171,8 @@ class MacCollector(_Collector):
             Gets load average.
         """
 
-        loadavg_result = os.getloadavg()
-
         # On va spliter en fonction des espaces
-        dict_loadavg = loadavg_result
+        dict_loadavg = os.getloadavg()
 
         # Prepare return entity
         load_average_entity = checks.LoadAverage()
