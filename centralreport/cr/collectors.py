@@ -19,6 +19,7 @@ import re
 import socket
 import time
 import os
+import sys
 
 from cr.entities import checks
 from cr.entities import host
@@ -265,30 +266,18 @@ class DebianCollector(_Collector):
         kernel_v = platform.release()
 
         # Getting OS Name and OS version
-        # Default values
-        os_name = 'Linux'
-        os_version = ''
+        if sys.version_info[:2] < (2, 6):  # Python < 2.6
+            from platform import dist
+        else:
+            from platform import linux_distribution as dist
 
-        if Config.HOST_DEBIAN == Config.HOST_CURRENT:
-            os_name = 'Debian'
-            os_version = system.execute_command('cat /etc/debian_version')
-
-        elif Config.HOST_UBUNTU == Config.HOST_CURRENT:
-            os_name = 'Ubuntu'
-
-            # OS version for Ubuntu
-            os_version = 'Unknown'
-            os_version_full = system.execute_command('cat /etc/lsb-release')
-            os_version_lines = os_version_full.splitlines()
-
-            # Looking for the "DISTRIB_RELEASE" key
-            for i in range(0, len(os_version_lines)):
-                if os_version_lines[i].startswith('DISTRIB_RELEASE'):
-                    try:
-                        os_version = os_version_lines[i].split("=")[1].replace(' ', '')
-                    except:
-                        log.log_error('Error getting Ubuntu version')
-                        os_version = ''
+            # Getting OS Name and OS version
+        try:
+            os_name = dist()[0]
+            os_version = dist()[1]
+        except:
+            os_name = 'Linux'
+            os_version = ''
 
         # TODO Find a way to find the computer model
         #model = system.execute_command('sysctl -n hw.model')
