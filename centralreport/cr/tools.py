@@ -10,7 +10,6 @@
 import ConfigParser
 import os
 import platform
-
 import uuid
 
 from cr import log

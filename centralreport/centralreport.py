@@ -44,7 +44,7 @@ class CentralReport(Daemon):
         CentralReport.configuration = Config()  # Getting config object
 
         # Getting current OS...
-        if (Config.HOST_CURRENT == Config.HOST_MAC) | (Config.HOST_CURRENT == Config.HOST_DEBIAN) | (
+        if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
             log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
@@ -53,7 +53,7 @@ class CentralReport(Daemon):
             log.log_critical('Sorry, but your OS is not supported yet...')
 
         # Is webserver enabled?
-        if not is_error & text.convert_text_to_bool(Config.get_config_value('Webserver', 'enable')):
+        if not is_error and text.convert_text_to_bool(Config.get_config_value('Webserver', 'enable')):
             from web.server import WebServer
 
             log.log_info('Enabling the webserver')
@@ -66,7 +66,6 @@ class CentralReport(Daemon):
 
             while CentralReport.is_running:
                 try:
-
                     if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
                         # If .pid file is not found, we must stop CR (only in production environment)
                         try:
