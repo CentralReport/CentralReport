@@ -7,65 +7,157 @@
 # https://github.com/miniche/CentralReport/
 # ------------------------------------------------------------
 
-# This script launchs CentralReport with the right user.
-# It can be added to the PATH.
+# This script allows to manage the CentralReport daemon.
+# You may use "start", "stop", "restart".
+# You may use the "status" argument too, to check if CR is currently running.
 
-CR_DIR_PID=/var/run/centralreport
+CR_PID_DIR=/var/run/centralreport
+CR_PID_FILE=/var/run/centralreport/centralreport.pid
 CR_DIR_LOG=/var/log/centralreport
 
-if [ $(uname -s) == "Darwin" ]; then
-    # Mac OS X
+#
+# Execute the main python script with optional arguments.
+# This only works in Mac OS X.
+#
+# PARAMETERS:
+#   $1..n: Arguments
+# RETURN: None
+#
+function execute_python_daemon_mac() {
+    sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
+}
 
-    # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
-    USER_UNIQUE_ID=$(dscl . -list /Users UniqueID | grep _centralreport | awk '{print $2}')
-    if [ -z "${USER_UNIQUE_ID}" ]; then
-        echo "Error: The _centralreport system user doesn't exist."
-        echo "For security reasons, CentralReport can't be launched."
-    else
+#
+# Execute the main python script with optional arguments.
+# This only works in Debian/Ubuntu. Not tested on other distributions.
+#
+# PARAMETERS:
+#   $1..n: Arguments
+# RETURN: None
+#
+function execute_python_daemon_debian() {
+    su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
+}
 
-        # Checking if the /var/run/centralreport/ directory already exist
-        if [ ! -d ${CR_DIR_PID} ]; then
-            sudo mkdir ${CR_DIR_PID}
-        fi
-        sudo chown -R _centralreport:_centralreport ${CR_DIR_PID}
-
-        # Checking if the directory which will contain logs is avalaible
-        if [ ! -d ${CR_DIR_LOG} ]; then
-            sudo mkdir ${CR_DIR_LOG}
-        fi
-        sudo chown -R _centralreport:_centralreport ${CR_DIR_LOG}
-
-        # Launching CR with the right user...
-        sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
+#
+# Manages the CentralReport daemon on Mac OS host.
+#
+# PARAMETERS:
+#   $1..n: Arguments
+# RETURN: None
+#
+function manage_daemon_mac() {
+    # Checking if the /var/run/centralreport/ directory already exist
+    if [ ! -d ${CR_PID_DIR} ]; then
+        sudo mkdir ${CR_PID_DIR}
     fi
+    sudo chown -R _centralreport:_centralreport ${CR_PID_DIR}
 
-elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
-    # Debian or Ubuntu
-
-    # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
-    CR_USER_FOUND=$(cat /etc/passwd | grep 'centralreport')
-    if [ -z "${CR_USER_FOUND}" ]; then
-        echo "Error: The _centralreport system user doesn't exist."
-        echo "For security reasons, CentralReport can't be launched."
-    else
-
-        # Checking if the /var/run/centralreport/ directory already exist
-        if [ ! -d ${CR_DIR_PID} ]; then
-            mkdir ${CR_DIR_PID}
-        fi
-        chown -R centralreport:centralreport ${CR_DIR_PID}
-
-        if [ ! -d ${CR_DIR_LOG} ]; then
-            mkdir ${CR_DIR_LOG}
-        fi
-        chown -R centralreport:centralreport ${CR_DIR_LOG}
-
-        # Launching CR with the right user...
-        su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
+    # Checking if the directory which will contain logs is avalaible
+    if [ ! -d ${CR_DIR_LOG} ]; then
+        sudo mkdir ${CR_DIR_LOG}
     fi
+    sudo chown -R _centralreport:_centralreport ${CR_DIR_LOG}
 
-else
-    echo "Sorry, your operating system isn't supported yet by CentralReport!"
-fi
+    if [ $1 == "restart" ]; then
+        echo "Stopping CentralReport..."
+        execute_python_daemon_mac stop
+        sleep 2
 
+        echo "Starting CentralReport..."
+        execute_python_daemon_mac start
+    else
+        execute_python_daemon_mac $*
+    fi
+}
 
+#
+# Manages the CentralReport daemon on Debian host.
+#
+# PARAMETERS:
+#   $1..n: Arguments
+# RETURN: None
+#
+function manage_daemon_debian() {
+    # Checking if the /var/run/centralreport/ directory already exist
+    if [ ! -d ${CR_PID_DIR} ]; then
+        mkdir ${CR_PID_DIR}
+    fi
+    chown -R centralreport:centralreport ${CR_PID_DIR}
+
+    if [ ! -d ${CR_DIR_LOG} ]; then
+        mkdir ${CR_DIR_LOG}
+    fi
+    chown -R centralreport:centralreport ${CR_DIR_LOG}
+
+    if [ $1 == "restart" ]; then
+        echo "Stopping CentralReport..."
+        execute_python_daemon_debian stop
+        sleep 2
+
+        echo "Starting CentralReport..."
+        execute_python_daemon_debian start
+    else
+        execute_python_daemon_debian $*
+    fi
+}
+
+#
+# Main
+#
+case $1 in
+    status)
+        # We just want to now if CentralReport is running or not.
+        if [ ! -f ${CR_PID_FILE} ]; then
+            echo "CentralReport is not running"
+        else
+            CR_PID_VALUE=$(cat ${CR_PID_FILE})
+            echo "CentralReport is running with PID ${CR_PID_VALUE}"
+        fi
+    ;;
+
+    start | stop | restart)
+        # For all others options, we ask to the centralreport.py to answer.
+        if [ $(uname -s) == "Darwin" ]; then
+            # Mac OS X
+
+            # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
+            USER_UNIQUE_ID=$(dscl . -list /Users UniqueID | grep _centralreport | awk '{print $2}')
+            if [ -z "${USER_UNIQUE_ID}" ]; then
+                echo "Error: The _centralreport system user doesn't exist."
+                echo "For security reasons, CentralReport can't be launched."
+                exit 1
+            else
+                manage_daemon_mac $*
+            fi
+
+        elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
+            # Debian or Ubuntu
+
+            if [[ $EUID -ne 0 ]]; then
+                echo "You must have administrative privileges to manage CentralReport daemon!"
+                exit 1
+            fi
+
+            # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
+            CR_USER_FOUND=$(cat /etc/passwd | grep 'centralreport')
+            if [ -z "${CR_USER_FOUND}" ]; then
+                echo "Error: The _centralreport system user doesn't exist."
+                echo "For security reasons, CentralReport can't be launched."
+                exit 1
+            else
+                manage_daemon_debian $*
+            fi
+
+        else
+            echo "Sorry, your operating system isn't supported yet by CentralReport!"
+            exit 1
+        fi
+    ;;
+
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+    ;;
+esac
+
+exit 0
