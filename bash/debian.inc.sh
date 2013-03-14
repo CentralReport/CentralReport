@@ -521,7 +521,7 @@ function  debian_create_pid_directory {
 function debian_verify_user {
 
     CR_USER_FOUND=$(cat /etc/passwd | grep 'centralreport')
-    if [ -z ${CR_USER_FOUND} ]; then
+    if [ -z "${CR_USER_FOUND}" ]; then
         return 0
     else
         return 1

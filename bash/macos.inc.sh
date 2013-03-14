@@ -729,7 +729,7 @@ function macos_remove_user {
 function macos_verify_user {
 
     USER_UNIQUE_ID=$(dscl . -list /Users UniqueID | grep _centralreport | awk '{print $2}')
-    if [ -z ${USER_UNIQUE_ID} ]; then
+    if [ -z "${USER_UNIQUE_ID}" ]; then
         return 0
     else
         return ${USER_UNIQUE_ID}
@@ -772,7 +772,7 @@ function macos_remove_group {
 function macos_verify_group {
 
     UGID=$(dscl . -list /Groups PrimaryGroupID | grep _centralreport | awk '{print $2}')
-    if [ -z ${UGID} ]; then
+    if [ -z "${UGID}" ]; then
         return 0
     else
         logFile "UGID: ${UGID}"
