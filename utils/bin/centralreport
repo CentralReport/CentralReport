@@ -15,28 +15,44 @@ CR_PID_DIR=/var/run/centralreport
 CR_PID_FILE=/var/run/centralreport/centralreport.pid
 CR_DIR_LOG=/var/log/centralreport
 
+CR_USER_MAC=_centralreport
+CR_GROUP_MAC=_centralreport
+
+CR_USER_DEBIAN=centralreport
+CR_GROUP_DEBIAN=centralreport
+
+
 #
-# Execute the main python script with optional arguments.
-# This only works in Mac OS X.
+# Executes bash commands, with administrative privileges.
 #
 # PARAMETERS:
-#   $1..n: Arguments
+#   $1..n: The command to execute.
 # RETURN: None
 #
-function execute_python_daemon_mac() {
-    sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
+function execute_command() {
+    if [ $(uname -s) == "Darwin" ]; then
+        sudo $*
+        return "$?"
+    else
+        $*
+        return "$?"
+    fi
 }
 
 #
-# Execute the main python script with optional arguments.
-# This only works in Debian/Ubuntu. Not tested on other distributions.
+# Executes the main python script with optional arguments.
 #
 # PARAMETERS:
 #   $1..n: Arguments
 # RETURN: None
 #
-function execute_python_daemon_debian() {
-    su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
+function execute_python_daemon() {
+
+    if [ $(uname -s) == "Darwin" ]; then
+        sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
+    else
+        su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
+    fi
 }
 
 #
@@ -46,60 +62,96 @@ function execute_python_daemon_debian() {
 #   $1..n: Arguments
 # RETURN: None
 #
-function manage_daemon_mac() {
+function manage_daemon() {
+
+    if [ $(uname -s) == "Darwin" ]; then
+        CR_USER="${CR_USER_MAC}"
+        CR_GROUP="${CR_GROUP_MAC}"
+    else
+        CR_USER="${CR_USER_DEBIAN}"
+        CR_GROUP="${CR_GROUP_DEBIAN}"
+    fi
+
     # Checking if the /var/run/centralreport/ directory already exist
     if [ ! -d ${CR_PID_DIR} ]; then
-        sudo mkdir ${CR_PID_DIR}
+        execute_command mkdir ${CR_PID_DIR}
     fi
-    sudo chown -R _centralreport:_centralreport ${CR_PID_DIR}
+    execute_command chown -R ${CR_USER}:${CR_GROUP} ${CR_PID_DIR}
 
     # Checking if the directory which will contain logs is avalaible
     if [ ! -d ${CR_DIR_LOG} ]; then
-        sudo mkdir ${CR_DIR_LOG}
+        execute_command mkdir ${CR_DIR_LOG}
     fi
-    sudo chown -R _centralreport:_centralreport ${CR_DIR_LOG}
+    execute_command chown -R ${CR_USER}:${CR_USER} ${CR_DIR_LOG}
 
-    if [ $1 == "restart" ]; then
-        echo "Stopping CentralReport..."
-        execute_python_daemon_mac stop
-        sleep 2
+    case $1 in
+        start)
+            if [ $(verify_pid_file) -eq 0 ]; then
+                echo "Starting CentralReport..."
+                execute_python_daemon start
+            else
+                echo "CentralReport is already running with PID $(verify_pid_file)"
+            fi
+        ;;
+        stop)
+            if [ $(verify_pid_file) -eq 0 ]; then
+                echo "CentralReport is not running"
+            else
+                # Sending SIGTERM signal to CR daemon
+                echo "Stopping CentralReport..."
+                execute_command kill $(verify_pid_file)
+                sleep 2
 
-        echo "Starting CentralReport..."
-        execute_python_daemon_mac start
-    else
-        execute_python_daemon_mac $*
-    fi
+                if [ $(verify_pid_file) -ne 0 ]; then
+                    # CR daemon stil running... We must send the signal of the death!
+                    echo "Sending SIGKILL to the CentralReport daemon!"
+                    execute_command kill -9 $(verify_pid_file)
+                fi
+            fi
+        ;;
+        restart)
+            manage_daemon stop
+            manage_daemon start
+        ;;
+        status)
+            # We just want to now if CentralReport is running or not.
+            if [ $(verify_pid_file) -eq 0 ]; then
+                echo "CentralReport is not running"
+            else
+                echo "CentralReport is running with PID $(verify_pid_file)"
+            fi
+        ;;
+    esac
 }
 
 #
-# Manages the CentralReport daemon on Debian host.
+# Verifies if CentralReport is running with the help of PID file.
+# If PID file exists but CR is not running, the PID will be cleared.
 #
-# PARAMETERS:
-#   $1..n: Arguments
-# RETURN: None
+# PARAMETERS: None
+# RETURN:
+#   0: CentralReport is not running
+#   Others: Current PID of the CentralReport daemon
 #
-function manage_daemon_debian() {
-    # Checking if the /var/run/centralreport/ directory already exist
-    if [ ! -d ${CR_PID_DIR} ]; then
-        mkdir ${CR_PID_DIR}
-    fi
-    chown -R centralreport:centralreport ${CR_PID_DIR}
+function verify_pid_file() {
 
-    if [ ! -d ${CR_DIR_LOG} ]; then
-        mkdir ${CR_DIR_LOG}
-    fi
-    chown -R centralreport:centralreport ${CR_DIR_LOG}
+    # Default value. PID 0 is impossible in Unix, CR is not running in this case.
+    CR_PID_NUMBER=0
 
-    if [ $1 == "restart" ]; then
-        echo "Stopping CentralReport..."
-        execute_python_daemon_debian stop
-        sleep 2
+    if [ -f ${CR_PID_FILE} ]; then
+        # PID file exists. CR is running?
+        CR_PID_NUMBER=$(cat ${CR_PID_FILE})
 
-        echo "Starting CentralReport..."
-        execute_python_daemon_debian start
-    else
-        execute_python_daemon_debian $*
+        if ! ps -p ${CR_PID_NUMBER} > /dev/null
+        then
+            # CR seems not running. Deleting the PID file...
+            execute_command rm ${CR_PID_FILE}
+
+            CR_PID_NUMBER=0
+        fi
     fi
+
+    echo "${CR_PID_NUMBER}"
 }
 
 #
@@ -108,14 +160,16 @@ function manage_daemon_debian() {
 case $1 in
     status)
         # We just want to now if CentralReport is running or not.
-        if [ ! -f ${CR_PID_FILE} ]; then
+        if [ $(verify_pid_file) -eq 0 ]; then
             echo "CentralReport is not running"
         else
-            CR_PID_VALUE=$(cat ${CR_PID_FILE})
-            echo "CentralReport is running with PID ${CR_PID_VALUE}"
+            echo "CentralReport is running with PID $(verify_pid_file)"
         fi
     ;;
-
+    debug)
+        # Launchs CentralReport in debug mode = in the current console
+        python /usr/local/lib/centralreport/test.py
+    ;;
     start | stop | restart)
         # For all others options, we ask to the centralreport.py to answer.
         if [ $(uname -s) == "Darwin" ]; then
@@ -128,7 +182,7 @@ case $1 in
                 echo "For security reasons, CentralReport can't be launched."
                 exit 1
             else
-                manage_daemon_mac $*
+                manage_daemon $*
             fi
 
         elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
@@ -146,7 +200,7 @@ case $1 in
                 echo "For security reasons, CentralReport can't be launched."
                 exit 1
             else
-                manage_daemon_debian $*
+                manage_daemon $*
             fi
 
         else
@@ -156,7 +210,7 @@ case $1 in
     ;;
 
     *)
-        echo "Usage: $0 {start|stop|restart|status}"
+        echo "Usage: $0 {start|stop|restart|status|debug}"
     ;;
 esac
 

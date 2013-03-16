@@ -63,8 +63,8 @@ function macos_stop_cr {
         logInfo "CentralReport is already stopped!"
         return 0
     else
-#        centralreport stop
-        sudo launchctl unload -w ${STARTUP_PLIST}
+        sudo centralreport stop
+#        sudo launchctl unload -w ${STARTUP_PLIST}
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
