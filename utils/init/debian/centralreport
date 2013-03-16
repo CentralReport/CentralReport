@@ -10,33 +10,14 @@
 # Description:       Enable service provided by CentralReport Daemon.
 ### END INIT INFO
 
-# Path to centralreport executable
-CENTRALREPORT_BIN=/usr/local/bin/centralreport
+case $1 in
+    start | stop | restart | status)
+        /usr/local/bin/centralreport $*
 
-# Carry out specific functions when asked to by the system
-case "$1" in
-    start)
-        echo "Starting CentralReport"
-        ${CENTRALREPORT_BIN} start
-        ;;
-    stop)
-        echo "Stopping CentralReport"
-        ${CENTRALREPORT_BIN} stop
-        ;;
-    restart)
-        echo "Restarting CentralReport"
-        ${CENTRALREPORT_BIN} stop
-        sleep 3
-        ${CENTRALREPORT_BIN} start
-        echo "CentralReport started"
-        ;;
-    status)
-        ${CENTRALREPORT_BIN} status
-        ;;
+    ;;
     *)
-        echo "Usage: /etc/init.d/centralreport {start|stop|restart|status}"
-        exit 1
-        ;;
+        echo "Usage: $0 {start|stop|restart|status}"
+    ;;
 esac
 
 exit 0

@@ -36,8 +36,8 @@ class CentralReport(Daemon):
     def signal_handler(self, signum, frame):
         """
             Receives signals from the OS.
-
         """
+
         if signum == signal.SIGTERM:
             # In this case, we must stop CentralReport immediatly!
             if not self.SIGTERM_SENT:
@@ -54,6 +54,9 @@ class CentralReport(Daemon):
             log.log_info('SIGINT signal received (%s). Stopping CentralReport...' % signum)
             self.stop()
 
+        else:
+            log.log_debug('Unknown signal number: %s' % signum)
+
     def run(self):
         """
             Constructor.
@@ -66,7 +69,6 @@ class CentralReport(Daemon):
         log.log_info('Current user: ' + getpass.getuser())
 
         # Registring SIGTERM signal event
-        os.setsid()
         signal.signal(signal.SIGTERM, self.signal_handler)
         signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -95,22 +97,17 @@ class CentralReport(Daemon):
             log.log_info('CentralReport started!')
 
             while CentralReport.is_running:
-                try:
-                    if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
-                        # If .pid file is not found, we must stop CR (only in production environment)
-                        try:
-                            pf = file(self.pidfile, 'r')
-                            pf.close()
-                        except IOError:
-                            log.log_error('Pid file is not found. CentralReport must stop itself.')
-                            CentralReport.is_running = False
-                            self.stop()
-                    time.sleep(1)
+                if not Config.CR_CONFIG_ENABLE_DEBUG_MODE:
+                    # If .pid file is not found, we must stop CR (only in production environment)
+                    try:
+                        pf = file(self.pidfile, 'r')
+                        pf.close()
+                    except IOError:
+                        log.log_error('Pid file is not found. CentralReport must stop itself.')
+                        CentralReport.is_running = False
+                        self.stop()
+                time.sleep(1)
 
-                except KeyboardInterrupt:
-                    CentralReport.is_running = False
-                    log.log_warning('KeyboardInterrupt exception!')
-                    self.stop()
         else:
             log.log_error('Error launching CentralReport!')
 
@@ -130,7 +127,7 @@ class CentralReport(Daemon):
             log.log_info('Stopping checks thread...')
             threads.Checks.performChecks = False
 
-        log.log_info('Stopping daemon...')
+        log.log_info('A last word from the daemon: Bye!')
 
         # Killing the current processus...
         # (This command send the "SIGKILL" signal)

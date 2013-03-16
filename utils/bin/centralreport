@@ -8,8 +8,12 @@
 # ------------------------------------------------------------
 
 # This script allows to manage the CentralReport daemon.
-# You may use "start", "stop", "restart".
-# You may use the "status" argument too, to check if CR is currently running.
+# You can use one of the following argument:
+#   - start
+#   - stop
+#   - restart
+#   - status
+#   - debug
 
 CR_PID_DIR=/var/run/centralreport
 CR_PID_FILE=/var/run/centralreport/centralreport.pid
@@ -21,7 +25,6 @@ CR_GROUP_MAC=_centralreport
 CR_USER_DEBIAN=centralreport
 CR_GROUP_DEBIAN=centralreport
 
-
 #
 # Executes bash commands, with administrative privileges.
 #
@@ -31,6 +34,13 @@ CR_GROUP_DEBIAN=centralreport
 #
 function execute_command() {
     if [ $(uname -s) == "Darwin" ]; then
+        # Testing if the "sudo" session still alive...
+        sudo -n echo "hey" > /dev/null 2>&1
+        if [ "$?" -ne 0 ]; then
+            echo "For security reasons, only an administrator can manage the CentralReport daemon."
+            echo "Please enter your password to check it!"
+        fi
+
         sudo $*
         return "$?"
     else
