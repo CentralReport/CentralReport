@@ -9,6 +9,18 @@
 
 # This file contains all variables used by bash scripts
 
+# OS
+CURRENT_OS=
+OS_MAC="MacOS"
+OS_DEBIAN="Debian"
+
+# CentralReport user
+CR_USER_MAC=_centralreport
+CR_GROUP_MAC=_centralreport
+
+CR_USER_DEBIAN=centralreport
+CR_GROUP_DEBIAN=centralreport
+
 # Folders
 CR_BIN_FILE=/usr/local/bin/centralreport
 
@@ -24,11 +36,6 @@ CR_PID_DIR=/var/run/centralreport
 CR_PID_FILE=/var/run/centralreport/centralreport.pid
 
 CR_LOG_DIR=/var/log/centralreport
-
-# OS
-CURRENT_OS=
-OS_MAC="MacOS"
-OS_DEBIAN="Debian"
 
 # Mac OS startup plist
 STARTUP_PLIST=/Library/LaunchDaemons/com.centralreport.plist

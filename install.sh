@@ -10,10 +10,8 @@
 # Importing scripts...
 source bash/vars.inc.sh
 source bash/log.inc.sh
+source bash/utils.inc.sh
 source bash/functions.inc.sh
-
-source bash/debian.inc.sh
-source bash/macos.inc.sh
 
 # Modes: only "install" yet ("check" mode will be added soon)
 ACTUAL_MODE=install
@@ -57,6 +55,15 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# On debian, the current user must have administrative privileges.
+if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+    if [[ $EUID -ne 0 ]]; then
+        logFile "You must be root to install CentralReport!"
+        printBox red "You must be root to install CentralReport!"
+        exit 1
+    fi
+fi
+
 # Check the actual mode.
 if [ "install" == ${ACTUAL_MODE} ]; then
     logConsole " "
@@ -70,18 +77,29 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         if [ ${CURRENT_OS} == ${OS_MAC} ]; then
             logInfo "Processing... CentralReport will be installed on this Mac."
-            macos_install
-            if [ $? -ne 0 ]; then
-                bit_error=1
-            fi
 
+            # On Mac OS, the user must have access to administrative commands.
+            # Testing if the "sudo" session still alive...
+            sudo -n echo "hey" > /dev/null 2>&1
+            if [ "$?" -ne 0 ]; then
+
+                echo -e "\n\nPlease use your administrator password to install CentralReport on this Mac."
+                sudo -v
+                if [ $? -ne 0 ]; then
+                    logError "Enable to use root privileges!"
+                    bit_error=1
+                fi
+            fi
         elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
             logInfo "Processing... CentralReport will be installed on this Linux."
-            debian_install
-            if [ $? -ne 0 ]; then
+        fi
+
+        # Process to CentralReport installation...
+        if [ ${bit_error} -eq 0 ]; then
+            install_cr
+            if [ "$?" -ne 0 ]; then
                 bit_error=1
             fi
-
         fi
 
         if [ ${bit_error} -eq 1 ]; then
@@ -118,8 +136,10 @@ else
                   Use: install.sh [install]"
 fi
 
-# End of program
-logConsole " "
-logInfo " -- End of the install program -- "
+if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
+    # Remove sudo privileges
+    sudo -k
+fi
 
+logFile " -- End of the install program -- "
 exit 0
