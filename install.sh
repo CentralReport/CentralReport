@@ -13,6 +13,8 @@ source bash/log.inc.sh
 source bash/utils.inc.sh
 source bash/functions.inc.sh
 
+source bash/010_uninstaller.inc.sh
+
 # Modes: only "install" yet ("check" mode will be added soon)
 ACTUAL_MODE=install
 
@@ -56,12 +58,21 @@ if [ $? -ne 0 ]; then
 fi
 
 # On debian, the current user must have administrative privileges.
-if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+if [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     if [[ $EUID -ne 0 ]]; then
         logFile "You must be root to install CentralReport!"
         printBox red "You must be root to install CentralReport!"
         exit 1
     fi
+fi
+
+# Before installing, we must check if an old version of CentralReport is already installed
+detect_010_version
+if [ "$?" -ne 0 ]; then
+    printBox yellow "CentralReport 0.1.0 has been detected on your host.| \
+                     Before installing the new version, we must delete it. This is automatic,| \
+                     but your configuration file will be erased. You can do a backup before if | \
+                     you want. The configuration file is: /etc/centralreport.cfg"
 fi
 
 # Check the actual mode.
@@ -136,7 +147,7 @@ else
                   Use: install.sh [install]"
 fi
 
-if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
+if [ ${CURRENT_OS} == ${OS_MAC} ]; then
     # Remove sudo privileges
     sudo -k
 fi

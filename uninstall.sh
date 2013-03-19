@@ -13,6 +13,8 @@ source bash/log.inc.sh
 source bash/utils.inc.sh
 source bash/functions.inc.sh
 
+source bash/010_uninstaller.inc.sh
+
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
 

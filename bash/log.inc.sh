@@ -92,7 +92,7 @@ function logSystem() {
 # If your text is less than 80 characters lenght, some spaces will be added to build a full line.
 #
 # PARAMETERS:
-#     $1 = background color : "blue" or "red"
+#     $1 = background color : "blue", "yellow" or "red"
 #     $2 = the message to display. Be sure that this message is less than 80 characters lenght.
 # RETURN: None
 #
@@ -112,6 +112,8 @@ function printLightBox() {
         LIGHTBOX_TEXT="\033[0;44m\033[37m${LIGHTBOX_TEXT}\033[0m"
     elif [ ${LIGHTBOX_COLOR} == "red" ]; then
         LIGHTBOX_TEXT="\033[0;41m\033[37m${LIGHTBOX_TEXT}\033[0m"
+    elif [ ${LIGHTBOX_COLOR} == "yellow" ]; then
+        LIGHTBOX_TEXT="\033[0;43m\033[30m${LIGHTBOX_TEXT}\033[0m"
     fi
 
     logConsole "${LIGHTBOX_TEXT}"

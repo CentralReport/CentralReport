@@ -660,6 +660,12 @@ function verify_cr_group(){
 
 function install_cr(){
 
+    # Deleting previous version...
+    detect_010_version
+    if [ "$?" -ne 0 ]; then
+        delete_010_version
+    fi
+
     printTitle "Removing any existing installation..."
 
     # Uninstall existing previous installation, if exist
@@ -734,7 +740,7 @@ function install_cr(){
     # CR config assistant
     # TODO: Refactor config assistant
 
-    printTitle " ** Starting CentralReport... ** "
+    printTitle "First start of CentralReport..."
     start_cr
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
@@ -743,6 +749,12 @@ function install_cr(){
 }
 
 function uninstall_cr(){
+
+    # Deleting previous version...
+    detect_010_version
+    if [ "$?" -ne 0 ]; then
+        delete_010_version
+    fi
 
     printTitle "Removing CentralReport files and directories..."
 
