@@ -732,7 +732,7 @@ function install_cr(){
         return ${RETURN_CODE}
     fi
 
-    displayAndExec "Copying CentralReport init file..." copy_init_file
+    displayAndExec "Copying the CentralReport init file..." copy_init_file
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
