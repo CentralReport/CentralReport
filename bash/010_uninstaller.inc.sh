@@ -19,7 +19,7 @@
 #
 function detect_010_version(){
 
-    if [ -f /usr/local/bin/centralreport/centralreport.py ] || [ -f /etc/centralreport.cfg ]; then
+    if [ -f /usr/local/bin/centralreport/centralreport.py ] || [ -f /etc/centralreport.cfg ] || [ -f /etc/init.d/centralreport.sh ]; then
         return 1
     fi
 
@@ -47,6 +47,14 @@ function delete_010_version(){
         displayAndExec "Deleting old configuration file..." execute_privileged_command rm -f /etc/centralreport.cfg
     else
         logFile "Old configuration file already deleted"
+    fi
+
+    # Removing old init.d script
+    if [ -f /etc/init.d/centralreport.sh ]; then
+        CR_PID=$(cat /var/run/centralreport.pid)
+        displayAndExec "Deleting old init.d script..." execute_privileged_command rm -f /etc/init.d/centralreport.sh
+
+        displayAndExec "Unregistering init.d service..." execute_privileged_command update-rc.d -f centralreport.sh remove
     fi
 
     if [ -f /var/run/centralreport.pid ]; then
