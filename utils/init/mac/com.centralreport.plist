@@ -9,19 +9,16 @@
     <string>com.centralreport</string>
 
     <key>KeepAlive</key>
-    <dict>
-        <key>SuccessfulExit</key>
-        <true/>
-    </dict>
+    <false/>
 
     <key>RunAtLoad</key>
     <true/>
 
     <key>ProgramArguments</key>
     <array>
-        <string>python</string>
-        <string>/usr/local/bin/centralreport/centralreport.py</string>
+        <string>/usr/local/bin/centralreport</string>
         <string>start</string>
     </array>
+
 </dict>
 </plist>

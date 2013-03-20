@@ -8,11 +8,12 @@
 # ------------------------------------------------------------
 
 # Importing some scripts
-source bash/debian.inc.sh
-source bash/functions.inc.sh
+source bash/vars.inc.sh
 source bash/log.inc.sh
-source bash/macos.inc.sh
-source bash/vars.sh
+source bash/utils.inc.sh
+source bash/functions.inc.sh
+
+source bash/010_uninstaller.inc.sh
 
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
@@ -43,31 +44,47 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# On debian, the current user must have administrative privileges.
+if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+    if [[ $EUID -ne 0 ]]; then
+        logFile "You must be root to install CentralReport!"
+        printBox red "You must be root to install CentralReport!"
+        exit 1
+    fi
+fi
+
 logConsole " "
 read -p "You will uninstall CentralReport. Are you sure you want to continue (y/N)? " RESP < /dev/tty
 
 # Are you sure to uninstall CR?
 checkYesNoAnswer ${RESP}
 if [ $? -eq 0 ]; then
-    logConsole "Processing..."
-
     # 0 = no error during uninstall
     bit_error=0
 
-    if [ ${CURRENT_OS} = ${OS_MAC} ]; then
-        # Removes CR from this Mac
-        macos_uninstall
-        if [ $? -ne 0 ]; then
-            bit_error=1
+    if [ ${CURRENT_OS} == ${OS_MAC} ]; then
+        logInfo "Processing... CentralReport will be removed from this Mac."
+
+        # On Mac OS, the user must have access to administrative commands.
+        # Testing if the "sudo" session still alive...
+        sudo -n echo "hey" > /dev/null 2>&1
+        if [ "$?" -ne 0 ]; then
+
+            echo -e "\n\nPlease use your administrator password to uninstall CentralReport on this Mac."
+            sudo -v
+            if [ $? -ne 0 ]; then
+                logError "Enable to use root privileges!"
+                bit_error=1
+            fi
         fi
+    elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+        logInfo "Processing... CentralReport will be removed from this Linux."
+    fi
 
-        # Remove sudo privileges
-        sudo -k
-
-    elif [ ${CURRENT_OS} = ${OS_DEBIAN} ]; then
-        # Removes CR from this Debian/Ubuntu distribution
-        debian_uninstall
-        if [ $? -ne 0 ]; then
+    # Process to CentralReport installation...
+    if [ ${bit_error} -eq 0 ]; then
+        uninstall_cr
+        if [ "$?" -ne 0 ]; then
             bit_error=1
         fi
     fi
@@ -103,8 +120,10 @@ else
     logInfo "Uninstall aborted on user demand."
 fi
 
-# End of program
-logConsole " "
-logInfo " -- End of the uninstall program -- "
+if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
+    # Remove sudo privileges
+    sudo -k
+fi
 
+logFile " -- End of the uninstall program -- "
 exit 0

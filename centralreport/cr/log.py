@@ -32,7 +32,7 @@ def get_cr_logger():
         cr_logger.setLevel(log_level)
 
         # In debug mode, log file must be in "/tmp", due to system permissions.
-        log_filename = '/var/log/centralreport.log' if debug_mode_enabled is False else '/tmp/centralreport.log'
+        log_filename = '/var/log/centralreport/centralreport.log' if debug_mode_enabled is False else '/tmp/centralreport.log'
 
         # Max size per log file: 5 MB (1024 * 1024 * 5). 2 files will be kept as archive.
         custom_rotating_fileHandler = logging.handlers.RotatingFileHandler(log_filename,

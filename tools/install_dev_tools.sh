@@ -10,7 +10,7 @@
 # This script will install all thirdparties tools (CherryPy, Jinja, etc...) on the current host.
 # It's be very helpfull on a dev host.
 
-source ../bash/vars.sh
+source ../bash/vars.inc.sh
 source ../bash/log.inc.sh
 source ../bash/functions.inc.sh
 
