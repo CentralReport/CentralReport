@@ -7,7 +7,7 @@
 # https://github.com/miniche/CentralReport/
 # ------------------------------------------------------------
 
-# This script contains functions used to remove 0.1.0 from the current host.
+# This script contains functions used to remove CentralReport 0.1.0 from the current host.
 
 #
 # Detects if CentralReport 0.1.0 is already installed on this host
@@ -44,17 +44,17 @@ function delete_010_version(){
     fi
 
     if [ -f /etc/centralreport.cfg ]; then
-        displayAndExec "Deleting old configuration file..." execute_privileged_command rm -f /etc/centralreport.cfg
+        displayAndExec "Deleting the old configuration file..." execute_privileged_command rm -f /etc/centralreport.cfg
     else
-        logFile "Old configuration file already deleted"
+        logFile "The old configuration file already deleted"
     fi
 
     # Removing old init.d script
     if [ -f /etc/init.d/centralreport.sh ]; then
         CR_PID=$(cat /var/run/centralreport.pid)
-        displayAndExec "Deleting old init.d script..." execute_privileged_command rm -f /etc/init.d/centralreport.sh
+        displayAndExec "Deleting the old init.d script..." execute_privileged_command rm -f /etc/init.d/centralreport.sh
 
-        displayAndExec "Unregistering init.d service..." execute_privileged_command update-rc.d -f centralreport.sh remove
+        displayAndExec "Unregistering the init.d service..." execute_privileged_command update-rc.d -f centralreport.sh remove
     fi
 
     if [ -f /var/run/centralreport.pid ]; then
@@ -62,9 +62,9 @@ function delete_010_version(){
         CR_PID=$(cat /var/run/centralreport.pid)
         displayAndExec "Killing CentralReport ruthless..." execute_privileged_command kill -9 ${CR_PID}
 
-        displayAndExec "Deleting old PID file..." execute_privileged_command rm -f /var/run/centralreport.pid
+        displayAndExec "Deleting the old PID file..." execute_privileged_command rm -f /var/run/centralreport.pid
     else
-        logFile "Old PID file already deleted"
+        logFile "The old PID file already deleted"
     fi
 
     if [ -d /usr/local/bin/centralreport/ ]; then

@@ -8,7 +8,7 @@
 # ------------------------------------------------------------
 
 # This script allows to manage the CentralReport daemon.
-# You can use one of the following argument:
+# You can use one of the following arguments:
 #   - start
 #   - stop
 #   - restart
@@ -26,7 +26,7 @@ CR_USER_DEBIAN=centralreport
 CR_GROUP_DEBIAN=centralreport
 
 #
-# Executes bash commands, with administrative privileges.
+# Executes bash commands with administrative privileges.
 #
 # PARAMETERS:
 #   $1..n: The command to execute.
