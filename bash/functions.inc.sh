@@ -37,7 +37,7 @@ function stop_cr(){
         execute_privileged_command /usr/local/bin/centralreport stop
         RETURN_CODE="$?"
 
-        if [ ${RETURN_CODE} -ne "0" ]; then
+        if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
             logError "Error stopping CentralReport (Error code: ${RETURN_CODE})!"
             return ${RETURN_CODE}
         fi
