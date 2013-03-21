@@ -8,11 +8,14 @@
 """
 
 import datetime
+import json
 import threading
 import time
 
-from cr import collectors
+from cr import collectors, webservices
 from cr import log
+from cr.entities import host
+from cr.utils import text
 from cr.utils.text import convert_text_to_bool
 from cr.tools import Config
 
@@ -89,10 +92,31 @@ class Checks(threading.Thread):
                 if convert_text_to_bool(Config.get_config_value('Checks', 'enable_disks_check')):
                     log.log_debug('Doing a disk check....')
                     Checks.last_check_disk = self.MyCollector.get_disks()
-
                 # Updating last check date...
 
                 Checks.last_check_date = datetime.datetime.now()  # Update the last check date
+
+                # TODO** Work on a better way to get disks
+                all_disks = []
+
+                for disk in Checks.last_check_disk.checks:
+                    check_disk = {
+                        'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                        'free': text.convert_byte(disk.free),
+                        'total': text.convert_byte(disk.size),
+                        'percent': int(round(disk.used, 0) * 100 / int(disk.size))
+                    }
+                    all_disks.append(check_disk)
+
+                myHost = host.Full()
+                myHost.host = Checks.hostEntity
+
+                myHost.cpu = Checks.last_check_cpu
+                myHost.memory = Checks.last_check_memory
+                myHost.load = Checks.last_check_loadAverage
+                myHost.disks = json.dumps(all_disks)
+
+                webservices.WebServices.send_full_check(myHost.json_serialize())
 
                 # Wait 60 seconds before next checks...
 

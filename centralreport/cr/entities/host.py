@@ -81,3 +81,39 @@ class Disks:
             'date': self.date.strftime('%s'),
             'disks': self.checks
         })
+
+
+class Full:
+    """
+    Entity containing all infos of the host
+    """
+
+    def __init__(self):
+        self.host = None
+        self.cpu = None
+        self.memory = None
+        self.load = None
+        self.disks = None
+
+    def json_serialize(self):
+        """
+        Serializes this entity in JSON.
+        """
+
+        HostInfos = {
+            'host': json.loads(self.host.json_serialize())
+        }
+
+        HostInfos['host']['checks'] = []
+
+        HostInfos['host']['checks'].append({
+            'cpu': json.loads(self.cpu.json_serialize()),
+            'memory': json.loads(self.memory.json_serialize()),
+            'load': json.loads(self.load.json_serialize()),
+            'disks': json.loads(self.disks)
+        })
+
+        return json.dumps(HostInfos)
+
+
+

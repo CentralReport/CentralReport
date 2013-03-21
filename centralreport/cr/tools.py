@@ -152,7 +152,7 @@ class Config:
 
         # Generating uuid if empty
         if '' == Config.get_config_value('General', 'uuid'):
-            Config.set_config_value('General', 'uuid', uuid.uuid1())
+            Config.set_config_value('General', 'uuid', str(uuid.uuid1()))
 
         # Writing conf file. Reading all sections defined in the config...
         for config_section in Config._CR_CONFIG_VALUES:
