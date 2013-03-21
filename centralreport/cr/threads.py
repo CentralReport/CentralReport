@@ -74,27 +74,23 @@ class Checks(threading.Thread):
                 log.log_debug('---- New check -----')
 
                 # Checking CPU
-                if convert_text_to_bool(Config.get_config_value('Checks', 'enable_cpu_check')):
-                    log.log_debug('Doing a CPU check...')
-                    Checks.last_check_cpu = self.MyCollector.get_cpu()
+                log.log_debug('Doing a CPU check...')
+                Checks.last_check_cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
-                if convert_text_to_bool(Config.get_config_value('Checks', 'enable_memory_check')):
-                    log.log_debug('Doing a memory check...')
-                    Checks.last_check_memory = self.MyCollector.get_memory()
+                log.log_debug('Doing a memory check...')
+                Checks.last_check_memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
-                if convert_text_to_bool(Config.get_config_value('Checks', 'enable_load_check')):
-                    log.log_debug('Doing a load average check...')
-                    Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
+                log.log_debug('Doing a load average check...')
+                Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
 
                 # Checking disks informations
-                if convert_text_to_bool(Config.get_config_value('Checks', 'enable_disks_check')):
-                    log.log_debug('Doing a disk check....')
-                    Checks.last_check_disk = self.MyCollector.get_disks()
-                # Updating last check date...
+                log.log_debug('Doing a disk check....')
+                Checks.last_check_disk = self.MyCollector.get_disks()
 
-                Checks.last_check_date = datetime.datetime.now()  # Update the last check date
+                # Updating last check date...
+                Checks.last_check_date = datetime.datetime.now()
 
                 # TODO** Work on a better way to get disks
                 all_disks = []

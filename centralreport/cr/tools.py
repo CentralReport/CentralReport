@@ -67,10 +67,6 @@ class Config:
             'port': '8080'
         },
         'Checks': {
-            'enable_cpu_check': 'True',
-            'enable_memory_check': 'True',
-            'enable_load_check': 'True',
-            'enable_disks_check': 'True',
             'interval': '60'
         },
         'Alerts': {
