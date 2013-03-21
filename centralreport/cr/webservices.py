@@ -30,4 +30,5 @@ class WebServices:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         r = requests.post(url, data=full, headers=headers)
+        log.log_debug('----------------------------------- Status: %s' % r.status_code)
         log.log_debug(r.text)

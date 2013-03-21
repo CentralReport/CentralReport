@@ -7,9 +7,6 @@
     https://github.com/miniche/CentralReport/
 """
 
-import datetime
-import json
-
 
 class Cpu:
 
@@ -18,7 +15,6 @@ class Cpu:
     """
 
     def __init__(self):
-        self.date = datetime.datetime.now()
         self.idle = float(0)
         self.system = float(0)
         self.user = float(0)
@@ -28,12 +24,37 @@ class Cpu:
             Serializes this entity in JSON
         """
 
-        return json.dumps({
-            'date': self.date.strftime('%s'),
+        return {
             'idle': self.idle,
             'system': self.system,
             'user': self.user
-            })
+        }
+
+
+class Disks:
+    """
+        Entity containing checks for all the disks.
+    """
+
+    def __init__(self):
+        self.disks = list()
+
+    def json_serialize(self):
+        """
+            Serializes this entity in JSON.
+        """
+
+        all_disks = []
+
+        for disk in self.disks:
+            check_disk = {
+                'name': disk.name,
+                'free': disk.free,
+                'total': disk.size
+            }
+            all_disks.append(check_disk)
+
+        return all_disks
 
 
 class Disk:
@@ -43,7 +64,6 @@ class Disk:
     """
 
     def __init__(self):
-        self.date = datetime.datetime.now()
         self.free = float(0)
         self.name = ''
         self.size = float(0)
@@ -55,14 +75,13 @@ class Disk:
             Serializes this entity in JSON
         """
 
-        return json.dumps({
-            'date': self.date.strftime('%s'),
+        return {
             'free': self.free,
             'name': self.name,
             'size': self.size,
             'unix_name': self.unix_name,
             'used': self.used
-            })
+        }
 
 
 class LoadAverage:
@@ -72,7 +91,6 @@ class LoadAverage:
     """
 
     def __init__(self):
-        self.date = datetime.datetime.now()
         self.last1m = float(0)
         self.last5m = float(0)
         self.last15m = float(0)
@@ -83,13 +101,12 @@ class LoadAverage:
             Serializes this entity in JSON
         """
 
-        return json.dumps({
-            'date': self.date.strftime('%s'),
+        return {
             'last1m': self.last1m,
             'last5m': self.last5m,
             'last15m': self.last15m,
             'uptime': self.uptime
-            })
+        }
 
 
 class Memory:
@@ -100,7 +117,6 @@ class Memory:
 
     def __init__(self):
         self.active = float(0)
-        self.date = datetime.datetime.now()
         self.free = float(0)
         self.inactive = float(0)
         self.resident = float(0)
@@ -114,9 +130,8 @@ class Memory:
             Serializes this entity in JSON
         """
 
-        return json.dumps({
+        return {
             'active': self.active,
-            'date': self.date.strftime('%s'),
             'free': self.free,
             'inactive': self.inactive,
             'resident': self.resident,
@@ -124,4 +139,4 @@ class Memory:
             'swap_size': self.swap_size,
             'swap_used': self.swap_used,
             'total': self.total
-            })
+        }

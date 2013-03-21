@@ -47,7 +47,7 @@ class Infos:
             Serializes this entity in JSON.
         """
 
-        return json.dumps({
+        return {
             'architecture': self.architecture,
             'cpu_count': self.cpu_count,
             'cpu_model': self.cpu_model,
@@ -60,32 +60,12 @@ class Infos:
             'os': self.os,
             'type': 'host',
             'uuid': self.uuid
-        })
-
-
-class Disks:
-    """
-        Entity containing checks for all the disks.
-    """
-
-    def __init__(self):
-        self.checks = list()
-        self.date = datetime.datetime.now()
-
-    def json_serialize(self):
-        """
-            Serializes this entity in JSON.
-        """
-
-        return json.dumps({
-            'date': self.date.strftime('%s'),
-            'disks': self.checks
-        })
+        }
 
 
 class Full:
     """
-    Entity containing all infos of the host
+        Entity containing all infos of the host
     """
 
     def __init__(self):
@@ -97,23 +77,23 @@ class Full:
 
     def json_serialize(self):
         """
-        Serializes this entity in JSON.
+            Serializes this entity in JSON.
         """
 
-        HostInfos = {
-            'host': json.loads(self.host.json_serialize())
+        host_data = {
+            'host': self.host.json_serialize()
         }
 
-        HostInfos['host']['checks'] = []
+        host_data['host']['checks'] = []
 
-        HostInfos['host']['checks'].append({
-            'cpu': json.loads(self.cpu.json_serialize()),
-            'memory': json.loads(self.memory.json_serialize()),
-            'load': json.loads(self.load.json_serialize()),
-            'disks': json.loads(self.disks)
+        host_data['host']['checks'].append({
+            'cpu': self.cpu.json_serialize(),
+            'memory': self.memory.json_serialize(),
+            'load': self.load.json_serialize(),
+            'disks': self.disks.json_serialize()
         })
 
-        return json.dumps(HostInfos)
+        return json.dumps(host_data)
 
 
 

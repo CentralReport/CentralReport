@@ -237,7 +237,7 @@ class Pages:
         if Checks.last_check_disk is not None:
             all_disks = []
 
-            for disk in Checks.last_check_disk.checks:
+            for disk in Checks.last_check_disk.disks:
                 # TODO: Find a better solution to decode UTF8
                 check_disk = {
                     'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
@@ -413,7 +413,7 @@ class Pages:
         if Checks.last_check_disk is not None:
             all_disks = []
 
-            for disk in Checks.last_check_disk.checks:
+            for disk in Checks.last_check_disk.disks:
                 check_disk = {
                     'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
                     'free': text.convert_byte(disk.free),

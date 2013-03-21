@@ -92,25 +92,13 @@ class Checks(threading.Thread):
                 # Updating last check date...
                 Checks.last_check_date = datetime.datetime.now()
 
-                # TODO** Work on a better way to get disks
-                all_disks = []
-
-                for disk in Checks.last_check_disk.checks:
-                    check_disk = {
-                        'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
-                        'free': text.convert_byte(disk.free),
-                        'total': text.convert_byte(disk.size),
-                        'percent': int(round(disk.used, 0) * 100 / int(disk.size))
-                    }
-                    all_disks.append(check_disk)
-
                 myHost = host.Full()
                 myHost.host = Checks.hostEntity
 
                 myHost.cpu = Checks.last_check_cpu
                 myHost.memory = Checks.last_check_memory
                 myHost.load = Checks.last_check_loadAverage
-                myHost.disks = json.dumps(all_disks)
+                myHost.disks = Checks.last_check_disk
 
                 webservices.WebServices.send_full_check(myHost.json_serialize())
 

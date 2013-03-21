@@ -214,7 +214,7 @@ class MacCollector(_Collector):
         header = df_split[0].split()
 
         # New return entity
-        list_disks = host.Disks()
+        list_disks = checks.Disks()
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
@@ -240,7 +240,7 @@ class MacCollector(_Collector):
                 check_disk.used = disk_used
                 check_disk.free = disk_free
 
-                list_disks.checks.append(check_disk)
+                list_disks.disks.append(check_disk)
 
         return list_disks
 
@@ -422,7 +422,7 @@ class DebianCollector(_Collector):
         df_dict = system.execute_command('df')
         df_split = df_dict.splitlines()
 
-        list_disks = host.Disks()  # Return new entity
+        list_disks = checks.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
@@ -442,6 +442,6 @@ class DebianCollector(_Collector):
                 check_disk.used = disk_used
                 check_disk.free = disk_free
 
-                list_disks.checks.append(check_disk)
+                list_disks.disks.append(check_disk)
 
         return list_disks
