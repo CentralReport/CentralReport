@@ -14,8 +14,8 @@ from sys import path as sysPath
 from os import path as osPath
 
 sysPath.insert(0, osPath.abspath(__file__ + '/../../libs/requests-1.1.0.zip'))
-
 import requests
+
 from cr.tools import Config
 from cr.utils.date import datetime_to_timestamp
 from cr.utils import text
