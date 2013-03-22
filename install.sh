@@ -71,8 +71,8 @@ detect_010_version
 if [ "$?" -ne 0 ]; then
     printBox yellow "CentralReport 0.1.0 has been detected on your host.| \
                      Before installing the new version, we must delete it. This is automatic,| \
-                     but your configuration file will be erased. You can do a backup before if | \
-                     you want. The configuration file is: /etc/centralreport.cfg"
+                     but your configuration file will be erased. You can do a backup before if| \
+                     you want. The configuration file is: /etc/centralreport/centralreport.cfg"
 fi
 
 # Check the actual mode.
@@ -126,13 +126,15 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         else
             # Nothing wrong happened while installing. We log this, and then we display the beautiful green lightbox.
-            logFile "CentralReport is now installed! For more options, you can edit the config file at /etc/centralreport.cfg"
+            logFile "CentralReport is now installed! For more options, you can edit the config \
+                     file at /etc/centralreport/centralreport.cfg"
             logFile "More help at http://github.com/miniche/CentralReport. Have fun!"
 
             # Adding a space before the lightbox to separate previous logs with the success message.
             logConsole " "
             printBox blue "CentralReport is now installed!| \
-                           For more options, you can edit the config file at /etc/centralreport.cfg| \
+                           For more options, you can edit the config file| \
+                           at /etc/centralreport/centralreport.cfg| \
                            | \
                            You can find more help at http://github.com/miniche/CentralReport.| \
                            Have fun!"

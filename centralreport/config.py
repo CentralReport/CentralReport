@@ -27,7 +27,8 @@ if __name__ == '__main__':
         print '                         CentralReport config editor                            '
         print '--------------------------------------------------------------------------------'
         print ' '
-        print 'You can also edit manually the config file, located at /etc/centralreport.cfg'
+        print 'You can also edit manually the config file, located'
+        print 'at /etc/centralreport/centralreport.cfg'
 
         daemon = CentralReport(Config.CR_PID_FILE)
         if not daemon.status():
