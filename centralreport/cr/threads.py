@@ -87,7 +87,7 @@ class Checks(threading.Thread):
 
                 # Checking disks informations
                 if convert_text_to_bool(Config.get_config_value('Checks', 'enable_disks_check')):
-                    log.log_debug('Doing a disk check....')
+                    log.log_debug('Doing a disk check...')
                     Checks.last_check_disk = self.MyCollector.get_disks()
 
                 # Updating last check date...
