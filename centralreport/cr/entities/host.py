@@ -41,6 +41,7 @@ class Infos:
         self.model = ''  # Only for Mac OS
         self.os = ''
         self.uuid = ''
+        self.hsecret = ''
 
     def json_serialize(self):
         """
@@ -59,7 +60,8 @@ class Infos:
             'language': self.language,
             'os': self.os,
             'type': 'host',
-            'uuid': self.uuid
+            'uuid': self.uuid,
+            'host_secret': self.hsecret
         }
 
 

@@ -59,7 +59,8 @@ class Config:
 
     _CR_CONFIG_VALUES = {
         'General': {
-            'uuid': ''
+            'uuid': '',
+            'host_secret': ''
         },
         'Webserver': {
             'enable': 'True',

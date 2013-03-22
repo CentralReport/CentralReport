@@ -100,7 +100,11 @@ class Checks(threading.Thread):
                 myHost.load = Checks.last_check_loadAverage
                 myHost.disks = Checks.last_check_disk
 
-                webservices.WebServices.send_full_check(myHost.json_serialize())
+                if '' == myHost.host.hsecret:
+                    log.log_debug('Your server is not registred')
+                    log.log_debug('Please register your server on http://centralreport.net')
+                else:
+                    webservices.WebServices.send_full_check(myHost.json_serialize())
 
                 # Wait 60 seconds before next checks...
 

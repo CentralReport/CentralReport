@@ -90,6 +90,7 @@ class MacCollector(_Collector):
         host_entity = host.Infos()
 
         host_entity.uuid = Config.get_config_value('General', 'uuid')
+        host_entity.hsecret = Config.get_config_value('General', 'host_secret')
         host_entity.os = Config.HOST_CURRENT
         host_entity.hostname = hostname
         host_entity.architecture = architecture
@@ -300,6 +301,7 @@ class DebianCollector(_Collector):
         host_entity = host.Infos()
 
         host_entity.uuid = Config.get_config_value('General', 'uuid')
+        host_entity.hsecret = Config.get_config_value('General', 'host_secret')
         host_entity.os = Config.HOST_CURRENT
         host_entity.hostname = hostname
         host_entity.architecture = architecture
