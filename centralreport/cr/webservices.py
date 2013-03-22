@@ -10,11 +10,12 @@
 
 from sys import path as sysPath
 from os import path as osPath
-from cr import log
 
 sysPath.insert(0, osPath.abspath(__file__ + '/../../libs/requests-1.1.0.zip'))
 
 import requests
+
+from cr.entities.webservices import WebServiceReturn
 
 
 class WebServices:
@@ -24,11 +25,23 @@ class WebServices:
     """
 
     @staticmethod
-    def send_full_check(full):
-        url = "http://httpbin.org/post"  # Will be replaced with CentralReport Online IP
+    def send_json(url, data):
+        """
+            Sends data to the remote server
+
+            @param url: Destination of the data
+            @param data: data to sent
+
+            @return: Response object of the Request library
+            @rtype: cr.entities.webservices.WebServiceReturn
+        """
 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        response = requests.post(url, data=data, headers=headers)
 
-        r = requests.post(url, data=full, headers=headers)
-        log.log_debug('----------------------------------- Status: %s' % r.status_code)
-        log.log_debug(r.text)
+        ws_return = WebServiceReturn()
+        ws_return.code = response.status_code
+        ws_return.headers = response.headers
+        ws_return.text = response.text
+
+        return ws_return

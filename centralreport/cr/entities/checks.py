@@ -7,9 +7,36 @@
     https://github.com/miniche/CentralReport/
 """
 
+import datetime
+
+
+class Check:
+    """
+        Entity representing a complete check
+    """
+
+    def __init__(self):
+        self.date = datetime.datetime.now()
+
+        self.cpu = None
+        self.disks = None
+        self.memory = None
+        self.load = None
+
+        def serialize(self):
+            """
+                Serializes this entity in JSON
+            """
+
+            return {
+                'cpu': self.cpu.serialize(),
+                'memory': self.memory.serialize(),
+                'load': self.load.serialize(),
+                'disks': self.disks.serialize()
+            }
+
 
 class Cpu:
-
     """
         Entity representing a cpu check for the current host.
     """
@@ -19,7 +46,7 @@ class Cpu:
         self.system = float(0)
         self.user = float(0)
 
-    def json_serialize(self):
+    def serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -39,7 +66,7 @@ class Disks:
     def __init__(self):
         self.disks = list()
 
-    def json_serialize(self):
+    def serialize(self):
         """
             Serializes this entity in JSON.
         """
@@ -58,7 +85,6 @@ class Disks:
 
 
 class Disk:
-
     """
         Entity representing a disk check for the current host.
     """
@@ -70,7 +96,7 @@ class Disk:
         self.unix_name = ''
         self.used = float(0)
 
-    def json_serialize(self):
+    def serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -85,7 +111,6 @@ class Disk:
 
 
 class LoadAverage:
-
     """
         Entity representing a load average check for the current host.
     """
@@ -96,7 +121,7 @@ class LoadAverage:
         self.last15m = float(0)
         self.uptime = int(0)  # Uptime in seconds
 
-    def json_serialize(self):
+    def serialize(self):
         """
             Serializes this entity in JSON
         """
@@ -110,7 +135,6 @@ class LoadAverage:
 
 
 class Memory:
-
     """
         Entity representing a memory check for the current host.
     """
@@ -125,7 +149,7 @@ class Memory:
         self.swap_used = float(0)
         self.total = float(0)
 
-    def json_serialize(self):
+    def serialize(self):
         """
             Serializes this entity in JSON
         """

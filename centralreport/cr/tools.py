@@ -59,8 +59,13 @@ class Config:
 
     _CR_CONFIG_VALUES = {
         'General': {
-            'uuid': '',
-            'host_secret': ''
+            'uuid': ''
+        },
+        'Remote': {
+            'key': '',
+            'server': 'http://localhost',
+            'url_status': 'status',
+            'url_checks': 'checks'
         },
         'Webserver': {
             'enable': 'True',

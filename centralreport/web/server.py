@@ -127,9 +127,9 @@ class Pages:
         tmpl_vars = dict()
 
         # Host informations
-        tmpl_vars['hostname'] = Checks.hostEntity.hostname
-        tmpl_vars['os_name'] = Checks.hostEntity.os_name
-        tmpl_vars['os_version'] = Checks.hostEntity.os_version
+        tmpl_vars['hostname'] = Checks.host_infos.hostname
+        tmpl_vars['os_name'] = Checks.host_infos.os_name
+        tmpl_vars['os_version'] = Checks.host_infos.os_version
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
             tmpl_vars['host_os'] = 'MAC'
@@ -151,7 +151,7 @@ class Pages:
             tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
             tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
             tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
-            tmpl_vars['cpu_count'] = Checks.hostEntity.cpu_count
+            tmpl_vars['cpu_count'] = Checks.host_infos.cpu_count
 
             if int(tmpl_vars['cpu_percent']) >= int(Config.get_config_value('Alerts', 'cpu_alert')):
                 tmpl_vars['cpu_alert'] = True
@@ -215,7 +215,7 @@ class Pages:
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
             tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
-                Checks.hostEntity.cpu_count)
+                Checks.host_infos.cpu_count)
 
             if int(tmpl_vars['loadaverage_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
                 tmpl_vars['load_alert'] = True
@@ -258,7 +258,7 @@ class Pages:
         tmpl_vars = dict()
 
         tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
-        tmpl_vars['host'] = Checks.hostEntity
+        tmpl_vars['host'] = Checks.host_infos
         tmpl_vars['cpu'] = Checks.last_check_cpu
         tmpl_vars['memory'] = Checks.last_check_memory
         tmpl_vars['loadaverage'] = Checks.last_check_loadAverage
@@ -387,7 +387,7 @@ class Pages:
 
                 tmpl_vars['load_last_one'] = Checks.last_check_loadAverage.last1m
                 tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
-                    Checks.hostEntity.cpu_count)
+                    Checks.host_infos.cpu_count)
 
                 if int(tmpl_vars['load_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
                     tmpl_vars['load_state'] = "alert"

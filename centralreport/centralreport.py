@@ -28,6 +28,7 @@ class CentralReport(Daemon):
 
     # Threads
     checks_thread = None
+    remote_thread = None
     webserver_thread = None
 
     # Sigterm signal
@@ -78,8 +79,10 @@ class CentralReport(Daemon):
         # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
-            log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
+            log.log_info('%s detected. Starting threads...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
+            CentralReport.remote_thread = threads.SendCheck()
+
         else:
             is_error = True
             log.log_critical('Sorry, but your OS is not supported yet...')
