@@ -126,8 +126,8 @@ if [ "install" == ${ACTUAL_MODE} ]; then
 
         else
             # Nothing wrong happened while installing. We log this, and then we display the beautiful green lightbox.
-            logFile "CentralReport is now installed! For more options, you can edit the config \
-                     file at /etc/centralreport/centralreport.cfg"
+            logFile "CentralReport is now installed!"
+            logFile "For more options, you can edit the config file at /etc/centralreport/centralreport.cfg"
             logFile "More help at http://github.com/miniche/CentralReport. Have fun!"
 
             # Adding a space before the lightbox to separate previous logs with the success message.
