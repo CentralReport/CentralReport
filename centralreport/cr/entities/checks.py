@@ -23,17 +23,17 @@ class Check:
         self.memory = None
         self.load = None
 
-        def serialize(self):
-            """
-                Serializes this entity in JSON
-            """
+    def serialize(self):
+        """
+            Serializes this entity in JSON
+        """
 
-            return {
-                'cpu': self.cpu.serialize(),
-                'memory': self.memory.serialize(),
-                'load': self.load.serialize(),
-                'disks': self.disks.serialize()
-            }
+        return {
+            'cpu': self.cpu.serialize(),
+            'memory': self.memory.serialize(),
+            'load': self.load.serialize(),
+            'disks': self.disks.serialize()
+        }
 
 
 class Cpu:
