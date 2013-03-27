@@ -144,6 +144,8 @@ class SendCheck(threading.Thread):
                     ws_check.os = Checks.host_infos.os
                     ws_check.os_version = Checks.host_infos.os_version
 
+                    print str(json.dumps(ws_check.serialize()))
+
                     WebServices.send_json(Config.get_config_value('Remote', 'server'), json.dumps(ws_check.serialize()))
 
                     # Todo: Read the result...
