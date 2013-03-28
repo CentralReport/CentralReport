@@ -8,17 +8,13 @@
 """
 
 import datetime
-import json
 import threading
 import time
 
-from cr import collectors, webservices
+from cr import collectors
 from cr import log
 from cr.entities import checks
-from cr.entities.webservices import Full
-from cr.entities.webservices import GetStatus
 from cr.tools import Config
-from cr.webservices import WebServices
 
 
 class Checks(threading.Thread):
@@ -26,7 +22,7 @@ class Checks(threading.Thread):
         Thread performing periodically checks.
     """
 
-    # Host related informations (entities.host.Infos())
+    # Host related information (entities.host.Infos())
     host_infos = None
 
     # Last checks (entities.checks.Check())
@@ -62,7 +58,7 @@ class Checks(threading.Thread):
             Executes checks.
         """
 
-        # Getting informations about the current host
+        # Getting information about the current host
 
         Checks.host_infos = self.MyCollector.get_infos()
 
@@ -83,7 +79,7 @@ class Checks(threading.Thread):
                 log.log_debug('Doing a load average check...')
                 check_entity.load = self.MyCollector.get_loadaverage()
 
-                # Checking disks informations
+                # Checking disks information
                 log.log_debug('Doing a disk check....')
                 check_entity.disks = self.MyCollector.get_disks()
 
@@ -91,7 +87,7 @@ class Checks(threading.Thread):
                 check_entity.date = datetime.datetime.now()
 
                 Checks.last_check = check_entity
-                SendCheck.add_check(check_entity)
+                Remote.add_check(check_entity)
 
                 # Wait 60 seconds before next checks...
                 log.log_debug('All checks are done')
@@ -105,12 +101,12 @@ class Checks(threading.Thread):
             time.sleep(1)
 
 
-class SendCheck(threading.Thread):
+class Remote(threading.Thread):
     """
         This class is used for sending Checks to the remote server
     """
 
-    checks = list()  # All checks which must sent to the remote server
+    checks = list()  # Checks that need to be sent to the remote server
 
     is_enable = False  # "True" only if this daemon is able to send checks to the remote server
 
@@ -131,7 +127,7 @@ class SendCheck(threading.Thread):
             log.log_debug('SendCheck: Waiting for the first check...')
             time.sleep(4)
 
-        while SendCheck._perform_send is True:
+        while Remote._perform_send:
 
             if Checks.host_infos.key == '':
                 log.log_debug('SendCheck: Remote key undefined!')
@@ -145,14 +141,14 @@ class SendCheck(threading.Thread):
     @staticmethod
     def add_check(check):
         """
-            Adds a check. It will be sent to the remote server as soon as possible.
+            Adds that will be sent to the remote server as soon as possible.
             The check is not added if CR is unable to communicate with the remote server.
 
             @param check: The check entity
             @type check: cr.entities.checks.Check
         """
-        if SendCheck.is_enable is True:
+        if Remote.is_enable:
             log.log_debug('This check will be sent to the remote server ASAP.')
-            SendCheck.checks.append(check)
+            Remote.checks.append(check)
         else:
             log.log_debug('Check ignored: Remote server is disable.')

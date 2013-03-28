@@ -12,7 +12,7 @@ import json
 
 class Full:
     """
-        This entity contains all infos of the host
+        This entity contains every host information
     """
 
     def __init__(self):
@@ -21,7 +21,7 @@ class Full:
 
     def json_serialize(self):
         """
-            Serializes this entity in JSON.
+            Serializes this entity into JSON.
         """
 
         host_data = {
@@ -36,7 +36,7 @@ class Full:
         return json.dumps(host_data)
 
 
-class GetStatus:
+class Registration:
     """
         Entity used to get the host status on the remote server
     """
@@ -51,7 +51,7 @@ class GetStatus:
     def serialize(self):
         """
             Serialize the current object
-            @return: a dict with all values
+            @return: a dict with the class attributes
         """
 
         return {
@@ -63,7 +63,7 @@ class GetStatus:
         }
 
 
-class WebServiceReturn:
+class Answer:
     """
         This entity contains the result of a webservice
     """

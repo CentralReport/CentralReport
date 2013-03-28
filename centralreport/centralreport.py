@@ -81,7 +81,7 @@ class CentralReport(Daemon):
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
             log.log_info('%s detected. Starting threads...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
-            CentralReport.remote_thread = threads.SendCheck()
+            CentralReport.remote_thread = threads.Remote()
 
         else:
             is_error = True
