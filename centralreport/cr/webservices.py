@@ -31,7 +31,7 @@ class WebServices:
     VERB_DELETE = "DELETE"
 
     @staticmethod
-    def send_data(verb, url, data, headers={}):
+    def send_data(verb, url, data, headers):
         """
             Sends data to the remote server
 
@@ -56,7 +56,6 @@ class WebServices:
             response = requests.delete(url, data=data, headers=headers)
         else:
             raise ValueError('Unknown verb')
-            return None
 
         ws_return = WebServiceReturn() 
         ws_return.code = response.status_code
@@ -64,7 +63,6 @@ class WebServices:
         ws_return.text = response.text
 
         return ws_return
-
 
     @staticmethod
     def send_json(verb, url, data):
