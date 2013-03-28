@@ -7,7 +7,7 @@
     https://github.com/miniche/CentralReport/
 """
 
-import datetime
+from datetime import datetime
 import threading
 import time
 
@@ -84,7 +84,7 @@ class Checks(threading.Thread):
                 check_entity.disks = self.MyCollector.get_disks()
 
                 # Updating last check date...
-                check_entity.date = datetime.datetime.now()
+                check_entity.date = datetime.now()
 
                 Checks.last_check = check_entity
                 Remote.add_check(check_entity)

@@ -50,7 +50,7 @@ class Registration:
 
     def serialize(self):
         """
-            Serialize the current object
+            Serializes the current object
             @return: a dict with the class attributes
         """
 

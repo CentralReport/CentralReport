@@ -141,16 +141,16 @@ class Pages:
         tmpl_vars['CR_version'] = Config.CR_VERSION
         tmpl_vars['CR_version_name'] = Config.CR_VERSION_NAME
 
-        if Checks.last_check_date is None:
+        if Checks.last_check.date is None:
             tmpl_vars['last_check'] = 'Never'
         else:
-            tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+            tmpl_vars['last_check'] = Checks.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
 
         # CPU stats
-        if Checks.last_check_cpu is not None:
-            tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
-            tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
-            tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
+        if Checks.last_check.cpu is not None:
+            tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check.cpu.idle)
+            tmpl_vars['cpu_user'] = Checks.last_check.cpu.user
+            tmpl_vars['cpu_system'] = Checks.last_check.cpu.system
             tmpl_vars['cpu_count'] = Checks.host_infos.cpu_count
 
             if int(tmpl_vars['cpu_percent']) >= int(Config.get_config_value('Alerts', 'cpu_alert')):
@@ -161,15 +161,15 @@ class Pages:
                 tmpl_vars['cpu_ok'] = True
 
         # Memory and swap stats
-        if Checks.last_check_memory is not None:
+        if Checks.last_check.memory is not None:
 
             # First: Memory stats
-            tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(
-                Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
-            tmpl_vars['memory_free'] = text.convert_byte(Checks.last_check_memory.free)
-            tmpl_vars['memory_total'] = text.convert_byte(Checks.last_check_memory.total)
+            tmpl_vars['memory_percent'] = ((int(Checks.last_check.memory.total) - int(
+                Checks.last_check.memory.free)) * 100) / int(Checks.last_check.memory.total)
+            tmpl_vars['memory_free'] = text.convert_byte(Checks.last_check.memory.free)
+            tmpl_vars['memory_total'] = text.convert_byte(Checks.last_check.memory.total)
             tmpl_vars['memory_used'] = text.convert_byte(
-                float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
+                float(Checks.last_check.memory.total) - float(Checks.last_check.memory.free))
 
             # Memory status
             if int(tmpl_vars['memory_percent']) >= int(Config.get_config_value('Alerts', 'memory_alert')):
@@ -180,16 +180,16 @@ class Pages:
                 tmpl_vars['memory_ok'] = True
 
             # Last: swap stats
-            if 0 != int(Checks.last_check_memory.swap_size):
-                tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swap_used) * 100 / int(
-                    Checks.last_check_memory.swap_size)
-                tmpl_vars['swap_used'] = text.convert_byte(Checks.last_check_memory.swap_used)
+            if 0 != int(Checks.last_check.memory.swap_size):
+                tmpl_vars['swap_percent'] = int(Checks.last_check.memory.swap_used) * 100 / int(
+                    Checks.last_check.memory.swap_size)
+                tmpl_vars['swap_used'] = text.convert_byte(Checks.last_check.memory.swap_used)
 
-                tmpl_vars['swap_free'] = text.convert_byte(Checks.last_check_memory.swap_free)
-                tmpl_vars['swap_size'] = text.convert_byte(Checks.last_check_memory.swap_size)
+                tmpl_vars['swap_free'] = text.convert_byte(Checks.last_check.memory.swap_free)
+                tmpl_vars['swap_size'] = text.convert_byte(Checks.last_check.memory.swap_size)
 
                 # On Mac, the swap is unlimited (only limited by the available hard drive size)
-                if Checks.last_check_memory.swap_size == Checks.last_check_memory.total:
+                if Checks.last_check.memory.swap_size == Checks.last_check.memory.total:
 
                     tmpl_vars['swap_configuration'] = 'unlimited'
                 else:
@@ -212,9 +212,9 @@ class Pages:
                 tmpl_vars['swap_configuration'] = 'undefined'
 
         # Load average stats
-        if Checks.last_check_loadAverage is not None:
-            tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
-            tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
+        if Checks.last_check.load is not None:
+            tmpl_vars['loadaverage'] = Checks.last_check.load.last1m
+            tmpl_vars['loadaverage_percent'] = (float(Checks.last_check.load.last1m) * 100) / int(
                 Checks.host_infos.cpu_count)
 
             if int(tmpl_vars['loadaverage_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
@@ -225,19 +225,19 @@ class Pages:
                 tmpl_vars['load_ok'] = True
 
         # Uptime stats (checked in load average collector)
-        if Checks.last_check_loadAverage is not None:
-            tmpl_vars['uptime'] = text.convert_seconds_to_phrase_time(int(Checks.last_check_loadAverage.uptime))
-            tmpl_vars['uptime_seconds'] = text.add_number_separators(str(Checks.last_check_loadAverage.uptime))
+        if Checks.last_check.load is not None:
+            tmpl_vars['uptime'] = text.convert_seconds_to_phrase_time(int(Checks.last_check.load.uptime))
+            tmpl_vars['uptime_seconds'] = text.add_number_separators(str(Checks.last_check.load.uptime))
             tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(
-                datetime_to_timestamp(Checks.last_check_date) - int(
-                    Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+                datetime_to_timestamp(Checks.last_check.date) - int(
+                    Checks.last_check.load.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
         # Disks stats
 
-        if Checks.last_check_disk is not None:
+        if Checks.last_check.disks is not None:
             all_disks = []
 
-            for disk in Checks.last_check_disk.disks:
+            for disk in Checks.last_check.disks.disks:
                 # TODO: Find a better solution to decode UTF8
                 check_disk = {
                     'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
@@ -249,20 +249,6 @@ class Pages:
                 all_disks.append(check_disk)
 
             tmpl_vars['disks'] = all_disks
-
-        return tmpl.render(tmpl_vars)
-
-    @cherrypy.expose
-    def dashboard(self):
-        tmpl = self.env.get_template('dashboard_mac.tpl')
-        tmpl_vars = dict()
-
-        tmpl_vars['last_check'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
-        tmpl_vars['host'] = Checks.host_infos
-        tmpl_vars['cpu'] = Checks.last_check_cpu
-        tmpl_vars['memory'] = Checks.last_check_memory
-        tmpl_vars['loadaverage'] = Checks.last_check_loadAverage
-        tmpl_vars['disks'] = Checks.last_check_disk
 
         return tmpl.render(tmpl_vars)
 
@@ -281,12 +267,12 @@ class Pages:
         cherrypy.response.headers['Content-Type'] = 'application/json'
         tmpl_vars = dict()
 
-        if Checks.last_check_date is None:
+        if Checks.last_check.date is None:
             tmpl_vars['last_timestamp'] = '0'
             tmpl_vars['last_fulldate'] = 'Never'
         else:
-            tmpl_vars['last_timestamp'] = datetime_to_timestamp(Checks.last_check_date)
-            tmpl_vars['last_fulldate'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+            tmpl_vars['last_timestamp'] = datetime_to_timestamp(Checks.last_check.date)
+            tmpl_vars['last_fulldate'] = Checks.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
 
         tmpl_vars['current_timestamp'] = datetime_to_timestamp(datetime.datetime.now())
 
@@ -303,23 +289,23 @@ class Pages:
         cherrypy.response.headers['Content-Type'] = 'application/json'
         tmpl_vars = dict()
 
-        if Checks.last_check_date is None:
+        if Checks.last_check.date is None:
             tmpl_vars['last_timestamp'] = '0'
             tmpl_vars['last_fulldate'] = 'Never'
         else:
-            tmpl_vars['last_timestamp'] = datetime_to_timestamp(Checks.last_check_date)
-            tmpl_vars['last_fulldate'] = Checks.last_check_date.strftime("%Y-%m-%d %H:%M:%S")
+            tmpl_vars['last_timestamp'] = datetime_to_timestamp(Checks.last_check.date)
+            tmpl_vars['last_fulldate'] = Checks.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
             tmpl_vars['current_timestamp'] = datetime_to_timestamp(datetime.datetime.now())
 
             # CPU Check informations
-            if Checks.last_check_cpu is None:
+            if Checks.last_check.cpu is None:
                 tmpl_vars['cpu_check_enabled'] = 'False'
             else:
                 tmpl_vars['cpu_check_enabled'] = 'True'
 
-                tmpl_vars['cpu_percent'] = int(Checks.last_check_cpu.user) + int(Checks.last_check_cpu.system)
-                tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
-                tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
+                tmpl_vars['cpu_percent'] = int(Checks.last_check.cpu.user) + int(Checks.last_check.cpu.system)
+                tmpl_vars['cpu_user'] = Checks.last_check.cpu.user
+                tmpl_vars['cpu_system'] = Checks.last_check.cpu.system
 
                 if int(Config.get_config_value('Alerts', 'cpu_alert')) <= int(tmpl_vars['cpu_percent']):
                     tmpl_vars['cpu_state'] = "alert"
@@ -329,17 +315,17 @@ class Pages:
                     tmpl_vars['cpu_state'] = 'ok'
 
             # Memory check informations
-            if Checks.last_check_memory is None:
+            if Checks.last_check.memory is None:
                 tmpl_vars['memory_check_enabled'] = 'False'
             else:
                 tmpl_vars['memory_check_enabled'] = "True"
 
-                tmpl_vars['memory_percent'] = ((int(Checks.last_check_memory.total) - int(
-                    Checks.last_check_memory.free)) * 100) / int(Checks.last_check_memory.total)
-                tmpl_vars['memory_free'] = text.convert_byte(Checks.last_check_memory.free)
-                tmpl_vars['memory_total'] = text.convert_byte(Checks.last_check_memory.total)
+                tmpl_vars['memory_percent'] = ((int(Checks.last_check.memory.total) - int(
+                    Checks.last_check.memory.free)) * 100) / int(Checks.last_check.memory.total)
+                tmpl_vars['memory_free'] = text.convert_byte(Checks.last_check.memory.free)
+                tmpl_vars['memory_total'] = text.convert_byte(Checks.last_check.memory.total)
                 tmpl_vars['memory_used'] = text.convert_byte(
-                    float(Checks.last_check_memory.total) - float(Checks.last_check_memory.free))
+                    float(Checks.last_check.memory.total) - float(Checks.last_check.memory.free))
 
                 if int(tmpl_vars['memory_percent']) >= int(Config.get_config_value('Alerts', 'memory_alert')):
                     tmpl_vars['memory_state'] = "alert"
@@ -349,16 +335,16 @@ class Pages:
                     tmpl_vars['memory_state'] = 'ok'
 
                 # Last: swap stats
-                if 0 != int(Checks.last_check_memory.swap_size):
-                    tmpl_vars['swap_percent'] = int(Checks.last_check_memory.swap_used) * 100 / int(
-                        Checks.last_check_memory.swap_size)
-                    tmpl_vars['swap_used'] = text.convert_byte(Checks.last_check_memory.swap_used)
+                if 0 != int(Checks.last_check.memory.swap_size):
+                    tmpl_vars['swap_percent'] = int(Checks.last_check.memory.swap_used) * 100 / int(
+                        Checks.last_check.memory.swap_size)
+                    tmpl_vars['swap_used'] = text.convert_byte(Checks.last_check.memory.swap_used)
 
-                    tmpl_vars['swap_free'] = text.convert_byte(Checks.last_check_memory.swap_free)
-                    tmpl_vars['swap_size'] = text.convert_byte(Checks.last_check_memory.swap_size)
+                    tmpl_vars['swap_free'] = text.convert_byte(Checks.last_check.memory.swap_free)
+                    tmpl_vars['swap_size'] = text.convert_byte(Checks.last_check.memory.swap_size)
 
                     # On Mac, the swap is unlimited (only limited by the available hard drive size)
-                    if Checks.last_check_memory.swap_size == Checks.last_check_memory.total:
+                    if Checks.last_check.memory.swap_size == Checks.last_check.memory.total:
 
                         tmpl_vars['swap_configuration'] = 'unlimited'
                     else:
@@ -380,13 +366,13 @@ class Pages:
                     tmpl_vars['swap_configuration'] = 'undefined'
 
             # Load average
-            if Checks.last_check_loadAverage is None:
+            if Checks.last_check.load is None:
                 tmpl_vars['load_check_enabled'] = 'False'
             else:
                 tmpl_vars['load_check_enabled'] = "True"
 
-                tmpl_vars['load_last_one'] = Checks.last_check_loadAverage.last1m
-                tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
+                tmpl_vars['load_last_one'] = Checks.last_check.load.last1m
+                tmpl_vars['load_percent'] = (float(Checks.last_check.load.last1m) * 100) / int(
                     Checks.host_infos.cpu_count)
 
                 if int(tmpl_vars['load_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
@@ -397,11 +383,11 @@ class Pages:
                     tmpl_vars['load_state'] = 'ok'
 
                 tmpl_vars['uptime_full_text'] = text.convert_seconds_to_phrase_time(
-                    int(Checks.last_check_loadAverage.uptime))
-                tmpl_vars['uptime_seconds'] = text.add_number_separators(str(Checks.last_check_loadAverage.uptime))
+                    int(Checks.last_check.load.uptime))
+                tmpl_vars['uptime_seconds'] = text.add_number_separators(str(Checks.last_check.load.uptime))
                 tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(
-                    datetime_to_timestamp(Checks.last_check_date) - int(
-                        Checks.last_check_loadAverage.uptime)).strftime("%Y-%m-%d %H:%M:%S")
+                    datetime_to_timestamp(Checks.last_check.date) - int(
+                        Checks.last_check.load.uptime)).strftime("%Y-%m-%d %H:%M:%S")
 
         return tmpl.render(tmpl_vars)
 
@@ -410,10 +396,10 @@ class Pages:
         tmpl = self.env.get_template('blocks/disks.block.tpl')
         tmpl_vars = dict()
 
-        if Checks.last_check_disk is not None:
+        if Checks.last_check.disks is not None:
             all_disks = []
 
-            for disk in Checks.last_check_disk.disks:
+            for disk in Checks.last_check.disks.disks:
                 check_disk = {
                     'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
                     'free': text.convert_byte(disk.free),
