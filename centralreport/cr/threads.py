@@ -136,34 +136,8 @@ class SendCheck(threading.Thread):
             if Checks.host_infos.key == '':
                 log.log_debug('SendCheck: Remote key undefined!')
             else:
-                if SendCheck.is_enable is False:
-                    ws_check = GetStatus()
-                    ws_check.uuid = Checks.host_infos.uuid
-                    ws_check.key = Checks.host_infos.key
-                    ws_check.hostname = Checks.host_infos.hostname
-                    ws_check.os = Checks.host_infos.os
-                    ws_check.os_version = Checks.host_infos.os_version
-
-                    print str(json.dumps(ws_check.serialize()))
-
-                    WebServices.send_json(Config.get_config_value('Remote', 'server'), json.dumps(ws_check.serialize()))
-
-                    # Todo: Read the result...
-
-                # Now, we can send data to the remote server, if available.
-                if SendCheck.is_enable is True:
-                    if len(SendCheck.checks) == 0:
-                        log.log_debug('No check to send to the remote server')
-                    else:
-                        log.log_debug('%s check(s) to send to the remote server...' % len(SendCheck.checks))
-
-                        ws_full = Full()
-                        ws_full.host = Checks.host_infos
-                        ws_full.checks = SendCheck.checks
-
-                        WebServices.send_json(Config.get_config_value('Remote', 'server'), ws_full.json_serialize())
-
-                        # Todo: Read the result...
+                # TODO: Connection with the remote server with HATEOAS and REST APIs
+                pass
 
             time.sleep(60)
 
