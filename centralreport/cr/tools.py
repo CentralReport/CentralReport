@@ -45,6 +45,8 @@ class Config:
     HOST_UBUNTU = 'Ubuntu'
     HOST_REDHAT = 'RedHat'
     HOST_FEDORA = 'Fedora'
+    HOST_ARCH = 'Arch Linux'
+    HOST_CENTOS = 'CentOS'
 
     # CentralReport pid file
     if CR_CONFIG_ENABLE_DEBUG_MODE:
@@ -233,3 +235,9 @@ class Config:
             elif os.path.isfile('/etc/redhat_version'):
                 # RedHat!
                 Config.HOST_CURRENT = Config.HOST_REDHAT
+            elif os.path.isfile('/etc/arch-release'):
+                # ArchLinux!
+                Config.HOST_CURRENT = Config.HOST_ARCH
+            elif os.path.isfile('/etc/redhat-release'):
+                # CentOS!
+                Config.HOST_CURRENT = Config.HOST_CENTOS
