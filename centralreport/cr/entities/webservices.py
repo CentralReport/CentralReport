@@ -7,8 +7,6 @@
     https://github.com/miniche/CentralReport/
 """
 
-from cr.utils import object
-
 
 class Full:
     """
@@ -18,22 +16,6 @@ class Full:
     def __init__(self):
         self.checks = list()
         self.host = None
-
-    def json_serialize(self):
-        """
-            Serializes this entity into JSON.
-        """
-
-        host_data = {
-            'host': self.host.serialize()
-        }
-
-        host_data['host']['checks'] = []
-
-        for check in self.checks:
-            host_data['host']['checks'].append(check.serialize())
-
-        object.object_converter(host_data, "json")
 
 
 class Registration:
@@ -47,14 +29,6 @@ class Registration:
         self.hostname = ""
         self.os = ""
         self.os_version = ""
-
-    def serialize(self):
-        """
-            Serializes the current object
-            @return: a dict with the class attributes
-        """
-
-        object.object_converter(self, "json")
 
 
 class Answer:

@@ -8,7 +8,6 @@
 """
 
 import datetime
-from cr.utils import object
 
 
 class Infos:
@@ -43,10 +42,3 @@ class Infos:
 
         self.uuid = ''
         self.key = ''
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON.
-        """
-
-        object.object_converter(self, "json")

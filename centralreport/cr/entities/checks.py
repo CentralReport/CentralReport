@@ -8,7 +8,6 @@
 """
 
 import datetime
-from cr.utils import object
 
 
 class Check:
@@ -24,13 +23,6 @@ class Check:
         self.memory = None
         self.load = None
 
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        object.object_converter(self, "json")
-
 
 class Cpu:
     """
@@ -42,13 +34,6 @@ class Cpu:
         self.system = float(0)
         self.user = float(0)
 
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        object.object_converter(self, "json")
-
 
 class Disks:
     """
@@ -57,23 +42,6 @@ class Disks:
 
     def __init__(self):
         self.disks = list()
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON.
-        """
-
-        all_disks = []
-
-        for disk in self.disks:
-            check_disk = {
-                'name': disk.name,
-                'free': disk.free,
-                'total': disk.size
-            }
-            all_disks.append(check_disk)
-
-        object.object_converter(all_disks, "json")
 
 
 class Disk:
@@ -88,13 +56,6 @@ class Disk:
         self.unix_name = ''
         self.used = float(0)
 
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        object.object_converter(self, "json")
-
 
 class LoadAverage:
     """
@@ -106,13 +67,6 @@ class LoadAverage:
         self.last5m = float(0)
         self.last15m = float(0)
         self.uptime = int(0)  # Uptime in seconds
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        object.object_converter(self, "json")
 
 
 class Memory:
@@ -129,10 +83,3 @@ class Memory:
         self.swap_size = float(0)
         self.swap_used = float(0)
         self.total = float(0)
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        object.object_converter(self, "json")
