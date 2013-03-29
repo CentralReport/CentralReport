@@ -8,6 +8,7 @@
 """
 
 import datetime
+from cr.utils import object
 
 
 class Check:
@@ -28,12 +29,7 @@ class Check:
             Serializes this entity in JSON
         """
 
-        return {
-            'cpu': self.cpu.serialize(),
-            'memory': self.memory.serialize(),
-            'load': self.load.serialize(),
-            'disks': self.disks.serialize()
-        }
+        object.object_converter(self, "json")
 
 
 class Cpu:
@@ -51,11 +47,7 @@ class Cpu:
             Serializes this entity in JSON
         """
 
-        return {
-            'idle': self.idle,
-            'system': self.system,
-            'user': self.user
-        }
+        object.object_converter(self, "json")
 
 
 class Disks:
@@ -81,7 +73,7 @@ class Disks:
             }
             all_disks.append(check_disk)
 
-        return all_disks
+        object.object_converter(all_disks, "json")
 
 
 class Disk:
@@ -101,13 +93,7 @@ class Disk:
             Serializes this entity in JSON
         """
 
-        return {
-            'free': self.free,
-            'name': self.name,
-            'size': self.size,
-            'unix_name': self.unix_name,
-            'used': self.used
-        }
+        object.object_converter(self, "json")
 
 
 class LoadAverage:
@@ -126,12 +112,7 @@ class LoadAverage:
             Serializes this entity in JSON
         """
 
-        return {
-            'last1m': self.last1m,
-            'last5m': self.last5m,
-            'last15m': self.last15m,
-            'uptime': self.uptime
-        }
+        object.object_converter(self, "json")
 
 
 class Memory:
@@ -154,13 +135,4 @@ class Memory:
             Serializes this entity in JSON
         """
 
-        return {
-            'active': self.active,
-            'free': self.free,
-            'inactive': self.inactive,
-            'resident': self.resident,
-            'swap_free': self.swap_free,
-            'swap_size': self.swap_size,
-            'swap_used': self.swap_used,
-            'total': self.total
-        }
+        object.object_converter(self, "json")

@@ -7,7 +7,7 @@
     https://github.com/miniche/CentralReport/
 """
 
-import json
+from cr.utils import object
 
 
 class Full:
@@ -33,7 +33,7 @@ class Full:
         for check in self.checks:
             host_data['host']['checks'].append(check.serialize())
 
-        return json.dumps(host_data)
+        object.object_converter(host_data, "json")
 
 
 class Registration:
@@ -54,13 +54,7 @@ class Registration:
             @return: a dict with the class attributes
         """
 
-        return {
-            'uuid': self.uuid,
-            'key': self.key,
-            'hostame': self.hostname,
-            'os': self.os,
-            'os_version': self.os_version
-        }
+        object.object_converter(self, "json")
 
 
 class Answer:
