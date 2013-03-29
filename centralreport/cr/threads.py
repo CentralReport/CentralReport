@@ -7,16 +7,13 @@
     https://github.com/miniche/CentralReport/
 """
 
-import datetime
-import json
+from datetime import datetime
 import threading
 import time
 
-from cr import collectors, webservices
+from cr import collectors
 from cr import log
-from cr.entities import host
-from cr.utils import text
-from cr.utils.text import convert_text_to_bool
+from cr.entities import checks
 from cr.tools import Config
 
 
@@ -25,15 +22,11 @@ class Checks(threading.Thread):
         Thread performing periodically checks.
     """
 
-    hostEntity = None  # Get host informations
+    # Host related information (entities.host.Infos())
+    host_infos = None
 
-    # Last checks (with new entities classes)
-
-    last_check_cpu = None
-    last_check_date = None
-    last_check_disk = None
-    last_check_loadAverage = None
-    last_check_memory = None
+    # Last checks (entities.checks.Check())
+    last_check = None
 
     performChecks = True  # True = perform checks...
     tickCount = 60  # Initial Count (Perform a check when starting)
@@ -65,49 +58,38 @@ class Checks(threading.Thread):
             Executes checks.
         """
 
-        # Getting informations about the current host
+        # Getting information about the current host
 
-        Checks.hostEntity = self.MyCollector.get_infos()
+        Checks.host_infos = self.MyCollector.get_infos()
 
         while Checks.performChecks:
             if self.tickPerformCheck <= self.tickCount:
                 log.log_debug('---- New check -----')
+                check_entity = checks.Check()
 
                 # Checking CPU
                 log.log_debug('Doing a CPU check...')
-                Checks.last_check_cpu = self.MyCollector.get_cpu()
+                check_entity.cpu = self.MyCollector.get_cpu()
 
                 # Checking memory
                 log.log_debug('Doing a memory check...')
-                Checks.last_check_memory = self.MyCollector.get_memory()
+                check_entity.memory = self.MyCollector.get_memory()
 
                 # Checking Load Average
                 log.log_debug('Doing a load average check...')
-                Checks.last_check_loadAverage = self.MyCollector.get_loadaverage()
+                check_entity.load = self.MyCollector.get_loadaverage()
 
-                # Checking disks informations
+                # Checking disks information
                 log.log_debug('Doing a disk check....')
-                Checks.last_check_disk = self.MyCollector.get_disks()
+                check_entity.disks = self.MyCollector.get_disks()
 
                 # Updating last check date...
-                Checks.last_check_date = datetime.datetime.now()
+                check_entity.date = datetime.now()
 
-                myHost = host.Full()
-                myHost.host = Checks.hostEntity
-
-                myHost.cpu = Checks.last_check_cpu
-                myHost.memory = Checks.last_check_memory
-                myHost.load = Checks.last_check_loadAverage
-                myHost.disks = Checks.last_check_disk
-
-                if '' == myHost.host.hsecret:
-                    log.log_debug('Your server is not registred')
-                    log.log_debug('Please register your server on http://centralreport.net')
-                else:
-                    webservices.WebServices.send_full_check(myHost.json_serialize())
+                Checks.last_check = check_entity
+                Remote.add_check(check_entity)
 
                 # Wait 60 seconds before next checks...
-
                 log.log_debug('All checks are done')
                 log.log_debug('Next checks in %s seconds...' % self.tickPerformCheck)
 
@@ -117,3 +99,56 @@ class Checks(threading.Thread):
 
             self.tickCount += 1
             time.sleep(1)
+
+
+class Remote(threading.Thread):
+    """
+        This class is used for sending Checks to the remote server
+    """
+
+    checks = list()  # Checks that need to be sent to the remote server
+
+    is_enable = False  # "True" only if this daemon is able to send checks to the remote server
+
+    _perform_send = True
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+        log.log_debug('SendCheck thread is starting...')
+        self.start()
+
+    def run(self):
+        """
+            Sends data to remote server
+        """
+
+        while Checks.host_infos is None:
+            log.log_debug('SendCheck: Waiting for the first check...')
+            time.sleep(4)
+
+        while Remote._perform_send:
+
+            if Checks.host_infos.key == '':
+                log.log_debug('SendCheck: Remote key undefined!')
+            else:
+                # TODO: Connection with the remote server with HATEOAS and REST APIs
+                pass
+
+            time.sleep(60)
+
+
+    @staticmethod
+    def add_check(check):
+        """
+            Adds that will be sent to the remote server as soon as possible.
+            The check is not added if CR is unable to communicate with the remote server.
+
+            @param check: The check entity
+            @type check: cr.entities.checks.Check
+        """
+        if Remote.is_enable:
+            log.log_debug('This check will be sent to the remote server ASAP.')
+            Remote.checks.append(check)
+        else:
+            log.log_debug('Check ignored: Remote server is disable.')

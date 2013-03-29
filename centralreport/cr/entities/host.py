@@ -8,7 +8,6 @@
 """
 
 import datetime
-import json
 
 
 class Infos:
@@ -40,10 +39,11 @@ class Infos:
         self.language = 'Python'  # CentralReport app language
         self.model = ''  # Only for Mac OS
         self.os = ''
-        self.uuid = ''
-        self.hsecret = ''
 
-    def json_serialize(self):
+        self.uuid = ''
+        self.key = ''
+
+    def serialize(self):
         """
             Serializes this entity in JSON.
         """
@@ -61,41 +61,5 @@ class Infos:
             'os': self.os,
             'type': 'host',
             'uuid': self.uuid,
-            'host_secret': self.hsecret
+            'key': self.key
         }
-
-
-class Full:
-    """
-        Entity containing all infos of the host
-    """
-
-    def __init__(self):
-        self.host = None
-        self.cpu = None
-        self.memory = None
-        self.load = None
-        self.disks = None
-
-    def json_serialize(self):
-        """
-            Serializes this entity in JSON.
-        """
-
-        host_data = {
-            'host': self.host.json_serialize()
-        }
-
-        host_data['host']['checks'] = []
-
-        host_data['host']['checks'].append({
-            'cpu': self.cpu.json_serialize(),
-            'memory': self.memory.json_serialize(),
-            'load': self.load.json_serialize(),
-            'disks': self.disks.json_serialize()
-        })
-
-        return json.dumps(host_data)
-
-
-
