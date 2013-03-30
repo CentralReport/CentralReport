@@ -7,12 +7,12 @@ def object_converter(data, encod):
         Represents an instance of a class converted to a given format.
         @param encod: Encoded format like JSON...
         @param data: An object
-        @Return: String that represents encoded object.
+        @Return: A string representing the encoded object.
     """
 
     def serialize(data):
         """
-            Serializes the object whatever his type is
+            Serializes the object whatever its type is
             @param data: An object
         """
         if isinstance(data, (bool, int, long, float, basestring)):
