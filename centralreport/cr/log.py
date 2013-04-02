@@ -54,6 +54,26 @@ def get_cr_logger():
     return cr_logger
 
 
+def change_log_level(level):
+    """
+        Changes the log level. Only messages above this level will be kept.
+        Default value is "INFO"
+
+        @param level: The new level. Can be DEBUG, INFO, WARNING, ERROR or CRITICAL
+    """
+
+    if level == 'DEBUG':
+        get_cr_logger().setLevel(logging.DEBUG)
+    elif level == 'WARNING':
+        get_cr_logger().setLevel(logging.WARNING)
+    elif level == 'ERROR':
+        get_cr_logger().setLevel(logging.ERROR)
+    elif level == 'CRITICAL':
+        get_cr_logger().setLevel(logging.CRITICAL)
+    else:
+        get_cr_logger().setLevel(logging.INFO)
+
+
 def log_debug(text):
     """
         Adds a record at the DEBUG level.
