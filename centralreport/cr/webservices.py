@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# CentralReport - Indev version
-# Project by Charles-Emmanuel CAMUS - Avril 2012
+"""
+    CentralReport - Webservices module
+        Contains functions used to manage webservices
 
-#
-# Warning: Not used. Only for testing purposes.
-#
-
+    https://github.com/miniche/CentralReport/
+"""
 
 from sys import path as sysPath
 from os import path as osPath
@@ -35,7 +34,7 @@ class WebServices:
         """
             Sends data to the remote server
 
-            @param method: The HTTP method to use. Please see "WebServices.VERB_xxxx" constants.
+            @param method: The HTTP method to use. Please see "WebServices.METHOD_xxxx" constants.
             @param url: Destination of the data
             @param data: data to sent
             @param headers: Custom header to use
@@ -69,7 +68,7 @@ class WebServices:
         """
             Sends JSON to the remote server
 
-            @param method: The HTTP method to use. Please see "WebServices.VERB_xxxx" constants.
+            @param method: The HTTP method to use. Please see "WebServices.METHOD_xxxx" constants.
             @param url: Destination of the data
             @param data: data to sent
 

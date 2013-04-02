@@ -144,28 +144,51 @@ class Remote(threading.Thread):
 
                 if Remote.route_hosts == '':
                     Remote.route_main = Config.CR_REMOTE_ROUTE.replace('%key%', Checks.host_infos.key)
-                    ws_return = WebServices.send_data(WebServices.METHOD_GET, Remote.route_main, None, None)
+                    ws_user = WebServices.send_data(WebServices.METHOD_GET, Remote.route_main, None, None)
 
-                    if ws_return.code == 404:
+                    if ws_user.code == 404:
                         log.log_error('The key %s is not a valid key on the remote server!')
-                    elif ws_return.code != 200 or ws_return.headers.count('application/json') == 0:
+                    elif ws_user.code != 200 or ws_user.headers.count('application/json') == 0:
                         log.log_error('The server has returned a unknown response.')
-                        log.log_error('Code: %s - Content: %s' % (ws_return.code, ws_return.text))
+                        log.log_error('Code: %s - Content: %s' % (ws_user.code, ws_user.text))
                     else:
                         # This key seems valid! Getting all routes available with HATEOAS
                         try:
-                            remote_json = json.loads(ws_return.text)
+                            remote_json = json.loads(ws_user.text)
                             Remote.route_hosts = remote_json['routes']['hosts']
                         except:
                             log.log_error('Error reading the JSON returned by the remote server!')
                             Remote.route_hosts = ''
 
                 if Remote.route_hosts != '':
-                    # We can now check if the current host already exist
+                    # We can now check if the current host is registered on the remote server
+                    Remote.route_hosts = Remote.route_hosts.replace('%uuid%', Checks.last_check.uuid)
+                    ws_host = WebServices.send_data(WebServices.METHOD_GET, Remote.route_main, None, None)
+
+                    if ws_host.code == 401:
+                        log.log_info('Please validate this host on the remote server!')
+                        Remote.route_checks = ''
+                    elif ws_host.code == 200:
+                        log.log_info('Host registered on the remote server')
+
+                        try:
+                            remote_json = json.loads(ws_host.text)
+                            Remote.route_checks = remote_json['routes']['checks']
+                        except:
+                            log.log_error('Error reading the JSON returned by the remote server!')
+                            Remote.route_checks = ''
+
+                    elif ws_host.code == 404:
+                        log.log_info('Host not registered. Registering this host the the remote server...')
+                        # TODO: Using the new serializer, send host data to the remote server
+
+
+                if Remote.route_hosts != '' and Remote.route_checks != '':
+                    # Ok, we can send checks to the remote server!
+                    # TODO: Using the new serializer, send checks to the remote server
                     pass
 
             time.sleep(60)
-
 
     @staticmethod
     def add_check(check):
