@@ -35,6 +35,9 @@ class Config:
     # Default interval between two checks (use this if not available in the config file)
     CR_CONFIG_DEFAULT_CHECKS_INTERVAL = int(60)
 
+    # Remote server main route
+    CR_REMOTE_ROUTE = 'http://centralreport.net/api/users/%key%'
+
     # Current host
     HOST_CURRENT = ''
 

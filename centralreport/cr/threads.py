@@ -8,6 +8,7 @@
 """
 
 from datetime import datetime
+import json
 import threading
 import time
 
@@ -15,6 +16,7 @@ from cr import collectors
 from cr import log
 from cr.entities import checks
 from cr.tools import Config
+from cr.webservices import WebServices
 
 
 class Checks(threading.Thread):
@@ -109,6 +111,11 @@ class Remote(threading.Thread):
     checks = list()  # Checks that need to be sent to the remote server
 
     is_enable = False  # "True" only if this daemon is able to send checks to the remote server
+    is_registered = False
+
+    route_main = ''
+    route_hosts = ''
+    route_checks = ''
 
     _perform_send = True
 
@@ -132,8 +139,30 @@ class Remote(threading.Thread):
             if Checks.host_infos.key == '':
                 log.log_debug('SendCheck: Remote key undefined!')
             else:
-                # TODO: Connection with the remote server with HATEOAS and REST APIs
-                pass
+                # Checking if this host is already registred on the remote server
+                log.log_info('A key is defined for the remote server!')
+
+                if Remote.route_hosts == '':
+                    Remote.route_main = Config.CR_REMOTE_ROUTE.replace('%key%', Checks.host_infos.key)
+                    ws_return = WebServices.send_data(WebServices.METHOD_GET, Remote.route_main, None, None)
+
+                    if ws_return.code == 404:
+                        log.log_error('The key %s is not a valid key on the remote server!')
+                    elif ws_return.code != 200 or ws_return.headers.count('application/json') == 0:
+                        log.log_error('The server has returned a unknown response.')
+                        log.log_error('Code: %s - Content: %s' % (ws_return.code, ws_return.text))
+                    else:
+                        # This key seems valid! Getting all routes available with HATEOAS
+                        try:
+                            remote_json = json.loads(ws_return.text)
+                            Remote.route_hosts = remote_json['routes']['hosts']
+                        except:
+                            log.log_error('Error reading the JSON returned by the remote server!')
+                            Remote.route_hosts = ''
+
+                if Remote.route_hosts != '':
+                    # We can now check if the current host already exist
+                    pass
 
             time.sleep(60)
 

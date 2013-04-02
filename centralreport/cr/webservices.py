@@ -31,11 +31,11 @@ class WebServices:
     METHOD_DELETE = "DELETE"
 
     @staticmethod
-    def send_data(verb, url, data, headers):
+    def send_data(method, url, data='', headers=''):
         """
             Sends data to the remote server
 
-            @param verb: The HTTP verb to use. Please see "WebServices.VERB_xxxx" constants.
+            @param method: The HTTP method to use. Please see "WebServices.VERB_xxxx" constants.
             @param url: Destination of the data
             @param data: data to sent
             @param headers: Custom header to use
@@ -44,15 +44,15 @@ class WebServices:
             @rtype: cr.entities.webservices.Answer
         """
 
-        if verb == WebServices.METHOD_GET:
+        if method == WebServices.METHOD_GET:
             response = requests.get(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_POST:
+        elif method == WebServices.METHOD_POST:
             response = requests.post(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_PUT:
+        elif method == WebServices.METHOD_PUT:
             response = requests.put(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_PATCH:
+        elif method == WebServices.METHOD_PATCH:
             response = requests.patch(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_DELETE:
+        elif method == WebServices.METHOD_DELETE:
             response = requests.delete(url, data=data, headers=headers)
         else:
             raise ValueError('Unknown verb')
@@ -65,11 +65,11 @@ class WebServices:
         return ws_return
 
     @staticmethod
-    def send_json(verb, url, data):
+    def send_json(method, url, data):
         """
             Sends JSON to the remote server
 
-            @param verb: The HTTP verb to use. Please see "WebServices.VERB_xxxx" constants.
+            @param method: The HTTP method to use. Please see "WebServices.VERB_xxxx" constants.
             @param url: Destination of the data
             @param data: data to sent
 
@@ -78,5 +78,5 @@ class WebServices:
         """
 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        return WebServices.send_data(verb, url, data, headers)
+        return WebServices.send_data(method, url, data, headers)
 
