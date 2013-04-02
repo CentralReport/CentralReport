@@ -11,6 +11,7 @@ import ConfigParser
 import os
 import platform
 import uuid
+import sys
 
 from cr import log
 
@@ -173,7 +174,8 @@ class Config:
 
             for config_value in config_section_vars:
                 try:
-                    Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
+                    Config.config.set(config_section, config_value,
+                                      Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
                     log.log_error('Error writing config value: %s/%s' % (config_section, config_value))
 
@@ -221,23 +223,32 @@ class Config:
             # On va essayer d'affiner en fonction des distributions
 
             # Utilisation de la liste de Novell pour reconnaitre des distrib Linux
-            # http://www.novell.com/coolsolutions/feature/11251.html
+            # http://www.novell.com/coolsolutions/feature/11251.html - Deprecated here
 
-            if os.path.isfile('/etc/lsb-release'):
+            # Getting OS Name and OS version
+            if sys.version_info[:2] < (2, 6):  # Python < 2.6
+                from platform import dist
+            else:
+                from platform import linux_distribution as dist
+
+            # TODO More distros will be added as soon as we need them
+            # List of major linux distrib : http://distrowatch.com/dwres.php?resource=popularity
+
+            if dist()[0] == "Ubuntu":
                 # Ubuntu!
                 Config.HOST_CURRENT = Config.HOST_UBUNTU
-            elif os.path.isfile('/etc/debian_version'):
-                # Une Debian pure et dure dans ce cas!
+            elif dist()[0] == "debian":
+                # Debian
                 Config.HOST_CURRENT = Config.HOST_DEBIAN
-            elif os.path.isfile('/etc/fedora-release'):
+            elif dist()[0] == "Fedora":
                 # Fedora!
                 Config.HOST_CURRENT = Config.HOST_FEDORA
-            elif os.path.isfile('/etc/redhat_version'):
+            elif dist()[0] == "redhat" or dist()[0] == 'Red Hat Enterprise Linux Server':
                 # RedHat!
                 Config.HOST_CURRENT = Config.HOST_REDHAT
             elif os.path.isfile('/etc/arch-release'):
                 # ArchLinux!
                 Config.HOST_CURRENT = Config.HOST_ARCH
-            elif os.path.isfile('/etc/redhat-release'):
+            elif dist()[0] == "CentOS":
                 # CentOS!
                 Config.HOST_CURRENT = Config.HOST_CENTOS
