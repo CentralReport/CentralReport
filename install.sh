@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux bash installer
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # Importing scripts...
@@ -27,7 +27,8 @@ clear
 printBox blue  "-------------------------- CentralReport installer ----------------------------| \
                 | \
                 Welcome! This script will install CentralReport on your host.| \
-                If you want more details, please visit http://github.com/miniche/CentralReport| \
+                If you want more details, | \
+                please visit http://github.com/CentralReport/CentralReport| \
                 | \
                 When installing CentralReport, we may ask for your password.| \
                 It will allow CentralReport to write files and directories such as| \
@@ -128,7 +129,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
             # Nothing wrong happened while installing. We log this, and then we display the beautiful green lightbox.
             logFile "CentralReport is now installed!"
             logFile "For more options, you can edit the config file at /etc/centralreport/centralreport.cfg"
-            logFile "More help at http://github.com/miniche/CentralReport. Have fun!"
+            logFile "More help at http://github.com/CentralReport/CentralReport. Have fun!"
 
             # Adding a space before the lightbox to separate previous logs with the success message.
             logConsole " "
@@ -136,7 +137,7 @@ if [ "install" == ${ACTUAL_MODE} ]; then
                            For more options, you can edit the config file| \
                            at /etc/centralreport/centralreport.cfg| \
                            | \
-                           You can find more help at http://github.com/miniche/CentralReport.| \
+                           You can find more help at http://github.com/CentralReport/CentralReport.| \
                            Have fun!"
 
         fi

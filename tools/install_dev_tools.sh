@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux dev tools installer
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This script will install all thirdparties tools (CherryPy, Jinja, etc...) on the current host.
@@ -24,7 +24,8 @@ clear
 printBox blue "--------------------- CentralReport dev tools installer -----------------------| \
                | \
                Welcome! This script will install development tools on your host.| \
-               If you want more details, please visit http://github.com/miniche/CentralReport"
+               If you want more details, | \
+               please visit http://github.com/CentralReport/CentralReport"
 
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then

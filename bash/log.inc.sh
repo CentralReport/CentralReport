@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux - Log function
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # Logs will be written in this file, it doesn't require administrative privileges.

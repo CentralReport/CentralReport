@@ -4,7 +4,7 @@
     CentralReport - Server module
         Manages internal web server
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import datetime

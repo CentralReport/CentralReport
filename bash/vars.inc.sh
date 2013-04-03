@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux - bash vars
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This file contains all variables used by bash scripts

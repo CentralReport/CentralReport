@@ -5,7 +5,7 @@
     CentralReport - Main
         Entry point of the application. Can be executed with "python centralreport.py start|stop|status"
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import datetime

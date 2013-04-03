@@ -4,7 +4,7 @@
     CentralReport - Text module
         Contains useful functions to working with strings
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import math

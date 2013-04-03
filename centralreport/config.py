@@ -9,7 +9,7 @@
         Important: Every console outputs must contain at most 80 characters.
         It's the default width of major consoles.
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import socket

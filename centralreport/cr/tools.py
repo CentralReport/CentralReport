@@ -4,7 +4,7 @@
     CentralReport - Tools module
         Contrains Config class
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import ConfigParser

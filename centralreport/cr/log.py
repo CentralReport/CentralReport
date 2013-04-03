@@ -4,7 +4,7 @@
     CentralReport - Log module
         Contains log functions to work with native Python logging modules
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import logging
