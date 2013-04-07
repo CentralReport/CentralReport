@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+
+"""
+    CentralReport - system module
+        Contains functions to interact with the operating system
+
+    https://github.com/CentralReport/
+"""
+
 import json
 
 
