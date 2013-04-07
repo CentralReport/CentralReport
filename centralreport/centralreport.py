@@ -75,6 +75,15 @@ class CentralReport(Daemon):
         CentralReport.starting_date = datetime.datetime.now()  # Starting date
         CentralReport.configuration = Config()  # Getting config object
 
+        # The log level can be personalized in the config file
+        if Config.CR_CONFIG_ENABLE_DEBUG_MODE is False:
+            try:
+                log_level = Config.get_config_value('Debug', 'log_level')
+            except:
+                log_level = 'INFO'
+
+            log.change_log_level(log_level)
+
         # Getting current OS...
         if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
