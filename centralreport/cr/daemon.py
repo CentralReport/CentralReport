@@ -4,7 +4,7 @@
     CentralReport - Daemon generic class
         Please see: http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import atexit

@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux - install/uninstall functions
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # --

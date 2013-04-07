@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux uninstaller
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # Importing some scripts
@@ -24,7 +24,8 @@ clear
 printBox blue "------------------------- CentralReport uninstaller ---------------------------| \
                | \
                Welcome! This script will uninstall CentralReport on your host.| \
-               If you want more details, please visit http://github.com/miniche/CentralReport"
+               If you want more details, | \
+               please visit http://github.com/CentralReport/CentralReport"
 
 # Getting current OS to check if uninstall will work for this host
 getOS
@@ -112,7 +113,7 @@ if [ $? -eq 0 ]; then
                        Thanks for your interest in CentralReport!| \
                        One of the best ways you can help us improve CentralReport is to let us know| \
                        about any problems you could have found.| \
-                       You can find CR developers at http://github.com/miniche/CentralReport| \
+                       You can find CR developers at http://github.com/CentralReport| \
                        Thanks!"
 
     fi
