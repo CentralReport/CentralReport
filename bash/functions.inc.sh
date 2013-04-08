@@ -153,11 +153,16 @@ function copy_init_file(){
         else
             chmod 755 ${STARTUP_DEBIAN}
 
-            update-rc.d centralreport defaults
+            if [ -f /etc/debian_version ]; then
+                update-rc.d centralreport defaults
+            elif [ -f /etc/redhat-release ]; then
+                chkconfig --add centralreport
+            fi
+
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error registering the startup script with update-rc.d (Error code: ${RETURN_CODE})"
+                logError "Error registering the startup script (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
                 return 0
@@ -307,8 +312,12 @@ function delete_init_file(){
                 logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
+                if [ -f /etc/debian_version ]; then
+                    update-rc.d -f centralreport remove
+                elif [ -f /etc/redhat-release ]; then
+                    chkconfig --del centralreport
+                fi
 
-                update-rc.d -f centralreport remove
                 RETURN_CODE="$?"
 
                 if [ ${RETURN_CODE} -ne "0" ]; then
