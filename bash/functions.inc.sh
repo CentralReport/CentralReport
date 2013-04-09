@@ -153,9 +153,9 @@ function copy_init_file(){
         else
             chmod 755 ${STARTUP_DEBIAN}
 
-            if [ -f /etc/debian_version ]; then
+            if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
                 update-rc.d centralreport defaults
-            elif [ -f /etc/redhat-release ]; then
+            elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ] || [ "${CURRENT_OS}" == "${OS_REDHAT}" ]; then
                 chkconfig --add centralreport
             fi
 
@@ -312,16 +312,16 @@ function delete_init_file(){
                 logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
-                if [ -f /etc/debian_version ]; then
+                if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
                     update-rc.d -f centralreport remove
-                elif [ -f /etc/redhat-release ]; then
+                elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ] || [ "${CURRENT_OS}" == "${OS_REDHAT}" ]; then
                     chkconfig --del centralreport
                 fi
 
                 RETURN_CODE="$?"
 
                 if [ ${RETURN_CODE} -ne "0" ]; then
-                    logError "Error removing the startup script with update-rc.d (Error code: ${RETURN_CODE})"
+                    logError "Error removing the startup script (Error code: ${RETURN_CODE})"
                     return ${RETURN_CODE}
                 else
                     logFile "Startup script deleted"

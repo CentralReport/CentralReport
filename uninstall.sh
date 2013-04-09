@@ -28,8 +28,7 @@ printBox blue "------------------------- CentralReport uninstaller -------------
 
 # Getting current OS to check if uninstall will work for this host
 getOS
-if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-
+if [ ${CURRENT_OS} == "${OS_OTHER}" ]; then
     printBox red "ERROR!| \
                   The uninstall is only designed for Mac OS, Debian and Ubuntu.| \
                   Support for other OS will come soon!"
@@ -45,7 +44,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # On debian, the current user must have administrative privileges.
-if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+if [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ] && [ ${CURRENT_OS} == ${OS_REDHAT} ]; then
     if [[ $EUID -ne 0 ]]; then
         ROOT_ERROR="You must be root to install CentralReport!"
         logFile ${ROOT_ERROR}
@@ -78,8 +77,9 @@ if [ $? -eq 0 ]; then
                 bit_error=1
             fi
         fi
-    elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
-        logInfo "Processing... CentralReport will be removed from this Linux."
+        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ] && [ ${CURRENT_OS} == ${OS_REDHAT} ]
+        then
+            logInfo "Processing... CentralReport will be removed from this Linux."
     fi
 
     # Process to CentralReport installation...

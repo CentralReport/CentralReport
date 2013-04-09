@@ -18,8 +18,17 @@ function getOS(){
 
     if [ "Darwin" == $(uname -s) ]; then
         CURRENT_OS=${OS_MAC}
-    elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ] || [ -f /etc/redhat-release ]; then
+    elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
         CURRENT_OS=${OS_DEBIAN}
+    elif [ -f "/etc/redhat-release" ]; then
+        OS=`cat /etc/redhat-release | awk {'print $1'}`
+        if [ ${OS} != "CentOS" ]; then
+            CURRENT_OS=${OS_REDHAT}
+        else
+            CURRENT_OS=${OS_CENTOS}
+        fi
+    else
+        CURRENT_OS=${OS_OTHER}
     fi
 }
 

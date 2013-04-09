@@ -85,10 +85,7 @@ class CentralReport(Daemon):
             log.change_log_level(log_level)
 
         # Getting current OS...
-        if (Config.HOST_CURRENT == Config.HOST_MAC) or \
-            (Config.HOST_CURRENT == Config.HOST_DEBIAN) or \
-            (Config.HOST_CURRENT == Config.HOST_UBUNTU) or \
-            (Config.HOST_CURRENT == Config.HOST_CENTOS):
+        if Config.HOST_CURRENT != Config.HOST_OTHER:
 
             log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread

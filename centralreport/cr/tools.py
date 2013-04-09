@@ -48,6 +48,7 @@ class Config:
     HOST_FEDORA = 'Fedora'
     HOST_ARCH = 'Arch Linux'
     HOST_CENTOS = 'CentOS'
+    HOST_OTHER = 'Not Supported OS'
 
     # CentralReport pid file
     if CR_CONFIG_ENABLE_DEBUG_MODE:
@@ -235,20 +236,23 @@ class Config:
             # List of major linux distrib : http://distrowatch.com/dwres.php?resource=popularity
 
             if dist()[0] == "Ubuntu":
-                # Ubuntu!
+                # Ubuntu
                 Config.HOST_CURRENT = Config.HOST_UBUNTU
             elif dist()[0] == "debian":
                 # Debian
                 Config.HOST_CURRENT = Config.HOST_DEBIAN
             elif dist()[0] == "Fedora":
-                # Fedora!
+                # Fedora
                 Config.HOST_CURRENT = Config.HOST_FEDORA
             elif dist()[0] == "redhat" or dist()[0] == 'Red Hat Enterprise Linux Server':
-                # RedHat!
+                # RedHat
                 Config.HOST_CURRENT = Config.HOST_REDHAT
             elif os.path.isfile('/etc/arch-release'):
-                # ArchLinux!
+                # ArchLinux
                 Config.HOST_CURRENT = Config.HOST_ARCH
             elif dist()[0] == "CentOS":
-                # CentOS!
+                # CentOS
                 Config.HOST_CURRENT = Config.HOST_CENTOS
+            else:
+                # No match, default
+                Config.HOST_CURRENT = Config.HOST_OTHER

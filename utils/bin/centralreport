@@ -197,7 +197,7 @@ case $1 in
             fi
 
         elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ] || [ -f /etc/redhat-release ]; then
-            # Debian or Ubuntu or CentOS
+            # Debian or Ubuntu or RedHat based Linux
 
             if [[ $EUID -ne 0 ]]; then
                 echo "You must have administrative privileges to manage CentralReport daemon!"
