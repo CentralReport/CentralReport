@@ -9,8 +9,6 @@ Version Alpha 0.2.0 (not released yet)
 
     - Feature #27: Added "cr.system" module
 
-    - Feature #35: [WIP] Webservices
-
     - Feature #40: Added this "News" file :-)
 
     - Feature #44: Improved security and integration on operating systems
@@ -47,13 +45,15 @@ Version Alpha 0.2.0 (not released yet)
         * Bash commands have been replaced by python function, when it's possible
         * Unifications of some checks between Linux and Mac, as much as possible
 
+    - Improvement #63: Removed "Routes" python library
+        * Removed "setuptools" and "repoze.lru" libraries too
+
     - Fix #39: Improved install dev tools
         * Can be used now on Linux and Mac OS
         * Script outputs use the same appearance as other bash scripts
           (Lightbox, colums width, error displays)
 
     - Fix #50: Removed "readme.md" file (duplicate content)
-
 
 
 --------------------------------------------------------------
