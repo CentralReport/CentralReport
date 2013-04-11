@@ -4,7 +4,7 @@
     CentralReport - Date module
         Contains useful functions to working with dates
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import time

@@ -4,7 +4,7 @@
     CentralReport - Collectors modules
         Contains collectors for Debian/Ubuntu and OS X.
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 # Summary of this module:

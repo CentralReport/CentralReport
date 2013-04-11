@@ -4,7 +4,7 @@
     CentralReport - Tools module
         Contrains Config class
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import ConfigParser
@@ -88,6 +88,9 @@ class Config:
             'load_warning': '75',
             'load_alert': '90'
         },
+        'Debug': {
+            'log_level': 'INFO'
+        }
     }
 
     def __init__(self):

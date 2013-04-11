@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux - Binary script
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This script allows to manage the CentralReport daemon.

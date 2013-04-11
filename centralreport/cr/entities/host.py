@@ -4,7 +4,7 @@
     CentralReport - Host module
         Contains all entities about current host (infos and disks)
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import datetime

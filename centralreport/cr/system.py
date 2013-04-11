@@ -4,7 +4,7 @@
     CentralReport - system module
         Contains functions to interact with the operating system
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import shlex

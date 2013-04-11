@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux "0.1.0 uninstaller"
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This script contains functions used to remove CentralReport 0.1.0 from the current host.

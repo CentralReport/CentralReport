@@ -4,7 +4,7 @@
     CentralReport - Threads module
         Contains threads used by CentralReport to perform periodic actions
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 from datetime import datetime
