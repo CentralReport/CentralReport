@@ -12,6 +12,7 @@
 
 source ../bash/vars.inc.sh
 source ../bash/log.inc.sh
+source ../bash/utils.inc.sh
 source ../bash/functions.inc.sh
 
 #=============================================================================
