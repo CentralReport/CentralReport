@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-    CentralReport - system module
-        Contains functions to interact with the operating system
+    CentralReport - serializer module
+        Contains functions to parse data to a serialized format
 
     https://github.com/CentralReport/
 """
@@ -12,16 +12,17 @@ import json
 
 def object_converter(data, encod):
     """
-        Represents an instance of a class converted to a given format.
-        @param encod: Encoded format like JSON...
+        Represents a data converted into a given serialized format.
         @param data: An object
-        @Return: A string representing the encoded object.
+        @param encod: Encoded format like JSON...
+        @Return: A string representing the serialized object.
     """
 
     def serialize(data):
         """
             Serializes the object whatever its type is
             @param data: An object
+            @Return: A string representing the serialized object.
         """
         if isinstance(data, (bool, int, long, float, basestring)):
             return data
