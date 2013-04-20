@@ -18,7 +18,7 @@ source ../bash/functions.inc.sh
 #=============================================================================
 # List of libraries to install
 # Can be updated as your needs
-declare -a LISTE='([0]="CherryPy" [1]="Jinja2" [2]="Routes")'
+declare -a LISTE='([0]="CherryPy" [1]="Jinja2")'
 #=============================================================================
 clear
 
@@ -68,31 +68,6 @@ elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     if [[ $EUID -ne 0 ]]; then
         printBox red "You must be root to install development tools!"
         exit 1
-    fi
-
-    printTitle "Installing Setuptools..."
-
-    displayAndExec "Untaring Setuptools..." tar -xzvf ../${SETUPTOOLS_TAR} -C ../thirdparties/
-    RETURN_CODE="$?"
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        printBox red "Woops... Something went wrong untaring Setuptools"
-        exit
-    fi
-
-    cd ../${SETUPTOOLS_DIR};
-    displayAndExec "Installing Setuptools..." python setup.py install
-    RETURN_CODE="$?"
-    cd ../../;
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        printBox red "Woops... Something went wrong installing Setuptools"
-        exit
-    fi
-
-    displayAndExec "Deleting installation files..." rm -Rf ${SETUPTOOLS_DIR}
-    RETURN_CODE="$?"
-    if [ ${RETURN_CODE} -ne 0 ]; then
-        printBox red "Woops... Something went wrong deleting installation files"
-        exit
     fi
 
     printTitle "Installing Libraries..."
