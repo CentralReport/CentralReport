@@ -21,7 +21,7 @@ Version Alpha 0.2.0 (not released yet)
         * All third party libraries are now included in CentralReport,
           in zip format (/usr/local/lib/centralreport/cr/libs)
 
-    - Improvement #25: Improved install and uninstall
+    - Improvement #25: Improved the installer and the uninstaller
         * Lines displayed in the CLI are not exceeding 80 columns width
               (bash and config.py)
         * Added default values in config.py script

@@ -54,7 +54,7 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
         RETURN_CODE="$?"
         if [ ${RETURN_CODE} -ne 0 ]; then
             printBox red "Woops... Something went wrong installing ${LISTE[${i}]}| \
-                          Read the log file in ${ERROR_FILE} for further informations"
+                          Read the log file in ${ERROR_FILE} for further information"
             sudo -k
             exit
         fi
