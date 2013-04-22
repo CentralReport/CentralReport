@@ -22,16 +22,16 @@ Version Alpha 0.2.0 (not released yet)
           in zip format (/usr/local/lib/centralreport/cr/libs)
 
     - Improvement #25: Improved install and uninstall
-        * All lines in the console don't exceed 80 columns width
+        * Lines displayed in the CLI are not exceeding 80 columns width
               (bash and config.py)
         * Added default values in config.py script
-        * Added new "lightbox" feature to display beautiful messages in bash
+        * Added new a "lightbox" bash function to display beautiful messages
 
     - Improvement #30: Updated Bootstrap from 2.2.1 to 2.3.0
 
     - Improvement #33: Improved log functions
         * Python Logger is now automatically configured on the first call of
-          one log function
+          one logging function
         * Added support for rotating log files. Each log file can't exceed 5 MB,
           and we keep a single backup
 
@@ -42,14 +42,14 @@ Version Alpha 0.2.0 (not released yet)
     - Improvement #45: Added printBox function in bash
 
     - Improvement #48: Updated data collectors
-        * Bash commands have been replaced by python function, when it's possible
-        * Unifications of some checks between Linux and Mac, as much as possible
+        * Bash commands have been replaced by python functions when available
+        * Checks unification removing duplicated code between Linux and Mac
 
     - Improvement #63: Removed "Routes" python library
         * Removed "setuptools" and "repoze.lru" libraries too
 
     - Fix #39: Improved install dev tools
-        * Can be used now on Linux and Mac OS
+        * Can now be used on both Linux and Mac OS
         * Script outputs use the same appearance as other bash scripts
           (Lightbox, colums width, error displays)
 

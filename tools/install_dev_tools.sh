@@ -17,7 +17,7 @@ source ../bash/functions.inc.sh
 
 #=============================================================================
 # List of libraries to install
-# Can be updated as your needs
+# Can be updated based on your needs
 declare -a LISTE='([0]="CherryPy" [1]="Jinja2")'
 #=============================================================================
 clear
@@ -31,7 +31,7 @@ printBox blue "--------------------- CentralReport dev tools installer ---------
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
     printBox red "ERROR!| \
-                  The install is only designed for Mac OS, Debian and Ubuntu.| \
+                  Installation is only designed for Mac OS, Debian and Ubuntu.| \
                   Support for other OS will come soon!"
     exit 1
 fi
