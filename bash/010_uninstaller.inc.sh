@@ -51,7 +51,6 @@ function delete_010_version(){
 
     # Removing old init.d script
     if [ -f /etc/init.d/centralreport.sh ]; then
-        CR_PID=$(cat /var/run/centralreport.pid)
         displayAndExec "Deleting the old init.d script..." execute_privileged_command rm -f /etc/init.d/centralreport.sh
 
         displayAndExec "Unregistering the old init.d service..." execute_privileged_command update-rc.d -f centralreport.sh remove
