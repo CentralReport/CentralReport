@@ -4,14 +4,15 @@
     CentralReport - Date module
         Contains useful functions to working with dates
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
-import cr.log as crLog
 import time
 
+from cr import log
 
-def datetimeToTimestamp(datetime):
+
+def datetime_to_timestamp(datetime):
     """
         Converts a datetime to Unix timestamp.
     """
@@ -22,6 +23,6 @@ def datetimeToTimestamp(datetime):
         # Uses the local timestamp
         timestamp = int(time.mktime(datetime.timetuple()))
     except:
-        crLog.writeError('Error convert datetime to timestamp')
+        log.log_error('Error convert datetime to timestamp')
 
     return timestamp

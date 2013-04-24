@@ -4,7 +4,7 @@
     CentralReport - Collectors modules
         Contains collectors for Debian/Ubuntu and OS X.
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 # Summary of this module:
@@ -12,22 +12,23 @@
 # MacCollector class
 # DebianCollector class
 
-import cr.entities.checks as crEntitiesChecks
-import cr.entities.host as crEntitiesHost
-import cr.log as crLog
-import cr.utils.text as crUtilsText
 import datetime
 import multiprocessing
 import platform
+import re
 import socket
-import subprocess
 import time
+import os
+import sys
+
+from cr.entities import checks
+from cr.entities import host
+from cr import system
+from cr.utils import text
 from cr.tools import Config
-from os import getloadavg
 
 
 class _Collector:
-
     def get_infos(self):
         raise NameError('Method not implemented yet')
 
@@ -48,7 +49,6 @@ class _Collector:
 
 
 class MacCollector(_Collector):
-
     """
         Collector executing Mac OS commands and getting useful values.
     """
@@ -61,49 +61,78 @@ class MacCollector(_Collector):
             Gets information about this Mac.
         """
 
-        subprocessPIPE = subprocess.PIPE
-        hostname = crUtilsText.removeSpecialsCharacters(
-            subprocess.Popen(['hostname', '-s'], stdout=subprocessPIPE, close_fds=True).communicate()[0])
+        hostname = text.remove_specials_characters(system.execute_command('hostname -s'))
 
-        architecture = subprocess.Popen(['sysctl', '-n', 'hw.machine'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        architecture = platform.machine()
 
-        kernel = subprocess.Popen(['sysctl', '-n', 'kern.ostype'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        kernel_v = subprocess.Popen(['uname', '-r'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        kernel = platform.system()
+        kernel_v = platform.release()
 
-        os_name = subprocess.Popen(['sw_vers', '-productName'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        os_version = subprocess.Popen(['sw_vers', '-productVersion'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        os_name = system.execute_command('sw_vers -productName')
+        os_version = system.execute_command('sw_vers -productVersion')
 
-        model = subprocess.Popen(['sysctl', '-n', 'hw.model'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        model = system.execute_command('sysctl -n hw.model')
 
-        ncpu = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
-        cpu_model = subprocess.Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=subprocessPIPE,
-            close_fds=True).communicate()[0]
+        # Number of CPU/CPU cores
+        ncpu = 1
+
+        try:
+            ncpu = multiprocessing.cpu_count()
+        except (ImportError, NotImplementedError):
+            try:
+                ncpu = system.execute_command('sysctl -n hw.ncpu')
+            except IOError:
+                pass
+
+        cpu_model = system.execute_command('sysctl -n machdep.cpu.brand_string')
 
         # Using new HostEntity
-        hostEntity = crEntitiesHost.Infos()
+        host_entity = host.Infos()
 
-        hostEntity.uuid = Config.getConfigValue('General', 'uuid')
-        hostEntity.os = Config.HOST_CURRENT
-        hostEntity.hostname = hostname
-        hostEntity.architecture = architecture
-        hostEntity.model = model
-        hostEntity.kernelName = kernel
-        hostEntity.kernelVersion = kernel_v
-        hostEntity.osName = os_name
-        hostEntity.osVersion = os_version
-        hostEntity.cpuModel = cpu_model
-        hostEntity.cpuCount = ncpu
+        host_entity.uuid = Config.get_config_value('General', 'uuid')
+        host_entity.os = Config.HOST_CURRENT
+        host_entity.hostname = hostname
+        host_entity.architecture = architecture
+        host_entity.model = model
+        host_entity.kernel_name = kernel
+        host_entity.kernel_version = kernel_v
+        host_entity.os_name = os_name
+        host_entity.os_version = os_version
+        host_entity.cpu_model = cpu_model
+        host_entity.cpu_count = ncpu
 
-        return hostEntity
+        return host_entity
+
+    def get_cpu(self):
+        """
+            Gets current CPU usage.
+        """
+
+        # iostat - entrees / sorties
+        iostat = system.execute_command('iostat -c 2')
+
+        # Formatage de iostat
+        iostat_split = iostat.splitlines()
+        headers = iostat_split[1].split()
+        values = iostat_split[3].split()
+
+        # Dictionnaire de valeur
+        dict_iostat = dict(zip(headers, values))
+
+        # Use your new CpuCheckEntity!
+        cpu_check = checks.Cpu()
+        cpu_check.idle = dict_iostat['id']
+        cpu_check.system = dict_iostat['sy']
+        cpu_check.user = dict_iostat['us']
+
+        return cpu_check
 
     def get_memory(self):
         """
             Gets memory information.
         """
 
-        subprocessPIPE = subprocess.PIPE
-
-        memory_cmd = subprocess.Popen(['vm_stat'], stdout=subprocessPIPE, close_fds=True).communicate()[0]
+        memory_cmd = system.execute_command('vm_stat')
 
         # Each line have a different data
         dict_memory = memory_cmd.splitlines()
@@ -125,85 +154,46 @@ class MacCollector(_Collector):
                      + int(dict_memory[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
 
         # Preparing return entity...
-        memoryCheck = crEntitiesChecks.Memory()
-        memoryCheck.total = mem_total
-        memoryCheck.free = mem_free
-        memoryCheck.active = mem_active
-        memoryCheck.inactive = mem_inactive
-        memoryCheck.resident = mem_resident
-        memoryCheck.swapSize = mem_total
-        memoryCheck.swapFree = 0
-        memoryCheck.swapUsed = mem_swap
+        memory_check = checks.Memory()
+        memory_check.total = mem_total
+        memory_check.free = mem_free
+        memory_check.active = mem_active
+        memory_check.inactive = mem_inactive
+        memory_check.resident = mem_resident
+        memory_check.swap_size = mem_total
+        memory_check.swap_free = 0
+        memory_check.swap_used = mem_swap
 
-        return memoryCheck
-
-    def get_cpu(self):
-        """
-            Gets current CPU usage.
-        """
-
-        # iostat - entrees / sorties
-        iostat = subprocess.Popen(['iostat', '-c', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-
-        # Formatage de iostat
-        iostat_split = iostat.splitlines()
-        headers = iostat_split[1].split()
-        values = iostat_split[3].split()
-
-        # Dictionnaire de valeur
-        dict_iostat = dict(zip(headers, values))
-
-        # Use your new CpuCheckEntity!
-        cpuCheck = crEntitiesChecks.Cpu()
-        cpuCheck.idle = dict_iostat['id']
-        cpuCheck.system = dict_iostat['sy']
-        cpuCheck.user = dict_iostat['us']
-
-        return cpuCheck
+        return memory_check
 
     def get_loadaverage(self):
         """
-            Gets the host load average.
+            Gets load average.
         """
 
-        dict_iostat = self.getIOStat()
+        # On va spliter en fonction des espaces
+        dict_loadavg = os.getloadavg()
 
         # Prepare return entity
-        loadAverageEntity = crEntitiesChecks.LoadAverage()
-        loadAverageEntity.last1m = dict_iostat['1m']
-        loadAverageEntity.last5m = dict_iostat['5m']
-        loadAverageEntity.last15m = dict_iostat['15m']
+        load_average_entity = checks.LoadAverage()
+        # Split after 2 decimals
+        load_average_entity.last1m = "%.2f" % dict_loadavg[0]
+        load_average_entity.last5m = "%.2f" % dict_loadavg[1]
+        load_average_entity.last15m = "%.2f" % dict_loadavg[2]
 
-        loadAverageEntity.uptime = self.get_uptime()
+        load_average_entity.uptime = self.get_uptime()
 
-        return loadAverageEntity
-
-    def getIOStat(self):
-        """
-            Gets IOStat dictionary.
-        """
-
-        # iostat - entrees / sorties
-        iostat = subprocess.Popen(['iostat', '-c', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-
-        # Formatage de iostat
-        iostat_split = iostat.splitlines()
-        headers = iostat_split[1].split()
-        values = iostat_split[3].split()
-
-        # Dictionnaire de valeur
-        dict_iostat = dict(zip(headers, values))
-
-        return dict_iostat
+        return load_average_entity
 
     def get_uptime(self):
         """
             Gets the number of seconds since the last boot.
         """
-        uptime_cmd = subprocess.Popen(['sysctl', '-n', 'kern.boottime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        uptime_cmd = system.execute_command('sysctl -n kern.boottime')
 
-        # Getting the split dict. The last command return this pattern: { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
-        # We want to use the first value
+        # Getting the split dict.
+        # The last command return this pattern: { sec = 1353839334, usec = 0 } Sun Nov 25 11:28:54 201)
+        # We want to use the first value.
         dict_uptime = uptime_cmd.split(' ')
 
         try:
@@ -218,13 +208,13 @@ class MacCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-        df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        df_dict = system.execute_command('df')
 
         df_split = df_dict.splitlines()
         header = df_split[0].split()
 
         # New return entity
-        listDisks = crEntitiesHost.Disks()
+        list_disks = host.Disks()
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
@@ -237,34 +227,25 @@ class MacCollector(_Collector):
                 disk_free = int(line_dict['Available']) * MacCollector.BLOCKBYTES_TO_BYTES
 
                 # Getting user friendly name
-                # Read http://docs.python.org/2/library/subprocess.html#replacing-shell-pipeline for more informations about shell pipe in Python
-                #
-                # Full command: diskutil info '+ line_dict['Filesystem'] +' | grep "Media Name" | awk \'BEGIN { FS=":" } END { print $2; }\''
-                disk_name_p1 = subprocess.Popen(['diskutil', 'info', line_dict['Filesystem']], stdout=subprocess.PIPE)
-                disk_name_p2 = subprocess.Popen(['grep', 'Volume Name'], stdin=disk_name_p1.stdout,
-                    stdout=subprocess.PIPE)
-                disk_name_p1.stdout.close()
-                disk_name_p3 = subprocess.Popen(['awk', 'BEGIN { FS=":" } END { print $2; }'], stdin=disk_name_p2.stdout,
-                    stdout=subprocess.PIPE).communicate()[0]
-                disk_name_p2.stdout.close()
+                disk_name = system.execute_command('diskutil info "' + line_dict['Filesystem'] + '"'
+                                                   ' | grep "Volume Name"'
+                                                   ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
 
                 # Using new check entity
+                check_disk = checks.Disk()
+                check_disk.date = datetime.datetime.now()
+                check_disk.name = disk_name.lstrip()
+                check_disk.unix_name = line_dict['Filesystem']
+                check_disk.size = disk_total
+                check_disk.used = disk_used
+                check_disk.free = disk_free
 
-                checkDisk = crEntitiesChecks.Disk()
-                checkDisk.date = datetime.datetime.now()
-                checkDisk.name = disk_name_p3.lstrip()
-                checkDisk.unix_namename = line_dict['Filesystem']
-                checkDisk.size = disk_total
-                checkDisk.used = disk_used
-                checkDisk.free = disk_free
+                list_disks.checks.append(check_disk)
 
-                listDisks.checks.append(checkDisk)
-
-        return listDisks
+        return list_disks
 
 
 class DebianCollector(_Collector):
-
     """
         Collector executing Debian/Ubuntu commands and getting useful values.
     """
@@ -275,38 +256,32 @@ class DebianCollector(_Collector):
         """
 
         hostname = socket.gethostname()
+
+        architecture = platform.machine()
+
         kernel = platform.system()
         kernel_v = platform.release()
 
         # Getting OS Name and OS version
-        # Default values
-        os_name = 'Linux'
-        os_version = ''
+        if sys.version_info[:2] < (2, 6):  # Python < 2.6
+            from platform import dist
+        else:
+            from platform import linux_distribution as dist
 
-        if Config.HOST_DEBIAN == Config.HOST_CURRENT:
-            os_name = 'Debian'
-            os_version = subprocess.Popen(['cat', '/etc/debian_version'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+            # Getting OS Name and OS version
+        try:
+            os_name = dist()[0]
+            os_version = dist()[1]
+        except:
+            os_name = 'Linux'
+            os_version = ''
 
-        elif Config.HOST_UBUNTU == Config.HOST_CURRENT:
-            os_name = 'Ubuntu'
-
-            # OS version for Ubuntu
-            os_version = 'Unknown'
-            os_version_full = subprocess.Popen(['cat', '/etc/lsb-release'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-            os_version_lines = os_version_full.splitlines()
-
-            # Looking for the "DISTRIB_RELEASE" key
-            for i in range(0, len(os_version_lines)):
-                if os_version_lines[i].startswith('DISTRIB_RELEASE'):
-                    try:
-                        os_version = os_version_lines[i].split("=")[1].replace(' ', '')
-                    except:
-                        crLog.writeError('Error getting Ubuntu version')
-                        os_version = ''
-
-        hostEntity = crEntitiesHost.Infos()
+        # TODO Find a way to find the computer model
+        #model = system.execute_command('sysctl -n hw.model')
 
         # Number of CPU/CPU cores
+        ncpu = 1
+
         try:
             ncpu = multiprocessing.cpu_count()
         except (ImportError, NotImplementedError):
@@ -315,15 +290,28 @@ class DebianCollector(_Collector):
             except IOError:
                 pass
 
-        hostEntity.os = Config.HOST_CURRENT
-        hostEntity.hostname = hostname
-        hostEntity.cpuCount = ncpu
-        hostEntity.kernelName = kernel
-        hostEntity.kernelVersion = kernel_v
-        hostEntity.osName = os_name
-        hostEntity.osVersion = os_version
+        cpu_infos = system.execute_command('cat /proc/cpuinfo | grep "model name"')
+        if "model name" in cpu_infos:
+            cpu_model = re.sub(".*model name.*:", "", cpu_infos, 1)
+        else:
+            cpu_model = 'CPU model unknown'
 
-        return hostEntity
+        # Using new HostEntity
+        host_entity = host.Infos()
+
+        host_entity.uuid = Config.get_config_value('General', 'uuid')
+        host_entity.os = Config.HOST_CURRENT
+        host_entity.hostname = hostname
+        host_entity.architecture = architecture
+        #host_entity.model = model
+        host_entity.kernel_name = kernel
+        host_entity.kernel_version = kernel_v
+        host_entity.os_name = os_name
+        host_entity.os_version = os_version
+        host_entity.cpu_model = cpu_model
+        host_entity.cpu_count = ncpu
+
+        return host_entity
 
     def get_cpu(self):
         """
@@ -331,7 +319,7 @@ class DebianCollector(_Collector):
         """
 
         # vmstat - input / output
-        iostat = subprocess.Popen(['vmstat', '1', '2'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        iostat = system.execute_command('vmstat 1 2')
 
         # Formatage de vmstat
         iostat_split = iostat.splitlines()
@@ -342,19 +330,19 @@ class DebianCollector(_Collector):
         dict_iostat = dict(zip(headers, values))
 
         # Use your new CpuCheckEntity!
-        cpuCheck = crEntitiesChecks.Cpu()
-        cpuCheck.idle = dict_iostat['id']
-        cpuCheck.system = dict_iostat['sy']
-        cpuCheck.user = dict_iostat['us']
+        cpu_check = checks.Cpu()
+        cpu_check.idle = dict_iostat['id']
+        cpu_check.system = dict_iostat['sy']
+        cpu_check.user = dict_iostat['us']
 
-        return cpuCheck
+        return cpu_check
 
     def get_memory(self):
         """
             Gets memory usage.
         """
 
-        memory_result = subprocess.Popen(['cat', '/proc/meminfo'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        memory_result = system.execute_command('cat /proc/meminfo')
 
         # On decoupe toutes les lignes
         memory_result_split = memory_result.splitlines()
@@ -380,43 +368,43 @@ class DebianCollector(_Collector):
 
         # Preparing return entity...
         # Debian return memory sizes in KB.
-        memoryCheck = crEntitiesChecks.Memory()
-        memoryCheck.total = int(dict_memory['MemTotal']) * 1024
-        memoryCheck.free = int(dict_memory['MemFree']) * 1024
-        memoryCheck.active = int(dict_memory['Active']) * 1024
-        memoryCheck.inactive = int(dict_memory['Inactive']) * 1024
-        memoryCheck.resident = 0
-        memoryCheck.swapSize = int(dict_memory['SwapTotal']) * 1024
-        memoryCheck.swapFree = int(dict_memory['SwapFree']) * 1024
-        memoryCheck.swapUsed = int(float(dict_memory['SwapTotal']) - float(dict_memory['SwapFree'])) * 1024
+        memory_check = checks.Memory()
+        memory_check.total = int(dict_memory['MemTotal']) * 1024
+        memory_check.free = int(dict_memory['MemFree']) * 1024
+        memory_check.active = int(dict_memory['Active']) * 1024
+        memory_check.inactive = int(dict_memory['Inactive']) * 1024
+        memory_check.resident = 0
+        memory_check.swap_size = int(dict_memory['SwapTotal']) * 1024
+        memory_check.swap_free = int(dict_memory['SwapFree']) * 1024
+        memory_check.swap_used = int(float(dict_memory['SwapTotal']) - float(dict_memory['SwapFree'])) * 1024
 
-        return memoryCheck
+        return memory_check
 
     def get_loadaverage(self):
         """
             Gets load average.
         """
 
-        loadavg_result = getloadavg()
+        loadavg_result = os.getloadavg()
 
         # On va spliter en fonction des espaces
         dict_loadavg = loadavg_result
 
         # Prepare return entity
-        loadAverageEntity = crEntitiesChecks.LoadAverage()
-        loadAverageEntity.last1m = dict_loadavg[0]
-        loadAverageEntity.last5m = dict_loadavg[1]
-        loadAverageEntity.last15m = dict_loadavg[2]
+        load_average_entity = checks.LoadAverage()
+        load_average_entity.last1m = dict_loadavg[0]
+        load_average_entity.last5m = dict_loadavg[1]
+        load_average_entity.last15m = dict_loadavg[2]
 
-        loadAverageEntity.uptime = self.get_uptime()
+        load_average_entity.uptime = self.get_uptime()
 
-        return loadAverageEntity
+        return load_average_entity
 
     def get_uptime(self):
         """
             Gets the number of seconds since the last boot.
         """
-        uptime_cmd = subprocess.Popen(['cat', '/proc/uptime'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        uptime_cmd = system.execute_command('cat /proc/uptime')
         uptime_dict = uptime_cmd.split(' ')
 
         try:
@@ -431,10 +419,10 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-        df_dict = subprocess.Popen(['df'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        df_dict = system.execute_command('df')
         df_split = df_dict.splitlines()
 
-        listDisks = crEntitiesHost.Disks()  # Return new entity
+        list_disks = host.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
@@ -446,14 +434,14 @@ class DebianCollector(_Collector):
                 disk_used = int(line_split[2]) * 1024
 
                 # Using new check entity
-                checkDisk = crEntitiesChecks.Disk()
-                checkDisk.date = datetime.datetime.now()
-                checkDisk.free = disk_free
-                checkDisk.name = line_split[0]
-                checkDisk.size = disk_total
-                checkDisk.unix_name = line_split[0]
-                checkDisk.used = disk_used
+                check_disk = checks.Disk()
+                check_disk.date = datetime.datetime.now()
+                check_disk.name = line_split[0]
+                check_disk.unix_name = line_split[0]
+                check_disk.size = disk_total
+                check_disk.used = disk_used
+                check_disk.free = disk_free
 
-                listDisks.checks.append(checkDisk)
+                list_disks.checks.append(check_disk)
 
-        return listDisks
+        return list_disks

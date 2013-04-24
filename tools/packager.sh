@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux packager
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This script package CentralReport in one archive (.tar.gz)

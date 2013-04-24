@@ -4,18 +4,18 @@
     CentralReport - Tools module
         Contrains Config class
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import ConfigParser
 import os
 import platform
-import cr.log as crLog
 import uuid
+
+from cr import log
 
 
 class Config:
-
     """
         Manages CentralReport configuration.
     """
@@ -23,11 +23,11 @@ class Config:
     # Python object used to manage the config file.
     config = ConfigParser.ConfigParser()
     CR_VERSION_MAJOR = 0
-    CR_VERSION_MINOR = 1
+    CR_VERSION_MINOR = 2
     CR_VERSION_REVISION = 0
-    CR_VERSION = str(CR_VERSION_MAJOR) + "." + str(CR_VERSION_MINOR) + "." + str(CR_VERSION_REVISION)
+    CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
-    CR_CONFIG_PATH = '/etc'  # Config file location
+    CR_CONFIG_PATH = '/etc/centralreport'  # Config file location
     CR_CONFIG_FILE = 'centralreport.cfg'
     CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH, CR_CONFIG_FILE)
     CR_CONFIG_ENABLE_DEBUG_MODE = False  # False = Production environment. True = debug/test/develop environment.
@@ -51,7 +51,7 @@ class Config:
         CR_PID_FILE = '/tmp/centralreport.pid'
 
     else:
-        CR_PID_FILE = '/var/run/centralreport.pid'
+        CR_PID_FILE = '/var/run/centralreport/centralreport.pid'
 
     # Customizable values. This values are stored in the config file.
     # Values are default values and can by updated by config file content.
@@ -60,19 +60,19 @@ class Config:
     _CR_CONFIG_VALUES = {
         'General': {
             'uuid': ''
-            },
+        },
         'Webserver': {
             'enable': 'True',
             'interface': '0.0.0.0',
             'port': '8080'
-            },
+        },
         'Checks': {
             'enable_cpu_check': 'True',
             'enable_memory_check': 'True',
             'enable_load_check': 'True',
             'enable_disks_check': 'True',
             'interval': '60'
-            },
+        },
         'Alerts': {
             'cpu_warning': '75',
             'cpu_alert': '90',
@@ -82,8 +82,11 @@ class Config:
             'swap_alert': '75',
             'load_warning': '75',
             'load_alert': '90'
-            },
+        },
+        'Debug': {
+            'log_level': 'INFO'
         }
+    }
 
     def __init__(self):
         """
@@ -93,24 +96,24 @@ class Config:
         Config.determine_current_host()
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
-            crLog.writeDebug('Mac config')
+            log.log_debug('Mac config')
         else:
-            crLog.writeDebug('Linux config')
+            log.log_debug('Linux config')
 
         # Managing config file
         if os.path.isfile(Config.CR_CONFIG_FULL_PATH):
-            crLog.writeDebug('Configuration file: Found. Reading it.')
-            self.readConfigFile()
+            log.log_debug('Configuration file: Found. Reading it.')
+            self.read_config_file()
         else:
-            crLog.writeInfo('Configuration file: Not found. Creating it.')
-            self.writeConfigFile()
+            log.log_info('Configuration file: Not found. Creating it.')
+            self.write_config_file()
 
-    def readConfigFile(self):
+    def read_config_file(self):
         """
             Reads the configuration file.
         """
 
-        crLog.writeDebug('Reading the config file...')
+        log.log_debug('Reading the config file...')
 
         # Using Python ConfigParser module to read the file
         Config.config.read(Config.CR_CONFIG_FULL_PATH)
@@ -123,43 +126,45 @@ class Config:
         for config_section in Config._CR_CONFIG_VALUES:
             for config_value in Config._CR_CONFIG_VALUES[config_section]:
                 try:
-                    Config._CR_CONFIG_VALUES[config_section][config_value] = Config.config.get(config_section, config_value)
+                    Config._CR_CONFIG_VALUES[config_section][config_value] = \
+                        Config.config.get(config_section, config_value)
 
                 except ConfigParser.NoSectionError:
                     config_must_be_updated = True
-                    crLog.writeError('Config section does not exist in the file: ' + config_section)
+                    log.log_error('Config section does not exist in the file: %s' % config_section)
 
                 except ConfigParser.NoOptionError:
                     config_must_be_updated = True
-                    crLog.writeError('Config value does not exist in the file: ' + config_value)
+                    log.log_error('Config value does not exist in the file: %s' % config_value)
 
                 except:
                     config_must_be_updated = True
-                    crLog.writeError('Error getting a config value: ' + config_section + '/' + config_value)
+                    log.log_error('Error getting a config value: %s/%s' % (config_section, config_value))
 
-        # In this case, config file have been written by a last version of CR. We must update it to include new sections or options.
+        # In this case, config file have been written by a last version of CR.
+        # We must update it to include new sections or options.
         if config_must_be_updated:
-            self.writeConfigFile()
+            self.write_config_file()
 
-    def writeConfigFile(self):
+    def write_config_file(self):
         """
             Writes the actual configuration into the config file.
         """
 
-        crLog.writeInfo('Writing the config file...')
+        log.log_info('Writing the config file...')
 
         # Generating uuid if empty
-        if '' == Config.getConfigValue('General', 'uuid'):
-            Config.setConfigValue('General', 'uuid', uuid.uuid1())
+        if '' == Config.get_config_value('General', 'uuid'):
+            Config.set_config_value('General', 'uuid', uuid.uuid1())
 
         # Writing conf file. Reading all sections defined in the config...
         for config_section in Config._CR_CONFIG_VALUES:
             try:
                 Config.config.add_section(config_section)
             except ConfigParser.DuplicateSectionError:
-                crLog.writeDebug('Section already exist: ' + config_section)
+                log.log_debug('Section already exist: %s' % config_section)
             except:
-                crLog.writeError('Error creating new section: ' + config_section + ': ' + Exception.message)
+                log.log_error('Error creating new section: %s:%s' % (config_section, Exception.message))
 
             # Reading all values in this section
             config_section_vars = Config._CR_CONFIG_VALUES[config_section]
@@ -168,16 +173,16 @@ class Config:
                 try:
                     Config.config.set(config_section, config_value, Config._CR_CONFIG_VALUES[config_section][config_value])
                 except:
-                    crLog.writeError('Error writing config value: ' + config_section + '/' + config_value)
+                    log.log_error('Error writing config value: %s/%s' % (config_section, config_value))
 
         try:
             Config.config.write(open(Config.CR_CONFIG_FULL_PATH, 'w'))  # Writing the config file on filesystem...
 
         except IOError:
-            crLog.writeError('/!\ Error writing config file. Using the default config')
+            log.log_error('/!\ Error writing config file. Using the default config')
 
     @staticmethod
-    def getConfigValue(section, variable):
+    def get_config_value(section, variable):
         """
             Gets a config value.
         """
@@ -185,10 +190,10 @@ class Config:
         try:
             return Config._CR_CONFIG_VALUES[section][variable]
         except:
-            raise NameError('Section or Variable not found! (' + section + '/' + variable + ')')
+            raise NameError('Section or Variable not found! (%s/%s)' % (section, variable))
 
     @staticmethod
-    def setConfigValue(section, variable, value):
+    def set_config_value(section, variable, value):
         """
             Adds a new value to a config variable, in a defined section
         """
@@ -196,7 +201,7 @@ class Config:
         try:
             Config._CR_CONFIG_VALUES[section][variable] = value
         except:
-            raise NameError('Section or Variable not found! (' + section + '/' + variable + ')')
+            raise NameError('Section or Variable not found! (%s/%s)' % (section, variable))
 
     @staticmethod
     def determine_current_host():

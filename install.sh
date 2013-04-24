@@ -4,15 +4,16 @@
 # CentralReport Unix/Linux bash installer
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # Importing scripts...
-source bash/vars.sh
+source bash/vars.inc.sh
 source bash/log.inc.sh
+source bash/utils.inc.sh
 source bash/functions.inc.sh
-source bash/macos.inc.sh
-source bash/debian.inc.sh
+
+source bash/010_uninstaller.inc.sh
 
 # Modes: only "install" yet ("check" mode will be added soon)
 ACTUAL_MODE=install
@@ -20,104 +21,139 @@ ACTUAL_MODE=install
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
 
-logConsole "\033[44m\033[1;37m"
-logConsole "  -------------- CentralReport installer --------------"
-logConsole "\033[0;44m"
-logConsole "  Welcome! This script will install CentralReport on your host."
-logConsole "  If you want more details, please visit http://github.com/miniche/CentralReport."
-logConsole " "
-logConsole " When installing CentralReport, we may ask for your password. It will allow CentralReport to write files and directories such as the project binaries, logs, etc."
-logConsole "\033[0m"
+# Cleaning console and then display the lightbox
+clear
+
+printBox blue  "-------------------------- CentralReport installer ----------------------------| \
+                | \
+                Welcome! This script will install CentralReport on your host.| \
+                If you want more details, | \
+                please visit http://github.com/CentralReport/CentralReport| \
+                | \
+                When installing CentralReport, we may ask for your password.| \
+                It will allow CentralReport to write files and directories such as| \
+                the project binaries, logs, etc."
 
 # In the future, it will be possible to have different modes.
 if [ -n "$1" ]; then
     ACTUAL_MODE=$1
 fi
 
-# Python is mandatory for CentralReport
-getPythonIsInstalled
-if [ $? -ne 0 ]; then
-    logError "Error! Python must be installed on your host to execute CentralReport."
+# Right now, CentralReport is only available on Mac OS X, Debian and Ubuntu.
+# Others Linux distributions coming soon.
+getOS
+if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
+    printBox red "ERROR!| \
+                  The install is only designed for Mac OS, Debian and Ubuntu.| \
+                  Support for other OS will come soon!"
+
     exit 1
 fi
 
-# Getting current OS to check if uninstall will works for this host
-getOS
+# Python is mandatory for CentralReport
+getPythonIsInstalled
+if [ $? -ne 0 ]; then
+    printBox red " Error! Python must be installed on your host to execute CentralReport."
+
+    exit 1
+fi
+
+# On debian, the current user must have administrative privileges.
+if [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+    if [[ $EUID -ne 0 ]]; then
+        logFile "You must be root to install CentralReport!"
+        printBox red "You must be root to install CentralReport!"
+        exit 1
+    fi
+fi
+
+# Before installing, we must check if an old version of CentralReport is already installed
+detect_010_version
+if [ "$?" -ne 0 ]; then
+    printBox yellow "CentralReport 0.1.0 has been detected on your host.| \
+                     Before installing the new version, we must delete it. This is automatic,| \
+                     but your configuration file will be erased. You can do a backup before if| \
+                     you want. The configuration file is: /etc/centralreport/centralreport.cfg"
+fi
 
 # Check the actual mode.
 if [ "install" == ${ACTUAL_MODE} ]; then
+    logConsole " "
+    read -p "You will install CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
 
-    # Right now, it only works on MacOS.
-    # Support for Linux distrib coming soon.
-    if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
-        logError " "
-        logError "ERROR"
-        logError "The install is only designed for Mac OS, Debian and Ubuntu."
-        logError "Support for other OS will come soon!"
-    else
+    # Are you sure to install CR?
+    checkYesNoAnswer ${RESP}
+    if [ $? -eq 0 ]; then
+        # O=no error / 1=one or more errors
+        bit_error=0
 
-        logConsole " "
-        logConsole "Install mode enabled"
-        read -p "You will install CentralReport. Are you sure you want to continue (y/N): " RESP < /dev/tty
+        if [ ${CURRENT_OS} == ${OS_MAC} ]; then
+            logInfo "Processing... CentralReport will be installed on this Mac."
 
-        # Are you sure to install CR ?
-        checkYesNoAnswer ${RESP}
-        if [ $? -eq 0 ]; then
+            # On Mac OS, the user must have access to administrative commands.
+            # Testing if the "sudo" session still alive...
+            sudo -n echo "hey" > /dev/null 2>&1
+            if [ "$?" -ne 0 ]; then
 
-            # It's an indev version. At each install, we delete everything.
-
-            # O=no error / 1=one or more errors
-            bit_error=0
-
-            if [ ${CURRENT_OS} == ${OS_MAC} ]; then
-                logInfo "Processing... CentralReport will be installed on this Mac."
-                macos_install
+                echo -e "\n\nPlease use your administrator password to install CentralReport on this Mac."
+                sudo -v
                 if [ $? -ne 0 ]; then
+                    logError "Enable to use root privileges!"
                     bit_error=1
                 fi
-
-            elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
-                logInfo "Processing... CentralReport will be installed on this Linux."
-                debian_install
-                if [ $? -ne 0 ]; then
-                    bit_error=1
-                fi
-
             fi
-
-
-            if [ ${bit_error} -eq 1 ]; then
-
-                logError "Something went wrong when installing CentralReport!"
-                logError "CentralReport isn't installed on this host."
-
-            else
-
-                # Displays the success text!
-                logConsole "\033[1;32m"
-                logConsole " "
-                logInfo "CentralReport is now installed!"
-                logInfo "For more options, you can edit the config file at /etc/centralreport.cfg"
-                logConsole " "
-                logInfo "More help at http://github.com/miniche/CentralReport"
-                logInfo "Have fun!"
-                logConsole " "
-                logConsole "\033[0m"
-
-            fi
-
+        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+            logInfo "Processing... CentralReport will be installed on this Linux."
         fi
 
-    fi
+        # Process to CentralReport installation...
+        if [ ${bit_error} -eq 0 ]; then
+            install_cr
+            if [ "$?" -ne 0 ]; then
+                bit_error=1
+            fi
+        fi
 
+        if [ ${bit_error} -eq 1 ]; then
+            # One or more error(s) append during installation.
+            # We display a generic message: previous logs already the specific error message.
+            logConsole " "
+            printBox red "Something went wrong when installing CentralReport!| \
+                          CentralReport isn't installed on this host.| \
+                          | \
+                          Some logs have been written in ${ERROR_FILE}"
+
+            logFile "Something went wrong when installing CentralReport, please consult previous logs."
+
+        else
+            # Nothing wrong happened while installing. We log this, and then we display the beautiful green lightbox.
+            logFile "CentralReport is now installed!"
+            logFile "For more options, you can edit the config file at /etc/centralreport/centralreport.cfg"
+            logFile "More help at http://github.com/CentralReport/CentralReport. Have fun!"
+
+            # Adding a space before the lightbox to separate previous logs with the success message.
+            logConsole " "
+            printBox blue "CentralReport is now installed!| \
+                           For more options, you can edit the config file| \
+                           at /etc/centralreport/centralreport.cfg| \
+                           | \
+                           You can find more help at http://github.com/CentralReport/CentralReport.| \
+                           Have fun!"
+
+        fi
+     else
+        logInfo "Installation aborted on user demand."
+    fi
 else
-    logError " "
-    logError "ERROR!"
-    logError "Unknown argument"
-    logError "Use: install.sh [install]"
+    printBox red "ERROR!| \
+                  Unknown argument| \
+                  Use: install.sh [install]"
 fi
 
+if [ ${CURRENT_OS} == ${OS_MAC} ]; then
+    # Remove sudo privileges
+    sudo -k
+fi
 
-# End of program
-logConsole " "
-logInfo " -- End of the program -- "
+logFile " -- End of the install program -- "
+exit 0

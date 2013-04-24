@@ -4,13 +4,13 @@
     CentralReport - Text module
         Contains useful functions to working with strings
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import math
 
 
-def removeSpecialsCharacters(text):
+def remove_specials_characters(text):
     """
         Removes specials characters in string (\n, \r and \l).
     """
@@ -22,7 +22,7 @@ def removeSpecialsCharacters(text):
     return text
 
 
-def numberSeparators(number, separator=' '):
+def add_number_separators(number, separator=' '):
     """
         Adds a separator every 3 digits in the number.
     """
@@ -36,16 +36,16 @@ def numberSeparators(number, separator=' '):
     if len(str_number[0]) <= 3:
         str_number[0] = str_number[0]
     else:
-        str_number[0] = numberSeparators(str_number[0][:-3]) + separator + str_number[0][-3:]
+        str_number[0] = add_number_separators(str_number[0][:-3]) + separator + str_number[0][-3:]
 
     # Verify if the var "number" have a decimal part.
     if len(str_number) > 1:
-        return str_number[0] + '.' + str_number[1]
+        return "%s.%s" % (str_number[0], str_number[1])
 
     return str_number[0]
 
 
-def textToBool(text):
+def convert_text_to_bool(text):
     """
         Converts a text to a boolean.
     """
@@ -58,7 +58,7 @@ def textToBool(text):
     return False
 
 
-def secondsToPhraseTime(seconds):
+def convert_seconds_to_phrase_time(seconds):
     """
         Converts seconds to a phrase time (ex: 65 = 1 minute 5 seconds).
     """
@@ -75,7 +75,7 @@ def secondsToPhraseTime(seconds):
         years = remaining_seconds / ONE_YEAR
         years = math.floor(years)
 
-        remaining_seconds = remaining_seconds - years * ONE_YEAR
+        remaining_seconds -= years * ONE_YEAR
 
         result_string += '1 year ' if 1 == years else str(int(years)) + ' years '
 
@@ -83,21 +83,21 @@ def secondsToPhraseTime(seconds):
         days = remaining_seconds / ONE_DAY
         days = math.floor(days)
 
-        remaining_seconds = remaining_seconds - days * ONE_DAY
+        remaining_seconds -= days * ONE_DAY
         result_string += '1 day ' if 1 == days else str(int(days)) + ' days '
 
     if ONE_HOUR < remaining_seconds:
         hours = remaining_seconds / ONE_HOUR
         hours = math.floor(hours)
 
-        remaining_seconds = remaining_seconds - hours * ONE_HOUR
+        remaining_seconds -= hours * ONE_HOUR
         result_string += '1 hour ' if 1 == hours else str(int(hours)) + ' hours '
 
     if ONE_MINUTE < remaining_seconds:
         minutes = remaining_seconds / ONE_MINUTE
         minutes = math.floor(minutes)
 
-        remaining_seconds = remaining_seconds - minutes * ONE_MINUTE
+        remaining_seconds -= minutes * ONE_MINUTE
         result_string += '1 minute ' if 1 == minutes else str(int(minutes)) + ' minutes '
 
     result_string += '1 second ' if 1 == remaining_seconds else str(int(remaining_seconds)) + ' seconds '
@@ -105,7 +105,7 @@ def secondsToPhraseTime(seconds):
     return str(result_string)
 
 
-def convertByte(byte_to_convert):
+def convert_byte(byte_to_convert):
     """
         Converts byte to most biggest unit.
     """

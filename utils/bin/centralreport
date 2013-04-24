@@ -1,0 +1,228 @@
+#!/bin/bash
+
+# ------------------------------------------------------------
+# CentralReport Unix/Linux - Binary script
+# Alpha version. Don't use in production environment!
+# ------------------------------------------------------------
+# https://github.com/CentralReport
+# ------------------------------------------------------------
+
+# This script allows to manage the CentralReport daemon.
+# You can use one of the following arguments:
+#   - start
+#   - stop
+#   - restart
+#   - status
+#   - debug
+
+CR_PID_DIR=/var/run/centralreport
+CR_PID_FILE=/var/run/centralreport/centralreport.pid
+CR_DIR_LOG=/var/log/centralreport
+
+CR_USER_MAC=_centralreport
+CR_GROUP_MAC=_centralreport
+
+CR_USER_DEBIAN=centralreport
+CR_GROUP_DEBIAN=centralreport
+
+#
+# Executes bash commands with administrative privileges.
+#
+# PARAMETERS:
+#   $1..n: The command to execute.
+# RETURN: None
+#
+function execute_command() {
+    if [ $(uname -s) == "Darwin" ]; then
+        # Checking that the "sudo" session is still alive...
+        sudo -n echo "hey" > /dev/null 2>&1
+        if [ "$?" -ne 0 ]; then
+            echo "For security purposes, only administrators are able to manage"
+            echo "the CentralReport daemon. Please enter your password to check it!"
+        fi
+
+        sudo $*
+        return "$?"
+    else
+        $*
+        return "$?"
+    fi
+}
+
+#
+# Executes the main python script with optional arguments.
+#
+# PARAMETERS:
+#   $1..n: Arguments
+# RETURN: None
+#
+function execute_python_daemon() {
+
+    if [ $(uname -s) == "Darwin" ]; then
+        sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
+    else
+        su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
+    fi
+}
+
+#
+# Manages the CentralReport daemon on Mac OS hosts.
+#
+# PARAMETERS:
+#   $1..n: Arguments
+# RETURN: None
+#
+function manage_daemon() {
+
+    if [ $(uname -s) == "Darwin" ]; then
+        CR_USER="${CR_USER_MAC}"
+        CR_GROUP="${CR_GROUP_MAC}"
+    else
+        CR_USER="${CR_USER_DEBIAN}"
+        CR_GROUP="${CR_GROUP_DEBIAN}"
+    fi
+
+    # Checking wheter the /var/run/centralreport/ directory already exists
+    if [ ! -d ${CR_PID_DIR} ]; then
+        execute_command mkdir ${CR_PID_DIR}
+    fi
+    execute_command chown -R ${CR_USER}:${CR_GROUP} ${CR_PID_DIR}
+
+    # Checking whether the logs directory is available
+    if [ ! -d ${CR_DIR_LOG} ]; then
+        execute_command mkdir ${CR_DIR_LOG}
+    fi
+    execute_command chown -R ${CR_USER}:${CR_USER} ${CR_DIR_LOG}
+
+    case $1 in
+        start)
+            if [ $(verify_pid_file) -eq 0 ]; then
+                echo "Starting CentralReport..."
+                execute_python_daemon start
+            else
+                echo "CentralReport is already running with PID $(verify_pid_file)"
+            fi
+        ;;
+        stop)
+            if [ $(verify_pid_file) -eq 0 ]; then
+                echo "CentralReport is not running"
+            else
+                # Sending SIGTERM signal to CR daemon
+                echo "Stopping CentralReport..."
+                execute_command kill $(verify_pid_file)
+                sleep 2
+
+                if [ $(verify_pid_file) -ne 0 ]; then
+                    # CR daemon stil running... We must send the signal of the death!
+                    echo "Sending SIGKILL to the CentralReport daemon!"
+                    execute_command kill -9 $(verify_pid_file)
+                fi
+            fi
+        ;;
+        restart)
+            manage_daemon stop
+            manage_daemon start
+        ;;
+        status)
+            # We just want to know if CentralReport is running or not.
+            if [ $(verify_pid_file) -eq 0 ]; then
+                echo "CentralReport is not running"
+            else
+                echo "CentralReport is running with PID $(verify_pid_file)"
+            fi
+        ;;
+    esac
+}
+
+#
+# Checks whether CentralReport is running using the PID file.
+# If the PID file exists and CR is not running, then the PID will be cleared
+#
+# PARAMETERS: None
+# RETURN:
+#   0: CentralReport is not running
+#   Others: Current PID of the CentralReport daemon
+#
+function verify_pid_file() {
+
+    # Default value.
+    # A PID which value is 0 is not available when a Unix is started, meaning CR is not running in this case.
+    CR_PID_NUMBER=0
+
+    if [ -f ${CR_PID_FILE} ]; then
+        # PID file exists. CR is running?
+        CR_PID_NUMBER=$(cat ${CR_PID_FILE})
+
+        if ! ps -p ${CR_PID_NUMBER} > /dev/null
+        then
+            # CR seems not to be running. Deleting the PID file...
+            execute_command rm ${CR_PID_FILE}
+
+            CR_PID_NUMBER=0
+        fi
+    fi
+
+    echo "${CR_PID_NUMBER}"
+}
+
+#
+# Main
+#
+case $1 in
+    status)
+        # We just want to know if CentralReport is running or not.
+        if [ $(verify_pid_file) -eq 0 ]; then
+            echo "CentralReport is not running"
+        else
+            echo "CentralReport is running with PID $(verify_pid_file)"
+        fi
+    ;;
+    debug)
+        # Launchs CentralReport in debug mode = in the current console
+        python /usr/local/lib/centralreport/test.py
+    ;;
+    start | stop | restart)
+        # For all others options, we ask to the centralreport.py to answer.
+        if [ $(uname -s) == "Darwin" ]; then
+            # Mac OS X
+
+            # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
+            USER_UNIQUE_ID=$(dscl . -list /Users UniqueID | grep _centralreport | awk '{print $2}')
+            if [ -z "${USER_UNIQUE_ID}" ]; then
+                echo "Error: The _centralreport system user doesn't exist."
+                echo "For security reasons, CentralReport can't be launched."
+                exit 1
+            else
+                manage_daemon $*
+            fi
+
+        elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
+            # Debian or Ubuntu
+
+            if [[ $EUID -ne 0 ]]; then
+                echo "You must have administrative privileges to manage CentralReport daemon!"
+                exit 1
+            fi
+
+            # If the _centralreport system user doesn't exist, we can't launch CentralReport agent.
+            CR_USER_FOUND=$(cat /etc/passwd | grep 'centralreport')
+            if [ -z "${CR_USER_FOUND}" ]; then
+                echo "Error: The _centralreport system user doesn't exist."
+                echo "For security reasons, CentralReport can't be launched."
+                exit 1
+            else
+                manage_daemon $*
+            fi
+
+        else
+            echo "Sorry, your operating system isn't supported by CentralReport yet!"
+            exit 1
+        fi
+    ;;
+
+    *)
+        echo "Usage: $0 {start|stop|restart|status|debug}"
+    ;;
+esac
+
+exit 0

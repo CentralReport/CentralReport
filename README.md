@@ -38,7 +38,7 @@ Please visit [Wiki installation page](https://github.com/CentralReport/CentralRe
 CentralReport runs on **Debian, Ubuntu and Mac OS X**.
 Right now, it's just a standalone version. It's free and very easy to use: install CentralReport and active the small web server included. You can monitor your host with a simple web browser:
 
-![Mac Screenshot](https://raw.github.com/CentralReport/CentralReport/develop/tools/screenshots/Capture_Mac.png)
+![Mac Screenshot](https://raw.github.com/CentralReport/CentralReport/master/tools/screenshots/Capture_Mac.png)
 
 
 __We are working on a cloud solution: you will be able to view all yours computers and servers, and set some email or push alerts.__
