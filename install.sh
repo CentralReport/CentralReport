@@ -18,9 +18,6 @@ source bash/010_uninstaller.inc.sh
 # Modes: only "install" yet ("check" mode will be added soon)
 ACTUAL_MODE=install
 
-# Default response
-RESP=no
-
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
 
@@ -82,13 +79,13 @@ fi
 # Check the actual mode.
 if [ "install" == ${ACTUAL_MODE} ] || [ "autoinstall" == ${ACTUAL_MODE} ]; then
     if [ "autoinstall" == ${ACTUAL_MODE} ]; then
-        ${RESP}="Yes"
+        checkYesNoAnswer "Yes"
     else
         logConsole " "
         read -p "You will install CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
+        checkYesNoAnswer ${RESP}
     fi
     # Are you sure to install CR?
-    checkYesNoAnswer ${RESP}
     if [ $? -eq 0 ]; then
         # O=no error / 1=one or more errors
         bit_error=0
