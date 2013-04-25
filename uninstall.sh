@@ -54,11 +54,14 @@ if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
     fi
 fi
 
-logConsole " "
-read -p "You will uninstall CentralReport. Are you sure you want to continue (y/N)? " RESP < /dev/tty
+if [ "autouninstall" == "$1" ]; then
+    checkYesNoAnswer "Yes"
+else
+    logConsole " "
+    read -p "You will uninstall CentralReport. Are you sure you want to continue (y/N)? " RESP < /dev/tty
+    checkYesNoAnswer ${RESP}
+fi
 
-# Are you sure to uninstall CR?
-checkYesNoAnswer ${RESP}
 if [ $? -eq 0 ]; then
     # 0 = no error during uninstall
     bit_error=0

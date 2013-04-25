@@ -85,7 +85,7 @@ if [ "install" == ${ACTUAL_MODE} ] || [ "autoinstall" == ${ACTUAL_MODE} ]; then
         read -p "You will install CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
         checkYesNoAnswer ${RESP}
     fi
-    # Are you sure to install CR?
+
     if [ $? -eq 0 ]; then
         # O=no error / 1=one or more errors
         bit_error=0
