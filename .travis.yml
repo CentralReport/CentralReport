@@ -2,10 +2,12 @@
 after_failure: 
   - "cat /tmp/centralreport_error.log"
   - "cat /tmp/centralreport_install.log"
+before_script: "ls ."
 branches: 
   only: feature-travis-in-readme
+install: ~
 language: python
 python: 
   - "2.6"
   - "2.7"
-script: "sudo ./.travis.sh"
+script: "sudo bash .travis.sh"
