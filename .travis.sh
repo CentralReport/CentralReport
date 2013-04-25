@@ -1,4 +1,4 @@
 #!/bin/sh
-sudo ./install.sh autoinstall
+./install.sh autoinstall
 service centralreport status
-sudo ./uninstall.sh autouninstall
+./uninstall.sh autouninstall
