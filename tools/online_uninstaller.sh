@@ -7,18 +7,20 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script will download latest CentralReport version, and begin uninstall on current host.
+# This script will download latest CentralReport version, and uninstall CR from this host
 # It works for Mac OS X, Debian and Ubuntu
 # Enjoy!
 
 # Vars
-URL_CR="http://www.charles-emmanuel.me/cr/package.tar.gz"
+URL_CR="http://files.centralreport.net/package.tar.gz"
 ARCHIVE="package.tar.gz"
 DIR="CentralReportPackage"
 
 CURRENT_OS=""
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
+
+echo -e "\n\nWelcome to CentralReport online uninstaller!"
 
 # Getting current OS
 if [ "Darwin" == $(uname -s) ]; then
@@ -40,7 +42,16 @@ else
     exit 1
 fi
 
-# Downloading full package...
+# Testing if Python is available on this host
+echo -e "\nTesting Python version..."
+python -V
+if [ $? -ne 0 ]; then
+    echo -e "\n\nError, Python must be installed on your host to execute CentralReport."
+    exit 1
+fi
+
+# Downloading the full package...
+cd /tmp
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
 else
