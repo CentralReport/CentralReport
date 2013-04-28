@@ -14,7 +14,7 @@
 # Vars
 URL_CR="http://www.charles-emmanuel.me/cr/package.tar.gz"
 ARCHIVE="package.tar.gz"
-DIR="CentralReportIndev"
+DIR="CentralReportPackage"
 
 CURRENT_OS=""
 OS_MAC="MacOS"
