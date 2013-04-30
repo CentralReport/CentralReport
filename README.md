@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CentralReport/CentralReport.png)](https://travis-ci.org/CentralReport/CentralReport)
+[![Build Status](https://travis-ci.org/CentralReport/CentralReport.png?branch=master)](https://travis-ci.org/CentralReport/CentralReport)
 
 # CentralReport
 
