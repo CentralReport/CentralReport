@@ -7,7 +7,7 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script will download latest CentralReport version, and uninstall CR from this host
+# This script will download latest CentralReport version and uninstall CR from this host
 # It works for Mac OS X, Debian and Ubuntu
 # Enjoy!
 
@@ -42,8 +42,7 @@ else
     exit 1
 fi
 
-# Testing if Python is available on this host
-echo -e "\nTesting Python version..."
+echo -e "\nChecking Python availability on your host"
 python -V
 if [ $? -ne 0 ]; then
     echo -e "\n\nError, Python must be installed on your host to execute CentralReport."
