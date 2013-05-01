@@ -15,6 +15,8 @@ source bash/functions.inc.sh
 
 source bash/010_uninstaller.inc.sh
 
+get_arguments $*
+
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
 
@@ -54,74 +56,88 @@ if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
     fi
 fi
 
-if [ "autouninstall" == "$1" ]; then
-    checkYesNoAnswer "Yes"
+
+if [ "${ARG_WRONG}" == true ]; then
+    printBox red "ERROR! Unknown argument| \
+                  Use: uninstall.sh [-s]"
 else
-    logConsole " "
-    read -p "You will uninstall CentralReport. Are you sure you want to continue (y/N)? " RESP < /dev/tty
-    checkYesNoAnswer ${RESP}
-fi
+    # Must be "true" to perform the installation.
+    UNINSTALL_CONFIRMED=false
 
-if [ $? -eq 0 ]; then
-    # 0 = no error during uninstall
-    bit_error=0
+    # The "-s" argument allows silent uninstallation, without any user interaction
+    if [ "${ARG_S}" == true ]; then
+        UNINSTALL_CONFIRMED=true
+    else
+        logConsole " "
+        read -p "You will uninstall CentralReport. Are you sure you want to continue? (y/N)" RESP < /dev/tty
+        checkYesNoAnswer ${RESP}
 
-    if [ ${CURRENT_OS} == ${OS_MAC} ]; then
-        logInfo "Processing... CentralReport will be removed from this Mac."
+        if [ $? -eq 0 ]; then
+            UNINSTALL_CONFIRMED=true
+        fi
+    fi
 
-        # On Mac OS, the user must have access to administrative commands.
-        # Testing if the "sudo" session still alive...
-        sudo -n echo "hey" > /dev/null 2>&1
-        if [ "$?" -ne 0 ]; then
+    if [ "${UNINSTALL_CONFIRMED}" == true ]; then
+        # 0 = no error during uninstall
+        bit_error=0
 
-            echo -e "\n\nPlease use your administrator password to uninstall CentralReport on this Mac."
-            sudo -v
-            if [ $? -ne 0 ]; then
-                logError "Enable to use root privileges!"
+        if [ ${CURRENT_OS} == ${OS_MAC} ]; then
+            logInfo "Processing... CentralReport will be removed from this Mac."
+
+            # On Mac OS, the user must have access to administrative commands.
+            # Testing if the "sudo" session still alive...
+            sudo -n echo "hey" > /dev/null 2>&1
+            if [ "$?" -ne 0 ]; then
+
+                echo -e "\n\nPlease use your administrator password to uninstall CentralReport on this Mac."
+                sudo -v
+                if [ $? -ne 0 ]; then
+                    logError "Enable to use root privileges!"
+                    bit_error=1
+                fi
+            fi
+        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+            logInfo "Processing... CentralReport will be removed from this Linux."
+        fi
+
+        # Process to CentralReport installation...
+        if [ ${bit_error} -eq 0 ]; then
+            uninstall_cr
+            if [ "$?" -ne 0 ]; then
                 bit_error=1
             fi
         fi
-    elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
-        logInfo "Processing... CentralReport will be removed from this Linux."
-    fi
 
-    # Process to CentralReport installation...
-    if [ ${bit_error} -eq 0 ]; then
-        uninstall_cr
-        if [ "$?" -ne 0 ]; then
-            bit_error=1
+        if [ ${bit_error} -eq 1 ]; then
+            # We display a generic message: previous logs already the specific error message.
+            logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
+
+            logConsole " "
+            printBox red " Error uninstalling CentralReport!| \
+                           CentralReport may still be installed on this host| \
+                           | \
+                           Some logs have been written in ${ERROR_FILE}"
+
+        else
+            # Nothing wrong happened while uninstalling. We log this, and then we display the "sad" green lightbox.
+            logFile "CentralReport has been deleted from your host."
+
+            # Adding a space before the lightbox to separate previous logs with the success message.
+            logConsole " "
+            printBox blue "CentralReport has been deleted from your host.| \
+                           It's sad, but you're welcome!| \
+                           | \
+                           PS:| \
+                           Thanks for your interest in CentralReport!| \
+                           One of the best ways you can help us improve CentralReport is to let us know| \
+                           about any problems you could have found.| \
+                           You can find CR developers at http://github.com/CentralReport| \
+                           Thanks!"
+
         fi
-    fi
-
-    if [ ${bit_error} -eq 1 ]; then
-        # We display a generic message: previous logs already the specific error message.
-        logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
-
-        logConsole " "
-        printBox red " Error uninstalling CentralReport!| \
-                       CentralReport may still be installed on this host| \
-                       | \
-                       Some logs have been written in ${ERROR_FILE}"
-
     else
-        # Nothing wrong happened while uninstalling. We log this, and then we display the "sad" green lightbox.
-        logFile "CentralReport has been deleted from your host."
-
-        # Adding a space before the lightbox to separate previous logs with the success message.
-        logConsole " "
-        printBox blue "CentralReport has been deleted from your host.| \
-                       It's sad, but you're welcome!| \
-                       | \
-                       PS:| \
-                       Thanks for your interest in CentralReport!| \
-                       One of the best ways you can help us improve CentralReport is to let us know| \
-                       about any problems you could have found.| \
-                       You can find CR developers at http://github.com/CentralReport| \
-                       Thanks!"
-
+        logInfo "Uninstallation aborted on user demand."
     fi
-else
-    logInfo "Uninstall aborted on user demand."
 fi
 
 if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
