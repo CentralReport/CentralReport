@@ -2,10 +2,11 @@
 after_failure: 
   - "cat /tmp/centralreport_error.log"
   - "cat /tmp/centralreport_install.log"
-before_script: "ls ."
+after_script: "sudo ./uninstall.sh -s"
+before_script: "sudo ./install.sh -s"
 language: python
 python:
   - "2.5"
   - "2.6"
   - "2.7"
-script: "sudo bash .travis.sh"
+script: "service centralreport status"
