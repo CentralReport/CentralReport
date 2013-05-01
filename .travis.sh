@@ -7,7 +7,7 @@ echo "========================================"
 echo "Check installation script"
 echo "========================================"
 echo " "
-./install.sh autoinstall
+./install.sh -s
 echo " "
 echo "Check if the service is running"
 echo "========================================"
@@ -17,6 +17,6 @@ echo " "
 echo "Check uninstallation script"
 echo "========================================"
 echo " "
-./uninstall.sh autouninstall
+./uninstall.sh -s
 echo " "
 echo "========================================"
