@@ -305,9 +305,6 @@ function delete_init_file(){
         logFile "Removing the startup script..."
 
         if [ -f ${STARTUP_DEBIAN} ]; then
-            rm -rf ${STARTUP_DEBIAN}
-            RETURN_CODE="$?"
-
             if [ ${RETURN_CODE} -ne "0" ]; then
                 logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
@@ -327,6 +324,8 @@ function delete_init_file(){
                     logFile "Startup script deleted"
                 fi
             fi
+            rm -rf ${STARTUP_DEBIAN}
+            RETURN_CODE="$?"
         else
             logInfo "The startup plist file was not found!"
         fi

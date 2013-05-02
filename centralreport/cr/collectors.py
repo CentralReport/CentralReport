@@ -425,7 +425,7 @@ class DebianCollector(_Collector):
         list_disks = host.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
-            if df_split[i].startswith('/dev/'):
+            if df_split[i].startswith('/dev/s') or df_split[i].startswith('/dev/h'):
                 line_split = df_split[i].split()
 
                 # Getting info in MB (Linux count with '1K block' unit)
