@@ -61,7 +61,6 @@ if [ "${ARG_WRONG}" == true ]; then
     printBox red "ERROR! Unknown argument| \
                   Use: uninstall.sh [-s]"
 else
-    # Must be "true" to perform the installation.
     UNINSTALL_CONFIRMED=false
 
     # The "-s" argument allows silent uninstallation, without any user interaction

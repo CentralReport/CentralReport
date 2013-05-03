@@ -74,7 +74,6 @@ if [ "${ARG_WRONG}" == true ]; then
     printBox red "ERROR! Unknown argument| \
                   Use: install.sh [-s]"
 else
-    # Must be "true" to perform the installation.
     INSTALL_CONFIRMED=false
 
     # The "-s" argument allows silent installation, without any user interaction
