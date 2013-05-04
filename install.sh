@@ -15,8 +15,7 @@ source bash/functions.inc.sh
 
 source bash/010_uninstaller.inc.sh
 
-# Modes: only "install" yet ("check" mode will be added soon)
-ACTUAL_MODE=install
+get_arguments $*
 
 # We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
@@ -33,11 +32,6 @@ printBox blue  "-------------------------- CentralReport installer -------------
                 When installing CentralReport, we may ask for your password.| \
                 It will allow CentralReport to write files and directories such as| \
                 the project binaries, logs, etc."
-
-# In the future, it will be possible to have different modes.
-if [ -n "$1" ]; then
-    ACTUAL_MODE=$1
-fi
 
 # Right now, CentralReport is only available on Mac OS X, Debian and Ubuntu.
 # Others Linux distributions coming soon.
@@ -76,17 +70,26 @@ if [ "$?" -ne 0 ]; then
                      you want. The configuration file is: /etc/centralreport/centralreport.cfg"
 fi
 
-# Check the actual mode.
-if [ "install" == ${ACTUAL_MODE} ] || [ "autoinstall" == ${ACTUAL_MODE} ]; then
-    if [ "autoinstall" == ${ACTUAL_MODE} ]; then
-        checkYesNoAnswer "Yes"
+if [ "${ARG_WRONG}" == true ]; then
+    printBox red "ERROR! Unknown argument| \
+                  Use: install.sh [-s]"
+else
+    INSTALL_CONFIRMED=false
+
+    # The "-s" argument allows silent installation, without any user interaction
+    if [ "${ARG_S}" == true ]; then
+        INSTALL_CONFIRMED=true
     else
         logConsole " "
         read -p "You will install CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
         checkYesNoAnswer ${RESP}
+
+        if [ $? -eq 0 ]; then
+            INSTALL_CONFIRMED=true
+        fi
     fi
 
-    if [ $? -eq 0 ]; then
+    if [ "${INSTALL_CONFIRMED}" == true ]; then
         # O=no error / 1=one or more errors
         bit_error=0
 
@@ -144,13 +147,9 @@ if [ "install" == ${ACTUAL_MODE} ] || [ "autoinstall" == ${ACTUAL_MODE} ]; then
                            Have fun!"
 
         fi
-     else
+    else
         logInfo "Installation aborted on user demand."
     fi
-else
-    printBox red "ERROR!| \
-                  Unknown argument| \
-                  Use: install.sh [install|autoinstall]"
 fi
 
 if [ ${CURRENT_OS} == ${OS_MAC} ]; then

@@ -1,13 +1,21 @@
---- 
-after_failure: 
-  - "cat /tmp/centralreport_error.log"
-  - "cat /tmp/centralreport_install.log"
-before_script: "ls ."
-branches: 
-  only: feature-travis-in-readme
-install: ~
+# ------------------------------------------------------------
+# Travis configuration for CentralReport
+# https://github.com/CentralReport
+# ------------------------------------------------------------
+
+# General declarations
+
 language: python
-python: 
+python:
+  - "2.5"
   - "2.6"
   - "2.7"
-script: "sudo bash .travis.sh"
+
+# Test definitions
+
+before_script: "sudo ./install.sh -s"
+script: "service centralreport status"
+after_script: "sudo ./uninstall.sh -s"
+after_failure:
+  - "cat /tmp/centralreport_error.log"
+  - "cat /tmp/centralreport_install.log"
