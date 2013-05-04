@@ -8,7 +8,7 @@
 # ------------------------------------------------------------
 
 # --
-# Start / Stop the CentralReport daemon
+# Starts / Stops the CentralReport daemon
 # --
 
 
@@ -48,8 +48,9 @@ function stop_cr(){
 
 function launch_config_assistant(){
 
-    logFile "Launching the CentralReport configuration wizard..."
-    printBox blue "Launching the CentralReport configuration wizard..."
+    CONFIG_TXT="Launching the CentralReport configuration wizard..."
+    logFile ${CONFIG_TXT}
+    printBox blue ${CONFIG_TXT}
 
     execute_privileged_command python ${CONFIG_ASSISTANT} < /dev/tty
 
@@ -58,7 +59,7 @@ function launch_config_assistant(){
 
 
 # --
-# Functions related to installation
+# Installation-related functions
 # --
 
 function copy_bin(){
@@ -170,7 +171,7 @@ function copy_init_file(){
 function create_config_directory(){
 
     if [ -d ${CR_CONFIG_DIR} ]; then
-        logFile "The config directory already exist!"
+        logFile "The config directory already exists!"
     else
         execute_privileged_command mkdir ${CR_CONFIG_DIR}
         RETURN_CODE="$?"
@@ -202,7 +203,7 @@ function create_config_directory(){
 
 function create_log_directory(){
     if [ -d ${CR_LOG_DIR} ]; then
-        logFile "The log directory already exist!"
+        logFile "The log directory already exists!"
     else
         execute_privileged_command mkdir ${CR_LOG_DIR}
         RETURN_CODE="$?"
@@ -225,7 +226,7 @@ function create_log_directory(){
     RETURN_CODE="$?"
 
     if [ ${RETURN_CODE} -ne "0" ]; then
-        logError "Error updating owner of ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
+        logError "Error updating the owner of ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
         return ${RETURN_CODE}
     fi
 
@@ -247,7 +248,7 @@ function delete_bin(){
             logError "Error deleting the CentralReport binary script at ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
-            logFile "CentralReport binary script have been removed"
+            logFile "CentralReport binary script has been removed"
         fi
     else
         logInfo "CentralReport binary script doesn't exist!"
@@ -267,7 +268,7 @@ function delete_lib(){
             logError "Error deleting the CentralReport libraries directory at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
         else
-            logFile "CentralReport lib files removed"
+            logFile "CentralReport lib files have been removed"
         fi
     else
         logInfo "CentralReport lib directory doesn't exist!"
@@ -289,10 +290,10 @@ function delete_init_file(){
                 logError "Error deleting the startup plist file at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
             else
-                logFile "Startup plist removed"
+                logFile "The startup plist has been removed"
             fi
         else
-            logInfo "Startup plist file not found!"
+            logInfo "The startup plist file was not found!"
         fi
 
     else
@@ -318,7 +319,7 @@ function delete_init_file(){
                 fi
             fi
         else
-            logInfo "Startup plist file not found!"
+            logInfo "The startup plist file was not found!"
         fi
     fi
 
@@ -398,7 +399,7 @@ function create_cr_user(){
 
         if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
             # Mac OS includes on each client an OpenDirectory server.
-            # So, it's a better more complex to add a simple user than on Linux.
+            # Thus, it's way complex to add a simple user than on Linux.
 
             # Scheme of this (big) function:
             #   _centralreport user already exits?
@@ -454,7 +455,7 @@ function create_cr_user(){
                 logError "Unable to find an available UniqueID for the CentralReport user."
                 return 1
             elif [ ${user_id} -le 100 ]; then
-                logError "Unable to find an available UniqueID, greater than 100, for the CentralReport user."
+                logError "Unable to find an available UniqueID greater than 100 for the CentralReport user."
                 return 1
             fi
 
@@ -473,7 +474,7 @@ function create_cr_user(){
 
                 # So, the same UGID as UID is available?
                 if dscl . -readall /Groups | grep -q "PrimaryGroupID: *${user_id}$" ; then
-                    logFile "UGID ${user_id} is already in use. Find a new one."
+                    logFile "UGID ${user_id} is already in use. Finding a new one."
 
                     # Creating a new group...
                     logFile "Creating a new group for CentralReport..."
@@ -530,7 +531,7 @@ function create_cr_user(){
                 sudo dscl . create /Groups/_centralreport
                 sudo dscl . create /Groups/_centralreport PrimaryGroupID ${GROUP_UNIQUE_ID}
 
-                # Checking if the group have been created
+                # Checking if the group has been created
                 RETURN_CODE=$(verify_cr_group)
                 logFile "GroupID: ${GROUP_UNIQUE_ID}"
                 if [ "${RETURN_CODE}" -eq 0 ]; then
@@ -556,7 +557,7 @@ function create_cr_user(){
             sudo dscl . -delete /Users/_centralreport AuthenticationAuthority
             sudo dscl . -create /Users/_centralreport Password "*"
 
-            # Registring the _centralreport user in the _centralreport group
+            # Registering the _centralreport user in the _centralreport group
             sudo dscl . -append /Groups/_centralreport GroupMembership _centralreport
 
             # Checking that the user has been created
