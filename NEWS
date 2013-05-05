@@ -4,6 +4,20 @@
 # ------------------------------------------------------------
 
 
+--------------------------------------------------------------
+Version Alpha 0.3.0 (Not released yet)
+    Currently in development
+
+    - Feature #67: Travis CI and silent installer/uninstaller
+        * Travis performs tests to ensure the code is sane, everytime
+          (https://travis-ci.org/CentralReport/CentralReport)
+        * New "-s" argument for the installer and the uninstaller scripts
+          When it used, tasks are fully automated, no user interaction required.
+          All confirmations are validated by default.
+          Useful to perform tests or for deployments.
+
+
+--------------------------------------------------------------
 Version Alpha 0.2.0 (April 24th, 2013)
 
     - Feature #27: Added "cr.system" module
