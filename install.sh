@@ -75,7 +75,7 @@ if [ "${ARG_WRONG}" == true ]; then
 else
     INSTALL_CONFIRMED=false
 
-    # The "-s" argument allows silent installation, without any user interaction
+    # The "-s" argument allows silent installation without any user interaction
     if [ "${ARG_S}" == true ]; then
         INSTALL_CONFIRMED=true
     else
