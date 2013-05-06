@@ -17,10 +17,8 @@ source bash/010_uninstaller.inc.sh
 
 get_arguments $*
 
-# We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport installer  --------------"
 
-# Cleaning console and then display the lightbox
 clear
 
 printBox blue  "-------------------------- CentralReport installer ----------------------------| \
@@ -55,8 +53,9 @@ fi
 # On debian, the current user must have administrative privileges.
 if [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
     if [[ $EUID -ne 0 ]]; then
-        logFile "You must be root to install CentralReport!"
-        printBox red "You must be root to install CentralReport!"
+        ROOT_ERROR="You must be root to install CentralReport!"
+        logFile ${ROOT_ERROR}
+        printBox red ${ROOT_ERROR}
         exit 1
     fi
 fi
@@ -90,21 +89,20 @@ else
     fi
 
     if [ "${INSTALL_CONFIRMED}" == true ]; then
-        # O=no error / 1=one or more errors
         bit_error=0
 
         if [ ${CURRENT_OS} == ${OS_MAC} ]; then
             logInfo "Processing... CentralReport will be installed on this Mac."
 
             # On Mac OS, the user must have access to administrative commands.
-            # Testing if the "sudo" session still alive...
+            # Checking whether the "sudo" session is still alive...
             sudo -n echo "hey" > /dev/null 2>&1
             if [ "$?" -ne 0 ]; then
 
                 echo -e "\n\nPlease use your administrator password to install CentralReport on this Mac."
                 sudo -v
                 if [ $? -ne 0 ]; then
-                    logError "Enable to use root privileges!"
+                    logError "Unable to use root privileges!"
                     bit_error=1
                 fi
             fi
@@ -122,7 +120,7 @@ else
 
         if [ ${bit_error} -eq 1 ]; then
             # One or more error(s) append during installation.
-            # We display a generic message: previous logs already the specific error message.
+            # We display a generic message: previous logs already contain messages about the error.
             logConsole " "
             printBox red "Something went wrong when installing CentralReport!| \
                           CentralReport isn't installed on this host.| \
@@ -132,7 +130,7 @@ else
             logFile "Something went wrong when installing CentralReport, please consult previous logs."
 
         else
-            # Nothing wrong happened while installing. We log this, and then we display the beautiful green lightbox.
+            # Nothing wrong happened while installing.
             logFile "CentralReport is now installed!"
             logFile "For more options, you can edit the config file at /etc/centralreport/centralreport.cfg"
             logFile "More help at http://github.com/CentralReport/CentralReport. Have fun!"

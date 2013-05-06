@@ -17,10 +17,8 @@ source bash/010_uninstaller.inc.sh
 
 get_arguments $*
 
-# We are ready to uninstall CentralReport. Log this and print the header.
 logFile "-------------- Starting CentralReport uninstaller  --------------"
 
-# Cleaning console and display the header lightbox
 clear
 
 printBox blue "------------------------- CentralReport uninstaller ---------------------------| \
@@ -29,7 +27,8 @@ printBox blue "------------------------- CentralReport uninstaller -------------
                If you want more details, | \
                please visit http://github.com/CentralReport/CentralReport"
 
-# Getting current OS to check if uninstall will work for this host
+# Right now, CentralReport is only available on Mac OS X, Debian and Ubuntu.
+# Others Linux distributions coming soon.
 getOS
 if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
 
@@ -50,8 +49,9 @@ fi
 # On debian, the current user must have administrative privileges.
 if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
     if [[ $EUID -ne 0 ]]; then
-        logFile "You must be root to install CentralReport!"
-        printBox red "You must be root to install CentralReport!"
+        ROOT_ERROR="You must be root to uninstall CentralReport!"
+        logFile ${ROOT_ERROR}
+        printBox red ${ROOT_ERROR}
         exit 1
     fi
 fi
@@ -63,7 +63,7 @@ if [ "${ARG_WRONG}" == true ]; then
 else
     UNINSTALL_CONFIRMED=false
 
-    # The "-s" argument allows silent uninstallation, without any user interaction
+    # The "-s" argument allows silent uninstallation without any user interaction
     if [ "${ARG_S}" == true ]; then
         UNINSTALL_CONFIRMED=true
     else
@@ -77,21 +77,20 @@ else
     fi
 
     if [ "${UNINSTALL_CONFIRMED}" == true ]; then
-        # 0 = no error during uninstall
         bit_error=0
 
         if [ ${CURRENT_OS} == ${OS_MAC} ]; then
             logInfo "Processing... CentralReport will be removed from this Mac."
 
             # On Mac OS, the user must have access to administrative commands.
-            # Testing if the "sudo" session still alive...
+            # Checking whether the "sudo" session is still alive...
             sudo -n echo "hey" > /dev/null 2>&1
             if [ "$?" -ne 0 ]; then
 
-                echo -e "\n\nPlease use your administrator password to uninstall CentralReport on this Mac."
+                echo -e "\n\nPlease use your administrator password to uninstall CentralReport from this Mac."
                 sudo -v
                 if [ $? -ne 0 ]; then
-                    logError "Enable to use root privileges!"
+                    logError "Unable to use root privileges!"
                     bit_error=1
                 fi
             fi
@@ -99,7 +98,7 @@ else
             logInfo "Processing... CentralReport will be removed from this Linux."
         fi
 
-        # Process to CentralReport installation...
+        # Process to CentralReport uninstallation...
         if [ ${bit_error} -eq 0 ]; then
             uninstall_cr
             if [ "$?" -ne 0 ]; then
@@ -108,7 +107,7 @@ else
         fi
 
         if [ ${bit_error} -eq 1 ]; then
-            # We display a generic message: previous logs already the specific error message.
+            # We display a generic message: previous logs already contain messages about the error.
             logFile "Error uninstalling CentralReport! CentralReport may still be installed on this host"
 
             logConsole " "
@@ -118,7 +117,7 @@ else
                            Some logs have been written in ${ERROR_FILE}"
 
         else
-            # Nothing wrong happened while uninstalling. We log this, and then we display the "sad" green lightbox.
+            # Nothing wrong happened while uninstalling.
             logFile "CentralReport has been deleted from your host."
 
             # Adding a space before the lightbox to separate previous logs with the success message.
