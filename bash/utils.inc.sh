@@ -8,6 +8,24 @@
 # ------------------------------------------------------------
 
 #
+# Gets all script arguments
+# The current OS will be stored in "CURRENT_OS" var.
+#
+# PARAMETERS: None
+# RETURN: None
+#
+function get_arguments(){
+
+    # http://wiki.bash-hackers.org/howto/getopts_tutorial
+    while getopts ":s" opt; do
+        case $opt in
+            s) ARG_S=true ;;
+            \?) ARG_WRONG=true ;;
+        esac
+    done
+}
+
+#
 # Determines the current OS.
 # The current OS will be stored in "CURRENT_OS" var.
 #
