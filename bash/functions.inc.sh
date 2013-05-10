@@ -11,7 +11,6 @@
 # Starts / Stops the CentralReport daemon
 # --
 
-
 function start_cr(){
 
     if [ -f /usr/local/bin/centralreport ]; then
@@ -42,17 +41,6 @@ function stop_cr(){
             return ${RETURN_CODE}
         fi
     fi
-
-    return 0
-}
-
-function launch_config_assistant(){
-
-    CONFIG_TXT="Launching the CentralReport configuration wizard..."
-    logFile ${CONFIG_TXT}
-    printBox blue ${CONFIG_TXT}
-
-    execute_privileged_command python ${CONFIG_ASSISTANT} < /dev/tty
 
     return 0
 }
