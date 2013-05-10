@@ -17,6 +17,10 @@ Version Alpha 0.3.0 (Not released yet)
           All confirmations are validated by default.
           Useful to perform tests or for deployments.
 
+    - Improvement #72: Added a check for the webserver port availability
+        * When the choosen port is already used on the current computer,
+          the webserver isn't loaded and a error is written in the log file.
+
 
 --------------------------------------------------------------
 Version Alpha 0.2.0 (April 24th, 2013)
