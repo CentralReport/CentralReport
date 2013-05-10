@@ -17,6 +17,8 @@ Version Alpha 0.3.0 (Not released yet)
           All confirmations are validated by default.
           Useful to perform tests or for deployments.
 
+    - Fix #73: Removed old config.py script
+
 
 --------------------------------------------------------------
 Version Alpha 0.2.0 (April 24th, 2013)
