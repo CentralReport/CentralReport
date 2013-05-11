@@ -14,18 +14,21 @@
 
 function start_cr(){
 
-    if [ -f /usr/local/bin/centralreport ]; then
-        if [ "${CURRENT_OS}" == $"{OS_MAC}" ]; then
-            execute_privileged_command launchctl load -w ${STARTUP_PLIST}
-        else
-            execute_privileged_command /usr/local/bin/centralreport start
-        fi
+    if [ ! -f /usr/local/bin/centralreport ]; then
+        logError "Unable to find the binary script!"
+        return 1
+    fi
 
-        RETURN_CODE="$?"
-        if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error starting CentralReport (Error code: ${RETURN_CODE})!"
-            return ${RETURN_CODE}
-        fi
+    if [ "${CURRENT_OS}" == $"{OS_MAC}" ]; then
+        execute_privileged_command launchctl load -w ${STARTUP_PLIST}
+    else
+        execute_privileged_command /usr/local/bin/centralreport start
+    fi
+
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error starting CentralReport (Error code: ${RETURN_CODE})!"
+        return ${RETURN_CODE}
     fi
 
     return 0
@@ -78,15 +81,14 @@ function copy_bin(){
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error copying the CentralReport binary script in ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
         return ${RETURN_CODE}
+    fi
 
-    else
-        execute_privileged_command chmod +x ${CR_BIN_FILE}
-        RETURN_CODE="$?"
+    execute_privileged_command chmod +x ${CR_BIN_FILE}
+    RETURN_CODE="$?"
 
-        if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error applying chmod on ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        fi
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error applying chmod on ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
+        return ${RETURN_CODE}
     fi
 
     return 0
@@ -150,18 +152,16 @@ function copy_init_file(){
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error copying the startup script at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
-        else
-            chmod 755 ${STARTUP_DEBIAN}
+        fi
 
-            update-rc.d centralreport defaults
-            RETURN_CODE="$?"
+        chmod 755 ${STARTUP_DEBIAN}
 
-            if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error registering the startup script with update-rc.d (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
-            else
-                return 0
-            fi
+        update-rc.d centralreport defaults
+        RETURN_CODE="$?"
+
+        if [ ${RETURN_CODE} -ne "0" ]; then
+            logError "Error registering the startup script with update-rc.d (Error code: ${RETURN_CODE})"
+            return ${RETURN_CODE}
         fi
     fi
 
@@ -247,9 +247,9 @@ function delete_bin(){
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting the CentralReport binary script at ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
-        else
-            logFile "CentralReport binary script has been removed"
         fi
+
+        logFile "CentralReport binary script has been removed"
     else
         logInfo "CentralReport binary script doesn't exist!"
     fi
@@ -267,9 +267,9 @@ function delete_lib(){
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting the CentralReport libraries directory at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
-        else
-            logFile "CentralReport lib files have been removed"
         fi
+
+        logFile "CentralReport lib files have been removed"
     else
         logInfo "CentralReport lib directory doesn't exist!"
     fi
@@ -289,9 +289,9 @@ function delete_init_file(){
             if [ ${RETURN_CODE} -ne "0" ]; then
                 logError "Error deleting the startup plist file at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
                 return ${RETURN_CODE}
-            else
-                logFile "The startup plist has been removed"
             fi
+
+            logFile "The startup plist has been removed"
         else
             logInfo "The startup plist file was not found!"
         fi
@@ -314,9 +314,9 @@ function delete_init_file(){
                 if [ ${RETURN_CODE} -ne "0" ]; then
                     logError "Error removing the startup script with update-rc.d (Error code: ${RETURN_CODE})"
                     return ${RETURN_CODE}
-                else
-                    logFile "Startup script deleted"
                 fi
+
+                logFile "Startup script deleted"
             fi
         else
             logInfo "The startup plist file was not found!"
@@ -336,9 +336,9 @@ function delete_config_directory(){
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting the CentralReport config dir at ${CR_CONFIG_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
-        else
-            logFile "CentralReport config dir deleted"
         fi
+
+        logFile "CentralReport config dir deleted"
     else
         logInfo "CentralReport config dir not found!"
     fi
@@ -356,9 +356,9 @@ function delete_log_directory(){
         if [ $? -ne "0" ]; then
             logError "Error deleting the log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
-        else
-            logFile "Log directory deleted"
         fi
+
+        logFile "Log directory deleted"
     else
         logInfo "Log directory already deleted!"
     fi
@@ -376,9 +376,9 @@ function delete_pid_directory(){
         if [ $? -ne "0" ]; then
             logError "Error deleting the pid directory at ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
             return ${RETURN_CODE}
-        else
-            logFile "PID directory deleted"
         fi
+
+        logFile "PID directory deleted"
     else
         logInfo "PID directory already deleted!"
     fi
@@ -751,6 +751,8 @@ function install_cr(){
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    return 0
 }
 
 function uninstall_cr(){
@@ -825,4 +827,6 @@ function uninstall_cr(){
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    return 0
 }
