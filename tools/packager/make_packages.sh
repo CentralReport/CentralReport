@@ -7,18 +7,18 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script package CentralReport in one archive (.tar.gz)
-# This archive is to be placed on the CR website and working with "online_installer" and "online_uninstaller"
+# This script generate the installer and the uninstaller packages.
+# They will be used for the online tools. Please see "online_installer.sh" and "online_uninstaller.sh" scripts.
 
-if [ ${PWD##*/} != "tools" ]; then
-    echo "ERROR - You must be in the 'tools' directory to execute this script."
+if [ ${PWD##*/} != "packager" ]; then
+    echo "ERROR - You must be in the 'packager' directory to execute this script."
     exit 1
 fi
 
-source ../bash/vars.inc.sh
-source ../bash/log.inc.sh
-source ../bash/utils.inc.sh
-source ../bash/functions.inc.sh
+source ../../bash/vars.inc.sh
+source ../../bash/log.inc.sh
+source ../../bash/utils.inc.sh
+source ../../bash/functions.inc.sh
 
 CR_PACKAGES_ROOT=/tmp/cr-package/
 
@@ -38,7 +38,7 @@ if [ $(uname -s) != "Darwin" ]; then
     exit 1
 fi
 
-cd ../
+cd ../../
 
 logConsole "Please use your administrator password to generate the package"
 sudo -v
@@ -147,6 +147,7 @@ done
 
 IFS=${IFS_SAVED}
 
+# We must be in this folder to generate a clean archive
 cd ${CR_PACKAGES_ROOT}
 
 logConsole "Creating the installer package..."
@@ -160,10 +161,10 @@ sudo rm -R ${CR_PACKAGE_INSTALLER_FOLDER}
 sudo rm -R ${CR_PACKAGE_UNINSTALLER_FOLDER}
 
 logConsole "Killing the sudo session..."
-#sudo -k
+sudo -k
 
 open ${CR_PACKAGES_ROOT}
 
-printBox blue "Package created successfully!"
+printBox blue "Packages created successfully!"
 
 exit 0
