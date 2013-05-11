@@ -12,9 +12,9 @@
 # Enjoy!
 
 # Vars
-URL_CR="http://files.centralreport.net/package.tar.gz"
-ARCHIVE="package.tar.gz"
-DIR="CentralReportPackage"
+URL_CR="http://files.centralreport.net/cr_uninstaller.tar.gz"
+ARCHIVE="cr_uninstaller.tar.gz"
+DIR="CentralReportUninstaller"
 
 CURRENT_OS=""
 OS_MAC="MacOS"

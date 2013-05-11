@@ -1,0 +1,17 @@
+# ------------------------------------------------------------
+# CentralReport Unix/Linux installer whitelist
+# https://github.com/CentralReport
+# ------------------------------------------------------------
+
+# This file contains all scripts/files/folders used for the installer.
+# All items will be packaged in the 'installer.tar.gz'.
+
+# One line per file or folder
+
+bash/
+utils/
+AUTHORS
+uninstall.sh
+LICENSE
+NEWS
+README.md
