@@ -2,7 +2,7 @@
 
 """
     CentralReport - Web module
-        Contains useful functions around the web
+        Contains useful functions from around the web
 
     https://github.com/CentralReport
 """

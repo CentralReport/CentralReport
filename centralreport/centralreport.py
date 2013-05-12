@@ -99,13 +99,13 @@ class CentralReport(Daemon):
             local_web_port = int(Config.get_config_value('Webserver', 'port'))
 
             if not utils_web.check_port('127.0.0.1', local_web_port):
-                log.log_info('Enabling the webserver...')
+                log.log_info('Starting the webserver...')
 
                 # Importing the module here improve the memory usage
                 from web.server import WebServer
                 CentralReport.webserver_thread = WebServer()
             else:
-                log.log_error('Error launching the webserver: port %s is already used on this host!' % local_web_port)
+                log.log_error('Error launching the webserver: port %s is already in use on this host!' % local_web_port)
         else:
             log.log_info('Webserver is disabled by configuration file!')
 
