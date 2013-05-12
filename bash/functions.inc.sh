@@ -547,12 +547,12 @@ function create_cr_user(){
 
             # Getting the last Unique ID available for system users.
             # From: http://superuser.com/questions/553374/find-available-ids-lower-than-500-vis-dscl
-            local continue="no"
-            local number_used="dontknow"
+            local continue=false
+            local number_used=true
             local fnumber_work_backwards_from=499
             local fnumber=${fnumber_work_backwards_from}
             local user_id=0
-            until [ ${continue} = "yes" ] ; do
+            until [ ${continue} = true ] ; do
                 cr_check_user=$(dscl . -list /Users UniqueID \
                                 | awk '{print $2, "\t", $1}' \
                                 | sort -ug | grep -c "${fnumber}")
@@ -563,11 +563,11 @@ function create_cr_user(){
                     number_used=false
                 fi
 
-                if [ ${number_used} = "true" ] ; then
+                if [ ${number_used} = true ] ; then
                     fnumber=`expr ${fnumber} - 1`
                 else
                     user_id="${fnumber}"
-                    continue="yes"
+                    continue=true
                 fi
             done;
 
@@ -602,12 +602,12 @@ function create_cr_user(){
                     logFile "Creating a new group for CentralReport..."
 
                     # We get the last Primary Group ID available for system groups.
-                    continue="no"
-                    number_used="dontknow"
+                    continue=false
+                    number_used=true
                     fnumber_work_backwards_from=499
                     fnumber=${fnumber_work_backwards_from}
                     GROUP_UNIQUE_ID=0
-                    until [ ${continue} = "yes" ] ; do
+                    until [ ${continue} = true ] ; do
                         cr_check_group=$(dscl . -list /Users UniqueID \
                                         | awk '{print $2, "\t", $1}' \
                                         | sort -ug \
@@ -619,11 +619,11 @@ function create_cr_user(){
                             number_used=false
                         fi
 
-                        if [ ${number_used} = "true" ] ; then
+                        if [ ${number_used} = true ] ; then
                             fnumber=`expr ${fnumber} - 1`
                         else
                             GROUP_UNIQUE_ID="${fnumber}"
-                            continue="yes"
+                            continue=true
                         fi
                     done;
 
