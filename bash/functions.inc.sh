@@ -730,9 +730,6 @@ function install_cr(){
     # Cleaning screen
     clear
 
-    # CR config assistant
-    # TODO: Refactor config assistant
-
     printTitle "First launch of CentralReport..."
     start_cr
     RETURN_CODE="$?"
