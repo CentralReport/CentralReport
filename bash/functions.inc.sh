@@ -305,7 +305,7 @@ function create_log_directory(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = Binary script doesn't exist anymore
+#   0 = Binary script removed
 #   1 = Error deleting the binary script
 #
 function delete_bin(){
@@ -333,7 +333,7 @@ function delete_bin(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The CentralReport doesn't exist anymore
+#   0 = CentralReport library removed
 #   1 = Error deleting the CentralReport library
 #
 function delete_lib(){
@@ -361,7 +361,7 @@ function delete_lib(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The init file doesn't exist anymore
+#   0 = Init file removed
 #   1 = Error deleting the init file
 #   2 = Error unregistering the init file (Linux only)
 #
@@ -418,7 +418,7 @@ function delete_init_file(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The configuration directory doesn't exist anymore
+#   0 = Configuration directory removed
 #   1 = Error deleting the configuration directory
 #
 function delete_config_directory(){
@@ -446,7 +446,7 @@ function delete_config_directory(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The log directory doesn't exist anymore
+#   0 = Log directory removed
 #   1 = Error deleting the log directory
 #
 function delete_log_directory(){
@@ -474,7 +474,7 @@ function delete_log_directory(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The PID directory doesn't exist anymore
+#   0 = PID directory removed
 #   1 = Error deleting the PID directory
 #
 function delete_pid_directory(){
@@ -715,7 +715,7 @@ function create_cr_user(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The user doesn't exist anymore
+#   0 = User removed
 #   1 = Error deleting the CentralReport user
 #
 function remove_cr_user(){
@@ -747,7 +747,7 @@ function remove_cr_user(){
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = The group doesn't exist anymore
+#   0 = CentralReport group removed
 #
 function remove_cr_group(){
 
