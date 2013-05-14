@@ -65,19 +65,6 @@ function stop_cr(){
     return 0
 }
 
-# This function must be removed.
-function launch_config_assistant(){
-
-    CONFIG_TXT="Launching the CentralReport configuration wizard..."
-    logFile ${CONFIG_TXT}
-    printBox blue ${CONFIG_TXT}
-
-    execute_privileged_command python ${CONFIG_ASSISTANT} < /dev/tty
-
-    return 0
-}
-
-
 # --
 # Installation-related functions
 # --
@@ -902,9 +889,6 @@ function install_cr(){
 
     # Cleaning screen
     clear
-
-    # CR config assistant
-    # TODO: Refactor config assistant
 
     printTitle "First launch of CentralReport..."
     start_cr
