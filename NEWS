@@ -21,6 +21,8 @@ Version Alpha 0.3.0 (Not released yet)
         * When the chosen port is already in use on the current host,
           the webserver isn't started and an error is logged.
 
+    - Fix #73: Removed old config.py script
+
 
 --------------------------------------------------------------
 Version Alpha 0.2.0 (April 24th, 2013)
