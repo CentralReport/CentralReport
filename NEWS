@@ -17,6 +17,10 @@ Version Alpha 0.3.0 (Not released yet)
           All confirmations are validated by default.
           Useful to perform tests or for deployments.
 
+    - Improvement #72: Added a check for the webserver port availability
+        * When the chosen port is already in use on the current host,
+          the webserver isn't started and an error is logged.
+
     - Fix #73: Removed old config.py script
 
 

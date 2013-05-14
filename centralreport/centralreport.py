@@ -20,6 +20,7 @@ from cr import threads
 from cr.utils import text
 from cr.daemon import Daemon
 from cr.tools import Config
+from cr.utils import web as utils_web
 
 
 class CentralReport(Daemon):
@@ -84,7 +85,7 @@ class CentralReport(Daemon):
 
             log.change_log_level(log_level)
 
-        # Getting current OS...
+        # Launching the check thread...
         if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
                 Config.HOST_CURRENT == Config.HOST_UBUNTU):
             log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
@@ -93,12 +94,18 @@ class CentralReport(Daemon):
             is_error = True
             log.log_critical('Sorry, but your OS is not supported yet...')
 
-        # Is webserver enabled?
+        # Launching the internal webserver...
         if not is_error and text.convert_text_to_bool(Config.get_config_value('Webserver', 'enable')):
-            from web.server import WebServer
+            local_web_port = int(Config.get_config_value('Webserver', 'port'))
 
-            log.log_info('Enabling the webserver...')
-            CentralReport.webserver_thread = WebServer()
+            if not utils_web.check_port('127.0.0.1', local_web_port):
+                log.log_info('Starting the webserver...')
+
+                # Importing the module here improve the memory usage
+                from web.server import WebServer
+                CentralReport.webserver_thread = WebServer()
+            else:
+                log.log_error('Error launching the webserver: port %s is already in use on this host!' % local_web_port)
         else:
             log.log_info('Webserver is disabled by configuration file!')
 
