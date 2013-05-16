@@ -1,5 +1,5 @@
 # ------------------------------------------------------------
-# CentralReport Unix/Linux installer whitelist
+# CentralReport Unix/Linux installer blacklist
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
