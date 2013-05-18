@@ -23,7 +23,7 @@ class Config:
     # Python object used to manage the config file.
     config = ConfigParser.ConfigParser()
     CR_VERSION_MAJOR = 0
-    CR_VERSION_MINOR = 1
+    CR_VERSION_MINOR = 2
     CR_VERSION_REVISION = 0
     CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'

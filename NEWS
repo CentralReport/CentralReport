@@ -1,0 +1,85 @@
+# ------------------------------------------------------------
+# CentralReport News
+# More at: https://github.com/CentralReport/CentralReport/
+# ------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Version Alpha 0.3.0 (Not released yet)
+    Currently in development
+
+    - Feature #67: Travis CI and silent installer/uninstaller
+        * Travis CI performs a Continuous Integration to ensure
+          your codebase is never broken.
+          (https://travis-ci.org/CentralReport/CentralReport)
+        * New "-s" argument for the installer and the uninstaller scripts
+          When it used, tasks are fully automated, no user interactions required.
+          All confirmations are validated by default.
+          Useful to perform tests or for deployments.
+
+    - Improvement #72: Added a check for the webserver port availability
+        * When the chosen port is already in use on the current host,
+          the webserver isn't started and an error is logged.
+
+    - Improvement #74: Bash functions cleaned
+        * Removed unneeded code
+        * Improved some variables
+
+    - Fix #73: Removed old config.py script
+
+
+--------------------------------------------------------------
+Version Alpha 0.2.0 (April 24th, 2013)
+
+    - Feature #27: Added "cr.system" module
+
+    - Feature #40: Added this "News" file :-)
+
+    - Feature #44: Improved security and integration on operating systems
+        * Added system user and group to secure the CentralReport daemon
+          ('centralreport' on Linux, '_centralreport' on Mac)
+        * Added binary script in /usr/local/bin
+          (CentralReport can be managed with the "centralreport" command in
+          a terminal)
+        * Moved all CR libraries in /usr/local/lib
+        * All third party libraries are now included in CentralReport,
+          in zip format (/usr/local/lib/centralreport/cr/libs)
+
+    - Improvement #25: Improved the installer and the uninstaller
+        * Lines displayed in the CLI are not exceeding 80 columns width
+              (bash and config.py)
+        * Added default values in config.py script
+        * Added new a "lightbox" bash function to display beautiful messages
+
+    - Improvement #30: Updated Bootstrap from 2.2.1 to 2.3.0
+
+    - Improvement #33: Improved log functions
+        * Python Logger is now automatically configured on the first call of
+          one logging function
+        * Added support for rotating log files. Each log file can't exceed 5 MB,
+          and we keep a single backup
+
+    - Improvement #38: PEP 8 refactors (code cleaning)
+        * Removed CamelCase in methods and variables
+        * Cleaned python imports in all scripts
+
+    - Improvement #45: Added printBox function in bash
+
+    - Improvement #48: Updated data collectors
+        * Bash commands have been replaced by python functions when available
+        * Checks unification removing duplicated code between Linux and Mac
+
+    - Improvement #63: Removed "Routes" python library
+        * Removed "setuptools" and "repoze.lru" libraries too
+
+    - Fix #39: Improved install dev tools
+        * Can now be used on both Linux and Mac OS
+        * Script outputs use the same appearance as other bash scripts
+          (Lightbox, colums width, error displays)
+
+    - Fix #50: Removed "readme.md" file (duplicate content)
+
+
+--------------------------------------------------------------
+Version Alpha 0.1.0 (January 30th, 2013)
+    Initial release of CentralReport, only for developing and testing purposes.
