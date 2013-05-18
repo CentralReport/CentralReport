@@ -9,13 +9,22 @@
 
 import json
 
+FORMAT_STRING = 'string'
+FORMAT_JSON = 'json'
 
-def serialize(data):
+
+def serialize(data, encod=FORMAT_STRING):
     """
         Serializes the object whatever its type is
+
         @param data: An object
+        @param encod: Encoded format (see serializer.FORMAT_xxxx variables)
         @Return: A string representing the serialized object.
     """
+
+    if encod == FORMAT_JSON:
+        return json.dumps(serialize(data))
+
     if isinstance(data, (bool, int, long, float, basestring)):
         return data
 
@@ -34,20 +43,5 @@ def serialize(data):
     if hasattr(data, '__dict__'):
         return serialize(data.__dict__)
 
-    return str(data)  # converts to string
-
-
-def object_converter(data, encod):
-    """
-        Represents a data converted into a given serialized format.
-        @param data: An object
-        @param encod: Encoded format like JSON...
-        @Return: A string representing the serialized object.
-    """
-
-    # We can add "if" for all type we want
-    if "json" == encod:
-        return json.dumps(serialize(data))
-
-    return serialize(data)
+    return str(data)
 
