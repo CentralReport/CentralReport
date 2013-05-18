@@ -4,8 +4,26 @@
 # CentralReport Unix/Linux bash functions
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
+
+#
+# Gets all script arguments
+# The current OS will be stored in "CURRENT_OS" var.
+#
+# PARAMETERS: None
+# RETURN: None
+#
+function get_arguments(){
+
+    # http://wiki.bash-hackers.org/howto/getopts_tutorial
+    while getopts ":s" opt; do
+        case $opt in
+            s) ARG_S=true ;;
+            \?) ARG_WRONG=true ;;
+        esac
+    done
+}
 
 #
 # Determines the current OS.
@@ -38,10 +56,9 @@ function getPythonIsInstalled {
 
     if [ $? -ne 0 ]; then
         return 1
-    else
-        return 0
     fi
 
+    return 0
 }
 
 #

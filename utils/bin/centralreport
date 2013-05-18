@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux - Binary script
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This script allows to manage the CentralReport daemon.
@@ -34,11 +34,11 @@ CR_GROUP_DEBIAN=centralreport
 #
 function execute_command() {
     if [ $(uname -s) == "Darwin" ]; then
-        # Testing if the "sudo" session still alive...
+        # Checking that the "sudo" session is still alive...
         sudo -n echo "hey" > /dev/null 2>&1
         if [ "$?" -ne 0 ]; then
-            echo "For security reasons, only an administrator can manage the CentralReport daemon."
-            echo "Please enter your password to check it!"
+            echo "For security purposes, only administrators are able to manage"
+            echo "the CentralReport daemon. Please enter your password to check it!"
         fi
 
         sudo $*
@@ -66,7 +66,7 @@ function execute_python_daemon() {
 }
 
 #
-# Manages the CentralReport daemon on Mac OS host.
+# Manages the CentralReport daemon on Mac OS hosts.
 #
 # PARAMETERS:
 #   $1..n: Arguments
@@ -82,13 +82,13 @@ function manage_daemon() {
         CR_GROUP="${CR_GROUP_DEBIAN}"
     fi
 
-    # Checking if the /var/run/centralreport/ directory already exist
+    # Checking wheter the /var/run/centralreport/ directory already exists
     if [ ! -d ${CR_PID_DIR} ]; then
         execute_command mkdir ${CR_PID_DIR}
     fi
     execute_command chown -R ${CR_USER}:${CR_GROUP} ${CR_PID_DIR}
 
-    # Checking if the directory which will contain logs is avalaible
+    # Checking whether the logs directory is available
     if [ ! -d ${CR_DIR_LOG} ]; then
         execute_command mkdir ${CR_DIR_LOG}
     fi
@@ -124,7 +124,7 @@ function manage_daemon() {
             manage_daemon start
         ;;
         status)
-            # We just want to now if CentralReport is running or not.
+            # We just want to know if CentralReport is running or not.
             if [ $(verify_pid_file) -eq 0 ]; then
                 echo "CentralReport is not running"
             else
@@ -135,8 +135,8 @@ function manage_daemon() {
 }
 
 #
-# Verifies if CentralReport is running with the help of PID file.
-# If PID file exists but CR is not running, the PID will be cleared.
+# Checks whether CentralReport is running using the PID file.
+# If the PID file exists and CR is not running, then the PID will be cleared
 #
 # PARAMETERS: None
 # RETURN:
@@ -145,7 +145,8 @@ function manage_daemon() {
 #
 function verify_pid_file() {
 
-    # Default value. PID 0 is impossible in Unix, CR is not running in this case.
+    # Default value.
+    # A PID which value is 0 is not available when a Unix is started, meaning CR is not running in this case.
     CR_PID_NUMBER=0
 
     if [ -f ${CR_PID_FILE} ]; then
@@ -154,7 +155,7 @@ function verify_pid_file() {
 
         if ! ps -p ${CR_PID_NUMBER} > /dev/null
         then
-            # CR seems not running. Deleting the PID file...
+            # CR seems not to be running. Deleting the PID file...
             execute_command rm ${CR_PID_FILE}
 
             CR_PID_NUMBER=0
@@ -169,7 +170,7 @@ function verify_pid_file() {
 #
 case $1 in
     status)
-        # We just want to now if CentralReport is running or not.
+        # We just want to know if CentralReport is running or not.
         if [ $(verify_pid_file) -eq 0 ]; then
             echo "CentralReport is not running"
         else
@@ -214,7 +215,7 @@ case $1 in
             fi
 
         else
-            echo "Sorry, your operating system isn't supported yet by CentralReport!"
+            echo "Sorry, your operating system isn't supported by CentralReport yet!"
             exit 1
         fi
     ;;

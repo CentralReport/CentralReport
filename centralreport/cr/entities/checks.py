@@ -4,7 +4,7 @@
     CentralReport - Checks module
         Contains all check entities
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import datetime

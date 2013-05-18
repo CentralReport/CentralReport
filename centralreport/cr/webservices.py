@@ -1,82 +1,74 @@
 # -*- coding: utf-8 -*-
 
-# CentralReport - Indev version
-# Project by Charles-Emmanuel CAMUS - Avril 2012
+"""
+    CentralReport - Webservices module
+        Contains functions used to manage webservices
 
-#
-# Warning: Not used. Only for testing purposes.
-#
-
+    https://github.com/miniche/CentralReport/
+"""
 
 from sys import path as sysPath
 from os import path as osPath
 
 sysPath.insert(0, osPath.abspath(__file__ + '/../../libs/requests-1.1.0.zip'))
-
 import requests
 
 from cr.entities.webservices import Answer
 
 
-class WebServices:
+METHOD_GET = "GET"
+METHOD_POST = "POST"
+METHOD_PUT = "PUT"
+METHOD_PATCH = "PATCH"
+METHOD_DELETE = "DELETE"
+
+
+def send_data(method, url, data='', headers=''):
     """
-        PS: This class is not used for the moment.
-        It has been created for testing purpose only.
+        Sends data to the remote server
+
+        @param method: The HTTP method to use. Please see "WebServices.METHOD_xxxx" constants.
+        @param url: Destination of the data
+        @param data: data to sent
+        @param headers: Custom header to use
+
+        @return: Response object of the Request library
+        @rtype: cr.entities.webservices.Answer
     """
 
-    METHOD_GET = "GET"
-    METHOD_POST = "POST"
-    METHOD_PUT = "PUT"
-    METHOD_PATCH = "PATCH"
-    METHOD_DELETE = "DELETE"
+    if method == METHOD_GET:
+        response = requests.get(url, data=data, headers=headers)
+    elif method == METHOD_POST:
+        response = requests.post(url, data=data, headers=headers)
+    elif method == METHOD_PUT:
+        response = requests.put(url, data=data, headers=headers)
+    elif method == METHOD_PATCH:
+        response = requests.patch(url, data=data, headers=headers)
+    elif method == METHOD_DELETE:
+        response = requests.delete(url, data=data, headers=headers)
+    else:
+        raise ValueError('Unknown verb')
 
-    @staticmethod
-    def send_data(verb, url, data, headers):
-        """
-            Sends data to the remote server
+    ws_return = Answer()
+    ws_return.code = response.status_code
+    ws_return.headers = response.headers
+    ws_return.text = response.text
 
-            @param verb: The HTTP verb to use. Please see "WebServices.VERB_xxxx" constants.
-            @param url: Destination of the data
-            @param data: data to sent
-            @param headers: Custom header to use
+    return ws_return
 
-            @return: Response object of the Request library
-            @rtype: cr.entities.webservices.Answer
-        """
 
-        if verb == WebServices.METHOD_GET:
-            response = requests.get(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_POST:
-            response = requests.post(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_PUT:
-            response = requests.put(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_PATCH:
-            response = requests.patch(url, data=data, headers=headers)
-        elif verb == WebServices.METHOD_DELETE:
-            response = requests.delete(url, data=data, headers=headers)
-        else:
-            raise ValueError('Unknown verb')
+def send_json(method, url, data):
+    """
+        Sends JSON to the remote server
 
-        ws_return = Answer()
-        ws_return.code = response.status_code
-        ws_return.headers = response.headers
-        ws_return.text = response.text
+        @param method: The HTTP method to use. Please see "WebServices.METHOD_xxxx" constants.
+        @param url: Destination of the data
+        @param data: data to sent
 
-        return ws_return
+        @return: Response object of the Request library
+        @rtype: cr.entities.webservices.Answer
+    """
 
-    @staticmethod
-    def send_json(verb, url, data):
-        """
-            Sends JSON to the remote server
-
-            @param verb: The HTTP verb to use. Please see "WebServices.VERB_xxxx" constants.
-            @param url: Destination of the data
-            @param data: data to sent
-
-            @return: Response object of the Request library
-            @rtype: cr.entities.webservices.Answer
-        """
-
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        return WebServices.send_data(verb, url, data, headers)
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    return send_data(method, url, data, headers)
 

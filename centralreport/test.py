@@ -6,7 +6,7 @@
         Launchs CentralReport in debug mode, without installation.
         Please verify CR is not installed on your host before launch this script.
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import sys

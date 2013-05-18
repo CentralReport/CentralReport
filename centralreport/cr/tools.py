@@ -4,7 +4,7 @@
     CentralReport - Tools module
         Contrains Config class
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import ConfigParser
@@ -23,7 +23,7 @@ class Config:
     # Python object used to manage the config file.
     config = ConfigParser.ConfigParser()
     CR_VERSION_MAJOR = 0
-    CR_VERSION_MINOR = 1
+    CR_VERSION_MINOR = 2
     CR_VERSION_REVISION = 0
     CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
@@ -34,6 +34,9 @@ class Config:
 
     # Default interval between two checks (use this if not available in the config file)
     CR_CONFIG_DEFAULT_CHECKS_INTERVAL = int(60)
+
+    # Remote server main route
+    CR_REMOTE_ROUTE = 'http://centralreport.net/api/users/%key%'
 
     # Current host
     HOST_CURRENT = ''
@@ -85,6 +88,9 @@ class Config:
             'load_warning': '75',
             'load_alert': '90'
         },
+        'Debug': {
+            'log_level': 'INFO'
+        }
     }
 
     def __init__(self):

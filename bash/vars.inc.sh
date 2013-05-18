@@ -4,7 +4,7 @@
 # CentralReport Unix/Linux - bash vars
 # Alpha version. Don't use in production environment!
 # ------------------------------------------------------------
-# https://github.com/miniche/CentralReport/
+# https://github.com/CentralReport
 # ------------------------------------------------------------
 
 # This file contains all variables used by bash scripts
@@ -29,8 +29,6 @@ CR_LIB_DIR=/usr/local/lib/centralreport/
 CR_LIB_DAEMON=/usr/local/lib/centralreport/centralreport.py
 
 CR_CONFIG_DIR=/etc/centralreport/
-
-CONFIG_ASSISTANT=/usr/local/lib/centralreport/config.py
 
 CR_PID_DIR=/var/run/centralreport
 CR_PID_FILE=/var/run/centralreport/centralreport.pid

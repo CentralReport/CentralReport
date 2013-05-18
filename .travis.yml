@@ -1,0 +1,21 @@
+# ------------------------------------------------------------
+# Travis configuration for CentralReport
+# https://github.com/CentralReport/CentralReport
+# ------------------------------------------------------------
+
+# General declarations
+
+language: python
+python:
+  - "2.5"
+  - "2.6"
+  - "2.7"
+
+# Test definitions
+
+before_script: "sudo ./install.sh -s"
+script: "service centralreport status"
+after_script: "sudo ./uninstall.sh -s"
+after_failure:
+  - "cat /tmp/centralreport_error.log"
+  - "cat /tmp/centralreport_install.log"
