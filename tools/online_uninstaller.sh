@@ -20,6 +20,7 @@ CURRENT_OS=""
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
 
+# TODO: Find a more accurate word than "online"
 echo -e "\n\nWelcome to CentralReport online uninstaller!"
 
 # Getting current OS
@@ -33,7 +34,7 @@ elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
     if [[ $EUID -ne 0 ]]; then
         echo " "
         echo "You must be root to run CentralReport uninstaller!"
-        exit 1
+        exit 2
     fi
 
 else
@@ -49,7 +50,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Downloading the full package...
+# Downloading the required package...
 cd /tmp
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
@@ -57,17 +58,20 @@ else
     wget -q ${URL_CR}
 fi
 
-# Unpackage...
+if [ ! -f ${DIR} ]; then
+    echo -e "\n\nError downloading the CentralReport uninstaller!"
+    exit 3
+fi
+
+# Unpackaging the uninstaller...
 tar -xzvf ${ARCHIVE}
 
-# Go to new dir...
 cd ${DIR}
 chmod +x uninstall.sh
 
-# Execute installer...
 ./uninstall.sh
 
-# After install, remove all downloaded files
+# The uninstallation is now finished, cleaning temporary files...
 echo "Removing tmp files"
 cd ../
 rm -R ${DIR}
