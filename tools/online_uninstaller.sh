@@ -50,7 +50,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Downloading the required package...
+echo -e "\nDownloading the uninstaller..."
 cd /tmp
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
@@ -58,21 +58,21 @@ else
     wget -q ${URL_CR}
 fi
 
-if [ ! -f ${DIR} ]; then
+if [ ! -f ${ARCHIVE} ]; then
     echo -e "\n\nError downloading the CentralReport uninstaller!"
     exit 3
 fi
 
-# Unpackaging the uninstaller...
-tar -xzvf ${ARCHIVE}
+echo -e "\nUnpackaging the uninstaller..."
+tar -xzf ${ARCHIVE}
 
 cd ${DIR}
 chmod +x uninstall.sh
 
+echo -e "\nLaunching the uninstaller..."
 ./uninstall.sh
 
-# The uninstallation is now finished, cleaning temporary files...
-echo "Removing tmp files"
+echo -e "\nRemoving all temporary files"
 cd ../
 rm -R ${DIR}
 rm ${ARCHIVE}

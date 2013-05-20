@@ -50,7 +50,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Downloading the required package...
+echo -e "\nDownloading the installer..."
 cd /tmp
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
@@ -58,21 +58,21 @@ else
     wget -q ${URL_CR}
 fi
 
-if [ ! -f ${DIR} ]; then
+if [ ! -f ${ARCHIVE} ]; then
     echo -e "\n\nError downloading the CentralReport installer!"
     exit 3
 fi
 
-# Unpackaging the installer...
-tar -xzvf ${ARCHIVE}
+echo -e "\nUnpackaging the installer..."
+tar -xzf ${ARCHIVE}
 
 cd ${DIR}
 chmod +x install.sh
 
+echo -e "\nLaunching the installer..."
 ./install.sh
 
-# The installation is now finished, cleaning temporary files...
-echo "Removing tmp files"
+echo -e "\nRemoving all temporary files"
 cd ../
 rm -R ${DIR}
 rm ${ARCHIVE}
