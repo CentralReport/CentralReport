@@ -10,16 +10,6 @@
 # This script generate the installer and the uninstaller packages.
 # They will be used for the online tools. Please see "online_installer.sh" and "online_uninstaller.sh" scripts.
 
-if [ ${PWD##*/} != "packager" ]; then
-    echo "ERROR - You must be in the 'packager' directory to execute this script."
-    exit 1
-fi
-
-source ../../bash/vars.inc.sh
-source ../../bash/log.inc.sh
-source ../../bash/utils.inc.sh
-source ../../bash/functions.inc.sh
-
 CR_PACKAGES_ROOT=/tmp/cr-package/
 
 CR_PACKAGE_INSTALLER_FOLDER=CentralReportInstaller/
@@ -27,6 +17,15 @@ CR_PACKAGE_INSTALLER_NAME=cr_installer.tar.gz
 
 CR_PACKAGE_UNINSTALLER_FOLDER=CentralReportUninstaller/
 CR_PACKAGE_UNINSTALLER_NAME=cr_uninstaller.tar.gz
+
+if [ ${PWD##*/} != "packager" ]; then
+    echo "ERROR - You must be in the 'packager' directory to execute this script."
+    exit 1
+fi
+
+source functions.inc.sh
+source ../../bash/log.inc.sh
+source ../../bash/utils.inc.sh
 
 clear
 printBox blue "--------------------------- CentralReport packager ----------------------------| \
@@ -39,6 +38,7 @@ if [ $(uname -s) != "Darwin" ]; then
 fi
 
 cd ../../
+CR_PROJECT_ROOT=$(pwd)
 
 logConsole "Please use your administrator password to generate the package"
 sudo -v
@@ -81,89 +81,28 @@ fi
 IFS_SAVED=$IFS
 IFS=$'\n'
 
-logConsole "Preparing the installer package..."
-
-# The whitelist contains all files or directory needed for the installer package
-for line in $(cat ./tools/packager/installer_whitelist.txt);
-do
-    if [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
-        if [ -d ${line} ]; then
-            sudo cp -R ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}${line}"
-        elif [ -f ${line} ]; then
-            sudo cp ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}${line}"
-        else
-            logError "Missing file or directory: ${line}"
-        fi
-    fi
-done
-
-# The blacklist contains all files or directory unneeded for the installer package
-for line in $(cat ./tools/packager/installer_blacklist.txt);
-do
-    if [[ ${line} == "*"* ]] ; then
-        find "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}" -name "${line}" -exec sudo rm -rf {} \;
-    elif [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
-        if [ -d ${line} ]; then
-            sudo rm -R ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}${line}"
-        elif [ -f ${line} ]; then
-            sudo rm ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}${line}"
-        else
-            logError "Missing file or directory: ${line}"
-        fi
-    fi
-done
-
-logConsole "Preparing the uninstaller package..."
-
-# The whitelist contains all files or directory needed for the uninstaller package
-for line in $(cat ./tools/packager/uninstaller_whitelist.txt);
-do
-    if [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
-        if [ -d ${line} ]; then
-            sudo cp -R ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}${line}"
-        elif [ -f ${line} ]; then
-            sudo cp ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}${line}"
-        else
-            logError "Missing file or directory: ${line}"
-        fi
-    fi
-done
-
-# The blacklist contains all files or directory unneeded for the uninstaller package
-for line in $(cat ./tools/packager/uninstaller_blacklist.txt);
-do
-    if [[ ${line} == "*"* ]] ; then
-        find "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}" -name "${line}" -exec sudo rm -rf {} \;
-    elif [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
-        if [ -d ${line} ]; then
-            sudo rm -R ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}${line}"
-        elif [ -f ${line} ]; then
-            sudo rm ${line} "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}${line}"
-        else
-            logError "Missing file or directory: ${line}"
-        fi
-    fi
-done
+ERROR_CREATING_PACKAGE=false
+create_packages
+if [ "$?" -ne 0 ]; then
+    ERROR_CREATING_PACKAGE=true
+fi
 
 IFS=${IFS_SAVED}
 
-# We must be in this folder to generate a clean archive
-cd ${CR_PACKAGES_ROOT}
-
-logConsole "Creating the installer package..."
-sudo tar -czf ${CR_PACKAGE_INSTALLER_NAME} ${CR_PACKAGE_INSTALLER_FOLDER}
-
-logConsole "Creating the uninstaller package..."
-sudo tar -czf ${CR_PACKAGE_UNINSTALLER_NAME} ${CR_PACKAGE_UNINSTALLER_FOLDER}
-
 logConsole "Removing the temporary folders..."
-sudo rm -R ${CR_PACKAGE_INSTALLER_FOLDER}
-sudo rm -R ${CR_PACKAGE_UNINSTALLER_FOLDER}
+
+sudo rm -R "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}"
+sudo rm -R "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}"
 
 logConsole "Killing the sudo session..."
 sudo -k
 
 open ${CR_PACKAGES_ROOT}
+
+if [ ${ERROR_CREATING_PACKAGE} == true ]; then
+    printBox red "An error has occured. Please consult the previous logs for more details."
+    exit 1
+fi
 
 printBox blue "Packages created successfully!"
 
