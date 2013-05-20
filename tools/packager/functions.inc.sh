@@ -208,5 +208,10 @@ function create_packages(){
         return 2
     fi
 
+    logConsole "Copying online scripts..."
+    cd "${CR_PROJECT_ROOT}"
+    sudo cp ${CR_INSTALLER_SCRIPT} "${CR_PACKAGES_ROOT}${CR_INSTALLER_SCRIPT_NAME}"
+    sudo cp ${CR_UNINSTALLER_SCRIPT} "${CR_PACKAGES_ROOT}${CR_UNINSTALLER_SCRIPT_NAME}"
+
     return 0
 }

@@ -18,6 +18,14 @@ CR_PACKAGE_INSTALLER_NAME=cr_installer.tar.gz
 CR_PACKAGE_UNINSTALLER_FOLDER=CentralReportUninstaller/
 CR_PACKAGE_UNINSTALLER_NAME=cr_uninstaller.tar.gz
 
+# Online installer script. Will be copied in the "CR_PACKAGES_ROOT" folder
+CR_INSTALLER_SCRIPT="tools/online_installer.sh"
+CR_INSTALLER_SCRIPT_NAME="install"
+
+# Online uninstaller script. Will be copied in the "CR_PACKAGES_ROOT" folder
+CR_UNINSTALLER_SCRIPT="tools/online_uninstaller.sh"
+CR_UNINSTALLER_SCRIPT_NAME="uninstall"
+
 if [ ${PWD##*/} != "packager" ]; then
     echo "ERROR - You must be in the 'packager' directory to execute this script."
     exit 1
@@ -57,6 +65,7 @@ if [ ! -d ${CR_PACKAGES_ROOT} ]; then
     mkdir ${CR_PACKAGES_ROOT}
 fi
 
+# Temporary folders
 if [ -d "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}" ]; then
     sudo rm -R "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}"
 fi
@@ -68,12 +77,22 @@ fi
 mkdir "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}"
 mkdir "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_FOLDER}"
 
+# Final packages
 if [ -f "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_NAME}" ]; then
     sudo rm "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_NAME}"
 fi
 
 if [ -f "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_NAME}" ]; then
     sudo rm "${CR_PACKAGES_ROOT}${CR_PACKAGE_UNINSTALLER_NAME}"
+fi
+
+# Online scripts
+if [ -f "${CR_PACKAGES_ROOT}${CR_INSTALLER_SCRIPT_NAME}" ]; then
+    sudo rm "${CR_PACKAGES_ROOT}${CR_INSTALLER_SCRIPT_NAME}"
+fi
+
+if [ -f "${CR_PACKAGES_ROOT}${CR_INSTALLER_SCRIPT_NAME}" ]; then
+    sudo rm "${CR_PACKAGES_ROOT}${CR_INSTALLER_SCRIPT_NAME}"
 fi
 
 # We must update the IFS variable. The default separator in bash is the space.
