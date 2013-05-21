@@ -23,18 +23,6 @@ class Check:
         self.memory = None
         self.load = None
 
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        return {
-            'cpu': self.cpu.serialize(),
-            'memory': self.memory.serialize(),
-            'load': self.load.serialize(),
-            'disks': self.disks.serialize()
-        }
-
 
 class Cpu:
     """
@@ -46,17 +34,6 @@ class Cpu:
         self.system = float(0)
         self.user = float(0)
 
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        return {
-            'idle': self.idle,
-            'system': self.system,
-            'user': self.user
-        }
-
 
 class Disks:
     """
@@ -65,23 +42,6 @@ class Disks:
 
     def __init__(self):
         self.disks = list()
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON.
-        """
-
-        all_disks = []
-
-        for disk in self.disks:
-            check_disk = {
-                'name': disk.name,
-                'free': disk.free,
-                'total': disk.size
-            }
-            all_disks.append(check_disk)
-
-        return all_disks
 
 
 class Disk:
@@ -96,19 +56,6 @@ class Disk:
         self.unix_name = ''
         self.used = float(0)
 
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        return {
-            'free': self.free,
-            'name': self.name,
-            'size': self.size,
-            'unix_name': self.unix_name,
-            'used': self.used
-        }
-
 
 class LoadAverage:
     """
@@ -120,18 +67,6 @@ class LoadAverage:
         self.last5m = float(0)
         self.last15m = float(0)
         self.uptime = int(0)  # Uptime in seconds
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        return {
-            'last1m': self.last1m,
-            'last5m': self.last5m,
-            'last15m': self.last15m,
-            'uptime': self.uptime
-        }
 
 
 class Memory:
@@ -148,19 +83,3 @@ class Memory:
         self.swap_size = float(0)
         self.swap_used = float(0)
         self.total = float(0)
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON
-        """
-
-        return {
-            'active': self.active,
-            'free': self.free,
-            'inactive': self.inactive,
-            'resident': self.resident,
-            'swap_free': self.swap_free,
-            'swap_size': self.swap_size,
-            'swap_used': self.swap_used,
-            'total': self.total
-        }

@@ -42,24 +42,3 @@ class Infos:
 
         self.uuid = ''
         self.key = ''
-
-    def serialize(self):
-        """
-            Serializes this entity in JSON.
-        """
-
-        return {
-            'architecture': self.architecture,
-            'cpu_count': self.cpu_count,
-            'cpu_model': self.cpu_model,
-            'date': self.date.strftime('%s'),
-            'hostname': self.hostname,
-            'kernel_name': self.kernel_name,
-            'kernel_version': self.kernel_version,
-            'model': self.model,
-            'language': self.language,
-            'os': self.os,
-            'type': 'host',
-            'uuid': self.uuid,
-            'key': self.key
-        }
