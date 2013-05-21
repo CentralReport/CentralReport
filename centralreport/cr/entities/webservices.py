@@ -25,10 +25,11 @@ class Registration:
 
     def __init__(self):
         self.uuid = ""
-        self.key = ""
-        self.hostname = ""
+        self.name = ""
+        self.displayName = ""
         self.os = ""
-        self.os_version = ""
+        self.osVersion = ""
+        self.type = ""
 
 
 class Answer:
