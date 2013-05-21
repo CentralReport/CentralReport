@@ -16,7 +16,7 @@ from cr import collectors
 from cr import log
 from cr.entities import checks
 from cr.tools import Config
-from cr import webservices
+from cr.utils import web
 
 
 class Checks(threading.Thread):
@@ -144,7 +144,7 @@ class Remote(threading.Thread):
 
                 if Remote.route_hosts == '':
                     Remote.route_main = Config.CR_REMOTE_ROUTE.replace('%key%', Checks.host_infos.key)
-                    ws_user = webservices.send_data(webservices.METHOD_GET, Remote.route_main, None, None)
+                    ws_user = web.send_data(web.METHOD_GET, Remote.route_main, None, None)
 
                     if ws_user.code == 404:
                         log.log_error('The key %s is not a valid key on the remote server!' % Checks.host_infos.key)
@@ -163,7 +163,7 @@ class Remote(threading.Thread):
                 if Remote.route_hosts != '':
                     # We can now check if the current host is registered on the remote server
                     Remote.route_hosts = Remote.route_hosts.replace('%uuid%', Checks.last_check.uuid)
-                    ws_host = webservices.send_data(webservices.METHOD_GET, Remote.route_main, None, None)
+                    ws_host = web.send_data(web.METHOD_GET, Remote.route_main, None, None)
 
                     if ws_host.code == 401:
                         log.log_info('Please validate this host on the remote server!')
