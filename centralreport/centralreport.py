@@ -15,6 +15,10 @@ import sys
 import time
 import os
 
+# Third-party libraries
+CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/requests-1.1.0.zip'))
+
 from cr import log
 from cr import threads
 from cr.utils import text

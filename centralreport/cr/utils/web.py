@@ -7,11 +7,8 @@
     https://github.com/CentralReport
 """
 
-from os import path as osPath
 import socket
-from sys import path as sysPath
 
-sysPath.insert(0, osPath.abspath(__file__ + '/../../libs/requests-1.1.0.zip'))
 import requests
 
 from cr.entities.webservices import Answer
