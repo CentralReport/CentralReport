@@ -50,10 +50,11 @@ class Disk:
     """
 
     def __init__(self):
-        self.free = float(0)
         self.name = ''
-        self.size = float(0)
         self.unix_name = ''
+        self.uuid = ''
+        self.size = float(0)
+        self.free = float(0)
         self.used = float(0)
 
 
