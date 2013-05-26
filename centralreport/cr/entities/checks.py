@@ -18,9 +18,16 @@ class Check:
     def __init__(self):
         self.date = datetime.datetime.now()
 
+        #: @type cpu: cr.entities.checks.Cpu
         self.cpu = None
+
+        #: @type disks: cr.entities.checks.Disks
         self.disks = None
+
+        #: @type memory: cr.entities.checks.Memory
         self.memory = None
+
+        #: @type load: cr.entities.checks.LoadAverage
         self.load = None
 
 
@@ -41,6 +48,8 @@ class Disks:
     """
 
     def __init__(self):
+
+        #: @type disks: list of cr.entities.checks.Disk
         self.disks = list()
 
 

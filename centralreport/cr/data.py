@@ -7,5 +7,8 @@
     https://github.com/CentralReport
 """
 
-host_info = None  # From cr.entities.host.Infos
-last_check = None  # From cr.entities.checks.check
+#: @type host_info: cr.entities.host.Infos
+host_info = None
+
+#: @type last_check: cr.entities.checks.Check
+last_check = None
