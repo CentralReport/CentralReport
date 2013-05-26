@@ -50,7 +50,7 @@ class Checks(threading.Thread):
 
     def run(self):
         """
-            Executes checks.
+            Manages the execution of new checks periodically.
         """
 
         # Getting data about the current host
@@ -58,37 +58,45 @@ class Checks(threading.Thread):
 
         while Checks.performChecks:
             if self.tickPerformCheck <= self.tickCount:
-                log.log_debug('---- New check -----')
-                check_entity = checks.Check()
+                try:
+                    self.perform_check()
+                except Exception as e:
+                    log.log_error('Error performing a new check: %s' % e.message)
 
-                # Checking CPU
-                log.log_debug('Doing a CPU check...')
-                check_entity.cpu = self.MyCollector.get_cpu()
-
-                # Checking memory
-                log.log_debug('Doing a memory check...')
-                check_entity.memory = self.MyCollector.get_memory()
-
-                # Checking Load Average
-                log.log_debug('Doing a load average check...')
-                check_entity.load = self.MyCollector.get_loadaverage()
-
-                # Checking disks information
-                log.log_debug('Doing a disk check....')
-                check_entity.disks = self.MyCollector.get_disks()
-
-                # Updating last check date...
-                check_entity.date = datetime.now()
-
-                data.last_check = check_entity
-
-                # Wait 60 seconds before next checks...
-                log.log_debug('All checks are done')
                 log.log_debug('Next checks in %s seconds...' % self.tickPerformCheck)
-
                 self.tickCount = 0
-
-            # new tick
 
             self.tickCount += 1
             time.sleep(1)
+
+    def perform_check(self):
+        """
+            Performs a new global check.
+            Can be raise a error if a check fail.
+        """
+
+        log.log_debug('---- New check -----')
+        check_entity = checks.Check()
+
+        # Checking CPU
+        log.log_debug('Doing a CPU check...')
+        check_entity.cpu = self.MyCollector.get_cpu()
+
+        # Checking memory
+        log.log_debug('Doing a memory check...')
+        check_entity.memory = self.MyCollector.get_memory()
+
+        # Checking Load Average
+        log.log_debug('Doing a load average check...')
+        check_entity.load = self.MyCollector.get_loadaverage()
+
+        # Checking disks information
+        log.log_debug('Doing a disk check....')
+        check_entity.disks = self.MyCollector.get_disks()
+
+        # Updating last check date...
+        check_entity.date = datetime.now()
+
+        data.last_check = check_entity
+
+        log.log_debug('All checks are done')
