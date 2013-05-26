@@ -1,0 +1,38 @@
+{
+    "date": "{{ date }}",
+    "checks": {
+        "load": {
+            "uptime": "{{ load_uptime }}",
+            "lastMinute": "{{ load_last1m }}",
+            "lastFiveMinutes":"{{ load_last5m }}",
+            "lastFifteenMinutes":"{{ load_last15m }}"
+        },
+        "disks": [
+            {% for disk in disks %}
+            {
+                "name":"{{ disk.name }}",
+                "unixName":"{{ disk.unix_name }}",
+                "uuid":"{{ disk.uuid }}",
+                "size":{{ disk.size }},
+                "used":{{ disk.used }},
+                "free":{{ disk.free }}
+            },
+            {% endfor %}
+        ],
+        "cpu": {
+            "idle": {{ cpu_idle }},
+            "system": {{ cpu_system }},
+            "user": {{ cpu_user }}
+        },
+        "memory": {
+            "total": {{ memory_total }},
+            "active": {{ memory_active }},
+            "inactive": {{ memory_inactive }},
+            "resident": {{ memory_resident }},
+            "free": {{ memory_free }},
+            "swapSize": {{ swap_size }},
+            "swapUsed": {{ swap_used }},
+            "swapFree": {{ swap_free }}
+        }
+    }
+}

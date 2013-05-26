@@ -8,29 +8,20 @@
 """
 
 from datetime import datetime
-import json
 import threading
 import time
 
 from cr import collectors
+from cr import data
 from cr import log
 from cr.entities import checks
-from cr.entities import webservices
 from cr.tools import Config
-from cr.utils import web
 
-from cr.utils import serializer
 
 class Checks(threading.Thread):
     """
         Thread performing periodically checks.
     """
-
-    # Host related information (entities.host.Infos())
-    host_infos = None
-
-    # Last checks (entities.checks.Check())
-    last_check = None
 
     performChecks = True  # True = perform checks...
     tickCount = 60  # Initial Count (Perform a check when starting)
@@ -62,9 +53,8 @@ class Checks(threading.Thread):
             Executes checks.
         """
 
-        # Getting information about the current host
-
-        Checks.host_infos = self.MyCollector.get_infos()
+        # Getting data about the current host
+        data.host_info = self.MyCollector.get_infos()
 
         while Checks.performChecks:
             if self.tickPerformCheck <= self.tickCount:
@@ -90,8 +80,7 @@ class Checks(threading.Thread):
                 # Updating last check date...
                 check_entity.date = datetime.now()
 
-                Checks.last_check = check_entity
-                Remote.add_check(check_entity)
+                data.last_check = check_entity
 
                 # Wait 60 seconds before next checks...
                 log.log_debug('All checks are done')
@@ -103,56 +92,3 @@ class Checks(threading.Thread):
 
             self.tickCount += 1
             time.sleep(1)
-
-
-class Remote(threading.Thread):
-    """
-        This class is used for sending Checks to the remote server
-    """
-
-    waiting_checks = list()  # Checks that need to be sent to the remote server
-
-    is_enable = False  # "True" only if this daemon is able to send checks to the remote server
-    is_registered = False
-
-    route_main = ''
-    route_hosts = ''
-    route_checks = ''
-
-    _perform_send = True
-
-    def __init__(self):
-        threading.Thread.__init__(self)
-
-        log.log_debug('SendCheck thread is starting...')
-        self.start()
-
-    def run(self):
-        """
-            Sends data to remote server
-        """
-
-        while Checks.host_infos is None:
-            log.log_debug('SendCheck: Waiting for the first check...')
-            time.sleep(4)
-
-        while Remote._perform_send:
-
-            #TODO: Check and send data to the online server
-
-            time.sleep(60)
-
-    @staticmethod
-    def add_check(check):
-        """
-            Adds that will be sent to the remote server as soon as possible.
-            The check is not added if CR is unable to communicate with the remote server.
-
-            @param check: The check entity
-            @type check: cr.entities.checks.Check
-        """
-        if Remote.is_enable:
-            log.log_debug('This check will be sent to the remote server ASAP.')
-            Remote.waiting_checks.append(check)
-        else:
-            log.log_debug('Check ignored: Remote server is disable.')

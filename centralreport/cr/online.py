@@ -5,13 +5,15 @@
         Contains all classes and functions used for the interaction with the Online server
         Please see http://centralreport.net
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport
 """
 
 import json
 
-from cr.utils import web
+from cr import data
 from cr import log
+from cr.utils import web
+
 
 # Main routes. Use the HATEOAS concept (http://en.wikipedia.org/wiki/HATEOAS).
 # They are empty when CR is starting, they will be gotten dynamically from the server.
@@ -106,14 +108,20 @@ def register_host(host_json):
         log.log_info('Host already registered on CentralReport Online!')
 
 
-def send_check(check_json):
+def send_check():
     """
-        [WIP] Sends a check to the online server
+        [WIP] Sends the last check to the online server
     """
 
     global route_checks_add
 
     log.log_debug('Sending the last check to CentralReport Online...')
+
+    if data.last_check is None:
+        raise ValueError('No check available!')
+
+    if route_checks_add == '':
+        raise ValueError('The Checks route is unknown!')
 
     route_checks_add = route_checks_add.replace('%key%', user_key)
     route_checks_add = route_checks_add.replace('%uuid%', host_uuid)
