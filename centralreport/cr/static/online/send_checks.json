@@ -2,10 +2,10 @@
     "date": "{{ date }}",
     "checks": {
         "load": {
-            "uptime": "{{ load_uptime }}",
-            "lastMinute": "{{ load_last1m }}",
-            "lastFiveMinutes":"{{ load_last5m }}",
-            "lastFifteenMinutes":"{{ load_last15m }}"
+            "uptime": {{ load_uptime }},
+            "lastMinute": {{ load_last1m }},
+            "lastFiveMinutes": {{ load_last5m }},
+            "lastFifteenMinutes": {{ load_last15m }}
         },
         "disks": [
             {% for disk in disks %}

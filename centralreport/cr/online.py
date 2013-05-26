@@ -170,8 +170,21 @@ def register_host():
 
     log.log_debug('Generating the JSON template...')
     template = jinja_env.get_template('host_registration.json')
+
     json_vars = dict()
-    json_vars['uuid'] = host_uuid
+    json_vars['uuid'] = data.host_info.uuid
+    json_vars['hostname'] = data.host_info.hostname
+    json_vars['displayName'] = data.host_info.hostname
+    json_vars['model'] = data.host_info.model
+    json_vars['cpuCount'] = data.host_info.cpu_count
+    json_vars['os'] = data.host_info.os_name
+    json_vars['osVersion'] = data.host_info.os_version
+    json_vars['kernel'] = data.host_info.kernel_name
+    json_vars['kernelVersion'] = data.host_info.kernel_version
+    json_vars['architecture'] = data.host_info.architecture
+    json_vars['agent'] = 'TODO'
+    json_vars['agentVersion'] = 'TODO'
+    json_vars['type'] = 'TODO'
 
     host_json = template.render(json_vars)
     log.log_debug(host_json)
@@ -211,8 +224,40 @@ def send_check():
     route_checks_add = route_checks_add.replace('%uuid%', host_uuid)
 
     log.log_debug('Generating the JSON template...')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    jinja_env = Environment(loader=FileSystemLoader(os.path.join(current_dir, 'static/online/')))
     template = jinja_env.get_template('send_checks.json')
+
     json_vars = dict()
+    json_vars['date'] = data.last_check.date
+    json_vars['load_uptime'] = data.last_check.load.uptime
+    json_vars['load_last1m'] = data.last_check.load.last1m
+    json_vars['load_last5m'] = data.last_check.load.last5m
+    json_vars['load_last15m'] = data.last_check.load.last15m
+    json_vars['cpu_idle'] = data.last_check.cpu.idle
+    json_vars['cpu_system'] = data.last_check.cpu.system
+    json_vars['cpu_user'] = data.last_check.cpu.user
+    json_vars['memory_total'] = data.last_check.memory.total
+    json_vars['memory_active'] = data.last_check.memory.active
+    json_vars['memory_inactive'] = data.last_check.memory.inactive
+    json_vars['memory_resident'] = data.last_check.memory.resident
+    json_vars['memory_free'] = data.last_check.memory.free
+    json_vars['swap_size'] = data.last_check.memory.swap_size
+    json_vars['swap_used'] = data.last_check.memory.swap_used
+    json_vars['swap_free'] = data.last_check.memory.swap_free
+
+    all_disks = []
+    for disk in data.last_check.disks.disks:
+        disk_json = {
+            'name': disk.name,
+            'unix_name': disk.unix_name,
+            'uuid': disk.uuid,
+            'size': disk.size,
+            'used': disk.used,
+            'free': disk.free
+        }
+        all_disks.append(disk_json)
+    json_vars['disks'] = all_disks
 
     check_json = template.render(json_vars)
     log.log_debug(check_json)
