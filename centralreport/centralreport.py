@@ -18,6 +18,8 @@ import os
 # Third-party libraries
 CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/requests-1.1.0.zip'))
+sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/jinja2-2.6.zip'))
+sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/cherrypy-3.2.2.zip'))
 
 from cr import log
 from cr import threads

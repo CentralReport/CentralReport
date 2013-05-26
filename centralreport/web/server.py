@@ -12,14 +12,8 @@ import os
 import sys
 import threading
 
-# By che: Temporary section. Will be improved soon.
-# Testing importing zip libraries...
-sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/jinja2-2.6.zip'))
-sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/cherrypy-3.2.2.zip'))
-
 import cherrypy
 import jinja2
-# End of temporary section by che.
 
 from cr import data
 from cr.utils.date import datetime_to_timestamp
