@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/CentralReport/CentralReport.png?branch=master)](https://travis-ci.org/CentralReport/CentralReport)
+
 # CentralReport
 
 **Central Report is designed to monitor very easily computers and servers, and runs on many current operating systems.**

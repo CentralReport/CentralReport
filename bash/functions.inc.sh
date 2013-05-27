@@ -155,7 +155,7 @@ function copy_init_file(){
 
             if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
                 update-rc.d centralreport defaults
-            elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ] || [ "${CURRENT_OS}" == "${OS_REDHAT}" ]; then
+            elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
                 chkconfig --add centralreport
             fi
 
@@ -311,7 +311,7 @@ function delete_init_file(){
             else
                 if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
                     update-rc.d -f centralreport remove
-                elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ] || [ "${CURRENT_OS}" == "${OS_REDHAT}" ]; then
+                elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
                     chkconfig --del centralreport
                 fi
 
