@@ -17,6 +17,7 @@ from cr import data
 from cr.errors import OnlineError
 from cr import log
 from cr.utils import web
+from cr.tools import Config
 
 
 # Main routes. Use the HATEOAS concept (http://en.wikipedia.org/wiki/HATEOAS).
@@ -176,15 +177,16 @@ def register_host():
     json_vars['hostname'] = data.host_info.hostname
     json_vars['displayName'] = data.host_info.hostname
     json_vars['model'] = data.host_info.model
-    json_vars['cpuCount'] = data.host_info.cpu_count
+    json_vars['cpu_model'] = data.host_info.cpu_model
+    json_vars['cpu_count'] = data.host_info.cpu_count
     json_vars['os'] = data.host_info.os_name
-    json_vars['osVersion'] = data.host_info.os_version
+    json_vars['os_version'] = data.host_info.os_version
     json_vars['kernel'] = data.host_info.kernel_name
-    json_vars['kernelVersion'] = data.host_info.kernel_version
+    json_vars['kernel_version'] = data.host_info.kernel_version
     json_vars['architecture'] = data.host_info.architecture
-    json_vars['agent'] = 'TODO'
-    json_vars['agentVersion'] = 'TODO'
-    json_vars['type'] = 'TODO'
+    json_vars['agent'] = Config.CR_AGENT_NAME
+    json_vars['agent_version'] = Config.CR_VERSION
+    json_vars['type'] = 'Host'
 
     host_json = template.render(json_vars)
     log.log_debug(host_json)

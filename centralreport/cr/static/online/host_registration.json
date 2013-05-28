@@ -3,6 +3,7 @@
     "name": "{{ hostname }}",
     "displayName": "{{ display_hostname }}",
     "model": "{{ model }}",
+    "cpuModel": "{{ cpu_model }}",
     "cpuCount": "{{ cpu_count }}",
     "os": "{{ os }}",
     "osVersion": "{{ os_version }}",
