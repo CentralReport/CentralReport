@@ -2,7 +2,7 @@
 
 """
     CentralReport - Online module
-        Contains all classes and functions used for the interaction with the Online server
+        Contains all classes and functions interacting with the Online server
         Please see http://centralreport.net
 
     https://github.com/CentralReport
@@ -271,7 +271,7 @@ def send_check():
     elif ws_checks.code == 409:
         raise OnlineError(3, 'Check already sent!')
     elif ws_checks.code != 200:
-        raise OnlineError(4, 'Unkown answer code %s!' % ws_checks.code)
+        raise OnlineError(4, 'Unknown answer code %s!' % ws_checks.code)
 
     log.log_info('Check sent successfully!')
     return True

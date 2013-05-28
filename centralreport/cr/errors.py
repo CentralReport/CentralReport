@@ -2,7 +2,7 @@
 
 """
     CentralReport - Errors module
-        Contains all definitions of the CentralReport custom errors
+        Contains all definitions of the CentralReport errors
 
     https://github.com/CentralReport
 """

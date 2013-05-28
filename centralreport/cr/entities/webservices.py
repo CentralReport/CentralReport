@@ -4,7 +4,7 @@
     CentralReport - Webservices module
         Contains all entities used with webservices.
 
-    https://github.com/miniche/CentralReport/
+    https://github.com/CentralReport/
 """
 
 

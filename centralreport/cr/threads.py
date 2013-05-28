@@ -79,19 +79,19 @@ class Checks(threading.Thread):
         check_entity = checks.Check()
 
         # Checking CPU
-        log.log_debug('Doing a CPU check...')
+        log.log_debug('Performing a CPU check...')
         check_entity.cpu = self.MyCollector.get_cpu()
 
         # Checking memory
-        log.log_debug('Doing a memory check...')
+        log.log_debug('Performing a memory check...')
         check_entity.memory = self.MyCollector.get_memory()
 
         # Checking Load Average
-        log.log_debug('Doing a load average check...')
+        log.log_debug('Performing a load average check...')
         check_entity.load = self.MyCollector.get_loadaverage()
 
         # Checking disks information
-        log.log_debug('Doing a disk check....')
+        log.log_debug('Performing a disk check....')
         check_entity.disks = self.MyCollector.get_disks()
 
         # Updating last check date...
