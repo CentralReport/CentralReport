@@ -13,10 +13,11 @@ import time
 
 from cr import collectors
 from cr import data
+from cr import errors
 from cr import log
+from cr import online
 from cr.entities import checks
 from cr.tools import Config
-
 
 class Checks(threading.Thread):
     """
@@ -62,6 +63,18 @@ class Checks(threading.Thread):
                     self.perform_check()
                 except Exception as e:
                     log.log_error('Error performing a new check: %s' % e.message)
+
+                if data.host_info.key != '':
+                    try:
+                        online.send_check()
+                    except ValueError as e:
+                        log.log_error('Unable to send the check to CentralReport Online: %s' % e.message)
+                    except errors.OnlineError as e:
+                        log.log_error('Error sending the check to CentralReport Online: %s' % e.message)
+                    except Exception as e:
+                        log.log_error('Unkown error sending the check to CentralReport Online: %s' % e.message)
+                else:
+                    log.log_debug('User key is not defined: no connection with CentralReport Online available')
 
                 log.log_debug('Next checks in %s seconds...' % self.tickPerformCheck)
                 self.tickCount = 0

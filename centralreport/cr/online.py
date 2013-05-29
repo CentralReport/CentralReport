@@ -16,9 +16,9 @@ from jinja2 import Environment, FileSystemLoader
 from cr import data
 from cr.errors import OnlineError
 from cr import log
+from cr.utils import text
 from cr.utils import web
 from cr.tools import Config
-
 
 # Main routes. Use the HATEOAS concept (http://en.wikipedia.org/wiki/HATEOAS).
 # They are empty when CR is starting, they will be gotten dynamically from the server.
@@ -26,9 +26,6 @@ route_user_check = 'http://centralreport.net/api/users/%key%'
 route_host_check = ''
 route_host_add = ''
 route_checks_add = ''
-
-user_key = None
-host_uuid = None
 
 jinja_env = None  # jinja2.Environment object used to generate JSON output for the webservices.
 
@@ -50,6 +47,9 @@ def initialize_online():
 
     if route_user_check == '':
         raise ValueError('The user check route is unknown!')
+
+    if data.host_info is None:
+        raise ValueError('Host data are unavailable!')
 
     if route_host_check == '':
         try:
@@ -94,11 +94,14 @@ def check_user_key():
     global route_host_check
     global route_host_add
 
-    route_user_check = route_user_check.replace('%key%', user_key)
+    if data.host_info.key == '':
+        raise ValueError('No user key defined!')
+
+    route_user_check = route_user_check.replace('%key%', data.host_info.key)
     ws_user = web.send_data(web.METHOD_GET, route_user_check, None, None)
 
     if ws_user.code == 404:
-        raise OnlineError(1, 'The key %s is not a valid key on the remote server!' % user_key)
+        raise OnlineError(1, 'The key %s is not a valid key on the remote server!' % data.host_info.key)
     elif ws_user.code != 200:
         raise OnlineError(2, 'The server has returned a unknown response. Code: %s' % ws_user.code)
     else:
@@ -129,8 +132,8 @@ def check_host():
 
     if route_host_check != '':
         # We can now check if the current host is registered on the remote server
-        route_host_check = route_host_check.replace('%key%', user_key)
-        route_host_check = route_host_check.replace('%uuid%', host_uuid)
+        route_host_check = route_host_check.replace('%key%', data.host_info.key)
+        route_host_check = route_host_check.replace('%uuid%', data.host_info.uuid)
         ws_host = web.send_data(web.METHOD_GET, route_host_check, None, None)
 
         if ws_host.code == 401:
@@ -167,7 +170,7 @@ def register_host():
     if route_host_add == '':
         raise ValueError('The host route is unknown!')
 
-    route_host_add = route_host_add.replace('%key%', user_key)
+    route_host_add = route_host_add.replace('%key%', data.host_info.key)
 
     log.log_debug('Generating the JSON template...')
     template = jinja_env.get_template('host_registration.json')
@@ -175,7 +178,7 @@ def register_host():
     json_vars = dict()
     json_vars['uuid'] = data.host_info.uuid
     json_vars['hostname'] = data.host_info.hostname
-    json_vars['displayName'] = data.host_info.hostname
+    json_vars['display_name'] = data.host_info.hostname
     json_vars['model'] = data.host_info.model
     json_vars['cpu_model'] = data.host_info.cpu_model
     json_vars['cpu_count'] = data.host_info.cpu_count
@@ -186,13 +189,12 @@ def register_host():
     json_vars['architecture'] = data.host_info.architecture
     json_vars['agent'] = Config.CR_AGENT_NAME
     json_vars['agent_version'] = Config.CR_VERSION
-    json_vars['type'] = 'Host'
+    json_vars['host_type'] = 'Host'
 
-    host_json = template.render(json_vars)
+    host_json = text.clean(template.render(json_vars))
     log.log_debug(host_json)
 
     ws_host_registration = web.send_data(web.METHOD_POST, route_host_add, host_json)
-
     if ws_host_registration.code == 200:
         log.log_info('Host registered! Waiting for user approval.')
         route_checks_add = ''
@@ -214,20 +216,19 @@ def send_check():
     if data.last_check is None:
         raise ValueError('No check available!')
 
-    if route_checks_add == '':
-        raise ValueError('The Checks route is unknown!')
-
     if initialize_online() is False:
         raise OnlineError(1, 'Wrong configuration for CentralReport Online')
 
+    if route_checks_add == '':
+        raise ValueError('The Checks route is unknown!')
+
     log.log_debug('Sending the last check to CentralReport Online...')
 
-    route_checks_add = route_checks_add.replace('%key%', user_key)
-    route_checks_add = route_checks_add.replace('%uuid%', host_uuid)
+    route_checks_add = route_checks_add.replace('%key%', data.host_info.key)
+    route_checks_add = route_checks_add.replace('%uuid%', data.host_info.uuid)
 
     log.log_debug('Generating the JSON template...')
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    jinja_env = Environment(loader=FileSystemLoader(os.path.join(current_dir, 'static/online/')))
+
     template = jinja_env.get_template('send_checks.json')
 
     json_vars = dict()
@@ -239,14 +240,14 @@ def send_check():
     json_vars['cpu_idle'] = data.last_check.cpu.idle
     json_vars['cpu_system'] = data.last_check.cpu.system
     json_vars['cpu_user'] = data.last_check.cpu.user
-    json_vars['memory_total'] = data.last_check.memory.total
-    json_vars['memory_active'] = data.last_check.memory.active
-    json_vars['memory_inactive'] = data.last_check.memory.inactive
-    json_vars['memory_resident'] = data.last_check.memory.resident
-    json_vars['memory_free'] = data.last_check.memory.free
-    json_vars['swap_size'] = data.last_check.memory.swap_size
-    json_vars['swap_used'] = data.last_check.memory.swap_used
-    json_vars['swap_free'] = data.last_check.memory.swap_free
+    json_vars['memory_total'] = long(data.last_check.memory.total)
+    json_vars['memory_active'] = long(data.last_check.memory.active)
+    json_vars['memory_inactive'] = long(data.last_check.memory.inactive)
+    json_vars['memory_resident'] = long(data.last_check.memory.resident)
+    json_vars['memory_free'] = long(data.last_check.memory.free)
+    json_vars['swap_size'] = long(data.last_check.memory.swap_size)
+    json_vars['swap_used'] = long(data.last_check.memory.swap_used)
+    json_vars['swap_free'] = long(data.last_check.memory.swap_free)
 
     all_disks = []
     for disk in data.last_check.disks.disks:
@@ -254,18 +255,17 @@ def send_check():
             'name': disk.name,
             'unix_name': disk.unix_name,
             'uuid': disk.uuid,
-            'size': disk.size,
-            'used': disk.used,
-            'free': disk.free
+            'size': long(disk.size),
+            'used': long(disk.used),
+            'free': long(disk.free)
         }
         all_disks.append(disk_json)
     json_vars['disks'] = all_disks
 
-    check_json = template.render(json_vars)
+    check_json = text.clean(template.render(json_vars))
     log.log_debug(check_json)
 
     ws_checks = web.send_data(web.METHOD_POST, route_checks_add, check_json)
-
     if ws_checks.code == 400:
         raise OnlineError(1, 'Data refused by the remote server: bad data')
     elif ws_checks.code == 404:
