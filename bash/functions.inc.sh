@@ -11,26 +11,45 @@
 # Starts / Stops the CentralReport daemon
 # --
 
-
+#
+# Starts the CentralReport daemon
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport is started
+#   1 = Error finding the binary script
+#   2 = Error starting the daemon
+#
 function start_cr(){
 
-    if [ -f /usr/local/bin/centralreport ]; then
-        if [ "${CURRENT_OS}" == $"{OS_MAC}" ]; then
-            execute_privileged_command launchctl load -w ${STARTUP_PLIST}
-        else
-            execute_privileged_command /usr/local/bin/centralreport start
-        fi
+    if [ ! -f /usr/local/bin/centralreport ]; then
+        logError "Unable to find the binary script!"
+        return 1
+    fi
 
-        RETURN_CODE="$?"
-        if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error starting CentralReport (Error code: ${RETURN_CODE})!"
-            return ${RETURN_CODE}
-        fi
+    if [ "${CURRENT_OS}" == $"{OS_MAC}" ]; then
+        execute_privileged_command launchctl load -w ${STARTUP_PLIST}
+    else
+        execute_privileged_command /usr/local/bin/centralreport start
+    fi
+
+    RETURN_CODE="$?"
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error starting CentralReport (Error code: ${RETURN_CODE})!"
+        return 2
     fi
 
     return 0
 }
 
+#
+# Stops the CentralReport daemon
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport is stopped
+#   1 = Error stopping the daemon
+#
 function stop_cr(){
 
     if [ -f /usr/local/bin/centralreport ]; then
@@ -39,29 +58,26 @@ function stop_cr(){
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
             logError "Error stopping CentralReport (Error code: ${RETURN_CODE})!"
-            return ${RETURN_CODE}
+            return 1
         fi
     fi
 
     return 0
 }
 
-function launch_config_assistant(){
-
-    CONFIG_TXT="Launching the CentralReport configuration wizard..."
-    logFile ${CONFIG_TXT}
-    printBox blue ${CONFIG_TXT}
-
-    execute_privileged_command python ${CONFIG_ASSISTANT} < /dev/tty
-
-    return 0
-}
-
-
 # --
 # Installation-related functions
 # --
 
+#
+# Copies the binary script in the right folder
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Binary script copied
+#   1 = Error copying the binary script
+#   2 = Error applying chmod on the binary script
+#
 function copy_bin(){
 
     # In some cases, /usr/local and /usr/local/bin don't exist. We will create them in this case.
@@ -77,21 +93,30 @@ function copy_bin(){
 
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error copying the CentralReport binary script in ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
-        return ${RETURN_CODE}
+        return 1
+    fi
 
-    else
-        execute_privileged_command chmod +x ${CR_BIN_FILE}
-        RETURN_CODE="$?"
+    execute_privileged_command chmod +x ${CR_BIN_FILE}
+    RETURN_CODE="$?"
 
-        if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error applying chmod on ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        fi
+    if [ ${RETURN_CODE} -ne "0" ]; then
+        logError "Error applying chmod on ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
+        return 2
     fi
 
     return 0
 }
 
+#
+# Copies the CentralReport library in the right folder
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Library copied
+#   1 = Error creating the CentralReport library directory
+#   2 = Error copying the library in the right folder
+#   3 = Error applying chmod on the daemon script
+#
 function copy_lib(){
 
     # In some cases, /usr/local and /usr/local/bin don't exist. We will create them in this case.
@@ -107,7 +132,7 @@ function copy_lib(){
 
     if [ ${RETURN_CODE} -ne "0" ]; then
           logError "Error creating the CentralReport library directory at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
-          return ${RETURN_CODE}
+          return 1
     fi
 
     execute_privileged_command cp -R -f centralreport ${CR_LIB_DIR_RELATIVE}
@@ -115,7 +140,7 @@ function copy_lib(){
 
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error copying the CentralReport libraries in ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
-        return ${RETURN_CODE}
+        return 2
     fi
 
     execute_privileged_command chmod +x ${CR_LIB_DAEMON}
@@ -123,12 +148,21 @@ function copy_lib(){
 
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error applying chmod on ${CR_LIB_DAEMON} (Error code: ${RETURN_CODE})"
-        return ${RETURN_CODE}
+        return 3
     fi
 
     return 0
 }
 
+#
+# Copies the init file (used to launch CR at the OS boot)
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Init file copied and registered
+#   1 = Error copying the init file in the right folder
+#   2 = Error registering the init file (Linux only)
+#
 function copy_init_file(){
 
     if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
@@ -140,7 +174,7 @@ function copy_init_file(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error copying the startup plist at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
+            return 1
         fi
 
     else
@@ -173,6 +207,15 @@ function copy_init_file(){
     return 0
 }
 
+#
+# Creates the configuration directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Configuration directory created
+#   1 = Error creating the directory
+#   2 = Error updating the directory owner
+#
 function create_config_directory(){
 
     if [ -d ${CR_CONFIG_DIR} ]; then
@@ -183,7 +226,7 @@ function create_config_directory(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error creating the config directory at ${CR_CONFIG_DIR} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
+            return 1
         fi
     fi
 
@@ -200,12 +243,21 @@ function create_config_directory(){
 
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error updating the owner of ${CR_CONFIG_DIR} (Error code: ${RETURN_CODE})"
-        return ${RETURN_CODE}
+        return 2
     fi
 
     return 0
 }
 
+#
+# Creates the log directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Log directory created
+#   1 = Error creating the log directory
+#   2 = Error updating the log directory owner
+#
 function create_log_directory(){
     if [ -d ${CR_LOG_DIR} ]; then
         logFile "The log directory already exists!"
@@ -215,7 +267,7 @@ function create_log_directory(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error creating the log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
+            return 1
         fi
     fi
 
@@ -232,7 +284,7 @@ function create_log_directory(){
 
     if [ ${RETURN_CODE} -ne "0" ]; then
         logError "Error updating the owner of ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
-        return ${RETURN_CODE}
+        return 2
     fi
 
     return 0
@@ -242,6 +294,14 @@ function create_log_directory(){
 # Unistall functions
 # --
 
+#
+# Removes the binary script
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Binary script removed
+#   1 = Error deleting the binary script
+#
 function delete_bin(){
     logFile "Removing the CentralReport binary script..."
 
@@ -251,10 +311,10 @@ function delete_bin(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting the CentralReport binary script at ${CR_BIN_FILE} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        else
-            logFile "CentralReport binary script has been removed"
+            return 1
         fi
+
+        logFile "CentralReport binary script has been removed"
     else
         logInfo "CentralReport binary script doesn't exist!"
     fi
@@ -262,6 +322,14 @@ function delete_bin(){
     return 0
 }
 
+#
+# Removes the CentralReport library
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport library removed
+#   1 = Error deleting the CentralReport library
+#
 function delete_lib(){
     logFile "Removing CentralReport libraries..."
 
@@ -271,10 +339,10 @@ function delete_lib(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting the CentralReport libraries directory at ${CR_LIB_DIR} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        else
-            logFile "CentralReport lib files have been removed"
+            return 1
         fi
+
+        logFile "CentralReport lib files have been removed"
     else
         logInfo "CentralReport lib directory doesn't exist!"
     fi
@@ -282,6 +350,15 @@ function delete_lib(){
     return 0
 }
 
+#
+# Removes the init file
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Init file removed
+#   1 = Error deleting the init file
+#   2 = Error unregistering the init file (Linux only)
+#
 function delete_init_file(){
 
     if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
@@ -293,10 +370,10 @@ function delete_init_file(){
 
             if [ ${RETURN_CODE} -ne "0" ]; then
                 logError "Error deleting the startup plist file at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
-            else
-                logFile "The startup plist has been removed"
+                return 1
             fi
+
+            logFile "The startup plist has been removed"
         else
             logInfo "The startup plist file was not found!"
         fi
@@ -305,27 +382,26 @@ function delete_init_file(){
         logFile "Removing the startup script..."
 
         if [ -f ${STARTUP_DEBIAN} ]; then
+            if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+                update-rc.d -f centralreport remove
+            elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
+                chkconfig --del centralreport
+            fi
+
             if [ ${RETURN_CODE} -ne "0" ]; then
                 logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
-            else
-                if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
-                    update-rc.d -f centralreport remove
-                elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
-                    chkconfig --del centralreport
-                fi
-
-                RETURN_CODE="$?"
-
-                if [ ${RETURN_CODE} -ne "0" ]; then
-                    logError "Error removing the startup script (Error code: ${RETURN_CODE})"
-                    return ${RETURN_CODE}
-                else
-                    logFile "Startup script deleted"
-                fi
+                return 1
             fi
+
             rm -rf ${STARTUP_DEBIAN}
             RETURN_CODE="$?"
+
+            if [ ${RETURN_CODE} -ne "0" ]; then
+                logError "Error removing the startup script (Error code: ${RETURN_CODE})"
+                return 2
+            fi
+
+            logFile "Startup script deleted"
         else
             logInfo "The startup plist file was not found!"
         fi
@@ -334,6 +410,14 @@ function delete_init_file(){
     return 0
 }
 
+#
+# Removes the configuration directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Configuration directory removed
+#   1 = Error deleting the configuration directory
+#
 function delete_config_directory(){
     logFile "Removing the CentralReport config dir..."
 
@@ -343,10 +427,10 @@ function delete_config_directory(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error deleting the CentralReport config dir at ${CR_CONFIG_DIR} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        else
-            logFile "CentralReport config dir deleted"
+            return 1
         fi
+
+        logFile "CentralReport config dir deleted"
     else
         logInfo "CentralReport config dir not found!"
     fi
@@ -354,6 +438,14 @@ function delete_config_directory(){
     return 0
 }
 
+#
+# Removes the log directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = Log directory removed
+#   1 = Error deleting the log directory
+#
 function delete_log_directory(){
     logFile "Removing the log directory..."
 
@@ -363,10 +455,10 @@ function delete_log_directory(){
 
         if [ $? -ne "0" ]; then
             logError "Error deleting the log directory at ${CR_LOG_DIR} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        else
-            logFile "Log directory deleted"
+            return 1
         fi
+
+        logFile "Log directory deleted"
     else
         logInfo "Log directory already deleted!"
     fi
@@ -374,6 +466,14 @@ function delete_log_directory(){
     return 0
 }
 
+#
+# Removes the PID directory
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = PID directory removed
+#   1 = Error deleting the PID directory
+#
 function delete_pid_directory(){
     logFile "Removing the PID directory..."
 
@@ -383,10 +483,10 @@ function delete_pid_directory(){
 
         if [ $? -ne "0" ]; then
             logError "Error deleting the pid directory at ${CR_PID_DIR} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
-        else
-            logFile "PID directory deleted"
+            return 1
         fi
+
+        logFile "PID directory deleted"
     else
         logInfo "PID directory already deleted!"
     fi
@@ -398,6 +498,17 @@ function delete_pid_directory(){
 # CentralReport User functions
 # --
 
+#
+# Creates the CentralReport system user
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = User created successfully
+#   1 = Error creating the CentralReport user
+#   2 = Error creating the CentralReport group (only on Mac OS X)
+#   3 = Error finding an available UID for the user (only on Mac OS X)
+#   4 = Error finding an available GID for the group (only on Mac OS X)
+#
 function create_cr_user(){
 
     RETURN_CODE=$(verify_cr_user)
@@ -433,12 +544,12 @@ function create_cr_user(){
 
             # Getting the last Unique ID available for system users.
             # From: http://superuser.com/questions/553374/find-available-ids-lower-than-500-vis-dscl
-            local continue="no"
-            local number_used="dontknow"
+            local continue=false
+            local number_used=true
             local fnumber_work_backwards_from=499
             local fnumber=${fnumber_work_backwards_from}
             local user_id=0
-            until [ ${continue} = "yes" ] ; do
+            until [ ${continue} = true ] ; do
                 cr_check_user=$(dscl . -list /Users UniqueID \
                                 | awk '{print $2, "\t", $1}' \
                                 | sort -ug | grep -c "${fnumber}")
@@ -449,11 +560,11 @@ function create_cr_user(){
                     number_used=false
                 fi
 
-                if [ ${number_used} = "true" ] ; then
+                if [ ${number_used} = true ] ; then
                     fnumber=`expr ${fnumber} - 1`
                 else
                     user_id="${fnumber}"
-                    continue="yes"
+                    continue=true
                 fi
             done;
 
@@ -461,16 +572,16 @@ function create_cr_user(){
 
             if [ ${user_id} -eq 0 ]; then
                 logError "Unable to find an available UniqueID for the CentralReport user."
-                return 1
+                return 3
             elif [ ${user_id} -le 100 ]; then
                 logError "Unable to find an available UniqueID greater than 100 for the CentralReport user."
-                return 1
+                return 3
             fi
 
             # Now, we must check in the UID is really available.
             if dscl . -readall /Users | grep -q "UniqueID: *${user_id}$" ; then
                 logError "UID ${user_id} is already in use"
-                return 1
+                return 3
             fi
 
             # Checks if CentralReport group already exists.
@@ -488,12 +599,12 @@ function create_cr_user(){
                     logFile "Creating a new group for CentralReport..."
 
                     # We get the last Primary Group ID available for system groups.
-                    continue="no"
-                    number_used="dontknow"
+                    continue=false
+                    number_used=true
                     fnumber_work_backwards_from=499
                     fnumber=${fnumber_work_backwards_from}
                     GROUP_UNIQUE_ID=0
-                    until [ ${continue} = "yes" ] ; do
+                    until [ ${continue} = true ] ; do
                         cr_check_group=$(dscl . -list /Users UniqueID \
                                         | awk '{print $2, "\t", $1}' \
                                         | sort -ug \
@@ -505,11 +616,11 @@ function create_cr_user(){
                             number_used=false
                         fi
 
-                        if [ ${number_used} = "true" ] ; then
+                        if [ ${number_used} = true ] ; then
                             fnumber=`expr ${fnumber} - 1`
                         else
                             GROUP_UNIQUE_ID="${fnumber}"
-                            continue="yes"
+                            continue=true
                         fi
                     done;
 
@@ -517,10 +628,10 @@ function create_cr_user(){
 
                     if [ ${user_id} -eq 0 ]; then
                         logError "Unable to find an available PrimaryGroupID for the CentralReport group."
-                        return 1
+                        return 4
                     elif [ ${user_id} -le 100 ]; then
                         logError "Unable to find an available PrimaryGroupID for the CentralReport group greater than 100."
-                        return 1
+                        return 4
                     fi
                 else
                     # We can use the same ID for the user and the group.
@@ -544,7 +655,7 @@ function create_cr_user(){
                 logFile "GroupID: ${GROUP_UNIQUE_ID}"
                 if [ "${RETURN_CODE}" -eq 0 ]; then
                     logFile "Error creating the CentralReport group."
-                    return 1
+                    return 2
                 fi
 
                 logFile "Group successfully created!"
@@ -588,7 +699,7 @@ function create_cr_user(){
             if [ ${RETURN_CODE} -ne 0 ]; then
                 logConsole " "
                 logError "Error creating the CentralReport user (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
+                return 1
             fi
         fi
     fi
@@ -596,6 +707,14 @@ function create_cr_user(){
     return 0
 }
 
+#
+# Deletes the CentralReport system user
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = User removed
+#   1 = Error deleting the CentralReport user
+#
 function remove_cr_user(){
 
     local USER_ID=$(verify_cr_user)
@@ -620,6 +739,13 @@ function remove_cr_user(){
     return 0
 }
 
+#
+# Deletes the CentralReport system group (only used for Mac OS X)
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport group removed
+#
 function remove_cr_group(){
 
     if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
@@ -635,6 +761,14 @@ function remove_cr_group(){
     return 0
 }
 
+#
+# Checks if the CentralReport user exists on this system
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = User doesn't exist
+#   Otherwise = The CentralReport user UID
+#
 function verify_cr_user(){
 
     if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
@@ -655,6 +789,14 @@ function verify_cr_user(){
     fi
 }
 
+#
+# Checks if the CentralReport system group exists on this system
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = The group doesn't exist
+#   Otherwise = The group GID
+#
 function verify_cr_group(){
 
     if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
@@ -671,6 +813,14 @@ function verify_cr_group(){
 # Global functions
 # --
 
+#
+# Installs CentralReport on the current system
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport installed successfully
+#   Otherwise = The error code
+#
 function install_cr(){
 
     # Deleting previous version...
@@ -750,17 +900,24 @@ function install_cr(){
     # Cleaning screen
     clear
 
-    # CR config assistant
-    # TODO: Refactor config assistant
-
     printTitle "First launch of CentralReport..."
     start_cr
     RETURN_CODE="$?"
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    return 0
 }
 
+#
+# Uninstalls CentralReport from the current system
+#
+# PARAMETERS: None
+# RETURN:
+#   0 = CentralReport uninstalled successfully
+#   Otherwise = The error code
+#
 function uninstall_cr(){
 
     # Deleting previous version...
@@ -833,4 +990,6 @@ function uninstall_cr(){
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    return 0
 }
