@@ -23,6 +23,7 @@ def remove_spaces(text):
         Removes unwanted spaces
     """
 
+    text = str(text)
     return " ".join(text.split())
 
 
@@ -31,6 +32,7 @@ def remove_specials_characters(text):
         Removes specials characters in string (\n, \r and \l).
     """
 
+    text = str(text)
     text = str.replace(text, '\n', '')
     text = str.replace(text, '\r', '')
     text = str.replace(text, '\l', '')
