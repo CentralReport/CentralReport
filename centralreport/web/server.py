@@ -254,7 +254,7 @@ class Api:
 
                 for disk in data.last_check.disks.disks:
                     check_disk = {
-                        'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                        'name': str.replace(disk.display_name, '/dev/', '').decode('utf-8'),
                         'free': text.convert_byte(disk.free),
                         'total': text.convert_byte(disk.size),
                         'percent': int(round(disk.used, 0) * 100 / int(disk.size))
@@ -398,7 +398,7 @@ class Pages:
             for disk in data.last_check.disks.disks:
                 # TODO: Find a better solution to decode UTF8
                 check_disk = {
-                    'name': str.replace(disk.name, '/dev/', '').decode('utf-8'),
+                    'name': str.replace(disk.display_name, '/dev/', '').decode('utf-8'),
                     'free': text.convert_byte(disk.free),
                     'total': text.convert_byte(disk.size),
                     'percent': int(round(disk.used, 0) * 100 / int(disk.size))

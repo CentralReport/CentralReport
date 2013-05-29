@@ -238,8 +238,8 @@ class MacCollector(_Collector):
 
                 # Using new check entity
                 check_disk = checks.Disk()
-                check_disk.name = text.clean(disk_name.lstrip())
-                check_disk.unix_name = text.clean(line_dict['Filesystem'])
+                check_disk.name = text.clean(line_dict['Filesystem'])
+                check_disk.display_name = text.clean(disk_name.lstrip())
                 check_disk.uuid = disk_uuid
                 check_disk.size = disk_total
                 check_disk.used = disk_used
@@ -463,8 +463,8 @@ class DebianCollector(_Collector):
                             disk_uuid = key
 
                 check_disk = checks.Disk()
-                check_disk.name = text.clean(disk_name.replace('/dev/', ''))
-                check_disk.unix_name = text.clean(disk_name)
+                check_disk.name = text.clean(disk_name)
+                check_disk.display_name = text.clean(disk_name.replace('/dev/', ''))
                 check_disk.uuid = disk_uuid
 
                 # Linux count with '1K block' unit

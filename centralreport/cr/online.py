@@ -253,7 +253,7 @@ def send_check():
     for disk in data.last_check.disks.disks:
         disk_json = {
             'name': disk.name,
-            'unix_name': disk.unix_name,
+            'display_name': disk.display_name,
             'uuid': disk.uuid,
             'size': long(disk.size),
             'used': long(disk.used),

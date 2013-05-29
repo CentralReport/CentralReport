@@ -60,7 +60,7 @@ class Disk:
 
     def __init__(self):
         self.name = ''
-        self.unix_name = ''
+        self.display_name = ''
         self.uuid = ''
         self.size = float(0)
         self.free = float(0)
