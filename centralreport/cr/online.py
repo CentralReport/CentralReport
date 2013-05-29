@@ -232,7 +232,7 @@ def send_check():
     template = jinja_env.get_template('send_checks.json')
 
     json_vars = dict()
-    json_vars['date'] = data.last_check.date
+    json_vars['date'] = data.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
     json_vars['load_uptime'] = data.last_check.load.uptime
     json_vars['load_last1m'] = data.last_check.load.last1m
     json_vars['load_last5m'] = data.last_check.load.last5m
