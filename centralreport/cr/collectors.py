@@ -61,17 +61,17 @@ class MacCollector(_Collector):
             Gets information about this Mac.
         """
 
-        hostname = text.remove_specials_characters(system.execute_command('hostname -s'))
+        hostname = text.clean(system.execute_command('hostname -s'))
 
-        architecture = platform.machine()
+        architecture = text.clean(platform.machine())
 
-        kernel = platform.system()
-        kernel_v = platform.release()
+        kernel = text.clean(platform.system())
+        kernel_v = text.clean(platform.release())
 
-        os_name = system.execute_command('sw_vers -productName')
-        os_version = system.execute_command('sw_vers -productVersion')
+        os_name = text.clean(system.execute_command('sw_vers -productName'))
+        os_version = text.clean(system.execute_command('sw_vers -productVersion'))
 
-        model = system.execute_command('sysctl -n hw.model')
+        model = text.clean(system.execute_command('sysctl -n hw.model'))
 
         # Number of CPU/CPU cores
         ncpu = 1
@@ -84,7 +84,7 @@ class MacCollector(_Collector):
             except IOError:
                 pass
 
-        cpu_model = system.execute_command('sysctl -n machdep.cpu.brand_string')
+        cpu_model = text.clean(system.execute_command('sysctl -n machdep.cpu.brand_string'))
 
         # Using new HostEntity
         host_entity = host.Infos()
@@ -238,8 +238,8 @@ class MacCollector(_Collector):
 
                 # Using new check entity
                 check_disk = checks.Disk()
-                check_disk.name = disk_name.lstrip()
-                check_disk.unix_name = line_dict['Filesystem']
+                check_disk.name = text.clean(disk_name.lstrip())
+                check_disk.unix_name = text.clean(line_dict['Filesystem'])
                 check_disk.uuid = disk_uuid
                 check_disk.size = disk_total
                 check_disk.used = disk_used
@@ -260,12 +260,11 @@ class DebianCollector(_Collector):
             Gets information about this host.
         """
 
-        hostname = socket.gethostname()
+        hostname = text.clean(socket.gethostname())
+        architecture = text.clean(platform.machine())
 
-        architecture = platform.machine()
-
-        kernel = platform.system()
-        kernel_v = platform.release()
+        kernel = text.clean(platform.system())
+        kernel_v = text.clean(platform.release())
 
         # Getting OS Name and OS version
         if sys.version_info[:2] < (2, 6):  # Python < 2.6
@@ -275,7 +274,7 @@ class DebianCollector(_Collector):
 
             # Getting OS Name and OS version
         try:
-            os_name = dist()[0]
+            os_name = text.clean(dist()[0])
             os_version = dist()[1]
         except:
             os_name = 'Linux'
@@ -297,7 +296,7 @@ class DebianCollector(_Collector):
 
         cpu_infos = system.execute_command('cat /proc/cpuinfo | grep "model name"')
         if "model name" in cpu_infos:
-            cpu_model = re.sub(".*model name.*:", "", cpu_infos, 1)
+            cpu_model = text.clean(re.sub(".*model name.*:", "", cpu_infos, 1))
         else:
             cpu_model = 'CPU model unknown'
 
@@ -464,8 +463,8 @@ class DebianCollector(_Collector):
                             disk_uuid = key
 
                 check_disk = checks.Disk()
-                check_disk.name = disk_name.replace('/dev/', '')
-                check_disk.unix_name = disk_name
+                check_disk.name = text.clean(disk_name.replace('/dev/', ''))
+                check_disk.unix_name = text.clean(disk_name)
                 check_disk.uuid = disk_uuid
 
                 # Linux count with '1K block' unit
