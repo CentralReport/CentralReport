@@ -241,15 +241,15 @@ class Config:
             elif dist()[0] == "debian":
                 # Debian
                 Config.HOST_CURRENT = Config.HOST_DEBIAN
-            elif dist()[0] == "Fedora":
+            #elif dist()[0] == "Fedora":
                 # Fedora
-                Config.HOST_CURRENT = Config.HOST_FEDORA
-            elif dist()[0] == "redhat" or dist()[0] == 'Red Hat Enterprise Linux Server':
+            #    Config.HOST_CURRENT = Config.HOST_FEDORA
+            #elif dist()[0] == "redhat" or dist()[0] == 'Red Hat Enterprise Linux Server':
                 # RedHat
-                Config.HOST_CURRENT = Config.HOST_REDHAT
-            elif os.path.isfile('/etc/arch-release'):
+            #    Config.HOST_CURRENT = Config.HOST_REDHAT
+            #elif os.path.isfile('/etc/arch-release'):
                 # ArchLinux
-                Config.HOST_CURRENT = Config.HOST_ARCH
+            #    Config.HOST_CURRENT = Config.HOST_ARCH
             elif dist()[0] == "CentOS":
                 # CentOS
                 Config.HOST_CURRENT = Config.HOST_CENTOS

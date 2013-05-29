@@ -40,9 +40,12 @@ function getOS(){
         CURRENT_OS=${OS_DEBIAN}
     elif [ -f "/etc/redhat-release" ]; then
         OS=`cat /etc/redhat-release | awk {'print $1'}`
-        if [ ${OS} != "CentOS" ]; then
-            CURRENT_OS=${OS_REDHAT}
-        else
+#        if [ ${OS} != "CentOS" ]; then
+#            CURRENT_OS=${OS_REDHAT}
+#        else
+#            CURRENT_OS=${OS_CENTOS}
+#        fi
+        if [ ${OS} == "CentOS" ]; then
             CURRENT_OS=${OS_CENTOS}
         fi
     else
