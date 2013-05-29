@@ -8,30 +8,6 @@
 """
 
 
-class Full:
-    """
-        This entity contains every host information
-    """
-
-    def __init__(self):
-        self.checks = list()
-        self.host = None
-
-
-class Registration:
-    """
-        Entity used to get the host status on the remote server
-    """
-
-    def __init__(self):
-        self.uuid = ""
-        self.name = ""
-        self.displayName = ""
-        self.os = ""
-        self.osVersion = ""
-        self.type = ""
-
-
 class Answer:
     """
         This entity contains the result of a webservice
