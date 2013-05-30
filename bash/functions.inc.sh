@@ -183,7 +183,7 @@ function copy_init_file(){
 
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error copying the startup script at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
-            return ${RETURN_CODE}
+            return 1
         else
             chmod 755 ${STARTUP_DEBIAN}
 
@@ -197,9 +197,7 @@ function copy_init_file(){
 
             if [ ${RETURN_CODE} -ne "0" ]; then
                 logError "Error registering the startup script (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
-            else
-                return 0
+                return 2
             fi
         fi
     fi
@@ -358,6 +356,7 @@ function delete_lib(){
 #   0 = Init file removed
 #   1 = Error deleting the init file
 #   2 = Error unregistering the init file (Linux only)
+#   3 = Init file not found
 #
 function delete_init_file(){
 
@@ -389,21 +388,22 @@ function delete_init_file(){
             fi
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
-                return 1
+                logError "Error unregistering the startup script (Error code: ${RETURN_CODE})"
+                return 2
             fi
 
             rm -rf ${STARTUP_DEBIAN}
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error removing the startup script (Error code: ${RETURN_CODE})"
-                return 2
+                logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
+                return 1
             fi
 
             logFile "Startup script deleted"
         else
             logInfo "The startup plist file was not found!"
+            return 3
         fi
     fi
 
@@ -731,7 +731,7 @@ function remove_cr_user(){
             if [ ${RETURN_CODE} -ne 0 ]; then
                 logConsole " "
                 logError "Error deleting the CentralReport user (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
+                return 1
             fi
         fi
     fi
