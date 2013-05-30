@@ -356,7 +356,6 @@ function delete_lib(){
 #   0 = Init file removed
 #   1 = Error deleting the init file
 #   2 = Error unregistering the init file (Linux only)
-#   3 = Init file not found
 #
 function delete_init_file(){
 
@@ -403,7 +402,6 @@ function delete_init_file(){
             logFile "Startup script deleted"
         else
             logInfo "The startup plist file was not found!"
-            return 3
         fi
     fi
 
