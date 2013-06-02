@@ -27,12 +27,15 @@ route_host_check = ''
 route_host_add = ''
 route_checks_add = ''
 
-jinja_env = None  # jinja2.Environment object used to generate JSON output for the webservices.
+jinja_env = None  # jinja2.Environment object used to generate JSON output for the web services.
 
 
 def initialize_online():
     """
-        [WIP] Initializes the connection with the CentralReport Online server
+        Initializes the connection with the CentralReport Online server.
+        This function performs all needed actions to check the user and the host status.
+
+        @return: True if the connection with CentralReport Online is established, False otherwise.
     """
 
     global jinja_env
@@ -40,6 +43,8 @@ def initialize_online():
     global route_host_check
     global route_host_add
     global route_checks_add
+
+    log.log_debug('Initializing the connection with CentralReport Online...')
 
     if jinja_env is None:
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -87,12 +92,16 @@ def initialize_online():
 
 def check_user_key():
     """
-        [WIP] Checks if the 'User token' is valid on the online server
+       Checks whether the 'User key' is valid on the online server.
+
+       @return: True if the 'user key' is valid, raise an OnlineError otherwise
     """
 
     global route_user_check
     global route_host_check
     global route_host_add
+
+    log.log_info('Checking the user key on CentralReport Online...')
 
     if data.host_info.key == '':
         raise ValueError('No user key defined!')
@@ -120,12 +129,16 @@ def check_user_key():
 
 def check_host():
     """
-        [WIP] Checks if the host is registered on the online server
+        Checks whether the host is registered on the online server
+
+        @return: True if the current host is registered on the online server, False otherwise.
     """
 
     global route_user_check
     global route_host_check
     global route_checks_add
+
+    log.log_info('Checking whether this host is registered on CentralReport Online...')
 
     if route_host_check == '':
         raise ValueError('The host route is unknown!')
@@ -157,12 +170,16 @@ def check_host():
 
 def register_host():
     """
-        [WIP] Registers the current host on the online server
+        Registers the current host on the online server
+
+        @return: True if the current host is registered on the online server successfully.
     """
 
     global jinja_env
     global route_host_add
     global route_checks_add
+
+    log.log_info('Registering this host on CentralReport Online...')
 
     if data.host_info is None:
         raise ValueError('Host data not available!')
@@ -208,10 +225,14 @@ def register_host():
 
 def send_check():
     """
-        [WIP] Sends the last check to the online server
+        Sends the last check to the online server
+
+        @return: True if the last check has been sent.
     """
 
     global route_checks_add
+
+    log.log_debug('Sending the last check to CentralReport Online...')
 
     if data.last_check is None:
         raise ValueError('No check available!')
@@ -221,8 +242,6 @@ def send_check():
 
     if route_checks_add == '':
         raise ValueError('The Checks route is unknown!')
-
-    log.log_debug('Sending the last check to CentralReport Online...')
 
     route_checks_add = route_checks_add.replace('%key%', data.host_info.key)
     route_checks_add = route_checks_add.replace('%uuid%', data.host_info.uuid)
