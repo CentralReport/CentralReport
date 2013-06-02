@@ -90,7 +90,7 @@ class MacCollector(_Collector):
         host_entity = host.Infos()
 
         host_entity.uuid = Config.get_config_value('General', 'uuid')
-        host_entity.key = Config.get_config_value('Remote', 'key')
+        host_entity.key = Config.get_config_value('Online', 'key')
         host_entity.os = Config.HOST_CURRENT
         host_entity.hostname = hostname
         host_entity.architecture = architecture

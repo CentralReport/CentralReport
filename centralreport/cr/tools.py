@@ -68,11 +68,8 @@ class Config:
         'General': {
             'uuid': ''
         },
-        'Remote': {
-            'key': '',
-            'server': 'http://localhost',
-            'url_status': 'status',
-            'url_checks': 'checks'
+        'Online': {
+            'key': ''
         },
         'Webserver': {
             'enable': 'True',
