@@ -7,6 +7,7 @@
     https://github.com/CentralReport
 """
 
+import copy
 from datetime import datetime
 import threading
 import time
@@ -109,6 +110,11 @@ class Checks(threading.Thread):
 
         # Updating last check date...
         check_entity.date = datetime.now()
+
+        # DEPRECATED
+        # Only used for the web services. Will be improved soon.
+        if data.last_check is not None:
+            data.previous_check = copy.copy(data.last_check)
 
         data.last_check = check_entity
 
