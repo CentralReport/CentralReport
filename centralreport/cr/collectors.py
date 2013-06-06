@@ -419,13 +419,13 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-        df_dict = system.execute_command('df')
+        df_dict = system.execute_command('df -kP')
         df_split = df_dict.splitlines()
 
         list_disks = host.Disks()  # Return new entity
 
         for i in range(1, len(df_split)):
-            if df_split[i].startswith(('/dev/s', '/dev/h')):
+            if df_split[i].startswith('/dev/'):
                 line_split = df_split[i].split()
 
                 # Getting info in MB (Linux count with '1K block' unit)
