@@ -7,18 +7,6 @@
             "lastFiveMinutesAverage": {{ load_last5m }},
             "lastFifteenMinutesAverage": {{ load_last15m }}
         },
-        "disks": [
-            {% for disk in disks %}
-            {
-                "name":"{{ disk.name }}",
-                "displayName":"{{ disk.display_name }}",
-                "uuid":"{{ disk.uuid }}",
-                "size":{{ disk.size }},
-                "usedSpace":{{ disk.used }},
-                "freeSpace":{{ disk.free }}
-            },
-            {% endfor %}
-        ],
         "cpu": {
             "idlePercentage": {{ cpu_idle }},
             "systemPercentage": {{ cpu_system }},

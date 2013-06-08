@@ -1,0 +1,5 @@
+{
+    "size":{{ size }},
+    "usedSpace":{{ used }},
+    "freeSpace":{{ free }}
+}
