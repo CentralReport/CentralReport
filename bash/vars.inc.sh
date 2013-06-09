@@ -13,6 +13,9 @@
 CURRENT_OS=
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
+OS_CENTOS="CentOS"
+OS_REDHAT="RedHat"
+OS_OTHER="Unsupported"
 
 # CentralReport user
 CR_USER_MAC=_centralreport

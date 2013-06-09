@@ -419,7 +419,7 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-        df_dict = system.execute_command('df')
+        df_dict = system.execute_command('df -kP')
         df_split = df_dict.splitlines()
 
         list_disks = host.Disks()  # Return new entity

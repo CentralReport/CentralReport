@@ -34,7 +34,7 @@ printBox blue  "-------------------------- CentralReport installer -------------
 # Right now, CentralReport is only available on Mac OS X, Debian and Ubuntu.
 # Others Linux distributions coming soon.
 getOS
-if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
+if [ ${CURRENT_OS} == "${OS_OTHER}" ]; then
     printBox red "ERROR!| \
                   The install is only designed for Mac OS, Debian and Ubuntu.| \
                   Support for other OS will come soon!"
@@ -51,7 +51,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # On debian, the current user must have administrative privileges.
-if [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+if [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]; then
     if [[ $EUID -ne 0 ]]; then
         ROOT_ERROR="You must be root to install CentralReport!"
         logFile ${ROOT_ERROR}
@@ -106,7 +106,8 @@ else
                     bit_error=1
                 fi
             fi
-        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]
+        then
             logInfo "Processing... CentralReport will be installed on this Linux."
         fi
 

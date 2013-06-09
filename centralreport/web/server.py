@@ -300,6 +300,8 @@ class Pages:
             tmpl_vars['host_os'] = 'UBUNTU'
         elif Config.HOST_CURRENT == Config.HOST_DEBIAN:
             tmpl_vars['host_os'] = 'DEBIAN'
+        elif Config.HOST_CURRENT == Config.HOST_CENTOS:
+            tmpl_vars['host_os'] = 'CENTOS'
 
         tmpl_vars['CR_version'] = Config.CR_VERSION
         tmpl_vars['CR_version_name'] = Config.CR_VERSION_NAME

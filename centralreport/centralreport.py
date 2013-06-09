@@ -86,8 +86,8 @@ class CentralReport(Daemon):
             log.change_log_level(log_level)
 
         # Launching the check thread...
-        if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
-                Config.HOST_CURRENT == Config.HOST_UBUNTU):
+        # Getting current OS...
+        if Config.HOST_CURRENT != Config.HOST_OTHER:
             log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
         else:
@@ -103,6 +103,7 @@ class CentralReport(Daemon):
 
                 # Importing the module here improve the memory usage
                 from web.server import WebServer
+
                 CentralReport.webserver_thread = WebServer()
             else:
                 log.log_error('Error launching the webserver: port %s is already in use on this host!' % local_web_port)
