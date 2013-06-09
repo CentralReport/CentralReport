@@ -48,7 +48,7 @@ class Config:
     HOST_FEDORA = 'Fedora'
     HOST_ARCH = 'Arch Linux'
     HOST_CENTOS = 'CentOS'
-    HOST_OTHER = 'Not Supported OS'
+    HOST_OTHER = 'Unsupported'
 
     # CentralReport pid file
     if CR_CONFIG_ENABLE_DEBUG_MODE:
