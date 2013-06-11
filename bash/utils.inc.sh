@@ -54,20 +54,29 @@ function getOS(){
 }
 
 #
-# Displays the python version (if python is available)
+# Checks whether python is available
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = Python is not available on this host
-#   1 = Python is available
+#   0 = Python is available
+#   1 = Python is not available on this host
+#   2 = Python version is too old
+#   3 = Python version is 3.0 or newer
 #
-function getPythonIsInstalled {
+function check_python {
 
-    echo " "
+    # Checking Python availability
     python -V &> /dev/null
-
-    if [ $? -ne 0 ]; then
+    if [ "$?" -ne 0 ]; then
         return 1
+    fi
+
+    if [ $(python -c 'import sys; print (sys.version_info < (2, 6) and "1" or "0")') -eq 1 ]; then
+        return 2
+    fi
+
+    if [ $(python -c 'import sys; print (sys.version_info >= (3, 0) and "1" or "0")') -eq 1 ]; then
+        return 3
     fi
 
     return 0

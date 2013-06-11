@@ -263,10 +263,7 @@ class DebianCollector(_Collector):
         kernel_v = platform.release()
 
         # Getting OS Name and OS version
-        if sys.version_info[:2] < (2, 6):  # Python < 2.6
-            from platform import dist
-        else:
-            from platform import linux_distribution as dist
+        from platform import linux_distribution as dist
 
             # Getting OS Name and OS version
         try:

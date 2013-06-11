@@ -39,13 +39,6 @@ if [ ${CURRENT_OS} == "${OS_OTHER}" ]; then
     exit 1
 fi
 
-getPythonIsInstalled
-if [ $? -ne 0 ]; then
-    printBox red "Error! Python must be installed on your host to remove CentralReport."
-
-    exit 1
-fi
-
 # On debian, the current user must have administrative privileges.
 if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]; then
     if [[ $EUID -ne 0 ]]; then

@@ -29,6 +29,8 @@ Version Alpha 0.3.0 (Not released yet)
 
     - Fix #73: Removed old config.py script
 
+    - Fix #79: Removed support for Python 2.5 and older
+
 
 --------------------------------------------------------------
 Version Alpha 0.2.0 (April 24th, 2013)

@@ -181,6 +181,14 @@ class CentralReport(Daemon):
 #
 
 if '__main__' == __name__:
+
+    if sys.version_info < (2, 6):
+        print "CentralReport works only with Python 2.6 or newer."
+        sys.exit(1)
+    elif sys.version_info >= (3, 0):
+        print "CentralReport doesn't work with Python 3.0 or newer."
+        sys.exit(1)
+
     daemon = CentralReport(Config.CR_PID_FILE)
 
     if 2 == len(sys.argv):
