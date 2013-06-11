@@ -55,17 +55,15 @@ function check_python {
 
     # Checking Python availability
     python -V &> /dev/null
-    if [ $? -ne 0 ]; then
+    if [ "$?" -ne 0 ]; then
         return 1
     fi
 
-    python -c 'import sys; print (sys.version_info >= (2, 6) and "1" or "0")' &> /dev/null
-    if [ $? -eq 0 ]; then
+    if [ $(python -c 'import sys; print (sys.version_info < (2, 6) and "1" or "0")') -eq 1 ]; then
         return 2
     fi
 
-    python -c 'import sys; print (sys.version_info >= (3, 0) and "1" or "0")' &> /dev/null
-    if [ $? -eq 0 ]; then
+    if [ $(python -c 'import sys; print (sys.version_info >= (3, 0) and "1" or "0")') -eq 1 ]; then
         return 3
     fi
 

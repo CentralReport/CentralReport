@@ -44,13 +44,14 @@ fi
 
 # Python is mandatory for CentralReport
 check_python
-if [ $? -eq 1 ]; then
+RETURN_PYTHON_CHECK="$?"
+if [ "${RETURN_PYTHON_CHECK}" -eq 1 ]; then
     printBox red "Error! Python must be installed on your host to execute CentralReport."
     exit 1
-elif [ $? -eq 2 ]; then
+elif [ "${RETURN_PYTHON_CHECK}" -eq 2 ]; then
     printBox red "Error! CentralReport is only designed to work with Python 2.6 or newer."
     exit 1
-elif [ $? -eq 3 ]; then
+elif [ "${RETURN_PYTHON_CHECK}" -eq 3 ]; then
     printBox red "Error! CentralReport doesn't work with Python 3.0 or newer!"
     exit 1
 fi
