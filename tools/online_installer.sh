@@ -19,6 +19,7 @@ DIR="CentralReportInstaller"
 CURRENT_OS=""
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
+OS_CENTOS="CentOS"
 
 # TODO: Find a more accurate word than "online"
 echo -e "\n\nWelcome to CentralReport online installer!"
@@ -30,14 +31,14 @@ if [ "Darwin" == $(uname -s) ]; then
 elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
     # Debian or Ubuntu
     CURRENT_OS=${OS_DEBIAN}
-
-    if [[ $EUID -ne 0 ]]; then
-        echo " "
-        echo "You must be root to run CentralReport installer!"
-        exit 2
+elif [ -f "/etc/redhat-release" ]; then
+    cat /etc/redhat-release | grep "CentOS" &>/dev/null
+    if [ "$?" -eq 0 ]; then
+        CURRENT_OS=${OS_CENTOS}
     fi
+fi
 
-else
+if [ "${CURRENT_OS}" == "" ]; then
     echo " "
     echo "Sorry, your OS isn't supported yet..."
     exit 1
@@ -48,6 +49,14 @@ python -V
 if [ $? -ne 0 ]; then
     echo -e "\n\nError, Python must be installed on your host to execute CentralReport."
     exit 1
+fi
+
+if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ] || [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
+    if [[ $EUID -ne 0 ]]; then
+        echo " "
+        echo "You must be root to run CentralReport installer!"
+        exit 2
+    fi
 fi
 
 echo -e "\nDownloading the installer..."
