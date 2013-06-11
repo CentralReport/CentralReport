@@ -38,28 +38,48 @@ function getOS(){
         CURRENT_OS=${OS_MAC}
     elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
         CURRENT_OS=${OS_DEBIAN}
+    elif [ -f "/etc/redhat-release" ]; then
+        OS=`cat /etc/redhat-release | awk {'print $1'}`
+#        if [ ${OS} != "CentOS" ]; then
+#            CURRENT_OS=${OS_REDHAT}
+#        else
+#            CURRENT_OS=${OS_CENTOS}
+#        fi
+        if [ ${OS} == "CentOS" ]; then
+            CURRENT_OS=${OS_CENTOS}
+        fi
+    else
+        CURRENT_OS=${OS_OTHER}
     fi
 }
 
 #
-# Displays the python version (if python is available)
+# Checks whether python is available
 #
 # PARAMETERS: None
 # RETURN:
-#   0 = Python is not available on this host
-#   1 = Python is available
+#   0 = Python is available
+#   1 = Python is not available on this host
+#   2 = Python version is too old
+#   3 = Python version is 3.0 or newer
 #
-function getPythonIsInstalled {
+function check_python {
 
-    echo " "
+    # Checking Python availability
     python -V &> /dev/null
-
-    if [ $? -ne 0 ]; then
+    if [ "$?" -ne 0 ]; then
         return 1
-    else
-        return 0
     fi
 
+    if [ $(python -c 'import sys; print (sys.version_info < (2, 6) and "1" or "0")') -eq 1 ]; then
+        return 2
+    fi
+
+    if [ $(python -c 'import sys; print (sys.version_info >= (3, 0) and "1" or "0")') -eq 1 ]; then
+        return 3
+    fi
+
+    return 0
 }
 
 #
