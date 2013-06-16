@@ -151,7 +151,7 @@ def check_host():
         route_host_check = route_host_check.replace('%uuid%', data.host_info.uuid)
         ws_host = web.send_data(web.METHOD_GET, route_host_check, None, None)
 
-        if ws_host.code == 401:
+        if ws_host.code == 403:
             route_checks_add = ''
             raise OnlineError(1, 'This host must be validated on CentralReport Online')
         elif ws_host.code == 200:
@@ -201,9 +201,9 @@ def register_host():
     json_vars['model'] = data.host_info.model
     json_vars['cpu_model'] = data.host_info.cpu_model
     json_vars['cpu_count'] = data.host_info.cpu_count
-    json_vars['os'] = data.host_info.os_name
+    json_vars['os_name'] = data.host_info.os_name
     json_vars['os_version'] = data.host_info.os_version
-    json_vars['kernel'] = data.host_info.kernel_name
+    json_vars['kernel_name'] = data.host_info.kernel_name
     json_vars['kernel_version'] = data.host_info.kernel_version
     json_vars['architecture'] = data.host_info.architecture
     json_vars['agent'] = Config.CR_AGENT_NAME
@@ -214,7 +214,7 @@ def register_host():
     log.log_debug(host_json)
 
     ws_host_registration = web.send_data(web.METHOD_POST, route_host_add, host_json)
-    if ws_host_registration.code == 200:
+    if ws_host_registration.code == 201:
         log.log_info('Host registered! Waiting for user approval.')
         route_checks_add = ''
     elif ws_host_registration.code == 400:
@@ -285,6 +285,7 @@ def send_disks_checks():
         template = jinja_env.get_template('disk_check.json')
 
         json_vars = dict()
+        json_vars['check_date'] = data.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
         json_vars['size'] = long(disk.size)
         json_vars['free'] = long(disk.free)
         json_vars['used'] = long(disk.used)

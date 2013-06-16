@@ -1,5 +1,8 @@
 {
-    "size":{{ size }},
-    "usedSpace":{{ used }},
-    "freeSpace":{{ free }}
+    "date": {{ check_date }},
+    "check": {
+        "size":{{ size }},
+        "usedSpace":{{ used }},
+        "freeSpace":{{ free }}
+}
 }
