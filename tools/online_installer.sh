@@ -12,7 +12,7 @@
 # Enjoy!
 
 # Vars
-URL_CR="http://files.centralreport.net/cr_installer.tar.gz"
+URL_CR="http://static.centralreport.net/cr_installer.tar.gz"
 ARCHIVE="cr_installer.tar.gz"
 DIR="CentralReportInstaller"
 

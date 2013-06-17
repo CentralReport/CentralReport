@@ -20,11 +20,11 @@ CR_PACKAGE_UNINSTALLER_NAME=cr_uninstaller.tar.gz
 
 # Online installer script. Will be copied in the "CR_PACKAGES_ROOT" folder
 CR_INSTALLER_SCRIPT="tools/online_installer.sh"
-CR_INSTALLER_SCRIPT_NAME="install"
+CR_INSTALLER_SCRIPT_NAME="installer"
 
 # Online uninstaller script. Will be copied in the "CR_PACKAGES_ROOT" folder
 CR_UNINSTALLER_SCRIPT="tools/online_uninstaller.sh"
-CR_UNINSTALLER_SCRIPT_NAME="uninstall"
+CR_UNINSTALLER_SCRIPT_NAME="uninstaller"
 
 if [ ${PWD##*/} != "packager" ]; then
     echo "ERROR - You must be in the 'packager' directory to execute this script."

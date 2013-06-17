@@ -12,7 +12,7 @@
 # Enjoy!
 
 # Vars
-URL_CR="http://files.centralreport.net/cr_uninstaller.tar.gz"
+URL_CR="http://static.centralreport.net/cr_uninstaller.tar.gz"
 ARCHIVE="cr_uninstaller.tar.gz"
 DIR="CentralReportUninstaller"
 
