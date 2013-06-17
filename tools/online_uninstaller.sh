@@ -7,7 +7,7 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script will download latest CentralReport version and uninstall CR from this host
+# This script will download the latest CentralReport uninstaller and process the uninstall
 # It works for Mac OS X, Debian and Ubuntu
 # Enjoy!
 

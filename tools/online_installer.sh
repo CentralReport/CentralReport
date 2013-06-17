@@ -7,7 +7,7 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script will download latest CentralReport version and begin the installation.
+# This script will download the latest CentralReport installer and process the install
 # It works for Mac OS X, Debian and Ubuntu
 # Enjoy!
 
