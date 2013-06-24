@@ -76,7 +76,7 @@ class CentralReport(Daemon):
         log.log_info('CentralReport is starting...')
         log.log_info('Current user: ' + getpass.getuser())
 
-        # Registring SIGTERM signal event
+        # Registering SIGTERM signal event
         signal.signal(signal.SIGTERM, self.signal_handler)
         signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -92,16 +92,15 @@ class CentralReport(Daemon):
 
             log.change_log_level(log_level)
 
-        # Launching the check thread...
-        if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
-                Config.HOST_CURRENT == Config.HOST_UBUNTU):
-            log.log_info('%s detected. Starting threads...' % Config.HOST_CURRENT)
-            CentralReport.checks_thread = threads.Checks()
+        # Starting the check thread...
+        if Config.HOST_CURRENT != Config.HOST_OTHER:
+            log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
+            CentralReport.checks_thread = threads.Checks()  # Launching checks thread
         else:
             is_error = True
             log.log_critical('Sorry, but your OS is not supported yet...')
 
-        # Launching the internal webserver...
+        # Starting the internal webserver...
         if not is_error and text.convert_text_to_bool(Config.get_config_value('Webserver', 'enable')):
             local_web_port = int(Config.get_config_value('Webserver', 'port'))
 
@@ -110,6 +109,7 @@ class CentralReport(Daemon):
 
                 # Importing the module here improve the memory usage
                 from web.server import WebServer
+
                 CentralReport.webserver_thread = WebServer()
             else:
                 log.log_error('Error launching the webserver: port %s is already in use on this host!' % local_web_port)
@@ -187,6 +187,14 @@ class CentralReport(Daemon):
 #
 
 if '__main__' == __name__:
+
+    if sys.version_info < (2, 6):
+        print "CentralReport works only with Python 2.6 or newer."
+        sys.exit(1)
+    elif sys.version_info >= (3, 0):
+        print "CentralReport doesn't work with Python 3.0 or newer."
+        sys.exit(1)
+
     daemon = CentralReport(Config.CR_PID_FILE)
 
     if 2 == len(sys.argv):

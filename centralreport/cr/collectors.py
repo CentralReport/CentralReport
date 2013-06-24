@@ -12,14 +12,12 @@
 # MacCollector class
 # DebianCollector class
 
-import datetime
 import multiprocessing
 import platform
 import re
 import socket
 import time
 import os
-import sys
 
 from cr.entities import checks
 from cr.entities import host
@@ -267,10 +265,7 @@ class DebianCollector(_Collector):
         kernel_v = text.clean(platform.release())
 
         # Getting OS Name and OS version
-        if sys.version_info[:2] < (2, 6):  # Python < 2.6
-            from platform import dist
-        else:
-            from platform import linux_distribution as dist
+        from platform import linux_distribution as dist
 
             # Getting OS Name and OS version
         try:
@@ -433,7 +428,7 @@ class DebianCollector(_Collector):
             disks_by_uuid[disk] = os.path.realpath(os.path.join('/dev/disk/by-uuid/', disk))
 
         # The "df" command is used to get the size of each disk
-        df_dict = system.execute_command('df')
+        df_dict = system.execute_command('df -kP')
         df_split = df_dict.splitlines()
 
         list_disks = checks.Disks()

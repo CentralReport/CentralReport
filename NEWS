@@ -8,6 +8,8 @@
 Version Alpha 0.3.0 (Not released yet)
     Currently in development
 
+    - Feature #58: CentOS distributions Support
+
     - Feature #67: Travis CI and silent installer/uninstaller
         * Travis CI performs a Continuous Integration to ensure
           your codebase is never broken.
@@ -26,6 +28,8 @@ Version Alpha 0.3.0 (Not released yet)
         * Improved some variables
 
     - Fix #73: Removed old config.py script
+
+    - Fix #79: Removed support for Python 2.5 and older
 
 
 --------------------------------------------------------------

@@ -36,7 +36,8 @@ class Checks(threading.Thread):
 
         if Config.HOST_CURRENT == Config.HOST_MAC:
             self.MyCollector = collectors.MacCollector()
-        elif (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (Config.HOST_CURRENT == Config.HOST_UBUNTU):
+        elif (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (Config.HOST_CURRENT == Config.HOST_UBUNTU) or \
+                (Config.HOST_CURRENT == Config.HOST_CENTOS):
             self.MyCollector = collectors.DebianCollector()
 
         # Perform a check every xx ticks (1 tick = 1 second)
