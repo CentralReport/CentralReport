@@ -25,8 +25,6 @@ from cr.tools import Config
 route_user_check = 'http://centralreport.net/api/users/%key%'
 route_host_check = ''
 route_host_add = ''
-route_disks_add = ''
-route_disks_checks_add = ''
 route_checks_add = ''
 
 jinja_env = None  # jinja2.Environment object used to generate JSON output for the web services.
@@ -225,88 +223,6 @@ def register_host():
     return True
 
 
-def send_disks_checks():
-    """
-        DEPRECATED
-        Registers the disks on the online server. This method will be deleted in the next release.
-
-        @return: True if all disks are registered in the online server
-    """
-
-    global route_disks_add
-    global route_disks_checks_add
-
-    if data.last_check is None:
-        raise ValueError('No check available!')
-
-    if route_disks_add == '':
-        raise ValueError('The Disks route is unknown!')
-
-    if route_disks_checks_add == '':
-        raise ValueError('The route for the disk checks is unknown!')
-
-    route_disks_add = route_disks_add.replace('%key%', data.host_info.key)
-    route_disks_add = route_disks_add.replace('%uuid%', data.host_info.uuid)
-
-    route_disks_checks_add = route_disks_checks_add.replace('%key%', data.host_info.key)
-    route_disks_checks_add = route_disks_checks_add.replace('%uuid%', data.host_info.uuid)
-
-    for disk in data.last_check.disks.disks:
-
-        # Disks must be registered on the online server before sending any check
-        must_registered = True
-
-        if data.previous_check is not None:
-            for previous_disks in data.previous_check.disks.disks:
-                if disk.uuid == previous_disks.uuid:
-                    must_registered = False
-                    break
-
-        if must_registered is True:
-            log.log_debug('Registering disk %s on CRO...' % disk.name)
-
-            template = jinja_env.get_template('disk_registration.json')
-
-            json_vars = dict()
-            json_vars['name'] = disk.name
-            json_vars['display_name'] = disk.display_name
-            json_vars['uuid'] = disk.uuid
-
-            disk_json = text.clean(template.render(json_vars))
-            log.log_debug(disk_json)
-
-            ws_disk = web.send_data(web.METHOD_POST, route_disks_add, disk_json)
-            if ws_disk.code == 404:
-                raise OnlineError(1, 'Wrong KEY or UUID!')
-        else:
-            log.log_debug('Disk %s may be already registered on CRO!' % disk.name)
-
-        # Disk is registered, we can send our check now!
-        template = jinja_env.get_template('disk_check.json')
-
-        json_vars = dict()
-        json_vars['check_date'] = data.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
-        json_vars['size'] = long(disk.size)
-        json_vars['free'] = long(disk.free)
-        json_vars['used'] = long(disk.used)
-
-        disk_json = text.clean(template.render(json_vars))
-        log.log_debug(disk_json)
-
-        ws_checks = web.send_data(web.METHOD_POST, route_disks_checks_add, disk_json)
-        if ws_checks.code == 404:
-            raise OnlineError(2, 'Wrong User key, Host UUID or disk UUID!')
-        elif ws_checks.code == 409:
-            raise OnlineError(3, 'Check already sent!')
-        elif ws_checks.code != 201:
-            raise OnlineError(4, 'Unknown answer code %s!' % ws_checks.code)
-
-        log.log_debug('Check sent successfully for the disk %s' % disk.name)
-
-    log.log_info('All disk checks had been sent!')
-    return True
-
-
 def send_check():
     """
         Sends the last check to the online server
@@ -351,6 +267,19 @@ def send_check():
     json_vars['swap_size'] = long(data.last_check.memory.swap_size)
     json_vars['swap_used'] = long(data.last_check.memory.swap_used)
     json_vars['swap_free'] = long(data.last_check.memory.swap_free)
+
+    all_disks = []
+    for disk in data.last_check.disks.disks:
+        disk_json = {
+            'name': disk.name,
+            'display_name': disk.display_name,
+            'uuid': disk.uuid,
+            'size': long(disk.size),
+            'used': long(disk.used),
+            'free': long(disk.free)
+        }
+        all_disks.append(disk_json)
+    json_vars['disks'] = all_disks
 
     check_json = text.clean(template.render(json_vars))
     log.log_debug(check_json)

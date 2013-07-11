@@ -21,6 +21,18 @@
             "swapSize": {{ swap_size }},
             "usedSwap": {{ swap_used }},
             "freeSwap": {{ swap_free }}
-        }
+        },
+        "disks": [
+            {% for disk in disks %}
+            {
+                "name":"{{ disk.name }}",
+                "displayName":"{{ disk.display_name }}",
+                "uuid":"{{ disk.uuid }}",
+                "size":{{ disk.size }},
+                "usedSpace":{{ disk.used }},
+                "freeSpace":{{ disk.free }}
+            },
+            {% endfor %}
+        ]
     }
 }
