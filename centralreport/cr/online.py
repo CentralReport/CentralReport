@@ -195,7 +195,6 @@ def register_host():
     json_vars = dict()
     json_vars['uuid'] = data.host_info.uuid
     json_vars['hostname'] = data.host_info.hostname
-    json_vars['display_name'] = data.host_info.hostname
     json_vars['model'] = data.host_info.model
     json_vars['cpu_model'] = data.host_info.cpu_model
     json_vars['cpu_count'] = data.host_info.cpu_count

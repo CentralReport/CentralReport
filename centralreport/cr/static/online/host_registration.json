@@ -1,7 +1,6 @@
 {
     "uuid": "{{ uuid }}",
     "name": "{{ hostname }}",
-    "displayName": "{{ display_name }}",
     "model": "{{ model }}",
     "cpuModel": "{{ cpu_model }}",
     "cpuCount": "{{ cpu_count }}",
