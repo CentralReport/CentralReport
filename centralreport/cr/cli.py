@@ -3,7 +3,7 @@
 
 """
     CentralReport - CLI module (WIP)
-        Manages the common line interface
+        Manages the command line interface
 
     https://github.com/CentralReport
 """
@@ -20,22 +20,35 @@ _palette = [
     ('button disabled', 'dark gray', 'dark blue')
 ]
 
+#: @type screen: urwid.Screen
 screen = None
 
+#: @type frame: urwid.Frame
 frame = None
 
+#: @type header: urwid.Text
 header = None
 
+#: @type main: urwid.Widget
 main = None
 
+#: @type footer: urwid.Text
 footer = None
 
 
 class WindowCli(object):
+    """
+        A default window to fill the "main" object of cr.cli
+    """
+
     def __init__(self):
         self.content = None
 
     def display(self):
+        """
+            Displays the content on the screen
+        """
+
         global main
         main = self.content
 
@@ -45,10 +58,27 @@ class WindowCli(object):
             pass
 
     def input_handle(self, input):
+        """
+            Default behavior when the user presses a key
+
+            @type input: str
+            @param input: The key code
+        """
         return False
 
 
+class DialogCli(WindowCli):
+    def __init__(self):
+        WindowCli.__init__(self)
+
+
 def init_screen():
+    """
+        Initializes the screen with a header (3 lines) and a footer (1 line).
+        The default background color is blue for the bars and black for the content.
+        This function does not display anything, see display_screen().
+    """
+
     global screen
     global frame
     global header
@@ -69,6 +99,12 @@ def init_screen():
 
 
 def display_screen(input_handle):
+    """
+        This function sends the content to the screen.
+
+        @param input_handle: Callback function called when the user presses a key
+    """
+
     global frame
     global screen
 
@@ -82,14 +118,25 @@ def display_screen(input_handle):
 
 
 def generate_blank_characters(number):
+    """
+        This function generates blank characters.
+
+        @param number: The number of blank characters.
+    """
+
     chars = ''
-    for i in range (0, number):
+    for i in range(0, number):
         chars += ' '
 
     return chars
 
 
 def quit():
+    """
+        This function exits the current urwid.MainLoop().
+        If multiple MainLoop have been started, the previous MainLoop resumes.
+    """
+
     global screen
 
     if screen is not None:
@@ -98,13 +145,34 @@ def quit():
     raise urwid.ExitMainLoop()
 
 
-def create_radio_item(g, name, callback):
-    button = urwid.RadioButton(g, name, on_state_change=callback)
+def create_radio_item(group, name, callback):
+    """
+        Creates a radio item, in a group. See urwid.RadioButton for more details
+
+        @type group: list
+        @param group: Add the new button to this group
+
+        @type name: str
+        @param name: Name displayed
+
+        @param callback: Callback function. Called when the user select this item.
+    """
+
+    button = urwid.RadioButton(group, name, on_state_change=callback)
     button = urwid.AttrWrap(button, 'button normal', 'select')
     return button
 
 
 def create_button(text, callback):
+    """
+        Creates a button, in a group. See urwid.Button for more details
+
+        @type text: str
+        @param text: Text displayed in the button
+
+        @param callback: Callback function. Called when the user presses this button.
+    """
+
     button = urwid.Button(text, callback)
     button = urwid.AttrWrap(button, 'button normal', 'select')
     return button

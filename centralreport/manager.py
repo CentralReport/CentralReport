@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-    CentralReport - Manager (WIP)
-
+    CentralReport - Manager
+        This CLI manager is used to modify the CentralReport configuration.
 
     https://github.com/CentralReport
 """
@@ -21,12 +21,15 @@ import cr.cli
 
 
 class OnlineCli(cr.cli.WindowCli):
+    """
+        Manages the configuration related to the Online part
+    """
 
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
 
         self.title = 'Online agent configuration'
-        self.subtitle = 'CentralReport Online is the best choose to monitor your host ' \
+        self.subtitle = 'CentralReport Online is the best choice to monitor your host ' \
                         'easily, without complex configuration. \n' \
                         'You can get your account token at centralreport.net'
 
@@ -50,18 +53,17 @@ class OnlineCli(cr.cli.WindowCli):
         self.list_box = urwid.ListBox(urwid.SimpleListWalker(self.menu))
         self.content = urwid.Columns([self.list_box], focus_column=0)
 
-    # def main(self):
-    #     cr.cli.main = self.content
-    #     try:
-    #         cr.cli.display_screen(self.input_handle)
-    #     except urwid.ExitMainLoop:
-    #         pass
-
     def validate(self, state):
+        """
+            Triggered when the user press the "OK" button
+        """
         cr.cli.quit()
 
 
 class StandaloneCli(cr.cli.WindowCli):
+    """
+        Manages the configuration related to the local app
+    """
 
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
@@ -89,10 +91,16 @@ class StandaloneCli(cr.cli.WindowCli):
         self.content = urwid.Columns([self.list_box], focus_column=0)
 
     def validate(self, state):
+        """
+            Triggered when the user press the "OK" button
+        """
         cr.cli.quit()
 
 
 class WizardCli(cr.cli.WindowCli):
+    """
+        Displayed during the CentralReport installation
+    """
 
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
@@ -109,17 +117,17 @@ class WizardCli(cr.cli.WindowCli):
         self.items = list()
         self.radios = list()
 
-        self.chooses = [
+        self.choices = [
             ['Standalone app only', 'Enables the internal web server'],
             ['CentralReport Online agent only', 'Only used as agent for centralreport.net'],
             ['Standalone app + CentralReport Online agent', 'Combines all local possibilities and the Online platform']
         ]
 
-        for choose in self.chooses:
-            self.radios.append(cr.cli.create_radio_item(self.group, choose[0], self.on_state_change))
+        for choise in self.choices:
+            self.radios.append(cr.cli.create_radio_item(self.group, choise[0], self.on_state_change))
 
             self.items.append(self.radios[-1])
-            self.items.append(urwid.Text(cr.cli.generate_blank_characters(6) + choose[1]))
+            self.items.append(urwid.Text(cr.cli.generate_blank_characters(6) + choise[1]))
             self.items.append(urwid.Divider())
 
         self.items[0].set_state(True)
@@ -141,9 +149,15 @@ class WizardCli(cr.cli.WindowCli):
         self.content = urwid.Columns([self.list_box], focus_column=0)
 
     def on_state_change(self, item, state):
+        """
+            Default behavior when the user select one radio item
+        """
         pass
 
     def input_handle(self, input):
+        """
+            Default behavior when the user press a key
+        """
         if input in ('q', 'Q'):
             cr.cli.quit()
             return True
@@ -151,6 +165,9 @@ class WizardCli(cr.cli.WindowCli):
         return False
 
     def validate(self, state):
+        """
+            Triggered when the user press the "OK" button
+        """
         if self.radios[0].state:
             standalone = StandaloneCli()
             standalone.display()
@@ -170,6 +187,7 @@ class WizardCli(cr.cli.WindowCli):
 if __name__ == '__main__':
     cr.cli.init_screen()
 
+    # TODO: Fix this main part
     wizard_screen = WizardCli()
     wizard_screen.display()
 
