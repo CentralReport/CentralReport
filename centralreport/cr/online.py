@@ -22,8 +22,8 @@ from cr.tools import Config
 
 # Main routes. Use the HATEOAS concept (http://en.wikipedia.org/wiki/HATEOAS).
 # They are empty when CR is starting, they will be gotten dynamically from the server.
-route_user_check = 'http://centralreport.net/api/users/%key%'
-route_host_check = ''
+route_user_check = 'http://172.16.215.147/CentralReportOnline/web/app_dev.php/api/users/%key%'
+route_host_check = 'http://172.16.215.147/CentralReportOnline/web/app_dev.php/api/users/%key%/hosts/%uuid%'
 route_host_add = ''
 route_checks_add = ''
 
@@ -56,7 +56,7 @@ def initialize_online():
     if data.host_info is None:
         raise ValueError('Host data are unavailable!')
 
-    if route_host_check == '':
+    if route_host_add == '':
         try:
             check_user_key()
         except OnlineError as e:
@@ -117,8 +117,7 @@ def check_user_key():
         # This key seems valid! Getting all routes available with HATEOAS
         try:
             remote_json = json.loads(ws_user.text)
-            route_host_check = remote_json['links']['hosts']
-            route_host_add = remote_json['links']['addHost']
+            route_host_add = remote_json['_links']['post_host']['href']
         except:
             route_host_check = ''
             route_host_add = ''
@@ -157,9 +156,8 @@ def check_host():
 
             try:
                 remote_json = json.loads(ws_host.text)
-                route_checks_add = remote_json['links']['checks']
+                route_checks_add = remote_json['_links']['post_check']['href']
             except:
-                log.log_error()
                 raise OnlineError(2, 'Error reading the JSON returned by the remote server!')
 
         elif ws_host.code == 404:
@@ -215,6 +213,7 @@ def register_host():
         log.log_info('Host registered! Waiting for user approval.')
         route_checks_add = ''
     elif ws_host_registration.code == 400:
+        log.log_debug(ws_host_registration.text)
         raise OnlineError(1, 'Bad request registering the host on CentralReport Online.')
     elif ws_host_registration.code == 409:
         log.log_info('Host already registered on CentralReport Online!')
@@ -294,9 +293,5 @@ def send_check():
         raise OnlineError(4, 'Unknown answer code %s!' % ws_checks.code)
 
     log.log_info('Check sent successfully!')
-
-    # DEPRECATED. Used for the first version of CentralReport Online API.
-    # Will be deleted in the next release.
-    send_disks_checks()
 
     return True

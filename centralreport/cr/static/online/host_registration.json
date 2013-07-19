@@ -1,15 +1,17 @@
 {
-    "uuid": "{{ uuid }}",
-    "name": "{{ hostname }}",
-    "model": "{{ model }}",
-    "cpuModel": "{{ cpu_model }}",
-    "cpuCount": "{{ cpu_count }}",
-    "os_name": "{{ os_name }}",
-    "osVersion": "{{ os_version }}",
-    "kernel_name": "{{ kernel_name }}",
-    "kernelVersion": "{{ kernel_version }}",
-    "architecture": "{{ architecture }}",
-    "agent": "{{ agent }}",
-    "agentVersion": "{{ agent_version }}",
-    "type": "{{ host_type }}"
+    "host": {
+        "name": "{{ hostname }}",
+        "uuid": "{{ uuid }}",
+        "model": "{{ model }}",
+        "cpuModel": "{{ cpu_model }}",
+        "cpuCount": "{{ cpu_count }}",
+        "osName": "{{ os_name }}",
+        "osVersion": "{{ os_version }}",
+        "kernelName": "{{ kernel_name }}",
+        "kernelVersion": "{{ kernel_version }}",
+        "architecture": "{{ architecture }}",
+        "agent": "{{ agent }}",
+        "agentVersion": "{{ agent_version }}",
+        "type": "{{ host_type }}"
+    }
 }
