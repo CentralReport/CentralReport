@@ -8,12 +8,11 @@
     https://github.com/CentralReport
 """
 
+# The centralreport module is imported first to initialize third-party libraries
+import centralreport
+
 import os
 import sys
-
-# Third-party libraries
-CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/urwid-1.1.1.zip'))
 
 import urwid
 
