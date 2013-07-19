@@ -68,8 +68,31 @@ class WindowCli(object):
 
 
 class DialogCli(WindowCli):
-    def __init__(self):
+    def __init__(self, text):
         WindowCli.__init__(self)
+
+        self.body = urwid.Text(text)
+        self.body = urwid.ListBox([self.body])
+
+        self.content = urwid.Frame(self.body, focus_part='footer')
+
+        self.add_buttons(self.validate)
+
+        self.content = urwid.Padding(self.content, ('fixed left', 2), ('fixed right', 2))
+        self.content = urwid.Filler(self.content, ('fixed top',  1), ('relative', 100))
+        self.content = urwid.AttrWrap(self.content, 'header')
+
+        self.content = urwid.Padding(self.content, 'center', 78)
+        self.content = urwid.Filler(self.content, 'middle', 20)
+
+    def add_buttons(self, callback):
+        l = list()
+        l.append(create_button('OK', callback))
+        self.buttons = urwid.GridFlow(l, 10, 3, 1, 'center')
+        self.content.footer = urwid.Pile([self.buttons], focus_item=0)
+
+    def validate(self, state):
+        quit()
 
 
 def init_screen():

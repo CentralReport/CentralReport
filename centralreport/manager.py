@@ -171,6 +171,7 @@ class WizardCli(cr.cli.WindowCli):
             standalone = StandaloneCli()
             standalone.display()
             cr.cli.quit()
+
         elif self.radios[1].state:
             online = OnlineCli()
             online.display()
