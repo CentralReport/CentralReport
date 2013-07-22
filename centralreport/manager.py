@@ -11,12 +11,21 @@
 # The centralreport module is imported first to initialize third-party libraries
 import centralreport
 
-import os
 import sys
 
 import urwid
 
 import cr.cli
+from cr.tools import Config
+
+cr_config = None
+
+class MainCli(cr.cli.WindowCli):
+    def __init__(self):
+        cr.cli.WindowCli.__init__(self)
+
+        #TODO: Finish this part
+        self.content = urwid.ListBox([urwid.Text('Not ready yet')])
 
 
 class OnlineCli(cr.cli.WindowCli):
@@ -93,6 +102,8 @@ class StandaloneCli(cr.cli.WindowCli):
         """
             Triggered when the user press the "OK" button
         """
+        cr_config.set_config_value('Webserver', 'enable', 'True')
+        cr_config.set_config_value('Webserver', 'port', str(self.port_edit_box))
         cr.cli.quit()
 
 
@@ -183,11 +194,27 @@ class WizardCli(cr.cli.WindowCli):
             online.display()
             cr.cli.quit()
 
+        cr_config.write_config_file()
+        cr.cli.quit()
+
+
+def display_usage():
+    print 'CentralReport CLI Manager - Usage: \n' \
+          'manager.py [wizard]'
 
 if __name__ == '__main__':
-    cr.cli.init_screen()
 
-    # TODO: Fix this main part
-    wizard_screen = WizardCli()
-    wizard_screen.display()
+    cr_config = Config()
+    cr_config.read_config_file()
 
+    if len(sys.argv) == 1:
+        cr.cli.init_screen()
+        main_screen = MainCli()
+        main_screen.display()
+    else:
+        if sys.argv[1] == 'wizard':
+            cr.cli.init_screen()
+            wizard_screen = WizardCli()
+            wizard_screen.display()
+        else:
+            display_usage()
