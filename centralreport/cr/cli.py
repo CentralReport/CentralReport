@@ -11,12 +11,14 @@
 import urwid
 
 _palette = [
-    ('header', 'white', 'dark blue', 'standout'),
+    ('header', 'light gray', 'dark blue', 'standout'),
     ('divider', 'black', 'dark cyan', 'standout'),
     ('error', 'white', 'dark red', 'standout'),
     ('text', 'light gray', 'default'),
+    ('text green', 'light green', 'black'),
+    ('text red', 'light red', 'black'),
     ('button normal', 'white', 'black', 'standout'),
-    ('select', 'black', 'light gray', 'standout'),
+    ('select', 'dark gray', 'light gray', 'standout'),
     ('button disabled', 'dark gray', 'dark blue')
 ]
 

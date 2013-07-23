@@ -8,7 +8,7 @@
     https://github.com/CentralReport
 """
 
-# The centralreport module is imported first to initialize third-party libraries
+# The centralreport module is firstly imported to initialize third-party libraries
 import centralreport
 
 import getpass
@@ -21,15 +21,69 @@ import cr.cli
 from cr import log
 from cr import system
 from cr.tools import Config
+from cr.utils.text import convert_text_to_bool
 
 cr_config = None
+
 
 class MainCli(cr.cli.WindowCli):
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
 
-        #TODO: Finish this part
-        self.content = urwid.ListBox([urwid.Text('Not ready yet')])
+        pid = system.execute_command('/usr/local/bin/centralreport pid')
+        if int(pid) == 0:
+            self.status = urwid.Text('CentralReport is not running')
+            self.status = urwid.AttrMap(self.status, 'text red')
+            button_status = cr.cli.create_button('Start', self.update_app_config)
+        else:
+            self.status = urwid.Text('CentralReport is running with PID %s' % pid)
+            self.status = urwid.AttrMap(self.status, 'text green')
+            button_status = cr.cli.create_button('Stop', self.update_app_config)
+            button_restart = cr.cli.create_button('Restart', self.update_app_config)
+
+        # Standalone config
+        if convert_text_to_bool(Config.get_config_value('Webserver', 'enable')) is True:
+            self.standalone_status = urwid.Text('Standalone app is enabled')
+            self.standalone_status = urwid.AttrMap(self.standalone_status, 'text green')
+        else:
+            self.standalone_status = urwid.Text('Standalone app is disabled')
+            self.standalone_status = urwid.AttrMap(self.standalone_status, 'text red')
+
+        button_app = cr.cli.create_button('Modify standalone app config', self.update_app_config)
+
+        # Online config
+        self.online_status = urwid.Text('Online config is not available yet')
+        self.online_status = urwid.AttrMap(self.online_status, 'text red')
+        button_online = cr.cli.create_button('Modify online config', self.update_online_config)
+
+        button_quit = cr.cli.create_button('Save and Quit', self.quit)
+
+        self.items = [urwid.Divider(),
+                      self.status,
+                      button_status,
+                      button_restart,
+                      urwid.Divider(),
+                      self.standalone_status,
+                      button_app,
+                      urwid.Divider(),
+                      self.online_status,
+                      button_online,
+                      urwid.Divider(),
+                      urwid.Divider(),
+                      button_quit]
+
+        self.content = urwid.ListBox(urwid.SimpleListWalker(self.items))
+
+    def update_app_config(self, state):
+        standalone = StandaloneCli()
+        standalone.display()
+
+    def update_online_config(self, state):
+        online = OnlineCli()
+        online.display()
+
+    def quit(self):
+        cr.cli.quit()
 
 
 class OnlineCli(cr.cli.WindowCli):
@@ -145,11 +199,11 @@ class WizardCli(cr.cli.WindowCli):
             ['Standalone app + CentralReport Online agent', 'Combines all local possibilities and the Online platform']
         ]
 
-        for choise in self.choices:
-            self.radios.append(cr.cli.create_radio_item(self.group, choise[0], self.on_state_change))
+        for choice in self.choices:
+            self.radios.append(cr.cli.create_radio_item(self.group, choice[0], self.on_state_change))
 
             self.items.append(self.radios[-1])
-            self.items.append(urwid.Text(cr.cli.generate_blank_characters(6) + choise[1]))
+            self.items.append(urwid.Text(cr.cli.generate_blank_characters(6) + choice[1]))
             self.items.append(urwid.Divider())
 
         self.items[0].set_state(True)
@@ -236,6 +290,7 @@ if __name__ == '__main__':
     cr_config.write_config_file()
 
     # CentralReport must be restarted to detect the new configuration
+    print 'Restarting CentralReport daemon...'
     system.execute_command('/usr/local/bin/centralreport restart')
 
     exit(0)
