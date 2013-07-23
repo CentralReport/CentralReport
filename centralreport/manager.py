@@ -11,11 +11,15 @@
 # The centralreport module is imported first to initialize third-party libraries
 import centralreport
 
+import getpass
+import os
 import sys
 
 import urwid
 
 import cr.cli
+from cr import log
+from cr import system
 from cr.tools import Config
 
 cr_config = None
@@ -65,6 +69,8 @@ class OnlineCli(cr.cli.WindowCli):
         """
             Triggered when the user press the "OK" button
         """
+
+        #TODO: Update the configuration, after merging "feature-webservices" branch in "develop"
         cr.cli.quit()
 
 
@@ -80,7 +86,7 @@ class StandaloneCli(cr.cli.WindowCli):
         self.subtitle = 'The standalone app is available through a web interface.'
 
         self.port_caption = urwid.Text('Port number: ', align='right')
-        self.port_edit_box = urwid.IntEdit(default=8080)
+        self.port_edit_box = urwid.IntEdit(default=int(cr_config.get_config_value('Webserver', 'port')))
         self.port_edit = urwid.AttrMap(self.port_edit_box, 'text', 'select')
         self.port_columns = urwid.Columns([self.port_caption, self.port_edit])
 
@@ -102,8 +108,14 @@ class StandaloneCli(cr.cli.WindowCli):
         """
             Triggered when the user press the "OK" button
         """
-        cr_config.set_config_value('Webserver', 'enable', 'True')
-        cr_config.set_config_value('Webserver', 'port', str(self.port_edit_box))
+
+        if self.port_edit_box.value() == 0:
+            cr_config.set_config_value('Webserver', 'enable', 'False')
+            cr_config.set_config_value('Webserver', 'port', '0')
+        else:
+            cr_config.set_config_value('Webserver', 'enable', 'True')
+            cr_config.set_config_value('Webserver', 'port', str(self.port_edit_box.value()))
+
         cr.cli.quit()
 
 
@@ -191,15 +203,18 @@ class WizardCli(cr.cli.WindowCli):
             online = OnlineCli()
             online.display()
 
-        cr_config.write_config_file()
         cr.cli.quit()
 
 
-def display_usage():
-    print 'CentralReport CLI Manager - Usage: \n' \
-          'manager.py [wizard]'
-
 if __name__ == '__main__':
+    if os.path.isfile('/usr/local/bin/centralreport') is False:
+        print 'CentralReport must be installed on this host to run the CLI Manager!'
+        exit(2)
+    elif getpass.getuser() != 'root':
+        print 'You must execute this manager as root to perform administrative operations!'
+        exit(3)
+
+    log.log_info('CLI Manager is starting...')
 
     cr_config = Config()
     cr_config.read_config_file()
@@ -214,4 +229,13 @@ if __name__ == '__main__':
             wizard_screen = WizardCli()
             wizard_screen.display()
         else:
-            display_usage()
+            print 'CentralReport CLI Manager - Usage: \n' \
+                  'manager.py [wizard]'
+            exit(1)
+
+    cr_config.write_config_file()
+
+    # CentralReport must be restarted to detect the new configuration
+    system.execute_command('/usr/local/bin/centralreport restart')
+
+    exit(0)
