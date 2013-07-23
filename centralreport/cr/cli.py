@@ -18,7 +18,7 @@ _palette = [
     ('text green', 'light green', 'black'),
     ('text red', 'light red', 'black'),
     ('button normal', 'white', 'black', 'standout'),
-    ('select', 'dark gray', 'light gray', 'standout'),
+    ('select', 'black', 'light gray', 'standout'),
     ('button disabled', 'dark gray', 'dark blue')
 ]
 

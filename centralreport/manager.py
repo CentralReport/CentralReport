@@ -29,17 +29,19 @@ cr_config = None
 class MainCli(cr.cli.WindowCli):
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
+        self.draw()
 
+    def draw(self):
         pid = system.execute_command('/usr/local/bin/centralreport pid')
         if int(pid) == 0:
             self.status = urwid.Text('CentralReport is not running')
             self.status = urwid.AttrMap(self.status, 'text red')
-            button_status = cr.cli.create_button('Start', self.update_app_config)
+            status_buttons = [cr.cli.create_button('Start', self.update_app_config)]
         else:
-            self.status = urwid.Text('CentralReport is running with PID %s' % pid)
+            self.status = urwid.Text('CentralReport is running with PID %s' % int(pid))
             self.status = urwid.AttrMap(self.status, 'text green')
-            button_status = cr.cli.create_button('Stop', self.update_app_config)
-            button_restart = cr.cli.create_button('Restart', self.update_app_config)
+            status_buttons = [cr.cli.create_button('Stop', self.update_app_config),
+                              cr.cli.create_button('Restart', self.update_app_config)]
 
         # Standalone config
         if convert_text_to_bool(Config.get_config_value('Webserver', 'enable')) is True:
@@ -59,10 +61,9 @@ class MainCli(cr.cli.WindowCli):
         button_quit = cr.cli.create_button('Save and Quit', self.quit)
 
         self.items = [urwid.Divider(),
-                      self.status,
-                      button_status,
-                      button_restart,
-                      urwid.Divider(),
+                      self.status] + \
+                     status_buttons + \
+                     [urwid.Divider(),
                       self.standalone_status,
                       button_app,
                       urwid.Divider(),
@@ -82,7 +83,12 @@ class MainCli(cr.cli.WindowCli):
         online = OnlineCli()
         online.display()
 
-    def quit(self):
+    def stop_daemon(self, button):
+        system.execute_command('/usr/local/bin/centralreport stop')
+        self.draw()
+        self.display()
+
+    def quit(self, button):
         cr.cli.quit()
 
 
@@ -94,10 +100,27 @@ class OnlineCli(cr.cli.WindowCli):
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
 
-        self.title = 'Online agent configuration'
-        self.subtitle = 'CentralReport Online is the best choice to monitor your host ' \
-                        'easily, without complex configuration. \n' \
-                        'You can get your account token at centralreport.net'
+        title = 'Online agent configuration'
+        subtitle = 'CentralReport Online is the best choice to monitor your host ' \
+                    'easily, without complex configuration. \n' \
+                    'You can get your account token at centralreport.net'
+
+        question = 'Do you want to add this host to your centralreport.net account?'
+
+        self.group = list()
+        self.items = list()
+        self.radios = list()
+
+        self.choices = ['Yes', 'No']
+
+        for choice in self.choices:
+            self.radios.append(cr.cli.create_radio_item(self.group, choice, None))
+            self.items.append(self.radios[-1])
+
+        if cr_config.get_config_value('Webserver', 'enable') != '':
+            self.items[0].set_state(True)
+        else:
+            self.items[1].set_state(True)
 
         self.port_caption = urwid.Text('Your account token: ', align='right')
         self.port_edit_box = urwid.Edit()
@@ -108,10 +131,13 @@ class OnlineCli(cr.cli.WindowCli):
         button_ok_grid = urwid.GridFlow([button_ok], 6, 2, 0, 'center')
 
         self.menu = [urwid.Divider(),
-                     urwid.Text(self.title),
-                     urwid.Text(self.subtitle),
+                     urwid.Text(title),
                      urwid.Divider(),
+                     urwid.Text(subtitle),
                      urwid.Divider(),
+                     urwid.Text(question)] + \
+                    self.items + \
+                    [urwid.Divider(),
                      self.port_columns,
                      urwid.Divider(),
                      button_ok_grid]
@@ -136,8 +162,26 @@ class StandaloneCli(cr.cli.WindowCli):
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
 
-        self.title = 'Standalone configuration'
-        self.subtitle = 'The standalone app is available through a web interface.'
+        title = 'Standalone app configuration'
+        subtitle = 'CentralReport includes a web server. You can check your statistics with a simple web ' \
+                   'browser, without any external service.'
+
+        question = 'Do you want to activate the standalone app?'
+
+        self.group = list()
+        self.items = list()
+        self.radios = list()
+
+        self.choices = ['Yes', 'No']
+
+        for choice in self.choices:
+            self.radios.append(cr.cli.create_radio_item(self.group, choice, None))
+            self.items.append(self.radios[-1])
+
+        if convert_text_to_bool(cr_config.get_config_value('Webserver', 'enable')):
+            self.items[0].set_state(True)
+        else:
+            self.items[1].set_state(True)
 
         self.port_caption = urwid.Text('Port number: ', align='right')
         self.port_edit_box = urwid.IntEdit(default=int(cr_config.get_config_value('Webserver', 'port')))
@@ -148,9 +192,13 @@ class StandaloneCli(cr.cli.WindowCli):
         button_ok_grid = urwid.GridFlow([button_ok], 6, 2, 0, 'center')
 
         self.menu = [urwid.Divider(),
-                     urwid.Text(self.title),
-                     urwid.Text(self.subtitle),
+                     urwid.Text(title),
                      urwid.Divider(),
+                     urwid.Text(subtitle),
+                     urwid.Divider(),
+                     urwid.Text(question)] + \
+                    self.items + \
+                    [urwid.Divider(),
                      self.port_columns,
                      urwid.Divider(),
                      button_ok_grid]
@@ -158,17 +206,16 @@ class StandaloneCli(cr.cli.WindowCli):
         self.list_box = urwid.ListBox(urwid.SimpleListWalker(self.menu))
         self.content = urwid.Columns([self.list_box], focus_column=0)
 
-    def validate(self, state):
+    def validate(self, button):
         """
             Triggered when the user press the "OK" button
         """
 
-        if self.port_edit_box.value() == 0:
-            cr_config.set_config_value('Webserver', 'enable', 'False')
-            cr_config.set_config_value('Webserver', 'port', '0')
-        else:
+        if self.items[0].state:
             cr_config.set_config_value('Webserver', 'enable', 'True')
             cr_config.set_config_value('Webserver', 'port', str(self.port_edit_box.value()))
+        else:
+            cr_config.set_config_value('Webserver', 'enable', 'False')
 
         cr.cli.quit()
 
@@ -181,54 +228,31 @@ class WizardCli(cr.cli.WindowCli):
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
 
-        self.title = 'Welcome to CentralReport!'
-        self.subtitle = 'CentralReport always keeps an eye on your system. Receive alerts in real time, ' \
+        title = 'Welcome to CentralReport!'
+        subtitle = 'CentralReport always keeps an eye on your system. Receive alerts in real time, ' \
                         'follow up statistics evolution and much more. \n' \
                         'The project is open sourced and available at github.com/CentralReport. \n' \
                         'All the documentation can be found at docs.centralreport.net'
 
-        self.caption = 'Please choose one mode:'
+        caption = 'This wizard helps you to configure main options. You will able to update the ' \
+                       'configuration executing "centralreport manager" or editing the configuration ' \
+                       'file located at /etc/centralreport/centralreport.cfg'
 
-        self.group = list()
-        self.items = list()
-        self.radios = list()
-
-        self.choices = [
-            ['Standalone app only', 'Enables the internal web server'],
-            ['CentralReport Online agent only', 'Only used as agent for centralreport.net'],
-            ['Standalone app + CentralReport Online agent', 'Combines all local possibilities and the Online platform']
-        ]
-
-        for choice in self.choices:
-            self.radios.append(cr.cli.create_radio_item(self.group, choice[0], self.on_state_change))
-
-            self.items.append(self.radios[-1])
-            self.items.append(urwid.Text(cr.cli.generate_blank_characters(6) + choice[1]))
-            self.items.append(urwid.Divider())
-
-        self.items[0].set_state(True)
-
-        button_ok = cr.cli.create_button('OK', self.validate)
-        button_ok_grid = urwid.GridFlow([button_ok], 6, 2, 0, 'center')
+        button_ok = cr.cli.create_button('Start', self.validate)
+        button_ok_grid = urwid.GridFlow([button_ok], 15, 2, 0, 'center')
 
         self.menu = [urwid.Divider(),
-                     urwid.Text(self.title),
-                     urwid.Text(self.subtitle),
+                     urwid.Text(title),
                      urwid.Divider(),
-                     urwid.Text(self.caption),
-                     urwid.Divider()] \
-                    + self.items + \
-                    [urwid.Divider(),
+                     urwid.Text(subtitle),
+                     urwid.Divider(),
+                     urwid.Text(caption),
+                     urwid.Divider(),
+                     urwid.Divider(),
                      button_ok_grid]
 
         self.list_box = urwid.ListBox(urwid.SimpleListWalker(self.menu))
         self.content = urwid.Columns([self.list_box], focus_column=0)
-
-    def on_state_change(self, item, state):
-        """
-            Default behavior when the user select one radio item
-        """
-        pass
 
     def input_handle(self, input):
         """
@@ -244,18 +268,10 @@ class WizardCli(cr.cli.WindowCli):
         """
             Triggered when the user press the "OK" button
         """
-        if self.radios[0].state:
-            standalone = StandaloneCli()
-            standalone.display()
-
-        elif self.radios[1].state:
-            online = OnlineCli()
-            online.display()
-        elif self.radios[2].state:
-            standalone = StandaloneCli()
-            standalone.display()
-            online = OnlineCli()
-            online.display()
+        standalone = StandaloneCli()
+        standalone.display()
+        online = OnlineCli()
+        online.display()
 
         cr.cli.quit()
 
@@ -287,10 +303,12 @@ if __name__ == '__main__':
                   'manager.py [wizard]'
             exit(1)
 
+    print 'Saving the new configuration...'
     cr_config.write_config_file()
 
     # CentralReport must be restarted to detect the new configuration
-    print 'Restarting CentralReport daemon...'
-    system.execute_command('/usr/local/bin/centralreport restart')
+    if int(system.execute_command('/usr/local/bin/centralreport pid')) != 0:
+        print 'Restarting CentralReport daemon...'
+        system.execute_command('/usr/local/bin/centralreport restart')
 
     exit(0)
