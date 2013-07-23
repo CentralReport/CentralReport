@@ -83,13 +83,13 @@ class DialogCli(WindowCli):
         self.content = urwid.AttrWrap(self.content, 'header')
 
         self.content = urwid.Padding(self.content, 'center', 78)
-        self.content = urwid.Filler(self.content, 'middle', 20)
+        self.content = urwid.Filler(self.content, 'middle', 10)
 
     def add_buttons(self, callback):
         l = list()
         l.append(create_button('OK', callback))
         self.buttons = urwid.GridFlow(l, 10, 3, 1, 'center')
-        self.content.footer = urwid.Pile([self.buttons], focus_item=0)
+        self.content.footer = urwid.Pile([self.buttons, urwid.Divider()], focus_item=0)
 
     def validate(self, state):
         quit()

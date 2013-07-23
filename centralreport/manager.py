@@ -181,18 +181,15 @@ class WizardCli(cr.cli.WindowCli):
         if self.radios[0].state:
             standalone = StandaloneCli()
             standalone.display()
-            cr.cli.quit()
 
         elif self.radios[1].state:
             online = OnlineCli()
             online.display()
-            cr.cli.quit()
         elif self.radios[2].state:
             standalone = StandaloneCli()
             standalone.display()
             online = OnlineCli()
             online.display()
-            cr.cli.quit()
 
         cr_config.write_config_file()
         cr.cli.quit()
