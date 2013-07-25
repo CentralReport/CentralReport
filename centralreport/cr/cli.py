@@ -17,6 +17,7 @@ _palette = [
     ('text', 'light gray', 'default'),
     ('text green', 'light green', 'black'),
     ('text red', 'light red', 'black'),
+    ('text yellow', 'yellow', 'black'),
     ('button normal', 'white', 'black', 'standout'),
     ('select', 'black', 'light gray', 'standout'),
     ('button disabled', 'dark gray', 'dark blue')
@@ -45,17 +46,28 @@ class WindowCli(object):
 
     def __init__(self):
         self.content = None
+        self.main_loop = None
 
     def display(self):
         """
             Displays the content on the screen
         """
 
+        global frame
         global main
+        global screen
+
         main = self.content
 
         try:
-            display_screen(self.input_handle)
+            frame = urwid.Frame(main, header, footer)
+            self.main_loop = urwid.MainLoop(frame, screen=screen, handle_mouse=False, unhandled_input=self.input_handle)
+
+            try:
+                self.main_loop.run()
+            except KeyboardInterrupt:
+                quit()
+
         except urwid.ExitMainLoop:
             pass
 
@@ -121,25 +133,6 @@ def init_screen():
 
     content_list = [urwid.Text("No content available")]
     main = urwid.ListBox(content_list)
-
-
-def display_screen(input_handle):
-    """
-        This function sends the content to the screen.
-
-        @param input_handle: Callback function called when the user presses a key
-    """
-
-    global frame
-    global screen
-
-    frame = urwid.Frame(main, header, footer)
-    main_loop = urwid.MainLoop(frame, screen=screen, handle_mouse=False, unhandled_input=input_handle)
-
-    try:
-        main_loop.run()
-    except KeyboardInterrupt:
-        quit()
 
 
 def generate_blank_characters(number):

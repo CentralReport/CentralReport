@@ -14,6 +14,7 @@ import centralreport
 import getpass
 import os
 import sys
+import time
 
 import urwid
 
@@ -22,6 +23,7 @@ from cr import log
 from cr import system
 from cr.tools import Config
 from cr.utils.text import convert_text_to_bool
+from cr.utils.web import check_port
 
 cr_config = None
 
@@ -29,27 +31,21 @@ cr_config = None
 class MainCli(cr.cli.WindowCli):
     def __init__(self):
         cr.cli.WindowCli.__init__(self)
-        self.draw()
 
-    def draw(self):
-        pid = system.execute_command('/usr/local/bin/centralreport pid')
-        if int(pid) == 0:
-            self.status = urwid.Text('CentralReport is not running')
-            self.status = urwid.AttrMap(self.status, 'text red')
-            status_buttons = [cr.cli.create_button('Start', self.update_app_config)]
-        else:
-            self.status = urwid.Text('CentralReport is running with PID %s' % int(pid))
-            self.status = urwid.AttrMap(self.status, 'text green')
-            status_buttons = [cr.cli.create_button('Stop', self.update_app_config),
-                              cr.cli.create_button('Restart', self.update_app_config)]
+        # Daemon status
+        self.status_text = urwid.Text('Daemon status unknown')
+        self.status = urwid.AttrMap(self.status_text, 'text red')
+        self.refresh_daemon_status()
+
+        status_buttons = [cr.cli.create_button('Start', self.start_daemon),
+                          cr.cli.create_button('Stop', self.stop_daemon),
+                          cr.cli.create_button('Restart', self.restart_daemon)]
+
 
         # Standalone config
-        if convert_text_to_bool(Config.get_config_value('Webserver', 'enable')) is True:
-            self.standalone_status = urwid.Text('Standalone app is enabled')
-            self.standalone_status = urwid.AttrMap(self.standalone_status, 'text green')
-        else:
-            self.standalone_status = urwid.Text('Standalone app is disabled')
-            self.standalone_status = urwid.AttrMap(self.standalone_status, 'text red')
+        self.standalone_status_text = urwid.Text('Standalone app status unknown')
+        self.standalone_status = urwid.AttrMap(self.standalone_status_text, 'text red')
+        self.refresh_standalone_status()
 
         button_app = cr.cli.create_button('Modify standalone app config', self.update_app_config)
 
@@ -75,18 +71,55 @@ class MainCli(cr.cli.WindowCli):
 
         self.content = urwid.ListBox(urwid.SimpleListWalker(self.items))
 
+    def refresh_daemon_status(self):
+        pid = system.execute_command('/usr/local/bin/centralreport pid')
+        if int(pid) == 0:
+            self.status_text.set_text('CentralReport is not running')
+            self.status.set_attr_map({None: 'text red'})
+        else:
+            self.status_text.set_text('CentralReport is running with PID %s' % int(pid))
+            self.status.set_attr_map({None: 'text green'})
+
+    def refresh_standalone_status(self):
+        if convert_text_to_bool(Config.get_config_value('Webserver', 'enable')) is True:
+            self.standalone_status_text.set_text('Standalone app is enabled')
+            self.standalone_status.set_attr_map({None: 'text green'})
+        else:
+            self.standalone_status_text.set_text('Standalone app is disabled')
+            self.standalone_status.set_attr_map({None: 'text red'})
+
     def update_app_config(self, state):
         standalone = StandaloneCli()
         standalone.display()
+        self.refresh_standalone_status()
 
     def update_online_config(self, state):
         online = OnlineCli()
         online.display()
 
     def stop_daemon(self, button):
+        self.status_text.set_text('Stopping CentralReport...')
+        self.status.set_attr_map({None: 'text yellow'})
+        self.main_loop.draw_screen()
+
         system.execute_command('/usr/local/bin/centralreport stop')
-        self.draw()
-        self.display()
+        self.refresh_daemon_status()
+
+    def start_daemon(self, button):
+        self.status_text.set_text('Starting CentralReport...')
+        self.status.set_attr_map({None: 'text yellow'})
+        self.main_loop.draw_screen()
+
+        system.execute_command('/usr/local/bin/centralreport start')
+        self.refresh_daemon_status()
+
+    def restart_daemon(self, button):
+        self.status_text.set_text('Restarting CentralReport...')
+        self.status.set_attr_map({None: 'text yellow'})
+        self.main_loop.draw_screen()
+
+        system.execute_command('/usr/local/bin/centralreport restart')
+        self.refresh_daemon_status()
 
     def quit(self, button):
         cr.cli.quit()
@@ -211,7 +244,16 @@ class StandaloneCli(cr.cli.WindowCli):
             Triggered when the user press the "OK" button
         """
 
+        chosen_port = int(self.port_edit_box.value())
+        actual_port = int(cr_config.get_config_value('Webserver', 'port'))
+
         if self.items[0].state:
+            if chosen_port != actual_port and check_port('127.0.0.1', chosen_port) is True:
+                error_dialog = cr.cli.DialogCli('This port is already used by another application. Please choose a '
+                                                'free port.')
+                error_dialog.display()
+                return
+
             cr_config.set_config_value('Webserver', 'enable', 'True')
             cr_config.set_config_value('Webserver', 'port', str(self.port_edit_box.value()))
         else:
@@ -235,7 +277,7 @@ class WizardCli(cr.cli.WindowCli):
                         'All the documentation can be found at docs.centralreport.net'
 
         caption = 'This wizard helps you to configure main options. You will able to update the ' \
-                       'configuration executing "centralreport manager" or editing the configuration ' \
+                       'configuration later executing "centralreport manager" or editing the configuration ' \
                        'file located at /etc/centralreport/centralreport.cfg'
 
         button_ok = cr.cli.create_button('Start', self.validate)
