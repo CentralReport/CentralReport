@@ -8,6 +8,10 @@
 Version Alpha 0.3.0 (Not released yet)
     Currently in development
 
+    - Feature #52: Communication with CentralReport Online
+        * CentralReport Online is an online tool to check all your hosts, in
+          a single place: centralreport.net
+
     - Feature #58: CentOS distributions Support
 
     - Feature #67: Travis CI and silent installer/uninstaller
