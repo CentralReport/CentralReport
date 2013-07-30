@@ -169,6 +169,10 @@ function verify_pid_file() {
 # Main
 #
 case $1 in
+    manage)
+        # This option starts the CLI Manager
+        execute_command python /usr/local/lib/centralreport/manager.py
+    ;;
     status)
         # We just want to know if CentralReport is running or not.
         if [ $(verify_pid_file) -eq 0 ]; then
@@ -225,7 +229,7 @@ case $1 in
     ;;
 
     *)
-        echo "Usage: $0 {start|stop|restart|status|debug}"
+        echo "Usage: $0 {manage|start|stop|restart|status|pid|debug}"
     ;;
 esac
 

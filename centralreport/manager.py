@@ -350,7 +350,7 @@ if __name__ == '__main__':
 
     # CentralReport must be restarted to detect the new configuration
     if int(system.execute_command('/usr/local/bin/centralreport pid')) != 0:
-        print 'Restarting CentralReport daemon...'
+        print 'Restarting the CentralReport daemon...'
         system.execute_command('/usr/local/bin/centralreport restart')
 
     exit(0)
