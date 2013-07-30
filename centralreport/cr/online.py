@@ -14,7 +14,7 @@ import os.path
 from jinja2 import Environment, FileSystemLoader
 
 from cr import data
-from cr.errors import OnlineError
+from cr.errors import OnlineError, OnlineNotValidated
 from cr import log
 from cr.utils import text
 from cr.utils import web
@@ -22,8 +22,9 @@ from cr.tools import Config
 
 # Main routes. Use the HATEOAS concept (http://en.wikipedia.org/wiki/HATEOAS).
 # They are empty when CR is starting, they will be gotten dynamically from the server.
-route_user_check = 'http://172.16.215.147/CentralReportOnline/web/app_dev.php/api/users/%key%'
-route_host_check = 'http://172.16.215.147/CentralReportOnline/web/app_dev.php/api/users/%key%/hosts/%uuid%'
+# TODO: Use HATEOAS for "route_host_check" when the CentralReport Online API will be updated
+route_user_check = 'http://centralreport.net/api/users/%key%'
+route_host_check = 'http://centralreport.net/api/users/%key%/hosts/%uuid%'
 route_host_add = ''
 route_checks_add = ''
 
@@ -82,6 +83,7 @@ def initialize_online():
                 return False
             except OnlineError as e:
                 log.log_warning('%s: %s' % (e.code, e.message))
+                return False
 
     if route_checks_add == '':
         log.log_warning('Unable to setup the communication with CentralReport Online. Please check previous logs.')
@@ -150,14 +152,15 @@ def check_host():
 
         if ws_host.code == 403:
             route_checks_add = ''
-            raise OnlineError(1, 'This host must be validated on CentralReport Online')
+            raise OnlineNotValidated(1, 'This host must be validated on CentralReport Online')
         elif ws_host.code == 200:
             log.log_info('Host registered on the remote server')
 
             try:
                 remote_json = json.loads(ws_host.text)
-                route_checks_add = remote_json['_links']['post_check']['href']
+                route_checks_add = remote_json['_links']['post_checks']['href']
             except:
+                log.log_debug(ws_host.text)
                 raise OnlineError(2, 'Error reading the JSON returned by the remote server!')
 
         elif ws_host.code == 404:
@@ -203,7 +206,7 @@ def register_host():
     json_vars['architecture'] = data.host_info.architecture
     json_vars['agent'] = Config.CR_AGENT_NAME
     json_vars['agent_version'] = Config.CR_VERSION
-    json_vars['host_type'] = 'Host'
+    json_vars['host_type'] = 'host'
 
     host_json = text.clean(template.render(json_vars))
     log.log_debug(host_json)
@@ -217,6 +220,9 @@ def register_host():
         raise OnlineError(1, 'Bad request registering the host on CentralReport Online.')
     elif ws_host_registration.code == 409:
         log.log_info('Host already registered on CentralReport Online!')
+    elif ws_host_registration.code != 200:
+        log.log_debug(ws_host_registration.text)
+        raise OnlineError(1, 'The Online server had returned an error registering the host.')
 
     return True
 
@@ -229,6 +235,7 @@ def send_check():
     """
 
     global route_checks_add
+    global route_host_add
 
     log.log_debug('Sending the last check to CentralReport Online...')
 
@@ -240,9 +247,6 @@ def send_check():
 
     if route_checks_add == '':
         raise ValueError('The Checks route is unknown!')
-
-    route_checks_add = route_checks_add.replace('%key%', data.host_info.key)
-    route_checks_add = route_checks_add.replace('%uuid%', data.host_info.uuid)
 
     log.log_debug('Generating the JSON template...')
 
@@ -284,12 +288,18 @@ def send_check():
 
     ws_checks = web.send_data(web.METHOD_POST, route_checks_add, check_json)
     if ws_checks.code == 400:
-        raise OnlineError(1, 'Data refused by the remote server: bad data')
+        log.log_debug(ws_checks.text)
+        raise OnlineError(1, 'Data refused by the remote server')
     elif ws_checks.code == 404:
+        log.log_debug(ws_checks.text)
+        route_checks_add = ''
+        route_host_add = ''
         raise OnlineError(2, 'Wrong KEY or UUID!')
     elif ws_checks.code == 409:
+        log.log_debug(ws_checks.text)
         raise OnlineError(3, 'Check already sent!')
     elif ws_checks.code != 201:
+        log.log_debug(ws_checks.text)
         raise OnlineError(4, 'Unknown answer code %s!' % ws_checks.code)
 
     log.log_info('Check sent successfully!')

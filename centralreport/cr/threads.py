@@ -73,6 +73,8 @@ class Checks(threading.Thread):
                         log.log_error('Unable to send the check to CentralReport Online: %s' % e.message)
                     except errors.OnlineError as e:
                         log.log_error('Error sending the check to CentralReport Online: %s' % e.message)
+                    except errors.OnlineNotValidated:
+                        log.log_info('This host must be validated on CentralReport Online!')
                     except Exception as e:
                         log.log_error('Unkown error sending the check to CentralReport Online: %s' % e.message)
                 else:

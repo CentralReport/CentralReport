@@ -31,7 +31,7 @@
                 "size":{{ disk.size }},
                 "usedSpace":{{ disk.used }},
                 "freeSpace":{{ disk.free }}
-            },
+            }{% if loop.last == False %},{% endif %}
             {% endfor %}
         ]
     }

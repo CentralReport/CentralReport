@@ -28,3 +28,10 @@ class OnlineError(CentralReportError):
         Defines an error during a communication with CentralReport Online
     """
     pass
+
+
+class OnlineNotValidated(CentralReportError):
+    """
+        Raised when the current host is not validated on CentralReport Online
+    """
+    pass

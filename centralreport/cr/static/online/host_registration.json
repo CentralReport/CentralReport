@@ -10,8 +10,6 @@
         "kernelName": "{{ kernel_name }}",
         "kernelVersion": "{{ kernel_version }}",
         "architecture": "{{ architecture }}",
-        "agent": "{{ agent }}",
-        "agentVersion": "{{ agent_version }}",
         "type": "{{ host_type }}"
     }
 }
