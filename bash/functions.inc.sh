@@ -65,6 +65,21 @@ function stop_cr(){
     return 0
 }
 
+#
+# Starts the wizard at the end of the installation
+# Skipped if the "-s" argument had been used
+#
+# PARAMETERS: None
+# RETURN: None
+#
+function start_wizard(){
+
+    if [ "${ARG_S}" != true ]; then
+        printTitle "Starting the CLI wizard..."
+        execute_privileged_command python /usr/local/lib/centralreport/manager.py wizard
+    fi
+}
+
 # --
 # Installation-related functions
 # --
@@ -894,6 +909,8 @@ function install_cr(){
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    start_wizard
 
     # Cleaning screen
     clear
