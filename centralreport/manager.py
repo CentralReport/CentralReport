@@ -14,7 +14,6 @@ import centralreport
 import getpass
 import os
 import sys
-import time
 
 import urwid
 
@@ -49,11 +48,6 @@ class MainCli(cr.cli.WindowCli):
 
         button_app = cr.cli.create_button('Modify standalone app config', self.update_app_config)
 
-        # Online config
-        self.online_status = urwid.Text('Online config is not available yet')
-        self.online_status = urwid.AttrMap(self.online_status, 'text red')
-        button_online = cr.cli.create_button('Modify online config', self.update_online_config)
-
         button_quit = cr.cli.create_button('Save and Quit', self.quit)
 
         self.items = [urwid.Divider(),
@@ -63,8 +57,6 @@ class MainCli(cr.cli.WindowCli):
                       self.standalone_status,
                       button_app,
                       urwid.Divider(),
-                      self.online_status,
-                      button_online,
                       urwid.Divider(),
                       urwid.Divider(),
                       button_quit]
@@ -93,10 +85,6 @@ class MainCli(cr.cli.WindowCli):
         standalone.display()
         self.refresh_standalone_status()
 
-    def update_online_config(self, state):
-        online = OnlineCli()
-        online.display()
-
     def stop_daemon(self, button):
         self.status_text.set_text('Stopping CentralReport...')
         self.status.set_attr_map({None: 'text yellow'})
@@ -122,68 +110,6 @@ class MainCli(cr.cli.WindowCli):
         self.refresh_daemon_status()
 
     def quit(self, button):
-        cr.cli.quit()
-
-
-class OnlineCli(cr.cli.WindowCli):
-    """
-        Manages the configuration related to the Online part
-    """
-
-    def __init__(self):
-        cr.cli.WindowCli.__init__(self)
-
-        title = 'Online agent configuration'
-        subtitle = 'CentralReport Online is the best choice to monitor your host ' \
-                    'easily, without complex configuration. \n' \
-                    'You can get your account token at centralreport.net'
-
-        question = 'Do you want to add this host to your centralreport.net account?'
-
-        self.group = list()
-        self.items = list()
-        self.radios = list()
-
-        self.choices = ['Yes', 'No']
-
-        for choice in self.choices:
-            self.radios.append(cr.cli.create_radio_item(self.group, choice, None))
-            self.items.append(self.radios[-1])
-
-        if cr_config.get_config_value('Webserver', 'enable') != '':
-            self.items[0].set_state(True)
-        else:
-            self.items[1].set_state(True)
-
-        self.port_caption = urwid.Text('Your account token: ', align='right')
-        self.port_edit_box = urwid.Edit()
-        self.port_edit = urwid.AttrMap(self.port_edit_box, 'text', 'select')
-        self.port_columns = urwid.Columns([self.port_caption, self.port_edit])
-
-        button_ok = cr.cli.create_button('OK', self.validate)
-        button_ok_grid = urwid.GridFlow([button_ok], 6, 2, 0, 'center')
-
-        self.menu = [urwid.Divider(),
-                     urwid.Text(title),
-                     urwid.Divider(),
-                     urwid.Text(subtitle),
-                     urwid.Divider(),
-                     urwid.Text(question)] + \
-                    self.items + \
-                    [urwid.Divider(),
-                     self.port_columns,
-                     urwid.Divider(),
-                     button_ok_grid]
-
-        self.list_box = urwid.ListBox(urwid.SimpleListWalker(self.menu))
-        self.content = urwid.Columns([self.list_box], focus_column=0)
-
-    def validate(self, state):
-        """
-            Triggered when the user press the "OK" button
-        """
-
-        #TODO: Update the configuration, after merging "feature-webservices" branch in "develop"
         cr.cli.quit()
 
 
@@ -312,8 +238,6 @@ class WizardCli(cr.cli.WindowCli):
         """
         standalone = StandaloneCli()
         standalone.display()
-        online = OnlineCli()
-        online.display()
 
         cr.cli.quit()
 
