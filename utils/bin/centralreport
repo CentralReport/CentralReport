@@ -169,7 +169,7 @@ function verify_pid_file() {
 # Main
 #
 case $1 in
-    manage)
+    manager)
         # This option starts the CLI Manager
         execute_command python /usr/local/lib/centralreport/manager.py
     ;;
@@ -229,7 +229,7 @@ case $1 in
     ;;
 
     *)
-        echo "Usage: $0 {manage|start|stop|restart|status|pid|debug}"
+        echo "Usage: $0 {manager|start|stop|restart|status|pid|debug}"
     ;;
 esac
 
