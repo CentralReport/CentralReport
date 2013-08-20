@@ -22,27 +22,27 @@ function read_whitelist(){
 
     for line in $(cat "$1");
     do
-        if [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
-            if [ -d ${line} ]; then
-                sudo cp -R ${line} "${2}${line}"
-                RETURN_CODE="$?"
-                if [ "$?" -ne "0" ]; then
-                    logError "Error copying ${line}!"
-                    return 1
-                fi
+        if [[ ${line} == "#"* ]] || [[ ${line} == ";"* ]]; then
+            continue
+        fi
 
-            elif [ -f ${line} ]; then
-                sudo cp ${line} "${2}${line}"
-                RETURN_CODE="$?"
-                if [ "$?" -ne "0" ]; then
-                    logError "Error copying ${line}!"
-                    return 1
-                fi
-
-            else
-                logError "Missing file or directory: ${line}"
-                return 2
+        if [ -d ${line} ]; then
+            sudo cp -R ${line} "${2}${line}"
+            if [ "$?" -ne "0" ]; then
+                logError "Error copying ${line}!"
+                return 1
             fi
+
+        elif [ -f ${line} ]; then
+            sudo cp ${line} "${2}${line}"
+            if [ "$?" -ne "0" ]; then
+                logError "Error copying ${line}!"
+                return 1
+            fi
+
+        else
+            logError "Missing file or directory: ${line}"
+            return 2
         fi
     done
 
