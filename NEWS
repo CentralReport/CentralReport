@@ -19,6 +19,12 @@ Version Alpha 0.3.0 (Not released yet)
           All confirmations are validated by default.
           Useful to perform tests or for deployments.
 
+    - Feature #70: New online installer and uninstaller
+        * Install and uninstall CentralReport with a single line in a terminal.
+          One remote script is available for the installer and another one for
+          the uninstaller. They are in charge to automatically download the related
+          package and they are handling the magic for you.
+
     - Improvement #72: Added a check for the webserver port availability
         * When the chosen port is already in use on the current host,
           the webserver isn't started and an error is logged.
