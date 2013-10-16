@@ -61,7 +61,7 @@ else
         UNINSTALL_CONFIRMED=true
     else
         logConsole " "
-        read -p "You will uninstall CentralReport. Are you sure you want to continue? (y/N)" RESP < /dev/tty
+        read -p "You will uninstall CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
         checkYesNoAnswer ${RESP}
 
         if [ $? -eq 0 ]; then

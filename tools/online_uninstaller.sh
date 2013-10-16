@@ -7,18 +7,22 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script will download latest CentralReport version, and begin uninstall on current host.
+# This script will download the latest CentralReport uninstaller and processes the uninstall
 # It works for Mac OS X, Debian and Ubuntu
 # Enjoy!
 
 # Vars
-URL_CR="http://www.charles-emmanuel.me/cr/package.tar.gz"
-ARCHIVE="package.tar.gz"
-DIR="CentralReportIndev"
+URL_CR="http://static.centralreport.net/cr_uninstaller.tar.gz"
+ARCHIVE="cr_uninstaller.tar.gz"
+DIR="CentralReportUninstaller"
 
 CURRENT_OS=""
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
+OS_CENTOS="CentOS"
+
+# TODO: Find a more accurate word than "online"
+echo -e "\n\nWelcome to CentralReport online uninstaller!"
 
 # Getting current OS
 if [ "Darwin" == $(uname -s) ]; then
@@ -27,38 +31,50 @@ if [ "Darwin" == $(uname -s) ]; then
 elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
     # Debian or Ubuntu
     CURRENT_OS=${OS_DEBIAN}
-
-    if [[ $EUID -ne 0 ]]; then
-        echo " "
-        echo "You must be root to run CentralReport uninstaller!"
-        exit 1
+elif [ -f "/etc/redhat-release" ]; then
+    cat /etc/redhat-release | grep "CentOS" &>/dev/null
+    if [ "$?" -eq 0 ]; then
+        CURRENT_OS=${OS_CENTOS}
     fi
+fi
 
-else
+if [ "${CURRENT_OS}" == "" ]; then
     echo " "
     echo "Sorry, your OS isn't supported yet..."
     exit 1
 fi
 
-# Downloading full package...
+if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ] || [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
+    if [[ $EUID -ne 0 ]]; then
+        echo " "
+        echo "You must be root to run CentralReport installer!"
+        exit 2
+    fi
+fi
+
+echo -e "\nDownloading the uninstaller..."
+cd /tmp
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
 else
     wget -q ${URL_CR}
 fi
 
-# Unpackage...
-tar -xzvf ${ARCHIVE}
+if [ ! -f ${ARCHIVE} ]; then
+    echo -e "\n\nError downloading the CentralReport uninstaller!"
+    exit 3
+fi
 
-# Go to new dir...
+echo -e "\nUnpackaging the uninstaller..."
+tar -xzf ${ARCHIVE}
+
 cd ${DIR}
 chmod +x uninstall.sh
 
-# Execute installer...
+echo -e "\nLaunching the uninstaller..."
 ./uninstall.sh
 
-# After install, remove all downloaded files
-echo "Removing tmp files"
+echo -e "\nRemoving all temporary files"
 cd ../
 rm -R ${DIR}
 rm ${ARCHIVE}
