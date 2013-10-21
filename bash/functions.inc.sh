@@ -74,7 +74,7 @@ function stop_cr(){
 #
 function start_wizard(){
 
-    if [ "${ARG_S}" != true ]; then
+    if [ ! "${ARG_S}" ]; then
         printTitle "Starting the CLI wizard..."
         execute_privileged_command python /usr/local/lib/centralreport/manager.py wizard
     fi

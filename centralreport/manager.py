@@ -167,7 +167,7 @@ class StandaloneCli(cr.cli.WindowCli):
 
     def validate(self, button):
         """
-            Triggered when the user press the "OK" button
+            Triggered when the user presses the "OK" button
         """
 
         chosen_port = int(self.port_edit_box.value())
@@ -202,7 +202,7 @@ class WizardCli(cr.cli.WindowCli):
                         'The project is open sourced and available at github.com/CentralReport. \n' \
                         'All the documentation can be found at docs.centralreport.net'
 
-        caption = 'This wizard helps you to configure main options. You will able to update the ' \
+        caption = 'This wizard helps you to configure main options. You will be able to update the ' \
                        'configuration later executing "centralreport manager" or editing the configuration ' \
                        'file located at /etc/centralreport/centralreport.cfg'
 
@@ -224,7 +224,7 @@ class WizardCli(cr.cli.WindowCli):
 
     def input_handle(self, input):
         """
-            Default behavior when the user press a key
+            Default behavior when the user presses a key
         """
         if input in ('q', 'Q'):
             cr.cli.quit()
@@ -234,7 +234,7 @@ class WizardCli(cr.cli.WindowCli):
 
     def validate(self, state):
         """
-            Triggered when the user press the "OK" button
+            Triggered when the user presses the "OK" button
         """
         standalone = StandaloneCli()
         standalone.display()

@@ -27,12 +27,12 @@ Version Alpha 0.3.0 (Not released yet)
 
     - Feature #82: New CLI Manager
         * A friendly way to modify the CentralReport configuration with
-          interactive menus and checkbox in the user terminal. No need
-          to modify manually the configuration file!
+          interactive menus and checkboxes in the user terminal. No need
+          to modify the configuration file manually!
           Can be used with the command "centralreport manager".
-        * Called during the installation to ask to the user the basic
-          configuration, like the port for the interal web server. Not
-          started when the user use the '-s' parameter (silent installation).
+        * Called during the installation to ask to user the basic
+          configuration, like the port for the interal web server. Not started
+          when using the '-s' parameter (silent installation).
 
     - Improvement #72: Added a check for the webserver port availability
         * When the chosen port is already in use on the current host,
