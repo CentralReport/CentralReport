@@ -66,7 +66,7 @@ class Config:
             'uuid': ''
         },
         'Webserver': {
-            'enable': 'True',
+            'enable': 'False',
             'interface': '0.0.0.0',
             'port': '8080'
         },
