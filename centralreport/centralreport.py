@@ -15,6 +15,10 @@ import sys
 import time
 import os
 
+# Third-party libraries
+CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/urwid-1.1.1.zip'))
+
 from cr import log
 from cr import threads
 from cr.utils import text
@@ -86,8 +90,8 @@ class CentralReport(Daemon):
             log.change_log_level(log_level)
 
         # Launching the check thread...
-        if (Config.HOST_CURRENT == Config.HOST_MAC) or (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (
-                Config.HOST_CURRENT == Config.HOST_UBUNTU):
+        # Getting current OS...
+        if Config.HOST_CURRENT != Config.HOST_OTHER:
             log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
         else:
@@ -103,6 +107,7 @@ class CentralReport(Daemon):
 
                 # Importing the module here improve the memory usage
                 from web.server import WebServer
+
                 CentralReport.webserver_thread = WebServer()
             else:
                 log.log_error('Error launching the webserver: port %s is already in use on this host!' % local_web_port)
@@ -180,6 +185,14 @@ class CentralReport(Daemon):
 #
 
 if '__main__' == __name__:
+
+    if sys.version_info < (2, 6):
+        print "CentralReport works only with Python 2.6 or newer."
+        sys.exit(1)
+    elif sys.version_info >= (3, 0):
+        print "CentralReport doesn't work with Python 3.0 or newer."
+        sys.exit(1)
+
     daemon = CentralReport(Config.CR_PID_FILE)
 
     if 2 == len(sys.argv):

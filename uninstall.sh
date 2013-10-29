@@ -30,7 +30,7 @@ printBox blue "------------------------- CentralReport uninstaller -------------
 # Right now, CentralReport is only available on Mac OS X, Debian and Ubuntu.
 # Others Linux distributions coming soon.
 getOS
-if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
+if [ ${CURRENT_OS} == "${OS_OTHER}" ]; then
 
     printBox red "ERROR!| \
                   The uninstall is only designed for Mac OS, Debian and Ubuntu.| \
@@ -39,15 +39,8 @@ if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
     exit 1
 fi
 
-getPythonIsInstalled
-if [ $? -ne 0 ]; then
-    printBox red "Error! Python must be installed on your host to remove CentralReport."
-
-    exit 1
-fi
-
 # On debian, the current user must have administrative privileges.
-if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]; then
     if [[ $EUID -ne 0 ]]; then
         ROOT_ERROR="You must be root to uninstall CentralReport!"
         logFile ${ROOT_ERROR}
@@ -68,7 +61,7 @@ else
         UNINSTALL_CONFIRMED=true
     else
         logConsole " "
-        read -p "You will uninstall CentralReport. Are you sure you want to continue? (y/N)" RESP < /dev/tty
+        read -p "You will uninstall CentralReport. Are you sure you want to continue? (y/N) " RESP < /dev/tty
         checkYesNoAnswer ${RESP}
 
         if [ $? -eq 0 ]; then
@@ -94,7 +87,7 @@ else
                     bit_error=1
                 fi
             fi
-        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]; then
             logInfo "Processing... CentralReport will be removed from this Linux."
         fi
 

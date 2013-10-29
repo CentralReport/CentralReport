@@ -34,7 +34,7 @@ printBox blue  "-------------------------- CentralReport installer -------------
 # Right now, CentralReport is only available on Mac OS X, Debian and Ubuntu.
 # Others Linux distributions coming soon.
 getOS
-if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
+if [ ${CURRENT_OS} == "${OS_OTHER}" ]; then
     printBox red "ERROR!| \
                   The install is only designed for Mac OS, Debian and Ubuntu.| \
                   Support for other OS will come soon!"
@@ -43,15 +43,21 @@ if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
 fi
 
 # Python is mandatory for CentralReport
-getPythonIsInstalled
-if [ $? -ne 0 ]; then
-    printBox red " Error! Python must be installed on your host to execute CentralReport."
-
+check_python
+RETURN_PYTHON_CHECK="$?"
+if [ "${RETURN_PYTHON_CHECK}" -eq 1 ]; then
+    printBox red "Error! Python must be installed on your host to execute CentralReport."
+    exit 1
+elif [ "${RETURN_PYTHON_CHECK}" -eq 2 ]; then
+    printBox red "Error! CentralReport is only designed to work with Python 2.6 or newer."
+    exit 1
+elif [ "${RETURN_PYTHON_CHECK}" -eq 3 ]; then
+    printBox red "Error! CentralReport doesn't work with Python 3.0 or newer!"
     exit 1
 fi
 
 # On debian, the current user must have administrative privileges.
-if [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+if [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]; then
     if [[ $EUID -ne 0 ]]; then
         ROOT_ERROR="You must be root to install CentralReport!"
         logFile ${ROOT_ERROR}
@@ -106,7 +112,8 @@ else
                     bit_error=1
                 fi
             fi
-        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+        elif [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]
+        then
             logInfo "Processing... CentralReport will be installed on this Linux."
         fi
 

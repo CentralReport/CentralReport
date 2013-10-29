@@ -21,6 +21,8 @@
                     <img src="img/logos/Ubuntu_logo.png" alt="Ubuntu logo" />
                 {% elif 'DEBIAN' == host_os %}
                     <img src="img/logos/Debian_logo.png" alt="Debian logo" />
+                {% elif 'CENTOS' == host_os %}
+                    <img src="img/logos/Centos_logo.png" alt="Centos logo" />
                 {% endif %}
             </div>
             <div class="span11 host-name">

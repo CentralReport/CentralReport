@@ -65,6 +65,21 @@ function stop_cr(){
     return 0
 }
 
+#
+# Starts the wizard at the end of the installation
+# Skipped if the "-s" argument had been used
+#
+# PARAMETERS: None
+# RETURN: None
+#
+function start_wizard(){
+
+    if [ ! "${ARG_S}" ]; then
+        printTitle "Starting the CLI wizard..."
+        execute_privileged_command python /usr/local/lib/centralreport/manager.py wizard
+    fi
+}
+
 # --
 # Installation-related functions
 # --
@@ -184,16 +199,21 @@ function copy_init_file(){
         if [ ${RETURN_CODE} -ne "0" ]; then
             logError "Error copying the startup script at ${STARTUP_PLIST} (Error code: ${RETURN_CODE})"
             return 1
-        fi
+        else
+            chmod 755 ${STARTUP_DEBIAN}
 
-        chmod 755 ${STARTUP_DEBIAN}
+            if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+                update-rc.d centralreport defaults
+            elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
+                chkconfig --add centralreport
+            fi
 
-        update-rc.d centralreport defaults
-        RETURN_CODE="$?"
+            RETURN_CODE="$?"
 
-        if [ ${RETURN_CODE} -ne "0" ]; then
-            logError "Error registering the startup script with update-rc.d (Error code: ${RETURN_CODE})"
-            return 2
+            if [ ${RETURN_CODE} -ne "0" ]; then
+                logError "Error registering the startup script (Error code: ${RETURN_CODE})"
+                return 2
+            fi
         fi
     fi
 
@@ -375,20 +395,23 @@ function delete_init_file(){
         logFile "Removing the startup script..."
 
         if [ -f ${STARTUP_DEBIAN} ]; then
+            if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ]; then
+                update-rc.d -f centralreport remove
+            elif [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
+                chkconfig --del centralreport
+            fi
+
+            if [ ${RETURN_CODE} -ne "0" ]; then
+                logError "Error unregistering the startup script (Error code: ${RETURN_CODE})"
+                return 2
+            fi
+
             rm -rf ${STARTUP_DEBIAN}
             RETURN_CODE="$?"
 
             if [ ${RETURN_CODE} -ne "0" ]; then
                 logError "Error deleting the startup script at ${STARTUP_DEBIAN} (Error code: ${RETURN_CODE})"
                 return 1
-            fi
-
-            update-rc.d -f centralreport remove
-            RETURN_CODE="$?"
-
-            if [ ${RETURN_CODE} -ne "0" ]; then
-                logError "Error removing the startup script with update-rc.d (Error code: ${RETURN_CODE})"
-                return 2
             fi
 
             logFile "Startup script deleted"
@@ -721,7 +744,7 @@ function remove_cr_user(){
             if [ ${RETURN_CODE} -ne 0 ]; then
                 logConsole " "
                 logError "Error deleting the CentralReport user (Error code: ${RETURN_CODE})"
-                return ${RETURN_CODE}
+                return 1
             fi
         fi
     fi
@@ -886,6 +909,8 @@ function install_cr(){
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    start_wizard
 
     # Cleaning screen
     clear

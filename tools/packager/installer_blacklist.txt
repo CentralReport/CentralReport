@@ -1,0 +1,12 @@
+# ------------------------------------------------------------
+# CentralReport Unix/Linux installer blacklist
+# https://github.com/CentralReport
+# ------------------------------------------------------------
+
+# This file contains all scripts/files/folders not used in the installer.
+# All items are deleted from the final package.
+
+# The blacklist is read after the whitelist.
+
+*.pyc
+*.DS_Store
