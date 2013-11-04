@@ -7,20 +7,22 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-# This script will download latest CentralReport version, and begin installation.
+# This script will download the latest CentralReport installer and processes the install
 # It works for Mac OS X, Debian and Ubuntu
 # Enjoy!
 
 # Vars
-URL_CR="http://www.charles-emmanuel.me/cr/package.tar.gz"
-ARCHIVE="package.tar.gz"
-DIR="CentralReportIndev"
+URL_CR="http://static.centralreport.net/cr_installer.tar.gz"
+ARCHIVE="cr_installer.tar.gz"
+DIR="CentralReportInstaller"
 
 CURRENT_OS=""
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
+OS_CENTOS="CentOS"
 
-echo -e "\n\nWelcome to CentralReport one-line installer!"
+# TODO: Find a more accurate word than "online"
+echo -e "\n\nWelcome to CentralReport online installer!"
 
 # Getting current OS
 if [ "Darwin" == $(uname -s) ]; then
@@ -29,47 +31,57 @@ if [ "Darwin" == $(uname -s) ]; then
 elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
     # Debian or Ubuntu
     CURRENT_OS=${OS_DEBIAN}
-
-    if [[ $EUID -ne 0 ]]; then
-        echo " "
-        echo "You must be root to run CentralReport installer!"
-        exit 1
+elif [ -f "/etc/redhat-release" ]; then
+    cat /etc/redhat-release | grep "CentOS" &>/dev/null
+    if [ "$?" -eq 0 ]; then
+        CURRENT_OS=${OS_CENTOS}
     fi
+fi
 
-else
+if [ "${CURRENT_OS}" == "" ]; then
     echo " "
     echo "Sorry, your OS isn't supported yet..."
     exit 1
 fi
 
-# Testing if Python is available on this host
-echo -e "\nTesting Python version..."
+echo -e "\nChecking Python availability on your host..."
 python -V
 if [ $? -ne 0 ]; then
     echo -e "\n\nError, Python must be installed on your host to execute CentralReport."
     exit 1
 fi
 
+if [ "${CURRENT_OS}" == "${OS_DEBIAN}" ] || [ "${CURRENT_OS}" == "${OS_CENTOS}" ]; then
+    if [[ $EUID -ne 0 ]]; then
+        echo " "
+        echo "You must be root to run CentralReport installer!"
+        exit 2
+    fi
+fi
 
-# Download full package...
+echo -e "\nDownloading the installer..."
+cd /tmp
 if [ ${CURRENT_OS} = ${OS_MAC} ]; then
     curl -O ${URL_CR}
 else
     wget -q ${URL_CR}
 fi
 
-# Unpackage...
-tar -xzvf ${ARCHIVE}
+if [ ! -f ${ARCHIVE} ]; then
+    echo -e "\n\nError downloading the CentralReport installer!"
+    exit 3
+fi
 
-# Go to new dir...
+echo -e "\nUnpackaging the installer..."
+tar -xzf ${ARCHIVE}
+
 cd ${DIR}
 chmod +x install.sh
 
-# Execute installer...
+echo -e "\nLaunching the installer..."
 ./install.sh
 
-# After install, remove all downloaded files
-echo "Removing tmp files"
+echo -e "\nRemoving all temporary files"
 cd ../
 rm -R ${DIR}
 rm ${ARCHIVE}

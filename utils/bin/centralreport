@@ -169,6 +169,10 @@ function verify_pid_file() {
 # Main
 #
 case $1 in
+    manager)
+        # This option starts the CLI Manager
+        execute_command python /usr/local/lib/centralreport/manager.py
+    ;;
     status)
         # We just want to know if CentralReport is running or not.
         if [ $(verify_pid_file) -eq 0 ]; then
@@ -177,8 +181,12 @@ case $1 in
             echo "CentralReport is running with PID $(verify_pid_file)"
         fi
     ;;
+    pid)
+        # Displays the PID number. 0 = The CentralReport daemon is not running
+        echo $(verify_pid_file)
+    ;;
     debug)
-        # Launchs CentralReport in debug mode = in the current console
+        # Starts CentralReport in debug mode = in the current console
         python /usr/local/lib/centralreport/test.py
     ;;
     start | stop | restart)
@@ -196,8 +204,8 @@ case $1 in
                 manage_daemon $*
             fi
 
-        elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
-            # Debian or Ubuntu
+        elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ] || [ -f /etc/redhat-release ]; then
+            # Debian or Ubuntu or RedHat based Linux
 
             if [[ $EUID -ne 0 ]]; then
                 echo "You must have administrative privileges to manage CentralReport daemon!"
@@ -221,7 +229,7 @@ case $1 in
     ;;
 
     *)
-        echo "Usage: $0 {start|stop|restart|status|debug}"
+        echo "Usage: $0 {manager|start|stop|restart|status|pid|debug}"
     ;;
 esac
 

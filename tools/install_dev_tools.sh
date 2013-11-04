@@ -29,7 +29,7 @@ printBox blue "--------------------- CentralReport dev tools installer ---------
                please visit http://github.com/CentralReport/CentralReport"
 
 getOS
-if [ ${CURRENT_OS} != ${OS_MAC} ] && [ ${CURRENT_OS} != ${OS_DEBIAN} ]; then
+if [ ${CURRENT_OS} == "${OS_OTHER}" ]; then
     printBox red "ERROR!| \
                   Installation is only designed for Mac OS, Debian and Ubuntu.| \
                   Support for other OS will come soon!"
@@ -61,10 +61,9 @@ if [ ${CURRENT_OS} == ${OS_MAC} ]; then
     done
 
     sudo -k
-
     exit 0
 
-elif [ ${CURRENT_OS} == ${OS_DEBIAN} ]; then
+elif [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]; then
     if [[ $EUID -ne 0 ]]; then
         printBox red "You must be root to install development tools!"
         exit 1

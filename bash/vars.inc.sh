@@ -13,6 +13,9 @@
 CURRENT_OS=
 OS_MAC="MacOS"
 OS_DEBIAN="Debian"
+OS_CENTOS="CentOS"
+OS_REDHAT="RedHat"
+OS_OTHER="Unsupported"
 
 # CentralReport user
 CR_USER_MAC=_centralreport
@@ -27,10 +30,9 @@ CR_BIN_FILE=/usr/local/bin/centralreport
 CR_LIB_DIR_RELATIVE=/usr/local/lib/
 CR_LIB_DIR=/usr/local/lib/centralreport/
 CR_LIB_DAEMON=/usr/local/lib/centralreport/centralreport.py
+CR_LIB_MANAGER=/usr/local/lib/centralreport/manager.py
 
 CR_CONFIG_DIR=/etc/centralreport/
-
-CONFIG_ASSISTANT=/usr/local/lib/centralreport/config.py
 
 CR_PID_DIR=/var/run/centralreport
 CR_PID_FILE=/var/run/centralreport/centralreport.pid
