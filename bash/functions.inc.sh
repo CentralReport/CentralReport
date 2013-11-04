@@ -76,7 +76,7 @@ function start_wizard(){
 
     if [ ! "${ARG_S}" ]; then
         printTitle "Starting the CLI wizard..."
-        execute_privileged_command python ${CR_LIB_MANAGER} wizard
+        execute_privileged_command python ${CR_LIB_MANAGER} wizard < /dev/tty
     fi
 }
 
