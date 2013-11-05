@@ -19,6 +19,7 @@ import os
 CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/urwid-1.1.1.zip'))
 
+from cr import host
 from cr import log
 from cr import threads
 from cr.utils import text
@@ -80,6 +81,9 @@ class CentralReport(Daemon):
         CentralReport.starting_date = datetime.datetime.now()  # Starting date
         CentralReport.configuration = Config()  # Getting config object
 
+        # Getting data about the current host...
+        host.get_current_host()
+
         # The log level can be personalized in the config file
         if Config.CR_CONFIG_ENABLE_DEBUG_MODE is False:
             try:
@@ -89,16 +93,15 @@ class CentralReport(Daemon):
 
             log.change_log_level(log_level)
 
-        # Launching the check thread...
-        # Getting current OS...
-        if Config.HOST_CURRENT != Config.HOST_OTHER:
-            log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
+        # Starting the check thread...
+        if host.get_current_host().os != host.OS_UNKNOWN:
+            log.log_info('%s detected. Starting ThreadChecks...' % host.get_current_host().os)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
         else:
             is_error = True
             log.log_critical('Sorry, but your OS is not supported yet...')
 
-        # Launching the internal webserver...
+        # Starting the internal webserver...
         if not is_error and text.convert_text_to_bool(Config.get_config_value('Webserver', 'enable')):
             local_web_port = int(Config.get_config_value('Webserver', 'port'))
 

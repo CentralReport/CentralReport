@@ -29,9 +29,6 @@ from cr.tools import Config
 
 
 class _Collector:
-    def get_infos(self):
-        raise NameError('Method not implemented yet')
-
     def get_cpu(self):
         raise NameError('Method not implemented yet')
 
@@ -55,53 +52,6 @@ class MacCollector(_Collector):
 
     PAGEBYTES_TO_BYTES = 4096.
     BLOCKBYTES_TO_BYTES = 512.
-
-    def get_infos(self):
-        """
-            Gets information about this Mac.
-        """
-
-        hostname = text.remove_specials_characters(system.execute_command('hostname -s'))
-
-        architecture = platform.machine()
-
-        kernel = platform.system()
-        kernel_v = platform.release()
-
-        os_name = system.execute_command('sw_vers -productName')
-        os_version = system.execute_command('sw_vers -productVersion')
-
-        model = system.execute_command('sysctl -n hw.model')
-
-        # Number of CPU/CPU cores
-        ncpu = 1
-
-        try:
-            ncpu = multiprocessing.cpu_count()
-        except (ImportError, NotImplementedError):
-            try:
-                ncpu = system.execute_command('sysctl -n hw.ncpu')
-            except IOError:
-                pass
-
-        cpu_model = system.execute_command('sysctl -n machdep.cpu.brand_string')
-
-        # Using new HostEntity
-        host_entity = host.Infos()
-
-        host_entity.uuid = Config.get_config_value('General', 'uuid')
-        host_entity.os = Config.HOST_CURRENT
-        host_entity.hostname = hostname
-        host_entity.architecture = architecture
-        host_entity.model = model
-        host_entity.kernel_name = kernel
-        host_entity.kernel_version = kernel_v
-        host_entity.os_name = os_name
-        host_entity.os_version = os_version
-        host_entity.cpu_model = cpu_model
-        host_entity.cpu_count = ncpu
-
-        return host_entity
 
     def get_cpu(self):
         """
@@ -249,66 +199,6 @@ class DebianCollector(_Collector):
     """
         Collector executing Debian/Ubuntu commands and getting useful values.
     """
-
-    def get_infos(self):
-        """
-            Gets information about this host.
-        """
-
-        hostname = socket.gethostname()
-
-        architecture = platform.machine()
-
-        kernel = platform.system()
-        kernel_v = platform.release()
-
-        # Getting OS Name and OS version
-        from platform import linux_distribution as dist
-
-            # Getting OS Name and OS version
-        try:
-            os_name = dist()[0]
-            os_version = dist()[1]
-        except:
-            os_name = 'Linux'
-            os_version = ''
-
-        # TODO Find a way to find the computer model
-        #model = system.execute_command('sysctl -n hw.model')
-
-        # Number of CPU/CPU cores
-        ncpu = 1
-
-        try:
-            ncpu = multiprocessing.cpu_count()
-        except (ImportError, NotImplementedError):
-            try:
-                ncpu = open('/proc/cpuinfo').read().count('processor\t:')
-            except IOError:
-                pass
-
-        cpu_infos = system.execute_command('cat /proc/cpuinfo | grep "model name"')
-        if "model name" in cpu_infos:
-            cpu_model = re.sub(".*model name.*:", "", cpu_infos, 1)
-        else:
-            cpu_model = 'CPU model unknown'
-
-        # Using new HostEntity
-        host_entity = host.Infos()
-
-        host_entity.uuid = Config.get_config_value('General', 'uuid')
-        host_entity.os = Config.HOST_CURRENT
-        host_entity.hostname = hostname
-        host_entity.architecture = architecture
-        #host_entity.model = model
-        host_entity.kernel_name = kernel
-        host_entity.kernel_version = kernel_v
-        host_entity.os_name = os_name
-        host_entity.os_version = os_version
-        host_entity.cpu_model = cpu_model
-        host_entity.cpu_count = ncpu
-
-        return host_entity
 
     def get_cpu(self):
         """
