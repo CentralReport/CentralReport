@@ -93,7 +93,7 @@ def get_current_host():
     if _current_host.os == OS_MAC:
         _current_host.hostname = text.remove_specials_characters(system.execute_command('hostname -s'))
         _current_host.os_name = system.execute_command('sw_vers -productName')
-        _current_host.os_version = system.execute_command('sw_vers -productVersion')
+        _current_host.os_version = text.remove_specials_characters(system.execute_command('sw_vers -productVersion'))
         _current_host.model = system.execute_command('sysctl -n hw.model')
 
         _current_host.cpu_model = system.execute_command('sysctl -n machdep.cpu.brand_string')
@@ -113,10 +113,10 @@ def get_current_host():
 
         _current_host.cpu_count = 1
         try:
-            _current_host = multiprocessing.cpu_count()
+            _current_host.cpu_count = multiprocessing.cpu_count()
         except (ImportError, NotImplementedError):
             try:
-                _current_host = open('/proc/cpuinfo').read().count('processor\t:')
+                _current_host.cpu_count = open('/proc/cpuinfo').read().count('processor\t:')
             except IOError:
                 pass
 

@@ -7,25 +7,15 @@
     https://github.com/CentralReport
 """
 
-# Summary of this module:
-# Collector abstract class
-# MacCollector class
-# DebianCollector class
-
 import datetime
-import multiprocessing
-import platform
-import re
-import socket
+from distutils import version
 import time
 import os
-import sys
 
+from cr import system
+import cr.host
 from cr.entities import checks
 from cr.entities import host
-from cr import system
-from cr.utils import text
-from cr.tools import Config
 
 
 class _Collector:
@@ -58,18 +48,14 @@ class MacCollector(_Collector):
             Gets current CPU usage.
         """
 
-        # iostat - entrees / sorties
+        # https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man8/iostat.8.html
         iostat = system.execute_command('iostat -c 2')
 
-        # Formatage de iostat
         iostat_split = iostat.splitlines()
         headers = iostat_split[1].split()
         values = iostat_split[3].split()
-
-        # Dictionnaire de valeur
         dict_iostat = dict(zip(headers, values))
 
-        # Use your new CpuCheckEntity!
         cpu_check = checks.Cpu()
         cpu_check.idle = dict_iostat['id']
         cpu_check.system = dict_iostat['sy']
@@ -82,37 +68,44 @@ class MacCollector(_Collector):
             Gets memory information.
         """
 
+        # https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/vm_stat.1.html
         memory_cmd = system.execute_command('vm_stat')
 
-        # Each line have a different data
-        dict_memory = memory_cmd.splitlines()
+        dict_wm_stat = memory_cmd.splitlines()
+        dict_memory = dict()
 
-        # Formating each line
-        for i in range(1, 12):
-            dict_memory[i] = dict_memory[i].replace(' ', '')
-            dict_memory[i] = dict_memory[i].replace('.', '')
-            dict_memory[i] = dict_memory[i].split(':')
+        for i in range(1, len(dict_wm_stat)):
+            dict_wm_stat[i] = dict_wm_stat[i].split(':')
+            dict_wm_stat[i][1] = dict_wm_stat[i][1].replace(' ', '')
+            dict_wm_stat[i][1] = dict_wm_stat[i][1].replace('.', '')
+            dict_memory[str(dict_wm_stat[i][0])] = dict_wm_stat[i][1]
 
         # Getting desired values
-        mem_free = (int(dict_memory[1][1]) + int(dict_memory[4][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_active = int(dict_memory[2][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_inactive = int(dict_memory[3][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_resident = int(dict_memory[5][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
-        mem_swap = int(dict_memory[11][1]) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        mem_free = (int(dict_memory['Pages free']) + int(dict_memory['Pages speculative']))
+        mem_active = int(dict_memory['Pages active'])
+        mem_resident = int(dict_memory['Pages wired down'])
 
-        mem_total = (int(dict_memory[1][1]) + int(dict_memory[4][1]) + int(dict_memory[2][1]) + int(dict_memory[3][1])
-                     + int(dict_memory[5][1])) * float(MacCollector.PAGEBYTES_TO_BYTES)
+        if version.StrictVersion(cr.host.get_current_host().os_version) < version.StrictVersion('10.9.0'):
+            mem_inactive = int(dict_memory['Pages inactive'])
+            mem_swap = int(dict_memory['Pageouts'])
+        else:
+            # On 10.9 and newer, Apple uses the WKdm algorithm.
+            # More details here: http://terpconnect.umd.edu/~barua/matt-compress-tr.pdf
+            mem_inactive = int(dict_memory['Pages inactive']) + int(dict_memory['Pages occupied by compressor'])
+            pages_swap_out = int(dict_memory['Swapouts']) - int(dict_memory['Swapins'])
+            mem_swap = 0 if pages_swap_out < 0 else pages_swap_out
 
-        # Preparing return entity...
+        mem_total = mem_free + mem_active + mem_inactive + mem_resident
+
         memory_check = checks.Memory()
-        memory_check.total = mem_total
-        memory_check.free = mem_free
-        memory_check.active = mem_active
-        memory_check.inactive = mem_inactive
-        memory_check.resident = mem_resident
-        memory_check.swap_size = mem_total
+        memory_check.total = mem_total * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.free = mem_free * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.active = mem_active * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.inactive = mem_inactive * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.resident = mem_resident * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.swap_size = mem_total * float(MacCollector.PAGEBYTES_TO_BYTES)
         memory_check.swap_free = 0
-        memory_check.swap_used = mem_swap
+        memory_check.swap_used = mem_swap * float(MacCollector.PAGEBYTES_TO_BYTES)
 
         return memory_check
 
