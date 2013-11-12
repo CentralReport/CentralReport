@@ -5,8 +5,7 @@
 
 
 --------------------------------------------------------------
-Version Alpha 0.3.0 (Not released yet)
-    Currently in development
+Version Alpha 0.3.0 (November 4th, 2013)
 
     - Feature #58: CentOS distributions Support
 
@@ -48,6 +47,7 @@ Version Alpha 0.3.0 (Not released yet)
 
     - Fix #81: Removed flot.js library and 'dashboard_mac' template
 
+    - Fix #84: Fixed "sudo -n" and "sudo -v" for OS X Mavericks
 
 --------------------------------------------------------------
 Version Alpha 0.2.0 (April 24th, 2013)

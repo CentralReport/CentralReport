@@ -30,7 +30,7 @@ function start_cr(){
     if [ "${CURRENT_OS}" == $"{OS_MAC}" ]; then
         execute_privileged_command launchctl load -w ${STARTUP_PLIST}
     else
-        execute_privileged_command /usr/local/bin/centralreport start
+        execute_privileged_command ${CR_BIN_FILE} start
     fi
 
     RETURN_CODE="$?"
@@ -53,7 +53,7 @@ function start_cr(){
 function stop_cr(){
 
     if [ -f /usr/local/bin/centralreport ]; then
-        execute_privileged_command /usr/local/bin/centralreport stop
+        execute_privileged_command ${CR_BIN_FILE} stop
         RETURN_CODE="$?"
 
         if [ ${RETURN_CODE} -ne "0" ] && [ ${RETURN_CODE} -ne "143" ]; then
@@ -76,7 +76,7 @@ function start_wizard(){
 
     if [ ! "${ARG_S}" ]; then
         printTitle "Starting the CLI wizard..."
-        execute_privileged_command python /usr/local/lib/centralreport/manager.py wizard
+        execute_privileged_command python ${CR_LIB_MANAGER} wizard < /dev/tty
     fi
 }
 
@@ -558,22 +558,15 @@ function create_cr_user(){
             # Getting the last Unique ID available for system users.
             # From: http://superuser.com/questions/553374/find-available-ids-lower-than-500-vis-dscl
             local continue=false
-            local number_used=true
             local fnumber_work_backwards_from=499
             local fnumber=${fnumber_work_backwards_from}
             local user_id=0
-            until [ ${continue} = true ] ; do
+            until [ ${continue} == true ] ; do
                 cr_check_user=$(dscl . -list /Users UniqueID \
                                 | awk '{print $2, "\t", $1}' \
                                 | sort -ug | grep -c "${fnumber}")
 
                 if [ ${cr_check_user} -gt 0 ]; then
-                    number_used=true
-                else
-                    number_used=false
-                fi
-
-                if [ ${number_used} = true ] ; then
                     fnumber=`expr ${fnumber} - 1`
                 else
                     user_id="${fnumber}"
@@ -613,23 +606,16 @@ function create_cr_user(){
 
                     # We get the last Primary Group ID available for system groups.
                     continue=false
-                    number_used=true
                     fnumber_work_backwards_from=499
                     fnumber=${fnumber_work_backwards_from}
                     GROUP_UNIQUE_ID=0
-                    until [ ${continue} = true ] ; do
+                    until [ ${continue} == true ] ; do
                         cr_check_group=$(dscl . -list /Users UniqueID \
                                         | awk '{print $2, "\t", $1}' \
                                         | sort -ug \
                                         | grep -c "${fnumber}")
 
                         if [ ${cr_check_group} -gt 0 ] ; then
-                            number_used=true
-                        else
-                            number_used=false
-                        fi
-
-                        if [ ${number_used} = true ] ; then
                             fnumber=`expr ${fnumber} - 1`
                         else
                             GROUP_UNIQUE_ID="${fnumber}"
@@ -665,8 +651,8 @@ function create_cr_user(){
 
                 # Checking if the group has been created
                 RETURN_CODE=$(verify_cr_group)
-                logFile "GroupID: ${GROUP_UNIQUE_ID}"
-                if [ "${RETURN_CODE}" -eq 0 ]; then
+                logFile "GroupID: ${RETURN_CODE}"
+                if [ ${RETURN_CODE} -eq 0 ]; then
                     logFile "Error creating the CentralReport group."
                     return 2
                 fi
@@ -816,6 +802,7 @@ function verify_cr_group(){
         UGID=$(dscl . -list /Groups PrimaryGroupID | grep _centralreport | awk '{print $2}')
         if [ ! -z "${UGID}" ]; then
             echo "${UGID}"
+            return
         fi
     fi
 
