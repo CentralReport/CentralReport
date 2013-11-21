@@ -78,10 +78,9 @@ class CentralReport(Daemon):
         signal.signal(signal.SIGTERM, self.signal_handler)
         signal.signal(signal.SIGINT, self.signal_handler)
 
-        CentralReport.starting_date = datetime.datetime.now()  # Starting date
-        CentralReport.configuration = Config()  # Getting config object
+        CentralReport.starting_date = datetime.datetime.now()
+        CentralReport.configuration = Config()
 
-        # Getting data about the current host...
         host.get_current_host()
 
         # The log level can be personalized in the config file
