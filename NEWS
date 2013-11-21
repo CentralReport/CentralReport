@@ -4,7 +4,7 @@
 # ------------------------------------------------------------
 
 --------------------------------------------------------------
-Version Alpha 0.4.0 (Not released yet)
+Version Alpha 0.4.0 (November 22nd, 2013)
 
     - Improvement #88: New host module and fixed memory collector for OS X 10.9 Mavericks
         * The host data are now obtained in a specific module (host.py)
