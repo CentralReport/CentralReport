@@ -9,9 +9,7 @@
 
 import ConfigParser
 import os
-import platform
 import uuid
-import sys
 
 from cr import log
 
@@ -35,20 +33,6 @@ class Config:
 
     # Default interval between two checks (use this if not available in the config file)
     CR_CONFIG_DEFAULT_CHECKS_INTERVAL = int(60)
-
-    # Current host
-    HOST_CURRENT = ''
-
-    # Some hosts...
-    HOST_MAC = 'Mac OS X'
-    HOST_LINUX = 'Linux'
-    HOST_DEBIAN = 'Debian'
-    HOST_UBUNTU = 'Ubuntu'
-    HOST_REDHAT = 'RedHat'
-    HOST_FEDORA = 'Fedora'
-    HOST_ARCH = 'Arch Linux'
-    HOST_CENTOS = 'CentOS'
-    HOST_OTHER = 'Unsupported'
 
     # CentralReport pid file
     if CR_CONFIG_ENABLE_DEBUG_MODE:
@@ -96,14 +80,6 @@ class Config:
         """
             Constructor
         """
-
-        Config.determine_current_host()
-
-        if Config.HOST_CURRENT == Config.HOST_MAC:
-            log.log_debug('Mac config')
-        else:
-            log.log_debug('Linux config')
-
         # Managing config file
         if os.path.isfile(Config.CR_CONFIG_FULL_PATH):
             log.log_debug('Configuration file: Found. Reading it.')
@@ -207,52 +183,3 @@ class Config:
             Config._CR_CONFIG_VALUES[section][variable] = value
         except:
             raise NameError('Section or Variable not found! (%s/%s)' % (section, variable))
-
-    @staticmethod
-    def determine_current_host():
-        """
-            Detecting current OS...
-        """
-
-        kernel = platform.system()
-
-        if kernel.startswith('Darwin'):
-            Config.HOST_CURRENT = Config.HOST_MAC
-        elif kernel.startswith('Linux'):
-            Config.HOST_CURRENT = Config.HOST_LINUX
-
-            # On va essayer d'affiner en fonction des distributions
-
-            # Utilisation de la liste de Novell pour reconnaitre des distrib Linux
-            # http://www.novell.com/coolsolutions/feature/11251.html - Deprecated here
-
-            # Getting OS Name and OS version
-            if sys.version_info[:2] < (2, 6):  # Python < 2.6
-                from platform import dist
-            else:
-                from platform import linux_distribution as dist
-
-            # TODO More distros will be added as soon as we need them
-            # List of major linux distrib : http://distrowatch.com/dwres.php?resource=popularity
-
-            if dist()[0] == "Ubuntu":
-                # Ubuntu
-                Config.HOST_CURRENT = Config.HOST_UBUNTU
-            elif dist()[0] == "debian":
-                # Debian
-                Config.HOST_CURRENT = Config.HOST_DEBIAN
-            #elif dist()[0] == "Fedora":
-                # Fedora
-            #    Config.HOST_CURRENT = Config.HOST_FEDORA
-            #elif dist()[0] == "redhat" or dist()[0] == 'Red Hat Enterprise Linux Server':
-                # RedHat
-            #    Config.HOST_CURRENT = Config.HOST_REDHAT
-            #elif os.path.isfile('/etc/arch-release'):
-                # ArchLinux
-            #    Config.HOST_CURRENT = Config.HOST_ARCH
-            elif dist()[0] == "CentOS":
-                # CentOS
-                Config.HOST_CURRENT = Config.HOST_CENTOS
-            else:
-                # No match, default
-                Config.HOST_CURRENT = Config.HOST_OTHER
