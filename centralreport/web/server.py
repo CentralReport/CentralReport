@@ -14,6 +14,8 @@ import threading
 
 # By che: Temporary section. Will be improved soon.
 # Testing importing zip libraries...
+import cr.host
+
 sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/jinja2-2.6.zip'))
 sys.path.insert(0, os.path.abspath(__file__ + '/../../libs/cherrypy-3.2.2.zip'))
 
@@ -232,7 +234,7 @@ class Api:
 
                     tmpl_vars['load_last_one'] = Checks.last_check_loadAverage.last1m
                     tmpl_vars['load_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
-                        Checks.hostEntity.cpu_count)
+                        cr.host.get_current_host().cpu_count)
 
                     if int(tmpl_vars['load_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
                         tmpl_vars['load_state'] = Api.STATE_ALERT
@@ -290,17 +292,17 @@ class Pages:
         tmpl_vars = dict()
 
         # Host information
-        tmpl_vars['hostname'] = Checks.hostEntity.hostname
-        tmpl_vars['os_name'] = Checks.hostEntity.os_name
-        tmpl_vars['os_version'] = Checks.hostEntity.os_version
+        tmpl_vars['hostname'] = cr.host.get_current_host().hostname
+        tmpl_vars['os_name'] = cr.host.get_current_host().os_name
+        tmpl_vars['os_version'] = cr.host.get_current_host().os_version
 
-        if Config.HOST_CURRENT == Config.HOST_MAC:
+        if cr.host.get_current_host().os == cr.host.OS_MAC:
             tmpl_vars['host_os'] = 'MAC'
-        elif Config.HOST_CURRENT == Config.HOST_UBUNTU:
+        elif cr.host.get_current_host().os == cr.host.OS_UBUNTU:
             tmpl_vars['host_os'] = 'UBUNTU'
-        elif Config.HOST_CURRENT == Config.HOST_DEBIAN:
+        elif cr.host.get_current_host().os == cr.host.OS_DEBIAN:
             tmpl_vars['host_os'] = 'DEBIAN'
-        elif Config.HOST_CURRENT == Config.HOST_CENTOS:
+        elif cr.host.get_current_host().os == cr.host.OS_CENTOS:
             tmpl_vars['host_os'] = 'CENTOS'
 
         tmpl_vars['CR_version'] = Config.CR_VERSION
@@ -316,7 +318,7 @@ class Pages:
             tmpl_vars['cpu_percent'] = 100 - int(Checks.last_check_cpu.idle)
             tmpl_vars['cpu_user'] = Checks.last_check_cpu.user
             tmpl_vars['cpu_system'] = Checks.last_check_cpu.system
-            tmpl_vars['cpu_count'] = Checks.hostEntity.cpu_count
+            tmpl_vars['cpu_count'] = cr.host.get_current_host().cpu_count
 
             if int(tmpl_vars['cpu_percent']) >= int(Config.get_config_value('Alerts', 'cpu_alert')):
                 tmpl_vars['cpu_alert'] = True
@@ -380,7 +382,7 @@ class Pages:
         if Checks.last_check_loadAverage is not None:
             tmpl_vars['loadaverage'] = Checks.last_check_loadAverage.last1m
             tmpl_vars['loadaverage_percent'] = (float(Checks.last_check_loadAverage.last1m) * 100) / int(
-                Checks.hostEntity.cpu_count)
+                cr.host.get_current_host().cpu_count)
 
             if int(tmpl_vars['loadaverage_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
                 tmpl_vars['load_alert'] = True

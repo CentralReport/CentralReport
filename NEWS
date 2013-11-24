@@ -3,6 +3,12 @@
 # More at: https://github.com/CentralReport/CentralReport/
 # ------------------------------------------------------------
 
+--------------------------------------------------------------
+Version Alpha 0.4.0 (November 22nd, 2013)
+
+    - Improvement #88: New host module and fixed memory collector for OS X 10.9 Mavericks
+        * The host data are now obtained in a specific module (host.py)
+        * The memory collector works well on OS X 10.9, with the memory compression
 
 --------------------------------------------------------------
 Version Alpha 0.3.0 (November 4th, 2013)
