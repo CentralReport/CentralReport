@@ -16,4 +16,8 @@ Vagrant.configure("2") do |config|
     cr_centos_6_4_64.vm.box_url = "http://static.centralreport.net/vagrant/centos_6_4_64.box"
   end
 
+  config.vm.define "cr_ubuntu_server_12_04_64" do |cr_ubuntu_server_12_04_64|
+    cr_ubuntu_server_12_04_64.vm.box = "cr_ubuntu_server_12_04_64"
+    cr_ubuntu_server_12_04_64.vm.box_url = "http://static.centralreport.net/vagrant/ubuntu_server_12_04_x64.box"
+  end
 end
