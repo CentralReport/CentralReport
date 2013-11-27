@@ -28,7 +28,7 @@ function system_test_installer(){
         return 2
     fi
 
-    printLightBox yellow " The uninstaller has return the success code"
+    printLightBox yellow " The installer has return the success code"
     return 0
 
 }
