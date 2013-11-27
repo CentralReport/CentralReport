@@ -17,7 +17,7 @@
 #
 function python_perform_unit_tests(){
 
-    python ../centralreport/tests.py &> "./results/${RESULT_DIRECTORY}/python_unitttest.txt"
+    python ../centralreport/tests.py
 
     if [ "$?" -ne 0 ]; then
         printLightBox red " Error during executing the Python unit tests!"

@@ -12,11 +12,8 @@ python:
 
 # Test definitions
 
-before_script: "sudo ./install.sh -s"
 script:
-  - "service centralreport status"
-  - "python centralreport/tests.py"
-after_script: "sudo ./uninstall.sh -s"
+  - "./tests/run_tests.sh -p"
 after_failure:
   - "cat /tmp/centralreport_error.log"
   - "cat /tmp/centralreport_install.log"

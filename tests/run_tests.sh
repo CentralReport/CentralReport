@@ -68,6 +68,8 @@ if [ ${TEST_ERRORS} == true ]; then
     exit 1
 fi
 
+rm -R "results/${RESULT_DIRECTORY}"
+
 echo " "
 printBox blue "All tests done successfully!"
 exit 0
