@@ -24,7 +24,7 @@ function vagrant_test_vm(){
     fi
 
     vagrant up $1
-    vagrant ssh $1 --command "/vagrant/tests/run_tests.sh -p;" 1>>"${ERROR_FILE}" 2>>"${ERROR_FILE}"
+    vagrant ssh $1 --command "/vagrant/tests/run_tests.sh -p -s;" 1>>"${ERROR_FILE}" 2>>"${ERROR_FILE}"
 
     local RETURN_CODE="$?"
 

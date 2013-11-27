@@ -8,10 +8,13 @@
 # ------------------------------------------------------------
 
 # Importing scripts...
-cd "$(dirname "$0")"
+CURRENT_DIR=$(dirname "$0")
+cd ${CURRENT_DIR}
+
 source ../bash/log.inc.sh
 source lib/functions.inc.sh
 source lib/python.inc.sh
+source lib/system.inc.sh
 source lib/vagrant.inc.sh
 
 TEST_ERRORS=false
@@ -19,6 +22,7 @@ ERROR_FILE="/tmp/centralreport_tests.log"
 ERROR_METHOD="TESTS"
 
 clear
+init_log_file
 logFile "-------------- Starting CentralReport tests  --------------"
 
 printBox blue  "---------------------------- CentralReport tests ------------------------------| \
@@ -33,15 +37,18 @@ if [ ${ARG_WRONG} == true ]; then
     exit 1
 fi
 
-if [ ${ARG_A} == true ]; then
-    ARG_P=true
-    ARG_V=true
-fi
-
 if [ ${ARG_P} == true ]; then
     echo " "
     printTitle "Performing Python unit tests..."
     python_perform_unit_tests
+
+    if [ "$?" -ne 0 ]; then
+        TEST_ERRORS=true
+    fi
+fi
+
+if [ ${ARG_S} == true ]; then
+    system_test_suite 2>&1 | tee -a "${ERROR_FILE}"
 
     if [ "$?" -ne 0 ]; then
         TEST_ERRORS=true

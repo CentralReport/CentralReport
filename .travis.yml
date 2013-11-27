@@ -13,7 +13,7 @@ python:
 # Test definitions
 
 script:
-  - "./tests/run_tests.sh -p"
+  - "sudo ./tests/run_tests.sh -p -s"
 after_failure:
   - "cat /tmp/centralreport_error.log"
   - "cat /tmp/centralreport_install.log"
