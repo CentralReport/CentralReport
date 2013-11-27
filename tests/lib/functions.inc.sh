@@ -26,9 +26,9 @@ function get_arguments(){
     # http://wiki.bash-hackers.org/howto/getopts_tutorial
     while getopts ":apv" opt; do
         case $opt in
-            a) ARG_A=true; echo "All tests will be performed"; ;;
-            p) ARG_P=true; echo "Python unit tests will be performed"; ;;
-            v) ARG_V=true; echo "Vagrant tests will be performand"; ;;
+            a) ARG_A=true; logInfo "All tests will be performed"; ;;
+            p) ARG_P=true; logInfo "Python unit tests will be performed"; ;;
+            v) ARG_V=true; logInfo "Vagrant tests will be performand"; ;;
             \?) ARG_WRONG=true ;;
         esac
     done

@@ -15,14 +15,13 @@ source lib/python.inc.sh
 source lib/vagrant.inc.sh
 
 TEST_ERRORS=false
-
-HOUR=$(date +%H%M)
-DAY=$(date +%Y%m%d)
-RESULT_DIRECTORY="${DAY}-${HOUR}"
+ERROR_FILE="/tmp/centralreport_tests.log"
+ERROR_METHOD="TESTS"
 
 clear
+logFile "-------------- Starting CentralReport tests  --------------"
 
-printBox blue  "---------------------------- CentralReport Tests ------------------------------| \
+printBox blue  "---------------------------- CentralReport tests ------------------------------| \
                 | \
                 This script will perform the selected tests (Unit or Vagrant). | \
                 All tests may take a few minutes. You can abort them with CTRL+C."
@@ -33,9 +32,6 @@ if [ ${ARG_WRONG} == true ]; then
     show_usage
     exit 1
 fi
-
-# This directory will contains error logs
-mkdir "results/${RESULT_DIRECTORY}"
 
 if [ ${ARG_A} == true ]; then
     ARG_P=true
@@ -55,7 +51,7 @@ fi
 if [ ${ARG_V} == true ]; then
     echo " "
     printTitle "Starting tests on multiple environments using Vagrant..."
-    vagrant_perform_tests
+    vagrant_perform_tests 2>&1 | tee -a "${ERROR_FILE}"
 
     if [ "$?" -ne 0 ]; then
         TEST_ERRORS=true
@@ -67,8 +63,6 @@ if [ ${TEST_ERRORS} == true ]; then
                   Please read previous log for more details."
     exit 1
 fi
-
-rm -R "results/${RESULT_DIRECTORY}"
 
 echo " "
 printBox blue "All tests done successfully!"

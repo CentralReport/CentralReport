@@ -17,13 +17,19 @@
 #
 function python_perform_unit_tests(){
 
-    python ../centralreport/tests.py
+    python ../centralreport/tests.py 2>&1 | tee -a "${ERROR_FILE}"
 
     if [ "$?" -ne 0 ]; then
-        printLightBox red " Error during executing the Python unit tests!"
+        local ERROR_MESSAGE="Error during executing the Python unit tests!"
+
+        logFile "${ERROR_MESSAGE}"
+        printLightBox red "${ERROR_MESSAGE}"
         return 1
     fi
 
-    printLightBox yellow " All Python unit tests are OK"
+    local OK_MESSAGE="All Python unit tests are OK"
+
+    logFile "${OK_MESSAGE}"
+    printLightBox yellow "${OK_MESSAGE}"
     return 0
 }

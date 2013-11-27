@@ -10,6 +10,9 @@
 # Logs will be written in this file, it doesn't require administrative privileges.
 ERROR_FILE="/tmp/centralreport_install.log"
 
+# This word will be written at the beginning of each new line in the log file.
+ERROR_METHOD="INSTALL"
+
 #
 # Writes a message in the log file
 #
@@ -19,7 +22,7 @@ ERROR_FILE="/tmp/centralreport_install.log"
 #
 function logFile() {
     CURRENT_DATE=$(date '+%d/%m/%Y %H:%M:%S')
-    echo -e "INSTALL\t ${CURRENT_DATE}\t $*" >> ${ERROR_FILE}
+    echo -e "${ERROR_METHOD}\t ${CURRENT_DATE}\t $*" >> ${ERROR_FILE}
 }
 
 #
