@@ -20,7 +20,7 @@ function system_test_installer(){
     logInfo "Testing the bash installer..."
 
     cd ../
-    ./install.sh -s 1>/dev/null | tee -a "${ERROR_FILE}"
+    ./install.sh -k -s 1>/dev/null | tee -a "${ERROR_FILE}"
     cd tests/
 
     if [ "$?" -ne 0 ]; then
@@ -46,7 +46,7 @@ function system_test_uninstaller(){
     logInfo "Testing the bash uninstaller..."
 
     cd ../
-    ./uninstall.sh -s 1>/dev/null | tee -a "${ERROR_FILE}"
+    ./uninstall.sh -k -s 1>/dev/null | tee -a "${ERROR_FILE}"
     cd tests/
 
     if [ "$?" -ne 0 ]; then

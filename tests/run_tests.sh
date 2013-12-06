@@ -37,6 +37,15 @@ if [ ${ARG_WRONG} == true ]; then
     exit 1
 fi
 
+if [ $(uname -s) == "Darwin" ] && [ ${ARG_S} == true ]; then
+    # On OS X, we must start a sudo session to perform system tests
+    sudo -v -p "Please enter your password to start the tests on this Mac: "
+    if [ $? -ne 0 ]; then
+        logError "Unable to use root privileges!"
+        exit 2
+    fi
+fi
+
 if [ ${ARG_P} == true ]; then
     echo " "
     printTitle "Performing Python unit tests..."
