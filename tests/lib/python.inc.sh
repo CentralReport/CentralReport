@@ -27,9 +27,9 @@ function python_perform_unit_tests(){
         return 1
     fi
 
-    local OK_MESSAGE="All Python unit tests are OK"
+    local OK_MESSAGE=" All Python unit tests are OK"
 
     logFile "${OK_MESSAGE}"
-    printLightBox yellow "${OK_MESSAGE}"
+    printLightBox green "${OK_MESSAGE}"
     return 0
 }

@@ -28,7 +28,7 @@ function system_test_installer(){
         return 2
     fi
 
-    printLightBox yellow " The installer has return the success code"
+    printLightBox green " The installer has return the success code"
     return 0
 
 }
@@ -54,7 +54,7 @@ function system_test_uninstaller(){
         return 2
     fi
 
-    printLightBox yellow " The uninstaller has return the success code"
+    printLightBox green " The uninstaller has return the success code"
     return 0
 
 }
@@ -79,11 +79,11 @@ function system_test_status(){
     fi
 
     if [ "${CR_PID}" -eq 0 ]; then
-        printLightBox red "CentralReport is not running!"
+        printLightBox red " CentralReport is not running!"
         return 1
     fi
 
-    printLightBox yellow "CentralReport is running with PID ${CR_PID}"
+    printLightBox green "CentralReport is running with PID ${CR_PID}"
     return 0
 
 }

@@ -35,7 +35,7 @@ function vagrant_test_vm(){
         return 2
     fi
 
-    printLightBox yellow " All tests done successfully on $1!"
+    printLightBox green " All tests done successfully on $1!"
     return 0
 }
 
@@ -75,6 +75,6 @@ function vagrant_perform_tests(){
         return 1
     fi
 
-    printLightBox yellow " All Vagrant boxes are tested successfully!"
+    printLightBox green " All Vagrant boxes are tested successfully!"
     return 0
 }
