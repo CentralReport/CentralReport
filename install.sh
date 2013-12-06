@@ -77,7 +77,9 @@ fi
 
 if [ "${ARG_WRONG}" == true ]; then
     printBox red "ERROR! Unknown argument| \
-                  Use: install.sh [-s]"
+                  Use: install.sh| \
+                  -k Keep the sudo session alive after the installation| \
+                  -s Silent install"
 else
     INSTALL_CONFIRMED=false
 
@@ -153,7 +155,7 @@ else
     fi
 fi
 
-if [ ${CURRENT_OS} == ${OS_MAC} ]; then
+if [ ${CURRENT_OS} == ${OS_MAC} ] && [ "${ARG_K}" == false ]; then
     # Remove sudo privileges
     sudo -k
 fi

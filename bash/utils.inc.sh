@@ -16,9 +16,13 @@
 #
 function get_arguments(){
 
+    ARG_K=false
+    ARG_S=false
+
     # http://wiki.bash-hackers.org/howto/getopts_tutorial
-    while getopts ":s" opt; do
+    while getopts ":ks" opt; do
         case $opt in
+            k) ARG_K=true ;;
             s) ARG_S=true ;;
             \?) ARG_WRONG=true ;;
         esac

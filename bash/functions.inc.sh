@@ -74,7 +74,7 @@ function stop_cr(){
 #
 function start_wizard(){
 
-    if [ ! "${ARG_S}" ]; then
+    if [ "${ARG_S}" == false ]; then
         printTitle "Starting the CLI wizard..."
         execute_privileged_command python ${CR_LIB_MANAGER} wizard < /dev/tty
     fi
