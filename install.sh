@@ -15,6 +15,8 @@ source bash/functions.inc.sh
 
 source bash/010_uninstaller.inc.sh
 
+bit_error=0
+
 get_arguments $*
 
 logFile "-------------- Starting CentralReport installer  --------------"
@@ -80,6 +82,7 @@ if [ "${ARG_WRONG}" == true ]; then
                   Use: install.sh| \
                   -k Keep the sudo session alive after the installation| \
                   -s Silent install"
+    exit 1
 else
     INSTALL_CONFIRMED=false
 
@@ -97,8 +100,6 @@ else
     fi
 
     if [ "${INSTALL_CONFIRMED}" == true ]; then
-        bit_error=0
-
         if [ ${CURRENT_OS} == ${OS_MAC} ]; then
             logInfo "Processing... CentralReport will be installed on this Mac."
 
@@ -161,4 +162,9 @@ if [ ${CURRENT_OS} == ${OS_MAC} ] && [ "${ARG_K}" == false ]; then
 fi
 
 logFile " -- End of the install program -- "
+
+if [ ${bit_error} -eq 1 ]; then
+    exit 1
+fi
+
 exit 0
