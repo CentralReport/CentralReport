@@ -23,9 +23,12 @@ function get_arguments(){
     ARG_WRONG=false
 
     echo " "
+    OPTIONS_COUNT=0
 
     # http://wiki.bash-hackers.org/howto/getopts_tutorial
     while getopts ":apsv" opt; do
+        OPTIONS_COUNT=$((OPTIONS_COUNT+1))
+
         case $opt in
             a) ARG_A=true; logInfo "All tests will be performed"; ;;
             p) ARG_P=true; logInfo "Python unit tests will be performed"; ;;
@@ -34,6 +37,16 @@ function get_arguments(){
             \?) ARG_WRONG=true ;;
         esac
     done
+
+    # Default value if no option is given
+    if [ "${OPTIONS_COUNT}" -eq 0 ]; then
+        ARG_A=true
+        printBox yellow "All tests will be performed, including Vagrant.| \
+                         Performing tests on virtual machines with Vagrant may take several minutes.| \
+                         You can use the -h argument to view all available tests. || \
+                         Tests will start in 10 seconds. Press CTRL+C to cancel."
+        sleep 10;
+    fi
 
     if [ ${ARG_A} == true ]; then
         ARG_P=true
