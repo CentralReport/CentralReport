@@ -24,13 +24,14 @@ function vagrant_test_vm(){
     fi
 
     vagrant up $1
-    vagrant ssh $1 --command "/vagrant/tests/run_tests.sh -p -s;" 1>>"${ERROR_FILE}" 2>>"${ERROR_FILE}"
+    VAGRANT_TEST_LOG=$(vagrant ssh $1 --command "/vagrant/tests/run_tests.sh -p -s;")
+    VAGRANT_TEST_RETURN="$?"
 
-    local RETURN_CODE="$?"
+    echo "${VAGRANT_TEST_LOG}" >> "${ERROR_FILE}"
 
     vagrant destroy $1 --force
 
-    if [ ${RETURN_CODE} -ne 0 ]; then
+    if [ ${VAGRANT_TEST_RETURN} -ne 0 ]; then
         printLightBox red " Error during executing the Python unit tests on $1"
         return 2
     fi

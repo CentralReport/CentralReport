@@ -17,9 +17,13 @@
 #
 function python_perform_unit_tests(){
 
-    python ../centralreport/tests.py 2>&1 | tee -a "${ERROR_FILE}"
+    PYTHON_TEST_LOG=$(python ../centralreport/tests.py 2>&1)
+    PYTHON_TEST_RETURN="$?"
 
-    if [ "$?" -ne 0 ]; then
+    echo "${PYTHON_TEST_LOG}"
+    echo "${PYTHON_TEST_LOG}" >> "${ERROR_FILE}"
+
+    if [ "${PYTHON_TEST_RETURN}" -ne 0 ]; then
         local ERROR_MESSAGE="Error during executing the Python unit tests!"
 
         logFile "${ERROR_MESSAGE}"

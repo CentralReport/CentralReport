@@ -20,10 +20,14 @@ function system_test_installer(){
     logInfo "Testing the bash installer..."
 
     cd ../
-    ./install.sh -k -s 1>/dev/null | tee -a "${ERROR_FILE}"
+    SYSTEM_TEST_LOG=$(./install.sh -k -s 1>/dev/null)
+    SYSTEM_TEST_RETURN="$?"
     cd tests/
 
-    if [ "$?" -ne 0 ]; then
+    echo "${SYSTEM_TEST_LOG}"
+    echo "${SYSTEM_TEST_LOG}" >> "${ERROR_FILE}"
+
+    if [ "${SYSTEM_TEST_RETURN}" -ne 0 ]; then
         printLightBox red " Error validating the bash installer!"
         return 2
     fi
@@ -46,10 +50,14 @@ function system_test_uninstaller(){
     logInfo "Testing the bash uninstaller..."
 
     cd ../
-    ./uninstall.sh -k -s 1>/dev/null | tee -a "${ERROR_FILE}"
+    SYSTEM_TEST_LOG=$(./uninstall.sh -k -s 1>/dev/null)
+    SYSTEM_TEST_RETURN="$?"
     cd tests/
 
-    if [ "$?" -ne 0 ]; then
+    echo "${SYSTEM_TEST_LOG}"
+    echo "${SYSTEM_TEST_LOG}" >> "${ERROR_FILE}"
+
+    if [ "${SYSTEM_TEST_RETURN}" -ne 0 ]; then
         printLightBox red " Error validating the bash uninstaller!"
         return 2
     fi

@@ -67,7 +67,7 @@ fi
 if [ ${ARG_V} == true ]; then
     echo " "
     printTitle "Starting tests on multiple environments using Vagrant..."
-    vagrant_perform_tests 2>&1 | tee -a "${ERROR_FILE}"
+    vagrant_perform_tests
 
     if [ "$?" -ne 0 ]; then
         TEST_ERRORS=true
@@ -75,6 +75,7 @@ if [ ${ARG_V} == true ]; then
 fi
 
 if [ ${TEST_ERRORS} == true ]; then
+    echo " "
     printBox red "Tests failed! | \
                   Please read previous log for more details."
     exit 1

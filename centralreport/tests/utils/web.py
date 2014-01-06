@@ -16,10 +16,10 @@ class CrCheckPortTest(unittest.TestCase):
     """
 
     def test_success(self):
-        self.assertEqual(True, cr.utils.web.check_port('centralreport.net', 80))
+        self.assertEqual(True, cr.utils.web.check_port('online.centralreport.net', 80))
 
     def test_fail(self):
-        self.assertEqual(False, cr.utils.web.check_port('centralreport.net', 50, 1))
+        self.assertEqual(False, cr.utils.web.check_port('online.centralreport.net', 50, 1))
 
 
 def suite():

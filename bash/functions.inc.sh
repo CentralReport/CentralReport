@@ -686,12 +686,12 @@ function create_cr_user(){
             fi
 
         else
-            useradd --system \
-                    --home /usr/local/lib/centralreport/ \
-                    --shell /bin/bash \
-                    --user-group \
-                    --comment "CentralReport Daemon" \
-                    centralreport
+            execute_privileged_command useradd --system \
+               --home /usr/local/lib/centralreport/ \
+               --shell /bin/bash \
+               --user-group \
+               --comment \"CentralReport Daemon\" \
+               centralreport
 
             RETURN_CODE="$?"
 

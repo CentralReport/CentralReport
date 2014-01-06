@@ -138,16 +138,17 @@ function displayAndExec() {
 #
 function execute_privileged_command() {
 
-    if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
+    TEST_SUDO=$(which sudo)
+
+    if [ "$?" -eq 0 ]; then
         sudo $*
     else
-        # On other system, the current user is already root.
-        $*
+        # If sudo is not available, we are already connected as root.
+        eval "$*"
     fi
 
-    # Returns the result of the last command
+    # Returns the result of the executed command
     return "$?"
-
 }
 
 #
@@ -165,5 +166,4 @@ function checkYesNoAnswer() {
         y|Y|yes|YES|Yes) return 0 ;;
         *)  return 1 ;;
     esac
-
 }
