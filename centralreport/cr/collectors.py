@@ -16,6 +16,7 @@ from cr import system
 import cr.host
 from cr.entities import checks
 from cr.entities import host
+from cr.utils import text
 
 
 class _Collector:
@@ -299,28 +300,52 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
+         # Getting all disks by UUID
+        disks_by_uuid = {}
+        list_disks_uuid = os.listdir('/dev/disk/by-uuid/')
+
+        # This associates UUID with the partition name
+        for disk in list_disks_uuid:
+            disks_by_uuid[disk] = os.path.realpath(os.path.join('/dev/disk/by-uuid/', disk))
+
+        # The "df" command is used to get the size of each disk
         df_dict = system.execute_command('df -kP')
         df_split = df_dict.splitlines()
 
-        list_disks = host.Disks()  # Return new entity
+        list_disks = host.Disks()
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
                 line_split = df_split[i].split()
 
-                # Getting info in MB (Linux count with '1K block' unit)
-                disk_free = int(line_split[3]) * 1024
-                disk_total = int(line_split[1]) * 1024
-                disk_used = int(line_split[2]) * 1024
+                # On Linux, "df" can return two name possibilities:
+                # - /dev/disk/by-uuid/(uuid)
+                # - /dev/(partition_name)
+                # We keep only the last part
+                disk_id_dict = line_split[0].split('/')
+                disk_id = disk_id_dict[-1]
 
-                # Using new check entity
+                # Default values whenever the disk_id is not found in the uuid dictionary.
+                disk_name = disk_id
+                disk_uuid = ''
+
+                if disk_id in disks_by_uuid:
+                    disk_name = disks_by_uuid[disk_id]
+                    disk_uuid = disk_id
+                else:
+                    for key, value in disks_by_uuid:
+                        if value == disk_id:
+                            disk_name = value
+                            disk_uuid = key
+
                 check_disk = checks.Disk()
-                check_disk.date = datetime.datetime.now()
-                check_disk.name = line_split[0]
-                check_disk.unix_name = line_split[0]
-                check_disk.size = disk_total
-                check_disk.used = disk_used
-                check_disk.free = disk_free
+                check_disk.unix_name = text.remove_specials_characters(disk_name)
+                check_disk.name = text.remove_specials_characters(disk_name.replace('/dev/', ''))
+
+                # Linux count with '1K block' unit
+                check_disk.size = int(line_split[1]) * 1024
+                check_disk.used = int(line_split[2]) * 1024
+                check_disk.free = int(line_split[3]) * 1024
 
                 list_disks.checks.append(check_disk)
 
