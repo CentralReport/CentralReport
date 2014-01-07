@@ -4,6 +4,12 @@
 # ------------------------------------------------------------
 
 --------------------------------------------------------------
+Version Alpha 0.5.0 (Not released yet)
+
+    - Improvement #92: Updated disk collector for Linux
+        * Disks are now gotten by their UUID, and their Linux names are displayed.
+
+--------------------------------------------------------------
 Version Alpha 0.4.0 (November 22nd, 2013)
 
     - Improvement #88: New host module and fixed memory collector for OS X 10.9 Mavericks
