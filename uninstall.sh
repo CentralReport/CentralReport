@@ -15,6 +15,8 @@ source bash/functions.inc.sh
 
 source bash/010_uninstaller.inc.sh
 
+bit_error=0
+
 get_arguments $*
 
 logFile "-------------- Starting CentralReport uninstaller  --------------"
@@ -52,7 +54,10 @@ fi
 
 if [ "${ARG_WRONG}" == true ]; then
     printBox red "ERROR! Unknown argument| \
-                  Use: uninstall.sh [-s]"
+                  Use: uninstall.sh| \
+                  -k Keep the sudo session alive after the uninstallation|\
+                  -s Silent uninstall"
+    exit 1
 else
     UNINSTALL_CONFIRMED=false
 
@@ -70,8 +75,6 @@ else
     fi
 
     if [ "${UNINSTALL_CONFIRMED}" == true ]; then
-        bit_error=0
-
         if [ ${CURRENT_OS} == ${OS_MAC} ]; then
             logInfo "Processing... CentralReport will be removed from this Mac."
 
@@ -127,10 +130,15 @@ else
     fi
 fi
 
-if [ "${CURRENT_OS}" == "${OS_MAC}" ]; then
+if [ "${CURRENT_OS}" == "${OS_MAC}" ] && [ "${ARG_K}" == false ]; then
     # Remove sudo privileges
     sudo -k
 fi
 
 logFile " -- End of the uninstall program -- "
+
+if [ ${bit_error} -eq 1 ]; then
+    exit 1
+fi
+
 exit 0
