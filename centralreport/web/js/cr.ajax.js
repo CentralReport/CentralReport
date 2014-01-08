@@ -302,7 +302,7 @@ var updateLastCheck = function () {
 
             // Uptime
             $('#span_uptime_full_text').text(data['uptime_full_text']);
-            $('#span_uptime_seconds_values').text(data['uptime_seconds_values']);
+            $('#span_uptime_seconds_value').text(data['uptime_seconds']);
             $('#span_uptime_start_date_value').text(data['start_date']);
             $('#div_uptime_box').fadeOut(300).fadeIn(300);
         }

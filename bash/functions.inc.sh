@@ -74,7 +74,7 @@ function stop_cr(){
 #
 function start_wizard(){
 
-    if [ ! "${ARG_S}" ]; then
+    if [ "${ARG_S}" == false ]; then
         printTitle "Starting the CLI wizard..."
         execute_privileged_command python ${CR_LIB_MANAGER} wizard < /dev/tty
     fi
@@ -686,12 +686,12 @@ function create_cr_user(){
             fi
 
         else
-            useradd --system \
-                    --home /usr/local/lib/centralreport/ \
-                    --shell /bin/bash \
-                    --user-group \
-                    --comment "CentralReport Daemon" \
-                    centralreport
+            execute_privileged_command useradd --system \
+               --home /usr/local/lib/centralreport/ \
+               --shell /bin/bash \
+               --user-group \
+               --comment "CentralReport_daemon" \
+               centralreport
 
             RETURN_CODE="$?"
 
