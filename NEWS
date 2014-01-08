@@ -8,6 +8,9 @@ Version Alpha 0.5.0 (Not released yet)
 
     - Improvement #77: Added support for unit testing and behaviors tests
 
+    - Improvement #92: Updated disk collector for Linux
+        * Disks are now gotten by their UUID, and their Linux names are displayed.
+
     - Fix #93: Fixed uptime displayed on the web server
         * Seconds are now refreshed in uptime data
 
