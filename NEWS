@@ -8,6 +8,9 @@ Version Alpha 0.5.0 (Not released yet)
 
     - Improvement #77: Added support for unit testing and behaviors tests
 
+    - Fix #93: Fixed uptime displayed on the web server
+        * Seconds are now refreshed in uptime data
+
 --------------------------------------------------------------
 Version Alpha 0.4.0 (November 22nd, 2013)
 
