@@ -163,7 +163,7 @@ fi
 
 logFile " -- End of the install program -- "
 
-if [ ${bit_error} -eq 1 ]; then
+if [ ${bit_error} -ne 0 ]; then
     exit 1
 fi
 

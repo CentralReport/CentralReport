@@ -57,8 +57,7 @@ if [ ${ARG_P} == true ]; then
 fi
 
 if [ ${ARG_S} == true ]; then
-    system_test_suite 2>&1 | tee -a "${ERROR_FILE}"
-
+    system_test_suite
     if [ "$?" -ne 0 ]; then
         TEST_ERRORS=true
     fi

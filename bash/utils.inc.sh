@@ -144,7 +144,7 @@ function execute_privileged_command() {
         sudo $*
     else
         # If sudo is not available, we are already connected as root.
-        eval "$*"
+        $*
     fi
 
     # Returns the result of the executed command

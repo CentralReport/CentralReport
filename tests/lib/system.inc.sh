@@ -127,7 +127,7 @@ function system_test_suite(){
         ERROR=true
     fi
 
-    if "${ERROR}" == true ]; then
+    if [ "${ERROR}" == true ]; then
         return 1
     fi
 

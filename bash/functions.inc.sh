@@ -690,7 +690,7 @@ function create_cr_user(){
                --home /usr/local/lib/centralreport/ \
                --shell /bin/bash \
                --user-group \
-               --comment \"CentralReport Daemon\" \
+               --comment "CentralReport_daemon" \
                centralreport
 
             RETURN_CODE="$?"
