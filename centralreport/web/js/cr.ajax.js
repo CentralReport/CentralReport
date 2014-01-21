@@ -8,6 +8,7 @@
  */
 
 var actualClientTimestamp = 0;  // Client timestamp
+var actualClientTimezoneOffset = 0; // Client timezone offset, in seconds
 var lastTimestamp = 0;  // Last check timestamp (server side)
 var nextCheckAt = 0;  // Next check will be occur at this timestamp (client side)
 var checksInterval = 60; // Interval between two checks
@@ -25,6 +26,7 @@ var updateNextCheckCounter = function () {
 
     if (0 !== nextCheckAt){
         actualClientTimestamp = Math.round(new Date().getTime() / 1000);
+
         nextCheckIn = parseInt(nextCheckAt - actualClientTimestamp, 10) + 3;
 
         ajaxEnabledElement = $('#ajax_enabled');
@@ -78,8 +80,8 @@ var verifyIsNewCheckIsAvailable = function () {
 
                     ajaxEnabledElement.text('Getting last check...');
 
-                    lastTimestamp = parseInt(data['last_timestamp'], 10);
-                    server_timestamp = parseInt(data['current_timestamp'], 10);
+                    lastTimestamp = parseInt(data['last_timestamp'], 10) + actualClientTimezoneOffset;
+                    server_timestamp = parseInt(data['current_timestamp'], 10) + actualClientTimezoneOffset;
 
                     // Differences between computer clock and client clock
                     actualClientTimestamp = Math.round(new Date().getTime() / 1000);
@@ -332,6 +334,9 @@ var createProgressBar = function (element, value) {
  */
 $(function () {
     $('#ajax_enabled').text('Ajax refresh enabled...');  // Enable Ajax auto refresh
+
+    actualClientTimezoneOffset = new Date().getTimezoneOffset() * 60;
+
     updateNextCheckCounter();
     verifyIsNewCheckIsAvailable();
 });

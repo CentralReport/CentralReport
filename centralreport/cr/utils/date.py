@@ -10,8 +10,6 @@
 import datetime
 import sys
 
-from cr import log
-
 
 def datetime_to_timestamp(datetime_to_convert):
     """

@@ -19,8 +19,8 @@ class CrTimestampTest(unittest.TestCase):
     """
 
     def test_datetime_to_timestamp(self):
-        date_to_convert = datetime.datetime(2012, 10, 10, 10, 10, 10)
-        self.assertEqual(cr_date.datetime_to_timestamp(date_to_convert), 1349863810L)
+        date_to_convert = datetime.datetime(2010, 1, 1, 1, 1, 1)
+        self.assertEqual(cr_date.datetime_to_timestamp(date_to_convert), 1262307661L)
 
     def test_wrong_timestamp(self):
         date_to_convert = datetime.datetime(2012, 10, 10, 10, 10, 10)
