@@ -183,7 +183,7 @@ class MacCollector(_Collector):
                 check_disk = checks.Disk()
                 check_disk.name = text.clean(line_dict['Filesystem'])
                 check_disk.display_name = text.clean(disk_name.lstrip())
-                check_disk.uuid = disk_uuid
+                check_disk.uuid = text.clean(disk_uuid)
                 check_disk.size = disk_total
                 check_disk.used = disk_used
                 check_disk.free = disk_free

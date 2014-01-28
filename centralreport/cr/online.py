@@ -24,8 +24,8 @@ from cr.tools import Config
 # Main routes. Use the HATEOAS concept (http://en.wikipedia.org/wiki/HATEOAS).
 # They are empty when CR is starting, they will be gotten dynamically from the server.
 # TODO: Use HATEOAS for "route_host_check" when the CentralReport Online API will be updated
-route_user_check = 'http://centralreport.net/api/users/%key%'
-route_host_check = 'http://centralreport.net/api/users/%key%/hosts/%uuid%'
+route_user_check = 'http://online.centralreport.net/api/users/%key%'
+route_host_check = 'http://online.centralreport.net/api/users/%key%/hosts/%uuid%'
 route_host_add = ''
 route_checks_add = ''
 
@@ -149,7 +149,7 @@ def check_host():
     if route_host_check != '':
         # We can now check if the current host is registered on the remote server
         route_host_check = route_host_check.replace('%key%', online_key)
-        route_host_check = route_host_check.replace('%uuid%', host.get_current_host().uuid)
+        route_host_check = route_host_check.replace('%uuid%', Config.get_config_value('General', 'uuid'))
         ws_host = web.send_data(web.METHOD_GET, route_host_check, None, None)
 
         if ws_host.code == 403:
@@ -193,7 +193,7 @@ def register_host():
     template = jinja_env.get_template('host_registration.json')
 
     json_vars = dict()
-    json_vars['uuid'] = host.get_current_host().uuid
+    json_vars['uuid'] = Config.get_config_value('General', 'uuid')
     json_vars['hostname'] = host.get_current_host().hostname
     json_vars['model'] = host.get_current_host().model
     json_vars['cpu_model'] = host.get_current_host().cpu_model
@@ -271,15 +271,16 @@ def send_check():
 
     all_disks = []
     for disk in data.last_check.disks.disks:
-        disk_json = {
-            'name': disk.name,
-            'display_name': disk.display_name,
-            'uuid': disk.uuid,
-            'size': long(disk.size),
-            'used': long(disk.used),
-            'free': long(disk.free)
-        }
-        all_disks.append(disk_json)
+        if disk.uuid:
+            disk_json = {
+                'name': disk.name,
+                'display_name': disk.display_name,
+                'uuid': disk.uuid,
+                'size': long(disk.size),
+                'used': long(disk.used),
+                'free': long(disk.free)
+            }
+            all_disks.append(disk_json)
     json_vars['disks'] = all_disks
 
     check_json = text.clean(template.render(json_vars))
