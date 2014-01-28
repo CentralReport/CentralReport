@@ -18,12 +18,20 @@ from cr import errors
 from cr import log
 from cr import online
 from cr.entities import checks
+import cr.host
 from cr.tools import Config
 
 class Checks(threading.Thread):
     """
         Thread performing periodically checks.
     """
+
+    # Last checks (with new entities classes)
+    last_check_cpu = None
+    last_check_date = None
+    last_check_disk = None
+    last_check_loadAverage = None
+    last_check_memory = None
 
     performChecks = True  # True = perform checks...
     tickCount = 60  # Initial Count (Perform a check when starting)
@@ -32,16 +40,15 @@ class Checks(threading.Thread):
         threading.Thread.__init__(self)
         log.log_debug('ThreadChecks is starting...')  # Standard output
 
-        # What is the current os?
 
-        if Config.HOST_CURRENT == Config.HOST_MAC:
+        if cr.host.get_current_host().os == cr.host.OS_MAC:
             self.MyCollector = collectors.MacCollector()
-        elif (Config.HOST_CURRENT == Config.HOST_DEBIAN) or (Config.HOST_CURRENT == Config.HOST_UBUNTU) or \
-                (Config.HOST_CURRENT == Config.HOST_CENTOS):
+        elif cr.host.get_current_host().family == cr.host.FAMILY_LINUX:
             self.MyCollector = collectors.DebianCollector()
+        else:
+            raise TypeError
 
         # Perform a check every xx ticks (1 tick = 1 second)
-
         try:
             self.tickPerformCheck = int(Config.get_config_value('Checks', 'interval'))
         except:
@@ -56,9 +63,6 @@ class Checks(threading.Thread):
             Manages the execution of new checks periodically.
         """
 
-        # Getting data about the current host
-        data.host_info = self.MyCollector.get_infos()
-
         while Checks.performChecks:
             if self.tickPerformCheck <= self.tickCount:
                 try:
@@ -66,7 +70,7 @@ class Checks(threading.Thread):
                 except Exception as e:
                     log.log_error('Error performing a new check: %s' % e.message)
 
-                if data.host_info.key != '':
+                if Config.get_config_value('Online', 'key') != '':
                     try:
                         online.send_check()
                     except ValueError as e:

@@ -15,6 +15,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from cr import data
 from cr.errors import OnlineError, OnlineNotValidated
+from cr import host
 from cr import log
 from cr.utils import text
 from cr.utils import web
@@ -53,9 +54,6 @@ def initialize_online():
 
     if route_user_check == '':
         raise ValueError('The user check route is unknown!')
-
-    if data.host_info is None:
-        raise ValueError('Host data are unavailable!')
 
     if route_host_add == '':
         try:
@@ -105,14 +103,16 @@ def check_user_key():
 
     log.log_info('Checking the user key on CentralReport Online...')
 
-    if data.host_info.key == '':
+    online_key = Config.get_config_value('Online', 'key')
+
+    if online_key == '':
         raise ValueError('No user key defined!')
 
-    route_user_check = route_user_check.replace('%key%', data.host_info.key)
+    route_user_check = route_user_check.replace('%key%', online_key)
     ws_user = web.send_data(web.METHOD_GET, route_user_check, None, None)
 
     if ws_user.code == 404:
-        raise OnlineError(1, 'The key %s is not a valid key on the remote server!' % data.host_info.key)
+        raise OnlineError(1, 'The key %s is not a valid key on the remote server!' % online_key)
     elif ws_user.code != 200:
         raise OnlineError(2, 'The server has returned a unknown response. Code: %s' % ws_user.code)
     else:
@@ -141,13 +141,15 @@ def check_host():
 
     log.log_info('Checking whether this host is registered on CentralReport Online...')
 
+    online_key = Config.get_config_value('Online', 'key')
+
     if route_host_check == '':
         raise ValueError('The host route is unknown!')
 
     if route_host_check != '':
         # We can now check if the current host is registered on the remote server
-        route_host_check = route_host_check.replace('%key%', data.host_info.key)
-        route_host_check = route_host_check.replace('%uuid%', data.host_info.uuid)
+        route_host_check = route_host_check.replace('%key%', online_key)
+        route_host_check = route_host_check.replace('%uuid%', host.get_current_host().uuid)
         ws_host = web.send_data(web.METHOD_GET, route_host_check, None, None)
 
         if ws_host.code == 403:
@@ -182,28 +184,25 @@ def register_host():
 
     log.log_info('Registering this host on CentralReport Online...')
 
-    if data.host_info is None:
-        raise ValueError('Host data not available!')
-
     if route_host_add == '':
         raise ValueError('The host route is unknown!')
 
-    route_host_add = route_host_add.replace('%key%', data.host_info.key)
+    route_host_add = route_host_add.replace('%key%', Config.get_config_value('Online', 'key'))
 
     log.log_debug('Generating the JSON template...')
     template = jinja_env.get_template('host_registration.json')
 
     json_vars = dict()
-    json_vars['uuid'] = data.host_info.uuid
-    json_vars['hostname'] = data.host_info.hostname
-    json_vars['model'] = data.host_info.model
-    json_vars['cpu_model'] = data.host_info.cpu_model
-    json_vars['cpu_count'] = data.host_info.cpu_count
-    json_vars['os_name'] = data.host_info.os_name
-    json_vars['os_version'] = data.host_info.os_version
-    json_vars['kernel_name'] = data.host_info.kernel_name
-    json_vars['kernel_version'] = data.host_info.kernel_version
-    json_vars['architecture'] = data.host_info.architecture
+    json_vars['uuid'] = host.get_current_host().uuid
+    json_vars['hostname'] = host.get_current_host().hostname
+    json_vars['model'] = host.get_current_host().model
+    json_vars['cpu_model'] = host.get_current_host().cpu_model
+    json_vars['cpu_count'] = host.get_current_host().cpu_count
+    json_vars['os_name'] = host.get_current_host().os_name
+    json_vars['os_version'] = host.get_current_host().os_version
+    json_vars['kernel_name'] = host.get_current_host().kernel_name
+    json_vars['kernel_version'] = host.get_current_host().kernel_version
+    json_vars['architecture'] = host.get_current_host().architecture
     json_vars['agent'] = Config.CR_AGENT_NAME
     json_vars['agent_version'] = Config.CR_VERSION
     json_vars['host_type'] = 'host'

@@ -15,6 +15,8 @@ source bash/functions.inc.sh
 
 source bash/010_uninstaller.inc.sh
 
+bit_error=0
+
 get_arguments $*
 
 logFile "-------------- Starting CentralReport installer  --------------"
@@ -77,7 +79,10 @@ fi
 
 if [ "${ARG_WRONG}" == true ]; then
     printBox red "ERROR! Unknown argument| \
-                  Use: install.sh [-s]"
+                  Use: install.sh| \
+                  -k Keep the sudo session alive after the installation| \
+                  -s Silent install"
+    exit 1
 else
     INSTALL_CONFIRMED=false
 
@@ -95,23 +100,17 @@ else
     fi
 
     if [ "${INSTALL_CONFIRMED}" == true ]; then
-        bit_error=0
-
         if [ ${CURRENT_OS} == ${OS_MAC} ]; then
             logInfo "Processing... CentralReport will be installed on this Mac."
 
             # On Mac OS, the user must have access to administrative commands.
-            # Checking whether the "sudo" session is still alive...
-            sudo -n echo "hey" > /dev/null 2>&1
-            if [ "$?" -ne 0 ]; then
-
-                echo -e "\n\nPlease use your administrator password to install CentralReport on this Mac."
-                sudo -v
-                if [ $? -ne 0 ]; then
-                    logError "Unable to use root privileges!"
-                    bit_error=1
-                fi
+            echo -e "\n"
+            sudo -v -p "Please enter your administrator password to install CentralReport on this Mac: "
+            if [ $? -ne 0 ]; then
+                logError "Unable to use root privileges!"
+                bit_error=1
             fi
+
         elif [ ${CURRENT_OS} == ${OS_DEBIAN} ] && [ ${CURRENT_OS} == ${OS_CENTOS} ]
         then
             logInfo "Processing... CentralReport will be installed on this Linux."
@@ -157,10 +156,15 @@ else
     fi
 fi
 
-if [ ${CURRENT_OS} == ${OS_MAC} ]; then
+if [ ${CURRENT_OS} == ${OS_MAC} ] && [ "${ARG_K}" == false ]; then
     # Remove sudo privileges
     sudo -k
 fi
 
 logFile " -- End of the install program -- "
+
+if [ ${bit_error} -ne 0 ]; then
+    exit 1
+fi
+
 exit 0

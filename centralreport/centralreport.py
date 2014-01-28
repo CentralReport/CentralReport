@@ -20,7 +20,9 @@ CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/requests-1.1.0.zip'))
 sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/jinja2-2.6.zip'))
 sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/cherrypy-3.2.2.zip'))
+sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/urwid-1.1.1.zip'))
 
+from cr import host
 from cr import log
 from cr import threads
 from cr.utils import text
@@ -80,8 +82,10 @@ class CentralReport(Daemon):
         signal.signal(signal.SIGTERM, self.signal_handler)
         signal.signal(signal.SIGINT, self.signal_handler)
 
-        CentralReport.starting_date = datetime.datetime.now()  # Starting date
-        CentralReport.configuration = Config()  # Getting config object
+        CentralReport.starting_date = datetime.datetime.now()
+        CentralReport.configuration = Config()
+
+        host.get_current_host()
 
         # The log level can be personalized in the config file
         if Config.CR_CONFIG_ENABLE_DEBUG_MODE is False:
@@ -93,8 +97,8 @@ class CentralReport(Daemon):
             log.change_log_level(log_level)
 
         # Starting the check thread...
-        if Config.HOST_CURRENT != Config.HOST_OTHER:
-            log.log_info('%s detected. Starting ThreadChecks...' % Config.HOST_CURRENT)
+        if host.get_current_host().os != host.OS_UNKNOWN:
+            log.log_info('%s detected. Starting ThreadChecks...' % host.get_current_host().os)
             CentralReport.checks_thread = threads.Checks()  # Launching checks thread
         else:
             is_error = True

@@ -9,13 +9,13 @@
 
 import datetime
 import os
-import sys
 import threading
 
 import cherrypy
 import jinja2
 
 from cr import data
+import cr.host
 from cr.utils.date import datetime_to_timestamp
 from cr.utils import text
 from cr.threads import Checks
@@ -224,10 +224,9 @@ class Api:
                     tmpl_vars['load_check_enabled'] = Api.CHECK_DISABLED
                 else:
                     tmpl_vars['load_check_enabled'] = Api.CHECK_ENABLED
-
                     tmpl_vars['load_last_one'] = data.last_check.load.last1m
                     tmpl_vars['load_percent'] = (float(data.last_check.load.last1m) * 100) / int(
-                        data.host_info.cpu_count)
+                        cr.host.get_current_host().cpu_count)
 
                     if int(tmpl_vars['load_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
                         tmpl_vars['load_state'] = Api.STATE_ALERT
@@ -285,17 +284,17 @@ class Pages:
         tmpl_vars = dict()
 
         # Host information
-        tmpl_vars['hostname'] = data.host_info.hostname
-        tmpl_vars['os_name'] = data.host_info.os_name
-        tmpl_vars['os_version'] = data.host_info.os_version
+        tmpl_vars['hostname'] = cr.host.get_current_host().hostname
+        tmpl_vars['os_name'] = cr.host.get_current_host().os_name
+        tmpl_vars['os_version'] = cr.host.get_current_host().os_version
 
-        if Config.HOST_CURRENT == Config.HOST_MAC:
+        if cr.host.get_current_host().os == cr.host.OS_MAC:
             tmpl_vars['host_os'] = 'MAC'
-        elif Config.HOST_CURRENT == Config.HOST_UBUNTU:
+        elif cr.host.get_current_host().os == cr.host.OS_UBUNTU:
             tmpl_vars['host_os'] = 'UBUNTU'
-        elif Config.HOST_CURRENT == Config.HOST_DEBIAN:
+        elif cr.host.get_current_host().os == cr.host.OS_DEBIAN:
             tmpl_vars['host_os'] = 'DEBIAN'
-        elif Config.HOST_CURRENT == Config.HOST_CENTOS:
+        elif cr.host.get_current_host().os == cr.host.OS_CENTOS:
             tmpl_vars['host_os'] = 'CENTOS'
 
         tmpl_vars['CR_version'] = Config.CR_VERSION
@@ -311,7 +310,7 @@ class Pages:
             tmpl_vars['cpu_percent'] = 100 - int(data.last_check.cpu.idle)
             tmpl_vars['cpu_user'] = data.last_check.cpu.user
             tmpl_vars['cpu_system'] = data.last_check.cpu.system
-            tmpl_vars['cpu_count'] = data.host_info.cpu_count
+            tmpl_vars['cpu_count'] = cr.host.get_current_host().cpu_count
 
             if int(tmpl_vars['cpu_percent']) >= int(Config.get_config_value('Alerts', 'cpu_alert')):
                 tmpl_vars['cpu_alert'] = True
@@ -375,7 +374,7 @@ class Pages:
         if data.last_check.load is not None:
             tmpl_vars['loadaverage'] = data.last_check.load.last1m
             tmpl_vars['loadaverage_percent'] = (float(data.last_check.load.last1m) * 100) / int(
-                data.host_info.cpu_count)
+                cr.host.get_current_host().cpu_count)
 
             if int(tmpl_vars['loadaverage_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
                 tmpl_vars['load_alert'] = True

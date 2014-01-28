@@ -10,13 +10,17 @@
 import datetime
 
 
-class Infos:
+class Host:
     """
-        Entity containing datas about actual host.
+        Entity containing details about actual host.
     """
 
     def __init__(self):
         self.architecture = ''
+
+        self.family = ''
+        self.variant = ''
+        self.os = ''
 
         # TODO: move it in CPU check.
 
@@ -38,7 +42,6 @@ class Infos:
 
         self.language = 'Python'  # CentralReport app language
         self.model = ''  # Only for Mac OS
-        self.os = ''
 
         self.uuid = ''
         self.key = ''
