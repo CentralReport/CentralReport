@@ -12,6 +12,7 @@ import sys
 _current_dir = os.path.dirname(__file__)
 _binaries_dir = os.path.abspath(os.path.join(_current_dir, "../libs/"))
 
+
 def register_libraries():
     """ Adds to sys.path available libraries """
 
