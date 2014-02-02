@@ -143,12 +143,25 @@ else
 
             # Adding a space before the lightbox to separate previous logs with the success message.
             logConsole " "
-            printBox blue "CentralReport is now installed!| \
-                           For more options, you can edit the config file| \
+            printBox blue "CentralReport is now installed!"
+
+            logConsole "\n"
+            logConsole "CentralReport includes a web server. You can check your statistics with a"
+            logConsole "simple web browser, without any external service."
+            logConsole "To enable it, just execute the following command:"
+            logConsole "centralreport config Webserver:enable true"
+            logConsole "\n\n"
+            logConsole "CentralReport Online keeps an eye on your system, at any moment."
+            logConsole "To configure your account, go to www.centralreport.net, it's free!"
+            logConsole "To send data to your online account, just run the following command:"
+            logConsole "centralreport config Online:key your_online_key"
+            logConsole "\n"
+
+            printBox blue "For more options, you can edit the config file| \
                            at /etc/centralreport/centralreport.cfg| \
-                           | \
                            You can find more help at http://github.com/CentralReport/CentralReport.| \
                            Have fun!"
+
 
         fi
     else

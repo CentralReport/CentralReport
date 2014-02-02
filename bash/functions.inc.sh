@@ -899,7 +899,6 @@ function install_cr(){
 
     start_wizard
 
-    # Cleaning screen
     clear
 
     printTitle "First launch of CentralReport..."
@@ -908,6 +907,8 @@ function install_cr(){
     if [ ${RETURN_CODE} -ne 0 ]; then
         return ${RETURN_CODE}
     fi
+
+    clear
 
     return 0
 }
