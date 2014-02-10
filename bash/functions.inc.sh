@@ -897,8 +897,6 @@ function install_cr(){
         return ${RETURN_CODE}
     fi
 
-    start_wizard
-
     clear
 
     printTitle "First launch of CentralReport..."
