@@ -15,6 +15,7 @@
 #   - status
 #   - debug
 
+CR_LIB_DIR=/usr/local/lib/centralreport/centralreport.py
 CR_PID_DIR=/var/run/centralreport
 CR_PID_FILE=/var/run/centralreport/centralreport.pid
 CR_DIR_LOG=/var/log/centralreport
@@ -59,9 +60,9 @@ function execute_command() {
 function execute_python_daemon() {
 
     if [ $(uname -s) == "Darwin" ]; then
-        sudo -u _centralreport /usr/local/lib/centralreport/centralreport.py $*
+        sudo -u _centralreport ${CR_LIB_DIR} $*
     else
-        su centralreport -c "python /usr/local/lib/centralreport/centralreport.py $*"
+        su centralreport -c "python ${CR_LIB_DIR} $*"
     fi
 }
 
@@ -118,6 +119,18 @@ function manage_daemon() {
                     execute_command kill -9 $(verify_pid_file)
                 fi
             fi
+        ;;
+        config)
+            echo "Updating CentralReport configuration..."
+            execute_python_daemon $*
+
+            if [ "$?" -ne 0 ]; then
+                echo "Error updating the configuration"
+                echo "Please check the syntax (centralreport config Section:key value)"
+                exit 1
+            fi
+
+            manage_daemon restart
         ;;
         restart)
             manage_daemon stop
@@ -189,7 +202,7 @@ case $1 in
         # Starts CentralReport in debug mode = in the current console
         python /usr/local/lib/centralreport/test.py
     ;;
-    start | stop | restart)
+    start | stop | restart | config)
         # For all others options, we ask to the centralreport.py to answer.
         if [ $(uname -s) == "Darwin" ]; then
             # Mac OS X

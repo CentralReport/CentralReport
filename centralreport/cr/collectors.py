@@ -158,7 +158,7 @@ class MacCollector(_Collector):
         header = df_split[0].split()
 
         # New return entity
-        list_disks = host.Disks()
+        list_disks = checks.Disks()
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
@@ -175,16 +175,20 @@ class MacCollector(_Collector):
                                                    ' | grep "Volume Name"'
                                                    ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
 
+                disk_uuid = system.execute_command('diskutil info "' + line_dict['Filesystem'] + '"'
+                                                   ' | grep "Volume UUID"'
+                                                   ' | awk "BEGIN { FS=\\":\\" } END { print $2; }"')
+
                 # Using new check entity
                 check_disk = checks.Disk()
-                check_disk.date = datetime.datetime.now()
-                check_disk.name = disk_name.lstrip()
-                check_disk.unix_name = line_dict['Filesystem']
+                check_disk.name = text.clean(line_dict['Filesystem'])
+                check_disk.display_name = text.clean(disk_name.lstrip())
+                check_disk.uuid = text.clean(disk_uuid)
                 check_disk.size = disk_total
                 check_disk.used = disk_used
                 check_disk.free = disk_free
 
-                list_disks.checks.append(check_disk)
+                list_disks.disks.append(check_disk)
 
         return list_disks
 
@@ -300,7 +304,7 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
-         # Getting all disks by UUID
+        # Getting all disks by UUID
         disks_by_uuid = {}
         list_disks_uuid = os.listdir('/dev/disk/by-uuid/')
 
@@ -312,7 +316,7 @@ class DebianCollector(_Collector):
         df_dict = system.execute_command('df -kP')
         df_split = df_dict.splitlines()
 
-        list_disks = host.Disks()
+        list_disks = checks.Disks()
 
         for i in range(1, len(df_split)):
             if df_split[i].startswith('/dev/'):
@@ -339,14 +343,15 @@ class DebianCollector(_Collector):
                             disk_uuid = key
 
                 check_disk = checks.Disk()
-                check_disk.unix_name = text.remove_specials_characters(disk_name)
-                check_disk.name = text.remove_specials_characters(disk_name.replace('/dev/', ''))
+                check_disk.name = text.clean(disk_name)
+                check_disk.display_name = text.clean(disk_name.replace('/dev/', ''))
+                check_disk.uuid = disk_uuid
 
                 # Linux count with '1K block' unit
                 check_disk.size = int(line_split[1]) * 1024
                 check_disk.used = int(line_split[2]) * 1024
                 check_disk.free = int(line_split[3]) * 1024
 
-                list_disks.checks.append(check_disk)
+                list_disks.disks.append(check_disk)
 
         return list_disks

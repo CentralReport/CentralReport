@@ -10,6 +10,9 @@
 
 import unittest
 
+import cr.libs
+cr.libs.register_libraries()
+
 import tests.utils.date
 import tests.utils.text
 import tests.utils.web

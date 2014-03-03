@@ -1,0 +1,15 @@
+{
+    "host": {
+        "name": "{{ hostname }}",
+        "uuid": "{{ uuid }}",
+        "model": "{{ model }}",
+        "cpuModel": "{{ cpu_model }}",
+        "cpuCount": "{{ cpu_count }}",
+        "osName": "{{ os_name }}",
+        "osVersion": "{{ os_version }}",
+        "kernelName": "{{ kernel_name }}",
+        "kernelVersion": "{{ kernel_version }}",
+        "architecture": "{{ architecture }}",
+        "type": "{{ host_type }}"
+    }
+}

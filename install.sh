@@ -143,12 +143,23 @@ else
 
             # Adding a space before the lightbox to separate previous logs with the success message.
             logConsole " "
-            printBox blue "CentralReport is now installed!| \
-                           For more options, you can edit the config file| \
+            printBox blue "CentralReport is now installed!"
+
+            logConsole "\n\
+CentralReport includes a web server. You can check your statistics with a \n\
+simple web browser, without any external service. \n\
+By default, it runs on port 8080: \n\
+http://localhost:8080\n\
+\n\
+The port can be changed with the following command:\n\
+centralreport config Webserver:port 8080\n\
+\n"
+
+            printBox blue "For more options, you can edit the config file| \
                            at /etc/centralreport/centralreport.cfg| \
-                           | \
                            You can find more help at http://github.com/CentralReport/CentralReport.| \
                            Have fun!"
+
 
         fi
     else
