@@ -8,6 +8,10 @@ CentralReport News
 - **Improvement [#92](https://github.com/CentralReport/CentralReport/pull/92)**: Updated disk collector for Linux
     * Disks are now gotten by their UUID, and their Linux names are displayed.
 
+- **Improvement [#52](https://github.com/CentralReport/CentralReport/pull/52)**: Many improvements
+    * This pull request was initially dedicated to CentralReport Online. As this project will take a new start,
+      all references to CRO was removed, and only important improvements was kept.
+
 - **Improvement [#95](https://github.com/CentralReport/CentralReport/pull/95)**: NEWS file is now in markdown
 
 - **Fix [#93](https://github.com/CentralReport/CentralReport/pull/93)**: Fixed uptime displayed on the web server
