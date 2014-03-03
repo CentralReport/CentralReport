@@ -145,17 +145,15 @@ else
             logConsole " "
             printBox blue "CentralReport is now installed!"
 
-            logConsole "\n"
-            logConsole "CentralReport includes a web server. You can check your statistics with a"
-            logConsole "simple web browser, without any external service."
-            logConsole "To enable it, just execute the following command:"
-            logConsole "centralreport config Webserver:enable true"
-            logConsole "\n\n"
-            logConsole "CentralReport Online keeps an eye on your system, at any moment."
-            logConsole "To configure your account, go to www.centralreport.net, it's free!"
-            logConsole "To send data to your online account, just run the following command:"
-            logConsole "centralreport config Online:key your_online_key"
-            logConsole "\n"
+            logConsole "\n\
+CentralReport includes a web server. You can check your statistics with a \n\
+simple web browser, without any external service. \n\
+By default, it runs on port 8080: \n\
+http://localhost:8080\n\
+\n\
+The port can be changed with the following command:\n\
+centralreport config Webserver:port 8080\n\
+\n"
 
             printBox blue "For more options, you can edit the config file| \
                            at /etc/centralreport/centralreport.cfg| \

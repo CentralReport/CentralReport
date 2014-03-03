@@ -56,9 +56,6 @@ class Config:
         'General': {
             'uuid': ''
         },
-        'Online': {
-            'key': ''
-        },
         'Webserver': {
             'enable': 'True',
             'interface': '0.0.0.0',

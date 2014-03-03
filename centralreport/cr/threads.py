@@ -7,19 +7,17 @@
     https://github.com/CentralReport
 """
 
-import copy
 from datetime import datetime
 import threading
 import time
 
 from cr import collectors
 from cr import data
-from cr import errors
 from cr import log
-from cr import online
 from cr.entities import checks
 import cr.host
 from cr.tools import Config
+
 
 class Checks(threading.Thread):
     """
@@ -70,20 +68,6 @@ class Checks(threading.Thread):
                 except Exception as e:
                     log.log_error('Error performing a new check: %s' % e.message)
 
-                if Config.get_config_value('Online', 'key') != '':
-                    try:
-                        online.send_check()
-                    except ValueError as e:
-                        log.log_error('Unable to send the check to CentralReport Online: %s' % e.message)
-                    except errors.OnlineError as e:
-                        log.log_error('Error sending the check to CentralReport Online: %s' % e.message)
-                    except errors.OnlineNotValidated:
-                        log.log_info('This host must be validated on CentralReport Online!')
-                    except Exception as e:
-                        log.log_error('Unkown error sending the check to CentralReport Online: %s' % e.message)
-                else:
-                    log.log_debug('User key is not defined: no connection with CentralReport Online available')
-
                 log.log_debug('Next checks in %s seconds...' % self.tickPerformCheck)
                 self.tickCount = 0
 
@@ -117,11 +101,6 @@ class Checks(threading.Thread):
 
         # Updating last check date...
         check_entity.date = datetime.now()
-
-        # DEPRECATED
-        # Only used for the web services. Will be improved soon.
-        if data.last_check is not None:
-            data.previous_check = copy.copy(data.last_check)
 
         data.last_check = check_entity
 
