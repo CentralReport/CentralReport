@@ -1,7 +1,7 @@
 CentralReport News
 ===================
 
-### Version Alpha 0.5.0 (Not released yet)
+### Version Alpha 0.5.0 (March 4th, 2014)
 
 - **Improvement [#77](https://github.com/CentralReport/CentralReport/pull/77)**: Added support for unit testing and behaviors tests
 
