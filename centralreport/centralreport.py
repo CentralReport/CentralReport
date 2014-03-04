@@ -15,9 +15,8 @@ import sys
 import time
 import os
 
-# Third-party libraries
-CR_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(CR_CURRENT_DIR, 'libs/urwid-1.1.1.zip'))
+import cr.libs
+cr.libs.register_libraries()
 
 from cr import host
 from cr import log
@@ -34,6 +33,7 @@ class CentralReport(Daemon):
 
     # Threads
     checks_thread = None
+    remote_thread = None
     webserver_thread = None
 
     # Sigterm signal
@@ -74,7 +74,7 @@ class CentralReport(Daemon):
         log.log_info('CentralReport is starting...')
         log.log_info('Current user: ' + getpass.getuser())
 
-        # Registring SIGTERM signal event
+        # Registering SIGTERM signal event
         signal.signal(signal.SIGTERM, self.signal_handler)
         signal.signal(signal.SIGINT, self.signal_handler)
 
@@ -182,6 +182,30 @@ class CentralReport(Daemon):
 
         self.run()
 
+    def modify_config(self, key, value):
+        """
+            Modifies one value in the config file
+        """
+
+        cr_config = Config()
+        array_key = key.split(':')
+
+        try:
+            Config.set_config_value(array_key[0], array_key[1], value)
+        except Exception as e:
+            print(e.message)
+            return False
+
+        try:
+            cr_config.write_config_file()
+        except Exception as e:
+            print(e.message)
+            return False
+
+        return True
+
+
+
 #
 # Main script
 #
@@ -197,18 +221,22 @@ if '__main__' == __name__:
 
     daemon = CentralReport(Config.CR_PID_FILE)
 
-    if 2 == len(sys.argv):
+    if len(sys.argv) > 1:
         if 'start' == sys.argv[1]:
             daemon.start()
 
         elif 'stop' == sys.argv[1]:
             daemon.stop()
 
-        else:
-            print 'usage: %s start|stop' % sys.argv[0]
-            sys.exit(2)
-        sys.exit(0)
+        elif 'config' == sys.argv[1]:
+            if daemon.modify_config(sys.argv[2], sys.argv[3]) is False:
+                sys.exit(2)
 
+        else:
+            print 'usage: %s start|stop|config' % sys.argv[0]
+            sys.exit(2)
     else:
-        print 'usage: %s start|stop|' % sys.argv[0]
+        print 'usage: %s start|stop|config' % sys.argv[0]
         sys.exit(2)
+
+    sys.exit(0)

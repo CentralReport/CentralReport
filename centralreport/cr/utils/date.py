@@ -7,22 +7,19 @@
     https://github.com/CentralReport
 """
 
-import time
+import datetime
+import sys
 
-from cr import log
 
-
-def datetime_to_timestamp(datetime):
+def datetime_to_timestamp(datetime_to_convert):
     """
         Converts a datetime to Unix timestamp.
     """
 
-    timestamp = 0
+    epoch = datetime.datetime.utcfromtimestamp(0)
+    delta = datetime_to_convert - epoch
 
-    try:
-        # Uses the local timestamp
-        timestamp = int(time.mktime(datetime.timetuple()))
-    except:
-        log.log_error('Error convert datetime to timestamp')
-
-    return timestamp
+    if sys.version_info >= (2, 7):
+        return long(delta.total_seconds())
+    else:
+        return long(delta.days * 86400 + delta.seconds + delta.microseconds / 1e6)

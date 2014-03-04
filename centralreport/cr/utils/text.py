@@ -10,11 +10,29 @@
 import math
 
 
+def clean(text):
+    """
+        Cleans unwanted text characters
+    """
+    text = remove_specials_characters(text)
+    return remove_spaces(text)
+
+
+def remove_spaces(text):
+    """
+        Removes unwanted spaces
+    """
+
+    text = str(text)
+    return " ".join(text.split())
+
+
 def remove_specials_characters(text):
     """
         Removes specials characters in string (\n, \r and \l).
     """
 
+    text = str(text)
     text = str.replace(text, '\n', '')
     text = str.replace(text, '\r', '')
     text = str.replace(text, '\l', '')
@@ -63,15 +81,16 @@ def convert_seconds_to_phrase_time(seconds):
         Converts seconds to a phrase time (ex: 65 = 1 minute 5 seconds).
     """
 
-    ONE_DAY = 60 * 60 * 24
-    ONE_HOUR = 60 * 60
+    ONE_SECOND = 1
     ONE_MINUTE = 60
+    ONE_HOUR = 60 * 60
+    ONE_DAY = 60 * 60 * 24
     ONE_YEAR = 60 * 60 * 24 * 365
 
     remaining_seconds = seconds
     result_string = ''
 
-    if remaining_seconds > ONE_YEAR:
+    if remaining_seconds >= ONE_YEAR:
         years = remaining_seconds / ONE_YEAR
         years = math.floor(years)
 
@@ -79,36 +98,39 @@ def convert_seconds_to_phrase_time(seconds):
 
         result_string += '1 year ' if 1 == years else str(int(years)) + ' years '
 
-    if ONE_DAY < remaining_seconds:
+    if remaining_seconds >= ONE_DAY:
         days = remaining_seconds / ONE_DAY
         days = math.floor(days)
 
         remaining_seconds -= days * ONE_DAY
         result_string += '1 day ' if 1 == days else str(int(days)) + ' days '
 
-    if ONE_HOUR < remaining_seconds:
+    if remaining_seconds >= ONE_HOUR:
         hours = remaining_seconds / ONE_HOUR
         hours = math.floor(hours)
 
         remaining_seconds -= hours * ONE_HOUR
         result_string += '1 hour ' if 1 == hours else str(int(hours)) + ' hours '
 
-    if ONE_MINUTE < remaining_seconds:
+    if  remaining_seconds >= ONE_MINUTE:
         minutes = remaining_seconds / ONE_MINUTE
         minutes = math.floor(minutes)
 
         remaining_seconds -= minutes * ONE_MINUTE
         result_string += '1 minute ' if 1 == minutes else str(int(minutes)) + ' minutes '
 
-    result_string += '1 second ' if 1 == remaining_seconds else str(int(remaining_seconds)) + ' seconds '
+    if remaining_seconds >= ONE_SECOND :
+        result_string += '1 second' if 1 == remaining_seconds else str(int(remaining_seconds)) + ' seconds'
 
-    return str(result_string)
+    return str(result_string).rstrip()
 
 
 def convert_byte(byte_to_convert):
     """
         Converts byte to most biggest unit.
     """
+
+    byte_to_convert = float(byte_to_convert)
 
     TBYTE = 1024 * 1024 * 1024 * 1024
     GBYTE = 1024 * 1024 * 1024

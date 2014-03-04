@@ -21,11 +21,15 @@ class Config:
 
     # Python object used to manage the config file.
     config = ConfigParser.ConfigParser()
+
+    CR_AGENT_NAME = "CentralReport Python Agent"
+
     CR_VERSION_MAJOR = 0
-    CR_VERSION_MINOR = 4
+    CR_VERSION_MINOR = 5
     CR_VERSION_REVISION = 0
     CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
+
     CR_CONFIG_PATH = '/etc/centralreport'  # Config file location
     CR_CONFIG_FILE = 'centralreport.cfg'
     CR_CONFIG_FULL_PATH = os.path.join(CR_CONFIG_PATH, CR_CONFIG_FILE)
@@ -33,6 +37,9 @@ class Config:
 
     # Default interval between two checks (use this if not available in the config file)
     CR_CONFIG_DEFAULT_CHECKS_INTERVAL = int(60)
+
+    # Remote server main route
+    CR_REMOTE_ROUTE = 'http://centralreport.net/api/users/%key%'
 
     # CentralReport pid file
     if CR_CONFIG_ENABLE_DEBUG_MODE:
@@ -50,15 +57,11 @@ class Config:
             'uuid': ''
         },
         'Webserver': {
-            'enable': 'False',
+            'enable': 'True',
             'interface': '0.0.0.0',
             'port': '8080'
         },
         'Checks': {
-            'enable_cpu_check': 'True',
-            'enable_memory_check': 'True',
-            'enable_load_check': 'True',
-            'enable_disks_check': 'True',
             'interval': '60'
         },
         'Alerts': {
@@ -135,7 +138,7 @@ class Config:
 
         # Generating uuid if empty
         if '' == Config.get_config_value('General', 'uuid'):
-            Config.set_config_value('General', 'uuid', uuid.uuid1())
+            Config.set_config_value('General', 'uuid', str(uuid.uuid1()))
 
         # Writing conf file. Reading all sections defined in the config...
         for config_section in Config._CR_CONFIG_VALUES:
