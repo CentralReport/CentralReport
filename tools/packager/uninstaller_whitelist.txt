@@ -13,5 +13,5 @@ utils/
 AUTHORS
 uninstall.sh
 LICENSE
-NEWS
+NEWS.md
 README.md
