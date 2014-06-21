@@ -16,13 +16,13 @@
         <div class="row-fluid">
             <div class="span1 host-logo">
                 {% if 'MAC' == host_os %}
-                    <img src="img/logos/Apple_logo.png" alt="Apple logo" />
+                    <img src="static/img/logos/Apple_logo.png" alt="Apple logo" />
                 {% elif 'UBUNTU' == host_os %}
-                    <img src="img/logos/Ubuntu_logo.png" alt="Ubuntu logo" />
+                    <img src="static/img/logos/Ubuntu_logo.png" alt="Ubuntu logo" />
                 {% elif 'DEBIAN' == host_os %}
-                    <img src="img/logos/Debian_logo.png" alt="Debian logo" />
+                    <img src="static/img/logos/Debian_logo.png" alt="Debian logo" />
                 {% elif 'CENTOS' == host_os %}
-                    <img src="img/logos/Centos_logo.png" alt="Centos logo" />
+                    <img src="static/img/logos/Centos_logo.png" alt="Centos logo" />
                 {% endif %}
             </div>
             <div class="span11 host-name">
@@ -315,7 +315,7 @@
 {% endblock %}
 
 {% block bottom_javascript %}
-    <script type="text/javascript" src="js/cr.ajax.js"></script>
+    <script type="text/javascript" src="static/js/cr.ajax.js"></script>
 {% endblock %}
 
 {% block footer_version %}CentralReport Unix/Linux {{ CR_version }} - {{ CR_version_name }}{% endblock %}
