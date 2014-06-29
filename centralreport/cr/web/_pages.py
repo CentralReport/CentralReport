@@ -9,8 +9,7 @@
 
 import datetime
 
-from web import _server
-
+from cr.web import server
 from cr import data
 import cr.host
 from cr.utils.date import datetime_to_timestamp
@@ -18,13 +17,13 @@ from cr.utils import text
 from cr.tools import Config
 
 
-@_server.app.route('/')
+@server.app.route('/')
 def index():
     """
         Main entry (http://localhost:port/)
     """
 
-    tmpl = _server.app.jinja_env.get_template('index.tpl')
+    tmpl = server.app.jinja_env.get_template('index.tpl')
 
     tmpl_vars = dict()
 

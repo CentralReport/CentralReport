@@ -9,15 +9,16 @@
 """
 
 import datetime
+
 import flask
 
-from web import _server
-
+from cr.web import server
 from cr import data
 import cr.host
 from cr.utils.date import datetime_to_timestamp
 from cr.utils import text
 from cr.tools import Config
+
 
 STATE_ALERT = 'alert'
 STATE_OK = 'ok'
@@ -26,9 +27,9 @@ STATE_WARNING = 'warning'
 CHECK_ENABLED = 'True'
 CHECK_DISABLED = 'False'
 
-@_server.app.route('/api/check/date')
+@server.app.route('/api/check/date')
 def api_check_date():
-    tmpl = _server.app.jinja_env.get_template('json/date_check.json')
+    tmpl = server.app.jinja_env.get_template('json/date_check.json')
     tmpl_vars = dict()
 
     if data.last_check is None:
@@ -49,9 +50,9 @@ def api_check_date():
                           status=200,
                           mimetype="application/json")
 
-@_server.app.route('/api/check/full')
+@server.app.route('/api/check/full')
 def api_check_full():
-    tmpl = _server.app.jinja_env.get_template('json/full_check.json')
+    tmpl = server.app.jinja_env.get_template('json/full_check.json')
     tmpl_vars = dict()
 
     if data.last_check is None:
@@ -155,9 +156,9 @@ def api_check_full():
                           status=200,
                           mimetype="application/json")
 
-@_server.app.route('/api/check/disks')
+@server.app.route('/api/check/disks')
 def api_check_disk():
-    tmpl = _server.app.jinja_env.get_template('blocks/disks.block.tpl')
+    tmpl = server.app.jinja_env.get_template('blocks/disks.block.tpl')
     tmpl_vars = dict()
 
     if data.last_check.disks is not None:

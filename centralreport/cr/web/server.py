@@ -10,12 +10,11 @@
 import threading
 
 from flask import Flask
-from web import _server
-_server.app = Flask(__name__)
 
 from cr.tools import Config
-from web import api
-from web import pages
+
+#: @type app: Flask
+app = Flask(__name__)
 
 
 class WebServer(threading.Thread):
@@ -33,7 +32,7 @@ class WebServer(threading.Thread):
             Starts the web server.
         """
 
-        _server.app.run(
+        app.run(
             host=Config.get_config_value('Webserver', 'interface'),
             port=int(Config.get_config_value('Webserver', 'port'))
         )

@@ -7,5 +7,7 @@
     https://github.com/CentralReport
 """
 
-#: @type app: Flask
-app = None
+from cr.web import server
+from cr.web import _api
+from cr.web import _pages
+

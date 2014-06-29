@@ -108,9 +108,9 @@ class CentralReport(Daemon):
                 log.log_info('Starting the webserver...')
 
                 # Importing the module here improve the memory usage
-                import web
+                import cr.web
 
-                CentralReport.webserver_thread = web.WebServer()
+                CentralReport.webserver_thread = cr.web.server.WebServer()
             else:
                 log.log_error('Error launching the webserver: port %s is already in use on this host!' % local_web_port)
         else:
