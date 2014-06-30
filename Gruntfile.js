@@ -1,3 +1,14 @@
+/*
+    CentralReport Gruntfile
+
+    This file is used by Grunt to compile the front assets.
+    You need:
+        - Node.js
+        - Grunt installed globally
+
+    To run init, just call "grunt" inside the current directory.
+*/
+
 module.exports = function(grunt) {
 
     // Load grunt tasks automatically

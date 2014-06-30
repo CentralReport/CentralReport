@@ -21,3 +21,4 @@ cr_test*
 # Front assets #
 ################
 node_modules/
+centralreport/cr/web/static/
