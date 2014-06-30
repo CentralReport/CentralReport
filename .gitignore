@@ -17,3 +17,7 @@
 # You can create your own test files or folders by prefixing by:
 cr_test*
 */cr_test*
+
+# Front assets #
+################
+node_modules/
