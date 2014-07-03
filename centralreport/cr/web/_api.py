@@ -27,134 +27,135 @@ STATE_WARNING = 'warning'
 CHECK_ENABLED = 'True'
 CHECK_DISABLED = 'False'
 
-@server.app.route('/api/check/date')
-def api_check_date():
-    tmpl = server.app.jinja_env.get_template('json/date_check.json')
+@server.app.route('/api/checks')
+def api_check():
+    """
+    Entry point of /api/checks
+    @return: flask.Response
+    """
+    tmpl = server.app.jinja_env.get_template('json/checks.json')
     tmpl_vars = dict()
 
-    if data.last_check is None:
-        tmpl_vars['last_timestamp'] = '0'
-        tmpl_vars['last_fulldate'] = 'Never'
-    else:
-        tmpl_vars['last_timestamp'] = datetime_to_timestamp(data.last_check.date)
-        tmpl_vars['last_fulldate'] = data.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
-
+    # Date and system status
+    tmpl_vars['last_timestamp'] = datetime_to_timestamp(data.last_check.date)
     tmpl_vars['current_timestamp'] = datetime_to_timestamp(datetime.datetime.now())
-
     try:
         tmpl_vars['checks_interval'] = int(Config.get_config_value('Checks', 'interval'))
-    except:
+    except NameError:
         tmpl_vars['checks_interval'] = int(Config.CR_CONFIG_DEFAULT_CHECKS_INTERVAL)
 
+    # Uptime
+    tmpl_vars['uptime_seconds'] = data.last_check.load.uptime
+    tmpl_vars['boot_date'] = datetime_to_timestamp(data.last_check.date) - int(data.last_check.load.uptime)
+
+    # CPU
+    tmpl_vars = _get_cpu_info(tmpl_vars)
+    tmpl_vars = _get_memory_info(tmpl_vars)
+    tmpl_vars = _get_swap_info(tmpl_vars)
+    tmpl_vars = _get_load_info(tmpl_vars)
+
+
     return flask.Response(response=tmpl.render(tmpl_vars),
-                          status=200,
-                          mimetype="application/json")
+                      status=200,
+                      mimetype="application/json")
 
-@server.app.route('/api/check/full')
-def api_check_full():
-    tmpl = server.app.jinja_env.get_template('json/full_check.json')
-    tmpl_vars = dict()
 
-    if data.last_check is None:
-        tmpl_vars['last_timestamp'] = '0'
-        tmpl_vars['last_fulldate'] = 'Never'
+def _get_cpu_info(tmpl_vars):
+    """
+    Gets template variables filled with the last CPU check
+    @param tmpl_vars:
+    @return: Dictionary of template variables
+    """
+    tmpl_vars['cpu_user'] = data.last_check.cpu.user
+    tmpl_vars['cpu_system'] = data.last_check.cpu.system
+    tmpl_vars['cpu_idle'] = data.last_check.cpu.idle
+
+    cpu_percent = int(data.last_check.cpu.user) + int(data.last_check.cpu.system)
+    if int(Config.get_config_value('Alerts', 'cpu_alert')) <= cpu_percent:
+        tmpl_vars['cpu_state'] = STATE_ALERT
+    elif int(Config.get_config_value('Alerts', 'cpu_warning')) <= cpu_percent:
+        tmpl_vars['cpu_state'] = STATE_WARNING
     else:
-        tmpl_vars['last_timestamp'] = datetime_to_timestamp(data.last_check.date)
-        tmpl_vars['last_fulldate'] = data.last_check.date.strftime("%Y-%m-%d %H:%M:%S")
-        tmpl_vars['current_timestamp'] = datetime_to_timestamp(datetime.datetime.now())
+        tmpl_vars['cpu_state'] = STATE_OK
 
-        # CPU Check information
-        if data.last_check.cpu is None:
-            tmpl_vars['cpu_check_enabled'] = CHECK_DISABLED
+    return tmpl_vars
+
+
+def _get_memory_info(tmpl_vars):
+    """
+    Gets template variables filled with the last memory check
+    @param tmpl_vars:
+    @return: Dictionary of template variables
+    """
+    tmpl_vars['memory_total'] = data.last_check.memory.total
+    tmpl_vars['memory_free'] = data.last_check.memory.free
+    tmpl_vars['memory_active'] = data.last_check.memory.active
+    tmpl_vars['memory_inactive'] = data.last_check.memory.inactive
+    tmpl_vars['memory_resident'] = data.last_check.memory.resident
+
+    memory_percent = ((int(data.last_check.memory.total) - int(data.last_check.memory.free)) * 100) / int(data.last_check.memory.total)
+    if memory_percent >= int(Config.get_config_value('Alerts', 'memory_alert')):
+        tmpl_vars['memory_state'] = STATE_ALERT
+    elif memory_percent >= int(Config.get_config_value('Alerts', 'memory_warning')):
+        tmpl_vars['memory_state'] = STATE_WARNING
+    else:
+        tmpl_vars['memory_state'] = STATE_OK
+
+    return tmpl_vars
+
+
+def _get_swap_info(tmpl_vars):
+    """
+    Gets template variables filled with the last swap check
+    @param tmpl_vars:
+    @return: Dictionary of template variables
+    """
+    if int(data.last_check.memory.swap_size) != 0:
+        tmpl_vars['swap_used'] = data.last_check.memory.swap_used
+        tmpl_vars['swap_free'] = data.last_check.memory.swap_free
+        tmpl_vars['swap_total'] = data.last_check.memory.swap_size
+
+        # On Mac, the swap is unlimited (only limited by the available hard drive size)
+        if data.last_check.memory.swap_size == data.last_check.memory.total:
+            tmpl_vars['swap_configuration'] = 'unlimited'
         else:
-            tmpl_vars['cpu_check_enabled'] = CHECK_ENABLED
+            tmpl_vars['swap_configuration'] = 'limited'
 
-            tmpl_vars['cpu_percent'] = int(data.last_check.cpu.user) + int(data.last_check.cpu.system)
-            tmpl_vars['cpu_user'] = data.last_check.cpu.user
-            tmpl_vars['cpu_system'] = data.last_check.cpu.system
+        swap_percent = int(data.last_check.memory.swap_used) * 100 / int(data.last_check.memory.swap_size)
+        if swap_percent >= int(Config.get_config_value('Alerts', 'swap_alert')):
+            tmpl_vars['swap_state'] = STATE_ALERT
+        elif swap_percent >= int(Config.get_config_value('Alerts', 'swap_warning')):
 
-            if int(Config.get_config_value('Alerts', 'cpu_alert')) <= int(tmpl_vars['cpu_percent']):
-                tmpl_vars['cpu_state'] = STATE_ALERT
-            elif int(Config.get_config_value('Alerts', 'cpu_warning')) <= int(tmpl_vars['cpu_percent']):
-                tmpl_vars['cpu_state'] = STATE_WARNING
-            else:
-                tmpl_vars['cpu_state'] = STATE_OK
-
-        # Memory check information
-        if data.last_check.memory is None:
-            tmpl_vars['memory_check_enabled'] = CHECK_DISABLED
+            tmpl_vars['swap_state'] = STATE_WARNING
         else:
-            tmpl_vars['memory_check_enabled'] = CHECK_ENABLED
+            tmpl_vars['swap_state'] = STATE_OK
+    else:
+        # No swap available on this host
+        tmpl_vars['swap_configuration'] = 'undefined'
 
-            tmpl_vars['memory_percent'] = ((int(data.last_check.memory.total) - int(
-                data.last_check.memory.free)) * 100) / int(data.last_check.memory.total)
-            tmpl_vars['memory_free'] = text.convert_byte(data.last_check.memory.free)
-            tmpl_vars['memory_total'] = text.convert_byte(data.last_check.memory.total)
-            tmpl_vars['memory_used'] = text.convert_byte(
-                float(data.last_check.memory.total) - float(data.last_check.memory.free))
+    return tmpl_vars
 
-            if int(tmpl_vars['memory_percent']) >= int(Config.get_config_value('Alerts', 'memory_alert')):
-                tmpl_vars['memory_state'] = STATE_ALERT
-            elif int(tmpl_vars['memory_percent']) >= int(Config.get_config_value('Alerts', 'memory_warning')):
-                tmpl_vars['memory_state'] = STATE_WARNING
-            else:
-                tmpl_vars['memory_state'] = STATE_OK
 
-            # Last: swap stats
-            if 0 != int(data.last_check.memory.swap_size):
-                tmpl_vars['swap_percent'] = int(data.last_check.memory.swap_used) * 100 / int(
-                    data.last_check.memory.swap_size)
-                tmpl_vars['swap_used'] = text.convert_byte(data.last_check.memory.swap_used)
-                tmpl_vars['swap_free'] = text.convert_byte(data.last_check.memory.swap_free)
-                tmpl_vars['swap_size'] = text.convert_byte(data.last_check.memory.swap_size)
+def _get_load_info(tmpl_vars):
+    """
+    Gets template variables filled with the last load average check
+    @param tmpl_vars:
+    @return: Dictionary of template variables
+    """
+    tmpl_vars['load_1m'] = data.last_check.load.last1m
+    tmpl_vars['load_5m'] = data.last_check.load.last5m
+    tmpl_vars['load_15m'] = data.last_check.load.last15m
 
-                # On Mac, the swap is unlimited (only limited by the available hard drive size)
-                if data.last_check.memory.swap_size == data.last_check.memory.total:
-                    tmpl_vars['swap_configuration'] = 'unlimited'
-                else:
-                    tmpl_vars['swap_configuration'] = 'limited'
+    load_percent = (float(data.last_check.load.last1m) * 100) / int(cr.host.get_current_host().cpu_count)
+    if load_percent >= int(Config.get_config_value('Alerts', 'load_alert')):
+        tmpl_vars['load_state'] = STATE_ALERT
+    elif load_percent >= int(Config.get_config_value('Alerts', 'load_warning')):
+        tmpl_vars['load_state'] = STATE_WARNING
+    else:
+        tmpl_vars['load_state'] = STATE_OK
 
-                if isinstance(tmpl_vars['swap_percent'], int):
-                    if int(tmpl_vars['swap_percent']) >= int(Config.get_config_value('Alerts', 'swap_alert')):
-                        tmpl_vars['swap_state'] = STATE_ALERT
-                    elif int(tmpl_vars['swap_percent']) >= int(Config.get_config_value('Alerts', 'swap_warning')):
+    return tmpl_vars
 
-                        tmpl_vars['swap_state'] = STATE_WARNING
-                    else:
-                        tmpl_vars['swap_state'] = STATE_OK
-                else:
-                    tmpl_vars['swap_state'] = STATE_OK
-            else:
-
-                # No swap available on this host
-                tmpl_vars['swap_configuration'] = 'undefined'
-
-        # Load average
-        if data.last_check.load is None:
-            tmpl_vars['load_check_enabled'] = CHECK_DISABLED
-        else:
-            tmpl_vars['load_check_enabled'] = CHECK_ENABLED
-            tmpl_vars['load_last_one'] = data.last_check.load.last1m
-            tmpl_vars['load_percent'] = (float(data.last_check.load.last1m) * 100) / int(
-                cr.host.get_current_host().cpu_count)
-
-            if int(tmpl_vars['load_percent']) >= int(Config.get_config_value('Alerts', 'load_alert')):
-                tmpl_vars['load_state'] = STATE_ALERT
-            elif int(tmpl_vars['load_percent']) >= int(Config.get_config_value('Alerts', 'load_warning')):
-                tmpl_vars['load_state'] = STATE_WARNING
-            else:
-                tmpl_vars['load_state'] = STATE_OK
-
-            tmpl_vars['uptime_full_text'] = text.convert_seconds_to_phrase_time(
-                int(data.last_check.load.uptime))
-            tmpl_vars['uptime_seconds'] = text.add_number_separators(str(data.last_check.load.uptime))
-            tmpl_vars['start_date'] = datetime.datetime.fromtimestamp(
-                datetime_to_timestamp(data.last_check.date) - int(
-                    data.last_check.load.uptime)).strftime("%Y-%m-%d %H:%M:%S")
-
-    return flask.Response(response=tmpl.render(tmpl_vars),
-                          status=200,
-                          mimetype="application/json")
 
 @server.app.route('/api/check/disks')
 def api_check_disk():

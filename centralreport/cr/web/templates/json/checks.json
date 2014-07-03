@@ -1,0 +1,38 @@
+{
+    "date": "{{ last_timestamp }}",
+    "interval": "{{ checks_interval }}",
+    "system": {
+        "timestamp": "{{ current_timestamp }}"
+    },
+    "uptime": {
+        "seconds": "{{ uptime_seconds }}",
+        "boot_date": "{{ boot_date }}"
+    },
+    "cpu": {
+        "user": "{{ cpu_user }}",
+        "system": "{{ cpu_system }}",
+        "idle": "{{ cpu_idle }}",
+        "state": "{{ cpu_state }}"
+    },
+    "memory": {
+        "total": "{{ memory_total }}",
+        "free": "{{ memory_free }}",
+        "active": "{{ memory_active }}",
+        "inactive": "{{ memory_inactive }}",
+        "resident": "{{ memory_resident }}",
+        "state": "{{ memory_state }}"
+    },
+    "swap": {
+        "configuration": "{{ swap_configuration }}",
+        "total": "{{ swap_total }}",
+        "free": "{{ swap_free }}",
+        "used": "{{ swap_used }}",
+        "state": "{{ swap_state }}"
+    },
+    "load": {
+        "1m": "{{ load_1m }}",
+        "5m": "{{ load_5m }}",
+        "15m": "{{ load_15m }}",
+        "state": "{{ load_state }}"
+    }
+}
