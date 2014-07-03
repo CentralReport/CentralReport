@@ -99,14 +99,14 @@ class MacCollector(_Collector):
         mem_total = mem_free + mem_active + mem_inactive + mem_resident
 
         memory_check = checks.Memory()
-        memory_check.total = mem_total * float(MacCollector.PAGEBYTES_TO_BYTES)
-        memory_check.free = mem_free * float(MacCollector.PAGEBYTES_TO_BYTES)
-        memory_check.active = mem_active * float(MacCollector.PAGEBYTES_TO_BYTES)
-        memory_check.inactive = mem_inactive * float(MacCollector.PAGEBYTES_TO_BYTES)
-        memory_check.resident = mem_resident * float(MacCollector.PAGEBYTES_TO_BYTES)
-        memory_check.swap_size = mem_total * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.total = int(mem_total * float(MacCollector.PAGEBYTES_TO_BYTES))
+        memory_check.free = int(mem_free * float(MacCollector.PAGEBYTES_TO_BYTES))
+        memory_check.active = int(mem_active * float(MacCollector.PAGEBYTES_TO_BYTES))
+        memory_check.inactive = int(mem_inactive * float(MacCollector.PAGEBYTES_TO_BYTES))
+        memory_check.resident = int(mem_resident * float(MacCollector.PAGEBYTES_TO_BYTES))
+        memory_check.swap_size = int(mem_total * float(MacCollector.PAGEBYTES_TO_BYTES))
         memory_check.swap_free = 0
-        memory_check.swap_used = mem_swap * float(MacCollector.PAGEBYTES_TO_BYTES)
+        memory_check.swap_used = int(mem_swap * float(MacCollector.PAGEBYTES_TO_BYTES))
 
         return memory_check
 
