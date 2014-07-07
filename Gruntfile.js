@@ -26,11 +26,20 @@ module.exports = function(grunt) {
                 web: '<%= cr.dirs.cwd %>centralreport/cr/web',
                 webDev: '<%= cr.dirs.web %>/static_dev',
                 webDist: '<%= cr.dirs.web %>/static',
-                vendor: '<%= cr.dirs.cwd %>front_vendor'
+                vendor: '<%= cr.dirs.cwd %>bower_components'
             }
         },
 
         pkg: grunt.file.readJSON('package.json'),
+
+        bower: {
+            install: {
+                options: {
+                    copy: false,
+                    verbose: true
+                }
+            }
+        },
 
         uglify: {
             development: {
@@ -41,8 +50,10 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= cr.dirs.webDist %>/js/centralreport.js' : [
-                        '<%= cr.dirs.crDesign %>/js/centralreport.js',
-                        '<%= cr.dirs.webDev %>/js/cr.ajax.js'
+                        '<%= cr.dirs.vendor %>/angular/angular.js',
+                        '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
+//                        '<%= cr.dirs.crDesign %>/js/centralreport.js',
+                        '<%= cr.dirs.webDev %>/js/*.js'
                     ]
                 }
             },
@@ -51,9 +62,11 @@ module.exports = function(grunt) {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
                 },
                 files: {
-                    '<%= cr.dirs.webDist %>/js/centralreport.min.js' : [
+                    '<%= cr.dirs.webDist %>/js/centralreport.js' : [
+                        '<%= cr.dirs.vendor %>/angular/angular.js',
+                        '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
                         '<%= cr.dirs.crDesign %>/js/centralreport.js',
-                        '<%= cr.dirs.webDev %>/js/cr.ajax.js'
+                        '<%= cr.dirs.webDev %>/js/*.js'
                     ]
                 }
             }
@@ -83,12 +96,24 @@ module.exports = function(grunt) {
                 src: '**',
                 dest: '<%= cr.dirs.webDist %>/css'
             },
+
+            partials: {
+                expand: true,
+                cwd: '<%= cr.dirs.webDev %>/partials',
+                src: '**',
+                dest: '<%= cr.dirs.webDist %>/partials'
+            },
         },
 
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             js: {
-                files: ['<%= cr.dirs.webDev %>/js/{,*/}*.js']
+                files: ['<%= cr.dirs.webDev %>/js/**.js'],
+                tasks: ['uglify:development']
+            },
+            static: {
+                files: ['<%= cr.dirs.webDev %>/**'],
+                tasks: ['copy']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -98,13 +123,21 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('default', [
-        'uglify',
+        'bower',
+        'uglify:development',
         'copy'
     ]);
 
-    grunt.registerTask('watch', [
-        'uglify',
+    grunt.registerTask('prod', [
+        'bower',
+        'uglify:production',
+        'copy'
+    ]);
+
+    grunt.registerTask('serve', [
+        'uglify:development',
         'copy',
         'watch'
     ]);
+
 };

@@ -6,18 +6,11 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/bootstrap-responsive.min.css">
-
-    <link rel="stylesheet" href="static/css/style.css">
-    <link rel="stylesheet" href="static/css/style-responsive.css">
-
-    <script type="text/javascript" src="static/js/jquery.min.js"></script>
-
+    {% block head_styles %}{% endblock %}
     {% block head_javascript %}{% endblock %}
 
 </head>
-<body>
+<body {% block body_class %}{% endblock %}>
     {% block body %}{% endblock %}
 
     {% block bottom_javascript %}{% endblock %}
