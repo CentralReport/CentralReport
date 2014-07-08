@@ -20,5 +20,6 @@ cr_test*
 
 # Front assets #
 ################
+bower_components/
 node_modules/
 centralreport/cr/web/static/
