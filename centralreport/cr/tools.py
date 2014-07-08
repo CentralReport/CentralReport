@@ -62,7 +62,7 @@ class Config:
             'port': '8080'
         },
         'Checks': {
-            'interval': '60'
+            'interval': '1'
         },
         'Alerts': {
             'cpu_warning': '75',
