@@ -33,7 +33,8 @@ module.exports = function(grunt) {
                 '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
                 '<%= cr.dirs.webDev %>/js/centralreport.js',
                 '<%= cr.dirs.webDev %>/js/app/app.js',
-                '<%= cr.dirs.webDev %>/js/app/controllers.js'
+                '<%= cr.dirs.webDev %>/js/app/controllers.js',
+                '<%= cr.dirs.webDev %>/js/app/directives.js'
             ]
         },
 

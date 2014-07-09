@@ -27,6 +27,7 @@ STATE_WARNING = 'warning'
 CHECK_ENABLED = 'True'
 CHECK_DISABLED = 'False'
 
+
 @server.app.route('/api/checks')
 def api_check():
     """
@@ -56,9 +57,26 @@ def api_check():
 
 
     return flask.Response(response=tmpl.render(tmpl_vars),
-                      status=200,
-                      mimetype="application/json")
+                          status=200,
+                          mimetype="application/json")
 
+
+@server.app.route('/api/host')
+def api_host():
+    """
+    Entry point of /api/host
+    @return: flask.Response
+    """
+
+    tmpl = server.app.jinja_env.get_template('json/host.json')
+    tmpl_vars = dict()
+    tmpl_vars['hostname'] = cr.host.get_current_host().hostname
+    tmpl_vars['os_name'] = cr.host.get_current_host().os_name
+    tmpl_vars['os_version'] = cr.host.get_current_host().os_version
+
+    return flask.Response(response=tmpl.render(tmpl_vars),
+                          status=200,
+                          mimetype="application/json")
 
 def _get_cpu_info(tmpl_vars):
     """

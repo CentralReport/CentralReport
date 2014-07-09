@@ -1,0 +1,5 @@
+{
+    "hostname": "{{ hostname }}",
+    "os_name": "{{ os_name }}",
+    "os_version": "{{ os_version }}"
+}

@@ -92,7 +92,7 @@ def get_current_host():
     # Specific getters
     if _current_host.os == OS_MAC:
         _current_host.hostname = text.remove_specials_characters(system.execute_command('hostname -s'))
-        _current_host.os_name = system.execute_command('sw_vers -productName')
+        _current_host.os_name = text.remove_specials_characters(system.execute_command('sw_vers -productName'))
         _current_host.os_version = text.remove_specials_characters(system.execute_command('sw_vers -productVersion'))
         _current_host.model = system.execute_command('sysctl -n hw.model')
 
