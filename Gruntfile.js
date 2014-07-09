@@ -27,7 +27,14 @@ module.exports = function(grunt) {
                 webDev: '<%= cr.dirs.web %>/static_dev',
                 webDist: '<%= cr.dirs.web %>/static',
                 vendor: '<%= cr.dirs.cwd %>bower_components'
-            }
+            },
+            js: [
+                '<%= cr.dirs.vendor %>/angular/angular.js',
+                '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
+                '<%= cr.dirs.webDev %>/js/centralreport.js',
+                '<%= cr.dirs.webDev %>/js/app/app.js',
+                '<%= cr.dirs.webDev %>/js/app/controllers.js'
+            ]
         },
 
         pkg: grunt.file.readJSON('package.json'),
@@ -49,12 +56,7 @@ module.exports = function(grunt) {
                     mangle: false
                 },
                 files: {
-                    '<%= cr.dirs.webDist %>/js/centralreport.js' : [
-                        '<%= cr.dirs.vendor %>/angular/angular.js',
-                        '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
-//                        '<%= cr.dirs.crDesign %>/js/centralreport.js',
-                        '<%= cr.dirs.webDev %>/js/*.js'
-                    ]
+                    '<%= cr.dirs.webDist %>/js/centralreport.js' : ['<%= cr.js %>']
                 }
             },
             production: {
@@ -62,12 +64,7 @@ module.exports = function(grunt) {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
                 },
                 files: {
-                    '<%= cr.dirs.webDist %>/js/centralreport.js' : [
-                        '<%= cr.dirs.vendor %>/angular/angular.js',
-                        '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
-                        '<%= cr.dirs.crDesign %>/js/centralreport.js',
-                        '<%= cr.dirs.webDev %>/js/*.js'
-                    ]
+                    '<%= cr.dirs.webDist %>/js/centralreport.js' : ['<%= cr.js %>']
                 }
             }
         },
@@ -108,7 +105,7 @@ module.exports = function(grunt) {
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             js: {
-                files: ['<%= cr.dirs.webDev %>/js/**.js'],
+                files: ['<%= cr.dirs.webDev %>/js/**.js', '<%= cr.dirs.webDev %>/js/app/**.js'],
                 tasks: ['uglify:development']
             },
             static: {
