@@ -22,7 +22,6 @@ CentralReport.angularApp.config(
 
 CentralReport.angularApp.run(function ($rootScope, $http) {
     $http.get('/api/host').success(function(data) {
-        console.log(data);
         $rootScope.hostData = data;
     });
 });

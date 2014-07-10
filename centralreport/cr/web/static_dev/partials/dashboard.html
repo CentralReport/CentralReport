@@ -11,7 +11,7 @@
                         <h3 class="panel-title">CPU (%)</h3>
                     </div>
                     <div class="panel-body text-center">
-                        <span class="stat-large">{{ checks.cpu.user }} %</span>
+                        <span class="stat-large">{{ [checks.cpu.user, checks.cpu.system] | addNumbers }} %</span>
                     </div>
                     <div class="panel-footer">
                         <div class="row">
@@ -37,24 +37,24 @@
                         <h3 class="panel-title">Memory</h3>
                     </div>
                     <div class="panel-body text-center">
-                        <span class="stat-large">10 %</span>
+                        <span class="stat-large">{{ {'total': checks.memory.total, 'values': [checks.memory.active, checks.memory.resident]} | percentage }} %</span>
                     </div>
                     <div class="panel-footer">
                        <div class="row">
                            <div class="col-xs-3 text-center">
-                               <div class="stat-small">0</div>
+                               <div class="stat-small">{{ checks.memory.active | readableBytes }}</div>
                                <div class="stat-subtitle">Active</div>
                            </div>
                            <div class="col-xs-3 text-center">
-                               <div class="stat-small">0</div>
+                               <div class="stat-small">{{ checks.memory.inactive | readableBytes }}</div>
                                <div class="stat-subtitle">Inactive</div>
                            </div>
                            <div class="col-xs-3 text-center">
-                               <div class="stat-small">0</div>
-                               <div class="stat-subtitle">Reserved</div>
+                               <div class="stat-small">{{ checks.memory.resident | readableBytes }}</div>
+                               <div class="stat-subtitle">Resident</div>
                            </div>
                            <div class="col-xs-3 text-center">
-                               <div class="stat-small">0</div>
+                               <div class="stat-small">{{ checks.memory.free | readableBytes }}</div>
                                <div class="stat-subtitle">Free</div>
                            </div>
                        </div>

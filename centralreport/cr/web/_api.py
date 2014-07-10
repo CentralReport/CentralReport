@@ -73,6 +73,12 @@ def api_host():
     tmpl_vars['hostname'] = cr.host.get_current_host().hostname
     tmpl_vars['os_name'] = cr.host.get_current_host().os_name
     tmpl_vars['os_version'] = cr.host.get_current_host().os_version
+    tmpl_vars['architecture'] = cr.host.get_current_host().architecture
+    tmpl_vars['cpu_count'] = cr.host.get_current_host().cpu_count
+    tmpl_vars['cpu_model'] = cr.host.get_current_host().cpu_model
+    tmpl_vars['kernel_name'] = cr.host.get_current_host().kernel_name
+    tmpl_vars['kernel_version'] = cr.host.get_current_host().kernel_version
+    tmpl_vars['uuid'] = cr.host.get_current_host().uuid
 
     return flask.Response(response=tmpl.render(tmpl_vars),
                           status=200,

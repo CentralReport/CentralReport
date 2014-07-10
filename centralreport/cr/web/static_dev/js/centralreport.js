@@ -28,6 +28,18 @@ var CentralReport = {
 
     getUTCtimestamp: function() {
         return (Math.round(new Date().getTime() / 1000)) - this.CLIENT_TIMEZONE_OFFSET;
+    },
+
+    getReadableFileSizeString: function(fileSizeInBytes) {
+        fileSizeInBytes = parseInt(fileSizeInBytes, 10);
+        var i = 0;
+        var byteUnits = ['B', ' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+        while (fileSizeInBytes > 1024){
+            fileSizeInBytes = fileSizeInBytes / 1024;
+            i++;
+        };
+
+        return Math.max(fileSizeInBytes, 0).toFixed(1) + byteUnits[i];
     }
 }
 

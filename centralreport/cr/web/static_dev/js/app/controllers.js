@@ -28,6 +28,10 @@ CentralReport.angularApp.controller('DashboardCtrl', function ($scope, $http, $t
         stopTimer();
     });
 
+    $scope.getReadableByte = function(bytes) {
+        return CentralReport.getReadableFileSizeString(bytes);
+    }
+
     dataGetter();
 });
 

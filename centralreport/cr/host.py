@@ -96,7 +96,7 @@ def get_current_host():
         _current_host.os_version = text.remove_specials_characters(system.execute_command('sw_vers -productVersion'))
         _current_host.model = system.execute_command('sysctl -n hw.model')
 
-        _current_host.cpu_model = system.execute_command('sysctl -n machdep.cpu.brand_string')
+        _current_host.cpu_model = text.remove_specials_characters(system.execute_command('sysctl -n machdep.cpu.brand_string'))
         _current_host.cpu_count = 1
         try:
             _current_host.cpu_count = multiprocessing.cpu_count()
