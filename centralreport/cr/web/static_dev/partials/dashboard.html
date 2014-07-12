@@ -1,6 +1,9 @@
 <div class="row">
     <div class="col-sm-8">
-        <h2><i class="fa fa-apple fa-fw"></i>{{ hostData.hostname }} <small>{{ hostData.os_name }} {{ hostData.os_version }}</small></h2>
+        <h2>
+            <i class="fa fa-fw" ng-class="{'Mac':'fa-apple', 'Debian':'fa-linux', 'RedHat':'fa-linux', '':''}[hostData.os_variant]"></i>
+            {{ hostData.hostname }} <small>{{ hostData.os_name }} {{ hostData.os_version }}</small>
+        </h2>
     </div>
 </div>
 

@@ -72,6 +72,8 @@ def api_host():
         'hostname': cr.host.get_current_host().hostname,
         'os_name': cr.host.get_current_host().os_name,
         'os_version': cr.host.get_current_host().os_version,
+        'os_family': cr.host.get_current_host().family,
+        'os_variant': cr.host.get_current_host().variant,
         'architecture': cr.host.get_current_host().architecture,
         'cpu_count': cr.host.get_current_host().cpu_count,
         'cpu_model': cr.host.get_current_host().cpu_model,
