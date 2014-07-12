@@ -1,133 +1,151 @@
 <div class="row">
-            <div class="col-sm-8">
-                <h2><i class="fa fa-apple fa-fw"></i>{{ hostData.hostname }} <small>{{ hostData.os_name }} {{ hostData.os_version }}</small></h2>
-            </div>
-        </div>
+    <div class="col-sm-8">
+        <h2><i class="fa fa-apple fa-fw"></i>{{ hostData.hostname }} <small>{{ hostData.os_name }} {{ hostData.os_version }}</small></h2>
+    </div>
+</div>
 
-        <div class="row row-panel">
-            <div class="col-sm-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">CPU (%)</h3>
-                    </div>
-                    <div class="panel-body text-center">
-                        <span class="stat-large">{{ [checks.cpu.user, checks.cpu.system] | addNumbers }} %</span>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-xs-4 text-center">
-                                <div class="stat-small">{{ checks.cpu.user }} %</div>
-                                <div class="stat-subtitle">User</div>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <div class="stat-small">{{ checks.cpu.system }} %</div>
-                                <div class="stat-subtitle">System</div>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <div class="stat-small">{{ checks.cpu.idle }} %</div>
-                                <div class="stat-subtitle">Idle</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="row row-panel">
+    <div class="col-sm-4">
+        <div class="panel" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.cpu.state]">
+            <div class="panel-heading">
+                <h3 class="panel-title">CPU</h3>
             </div>
-            <div class="col-sm-4">
-                <div class="panel panel-warning">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Memory</h3>
-                    </div>
-                    <div class="panel-body text-center">
-                        <span class="stat-large">{{ {'total': checks.memory.total, 'values': [checks.memory.active, checks.memory.resident]} | percentage }} %</span>
-                    </div>
-                    <div class="panel-footer">
-                       <div class="row">
-                           <div class="col-xs-3 text-center">
-                               <div class="stat-small">{{ checks.memory.active | readableBytes }}</div>
-                               <div class="stat-subtitle">Active</div>
-                           </div>
-                           <div class="col-xs-3 text-center">
-                               <div class="stat-small">{{ checks.memory.inactive | readableBytes }}</div>
-                               <div class="stat-subtitle">Inactive</div>
-                           </div>
-                           <div class="col-xs-3 text-center">
-                               <div class="stat-small">{{ checks.memory.resident | readableBytes }}</div>
-                               <div class="stat-subtitle">Resident</div>
-                           </div>
-                           <div class="col-xs-3 text-center">
-                               <div class="stat-small">{{ checks.memory.free | readableBytes }}</div>
-                               <div class="stat-subtitle">Free</div>
-                           </div>
-                       </div>
-                    </div>
-                </div>
+            <div class="panel-body text-center">
+                <span class="stat-large">{{ checks.cpu.percent }} %</span>
             </div>
-            <div class="col-sm-4">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Swap</h3>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-xs-4 text-center">
+                        <div class="stat-small">{{ checks.cpu.user }} %</div>
+                        <div class="stat-subtitle">User</div>
                     </div>
-                    <div class="panel-body text-center">
-                        <span class="stat-small">No swap on this host</span>
+                    <div class="col-xs-4 text-center">
+                        <div class="stat-small">{{ checks.cpu.system }} %</div>
+                        <div class="stat-subtitle">System</div>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <div class="stat-small">{{ checks.cpu.idle }} %</div>
+                        <div class="stat-subtitle">Idle</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row row-panel">
-            <div class="col-sm-4">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Load average</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="panel-stats">
-                            <div class="col-xs-4 text-center">
-                                <div class="stat-large">{{ checks.load.1m }}</div>
-                                <div class="stat-subtitle">1 m</div>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <div class="stat-large">{{ checks.load.5m }}</div>
-                                <div class="stat-subtitle">5 m</div>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <div class="stat-large">{{ checks.load.15m }}</div>
-                                <div class="stat-subtitle">15 m</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.memory.state]">
+            <div class="panel-heading">
+                <h3 class="panel-title">Memory</h3>
             </div>
-            <div class="col-sm-8">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Uptime</h3>
+            <div class="panel-body text-center">
+                <span class="stat-large">{{ checks.memory.percent }} %</span>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-xs-3 text-center">
+                        <div class="stat-small">{{ checks.memory.active | readableBytes }}</div>
+                        <div class="stat-subtitle">Active</div>
                     </div>
-                    <div class="panel-body">
-                        <div class="panel-stats">
-                            <div class="stat-small">1 hour 48 minutes 32 seconds (6 512 seconds)</div>
-                        </div>
+                    <div class="col-xs-3 text-center">
+                        <div class="stat-small">{{ checks.memory.resident | readableBytes }}</div>
+                        <div class="stat-subtitle">Resident</div>
                     </div>
-                    <div class="panel-footer">
-                        <div class="stat-subtitle">Boot date: 2014-06-28 18:14:41</div>
+                    <div class="col-xs-3 text-center">
+                        <div class="stat-small">{{ checks.memory.inactive | readableBytes }}</div>
+                        <div class="stat-subtitle">Inactive</div>
+                    </div>
+                    <div class="col-xs-3 text-center">
+                        <div class="stat-small">{{ checks.memory.free | readableBytes }}</div>
+                        <div class="stat-subtitle">Free</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row row-panel">
-            <div class="col-sm-12">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Disks</h3>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.swap.state]">
+            <div class="panel-heading">
+                <h3 class="panel-title">Swap</h3>
+            </div>
+            <div class="panel-body" ng-switch="checks.swap.configuration">
+                <div class="text-center" ng-switch-when="unlimited">
+                    <span class="stat-large">{{ checks.swap.used | readableBytes }}</span>
+                </div>
+                <div class="text-center" ng-switch-when="limited">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <div class="stat-small">{{ checks.swap.percent }}</div>
+                            <div class="stat-subtitle">%</div>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <div class="stat-small">{{ checks.swap.used | readableBytes }}</div>
+                            <div class="stat-subtitle">Used</div>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <div class="stat-small">{{ checks.swap.total | readableBytes }}</div>
+                            <div class="stat-subtitle">Total</div>
+                        </div>
                     </div>
-                    <table class="table">
-                        <tr>
-                            <td>Macintosh HD</td>
-                            <td>60.59 GB free / 110.99 GB total (45 % used)</td>
-                        </tr>
-                        <tr>
-                            <td>Macintosh HD</td>
-                            <td>60.59 GB free / 110.99 GB total (45 % used)</td>
-                        </tr>
-                    </table>
+                </div>
+                <div ng-switch-default>
+                    <span class="stat-small">No swap on this host</span>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="row row-panel">
+    <div class="col-sm-4">
+        <div class="panel"  ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.load.state]">
+            <div class="panel-heading">
+                <h3 class="panel-title">Load average</h3>
+            </div>
+            <div class="panel-body">
+                <div class="panel-stats">
+                    <div class="col-xs-4 text-center">
+                        <div class="stat-large">{{ checks.load.1m }}</div>
+                        <div class="stat-subtitle">1 m</div>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <div class="stat-large">{{ checks.load.5m }}</div>
+                        <div class="stat-subtitle">5 m</div>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <div class="stat-large">{{ checks.load.15m }}</div>
+                        <div class="stat-subtitle">15 m</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Uptime</h3>
+            </div>
+            <div class="panel-body">
+                <div class="panel-stats">
+                    <div class="stat-small">{{ checks.uptime.seconds | readableUptime }} ({{ checks.uptime.seconds | number }} seconds)</div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="stat-subtitle">Boot date: {{ checks.uptime.boot_date + '000' | date : 'medium' }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row row-panel">
+    <div class="col-sm-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Disks</h3>
+            </div>
+            <table class="table">
+                <tr ng-repeat="disk in checks.disks"  ng-class="{'warning':'warning', 'alert':'danger'}[disk.state]">
+                    <td>{{ disk.display_name }} ({{ disk.name }})</td>
+                    <td>{{ disk.used | readableBytes }} used - {{ disk.free | readableBytes }} free - {{ disk.size | readableBytes }} total</td>
+                    <td>{{ disk.percent }} %</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

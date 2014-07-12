@@ -19,7 +19,6 @@ CentralReport.angularApp.controller('DashboardCtrl', function ($scope, $http, $t
         if (angular.isDefined($scope.timer)) {
             $timeout.cancel($scope.timer);
             $scope.timer = undefined;
-
         }
     };
 

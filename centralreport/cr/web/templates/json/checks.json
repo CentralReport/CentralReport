@@ -9,12 +9,14 @@
         "boot_date": "{{ boot_date }}"
     },
     "cpu": {
+        "percent": "{{ cpu_percent }}",
         "user": "{{ cpu_user }}",
         "system": "{{ cpu_system }}",
         "idle": "{{ cpu_idle }}",
         "state": "{{ cpu_state }}"
     },
     "memory": {
+        "percent": "{{ memory_percent }}",
         "total": "{{ memory_total }}",
         "free": "{{ memory_free }}",
         "active": "{{ memory_active }}",
@@ -24,6 +26,7 @@
     },
     "swap": {
         "configuration": "{{ swap_configuration }}",
+        "percent": "{{ swap_percent }}",
         "total": "{{ swap_total }}",
         "free": "{{ swap_free }}",
         "used": "{{ swap_used }}",
@@ -34,5 +37,18 @@
         "5m": "{{ load_5m }}",
         "15m": "{{ load_15m }}",
         "state": "{{ load_state }}"
-    }
+    },
+    "disks": [
+        {% for disk in disks %}
+        {
+            "name": "{{ disk.name }}",
+            "display_name": "{{ disk.display_name }}",
+            "uuid": "{{ disk.uuid }}",
+            "size": "{{ disk.size }}",
+            "free": "{{ disk.free }}",
+            "used": "{{ disk.used }}",
+            "percent": "{{ disk.percent }}"
+        },
+        {% endfor %}
+    ]
 }

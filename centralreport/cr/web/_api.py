@@ -9,6 +9,7 @@
 """
 
 import datetime
+import json
 
 import flask
 
@@ -16,7 +17,6 @@ from cr.web import server
 from cr import data
 import cr.host
 from cr.utils.date import datetime_to_timestamp
-from cr.utils import text
 from cr.tools import Config
 
 
@@ -34,29 +34,29 @@ def api_check():
     Entry point of /api/checks
     @return: flask.Response
     """
-    tmpl = server.app.jinja_env.get_template('json/checks.json')
-    tmpl_vars = dict()
-
-    # Date and system status
-    tmpl_vars['last_timestamp'] = datetime_to_timestamp(data.last_check.date)
-    tmpl_vars['current_timestamp'] = datetime_to_timestamp(datetime.datetime.now())
     try:
-        tmpl_vars['checks_interval'] = int(Config.get_config_value('Checks', 'interval'))
+        interval = int(Config.get_config_value('Checks', 'interval'))
     except NameError:
-        tmpl_vars['checks_interval'] = int(Config.CR_CONFIG_DEFAULT_CHECKS_INTERVAL)
+        interval = int(Config.CR_CONFIG_DEFAULT_CHECKS_INTERVAL)
 
-    # Uptime
-    tmpl_vars['uptime_seconds'] = data.last_check.load.uptime
-    tmpl_vars['boot_date'] = datetime_to_timestamp(data.last_check.date) - int(data.last_check.load.uptime)
+    vars = {
+        'date': datetime_to_timestamp(data.last_check.date),
+        'interval': interval,
+        'system': {
+            'timestamp': datetime_to_timestamp(datetime.datetime.now())
+        },
+        'uptime': {
+            'seconds': data.last_check.load.uptime,
+            'boot_date': datetime_to_timestamp(data.last_check.date) - int(data.last_check.load.uptime)
+        },
+        'cpu': _get_cpu_info(),
+        'memory': _get_memory_info(),
+        'swap': _get_swap_info(),
+        'load': _get_load_info(),
+        'disks': _get_disks_info()
+    }
 
-    # CPU
-    tmpl_vars = _get_cpu_info(tmpl_vars)
-    tmpl_vars = _get_memory_info(tmpl_vars)
-    tmpl_vars = _get_swap_info(tmpl_vars)
-    tmpl_vars = _get_load_info(tmpl_vars)
-
-
-    return flask.Response(response=tmpl.render(tmpl_vars),
+    return flask.Response(response=json.dumps(vars),
                           status=200,
                           mimetype="application/json")
 
@@ -68,139 +68,151 @@ def api_host():
     @return: flask.Response
     """
 
-    tmpl = server.app.jinja_env.get_template('json/host.json')
-    tmpl_vars = dict()
-    tmpl_vars['hostname'] = cr.host.get_current_host().hostname
-    tmpl_vars['os_name'] = cr.host.get_current_host().os_name
-    tmpl_vars['os_version'] = cr.host.get_current_host().os_version
-    tmpl_vars['architecture'] = cr.host.get_current_host().architecture
-    tmpl_vars['cpu_count'] = cr.host.get_current_host().cpu_count
-    tmpl_vars['cpu_model'] = cr.host.get_current_host().cpu_model
-    tmpl_vars['kernel_name'] = cr.host.get_current_host().kernel_name
-    tmpl_vars['kernel_version'] = cr.host.get_current_host().kernel_version
-    tmpl_vars['uuid'] = cr.host.get_current_host().uuid
+    vars = {
+        'hostname': cr.host.get_current_host().hostname,
+        'os_name': cr.host.get_current_host().os_name,
+        'os_version': cr.host.get_current_host().os_version,
+        'architecture': cr.host.get_current_host().architecture,
+        'cpu_count': cr.host.get_current_host().cpu_count,
+        'cpu_model': cr.host.get_current_host().cpu_model,
+        'kernel_name': cr.host.get_current_host().kernel_name,
+        'kernel_version': cr.host.get_current_host().kernel_version,
+        'uuid': cr.host.get_current_host().uuid
+    }
 
-    return flask.Response(response=tmpl.render(tmpl_vars),
+    return flask.Response(response=json.dumps(vars),
                           status=200,
                           mimetype="application/json")
 
-def _get_cpu_info(tmpl_vars):
+def _get_cpu_info():
     """
     Gets template variables filled with the last CPU check
-    @param tmpl_vars:
     @return: Dictionary of template variables
     """
-    tmpl_vars['cpu_user'] = data.last_check.cpu.user
-    tmpl_vars['cpu_system'] = data.last_check.cpu.system
-    tmpl_vars['cpu_idle'] = data.last_check.cpu.idle
 
-    cpu_percent = int(data.last_check.cpu.user) + int(data.last_check.cpu.system)
-    if int(Config.get_config_value('Alerts', 'cpu_alert')) <= cpu_percent:
-        tmpl_vars['cpu_state'] = STATE_ALERT
-    elif int(Config.get_config_value('Alerts', 'cpu_warning')) <= cpu_percent:
-        tmpl_vars['cpu_state'] = STATE_WARNING
+    vars = {
+        'percent': int(data.last_check.cpu.user) + int(data.last_check.cpu.system),
+        'user': data.last_check.cpu.user,
+        'system': data.last_check.cpu.system,
+        'idle': data.last_check.cpu.idle
+    }
+
+    if int(Config.get_config_value('Alerts', 'cpu_alert')) <= vars['percent']:
+        vars['state'] = STATE_ALERT
+    elif int(Config.get_config_value('Alerts', 'cpu_warning')) <= vars['percent']:
+        vars['state'] = STATE_WARNING
     else:
-        tmpl_vars['cpu_state'] = STATE_OK
+        vars['state'] = STATE_OK
 
-    return tmpl_vars
+    return vars
 
 
-def _get_memory_info(tmpl_vars):
+def _get_memory_info():
     """
     Gets template variables filled with the last memory check
-    @param tmpl_vars:
     @return: Dictionary of template variables
     """
-    tmpl_vars['memory_total'] = data.last_check.memory.total
-    tmpl_vars['memory_free'] = data.last_check.memory.free
-    tmpl_vars['memory_active'] = data.last_check.memory.active
-    tmpl_vars['memory_inactive'] = data.last_check.memory.inactive
-    tmpl_vars['memory_resident'] = data.last_check.memory.resident
 
-    memory_percent = ((int(data.last_check.memory.total) - int(data.last_check.memory.free)) * 100) / int(data.last_check.memory.total)
-    if memory_percent >= int(Config.get_config_value('Alerts', 'memory_alert')):
-        tmpl_vars['memory_state'] = STATE_ALERT
-    elif memory_percent >= int(Config.get_config_value('Alerts', 'memory_warning')):
-        tmpl_vars['memory_state'] = STATE_WARNING
+    vars = {
+        'percent': (int(data.last_check.memory.total) - int(data.last_check.memory.free)) * 100 / int(data.last_check.memory.total),
+        'total': data.last_check.memory.total,
+        'active': data.last_check.memory.active,
+        'inactive': data.last_check.memory.inactive,
+        'resident': data.last_check.memory.resident,
+        'free': data.last_check.memory.free
+    }
+
+    if vars['percent'] >= int(Config.get_config_value('Alerts', 'memory_alert')):
+        vars['sate'] = STATE_ALERT
+    elif vars['percent'] >= int(Config.get_config_value('Alerts', 'memory_warning')):
+        vars['state'] = STATE_WARNING
     else:
-        tmpl_vars['memory_state'] = STATE_OK
+        vars['state'] = STATE_OK
 
-    return tmpl_vars
+    return vars
 
 
-def _get_swap_info(tmpl_vars):
+def _get_swap_info():
     """
     Gets template variables filled with the last swap check
-    @param tmpl_vars:
     @return: Dictionary of template variables
     """
-    if int(data.last_check.memory.swap_size) != 0:
-        tmpl_vars['swap_used'] = data.last_check.memory.swap_used
-        tmpl_vars['swap_free'] = data.last_check.memory.swap_free
-        tmpl_vars['swap_total'] = data.last_check.memory.swap_size
 
+    vars = dict()
+
+    if int(data.last_check.memory.swap_size) != 0:
         # On Mac, the swap is unlimited (only limited by the available hard drive size)
         if data.last_check.memory.swap_size == data.last_check.memory.total:
-            tmpl_vars['swap_configuration'] = 'unlimited'
+            vars['configuration'] = 'unlimited'
         else:
-            tmpl_vars['swap_configuration'] = 'limited'
+            vars['configuration'] = 'limited'
 
-        swap_percent = int(data.last_check.memory.swap_used) * 100 / int(data.last_check.memory.swap_size)
-        if swap_percent >= int(Config.get_config_value('Alerts', 'swap_alert')):
-            tmpl_vars['swap_state'] = STATE_ALERT
-        elif swap_percent >= int(Config.get_config_value('Alerts', 'swap_warning')):
+        vars['percent'] = int(data.last_check.memory.swap_used) * 100 / int(data.last_check.memory.swap_size)
+        vars['used'] = data.last_check.memory.swap_used
+        vars['free'] = data.last_check.memory.swap_free
+        vars['total'] = data.last_check.memory.swap_size
 
-            tmpl_vars['swap_state'] = STATE_WARNING
+        if vars['percent'] >= int(Config.get_config_value('Alerts', 'swap_alert')):
+            vars['state'] = STATE_ALERT
+        elif vars['percent'] >= int(Config.get_config_value('Alerts', 'swap_warning')):
+            vars['state'] = STATE_WARNING
         else:
-            tmpl_vars['swap_state'] = STATE_OK
+            vars['state'] = STATE_OK
     else:
         # No swap available on this host
-        tmpl_vars['swap_configuration'] = 'undefined'
+        vars['configuration'] = 'undefined'
 
-    return tmpl_vars
+    return vars
 
 
-def _get_load_info(tmpl_vars):
+def _get_load_info():
     """
     Gets template variables filled with the last load average check
-    @param tmpl_vars:
     @return: Dictionary of template variables
     """
-    tmpl_vars['load_1m'] = data.last_check.load.last1m
-    tmpl_vars['load_5m'] = data.last_check.load.last5m
-    tmpl_vars['load_15m'] = data.last_check.load.last15m
+
+    vars = {
+        '1m': data.last_check.load.last1m,
+        '5m': data.last_check.load.last5m,
+        '15m': data.last_check.load.last15m
+    }
 
     load_percent = (float(data.last_check.load.last1m) * 100) / int(cr.host.get_current_host().cpu_count)
     if load_percent >= int(Config.get_config_value('Alerts', 'load_alert')):
-        tmpl_vars['load_state'] = STATE_ALERT
+        vars['state'] = STATE_ALERT
     elif load_percent >= int(Config.get_config_value('Alerts', 'load_warning')):
-        tmpl_vars['load_state'] = STATE_WARNING
+        vars['state'] = STATE_WARNING
     else:
-        tmpl_vars['load_state'] = STATE_OK
+        vars['state'] = STATE_OK
 
-    return tmpl_vars
+    return vars
 
 
-@server.app.route('/api/check/disks')
-def api_check_disk():
-    tmpl = server.app.jinja_env.get_template('blocks/disks.block.tpl')
-    tmpl_vars = dict()
-
+def _get_disks_info():
+    """
+    Gets template variables filled with disks data
+    @return: Dictionary of template variables
+    """
+    all_disks = []
     if data.last_check.disks is not None:
-        all_disks = []
-
         for disk in data.last_check.disks.disks:
             check_disk = {
-                'name': str.replace(disk.display_name, '/dev/', '').decode('utf-8'),
-                'free': text.convert_byte(disk.free),
-                'total': text.convert_byte(disk.size),
+                'name': disk.name.decode('utf-8'),
+                'display_name': disk.display_name.decode('utf-8'),
+                'uuid': disk.uuid,
+                'used': disk.used,
+                'free': disk.free,
+                'size': disk.size,
                 'percent': int(round(disk.used, 0) * 100 / int(disk.size))
             }
 
+            if check_disk['percent'] >= int(Config.get_config_value('Alerts', 'disk_alert')):
+                check_disk['state'] = STATE_ALERT
+            elif check_disk['percent'] >= int(Config.get_config_value('Alerts', 'disk_warning')):
+                check_disk['state'] = STATE_WARNING
+            else:
+                check_disk['state'] = STATE_OK
+
             all_disks.append(check_disk)
 
-        tmpl_vars['disks'] = all_disks
-
-    return flask.Response(response=tmpl.render(tmpl_vars),
-                          status=200,
-                          mimetype="application/json")
+    return all_disks

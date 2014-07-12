@@ -33,13 +33,22 @@ var CentralReport = {
     getReadableFileSizeString: function(fileSizeInBytes) {
         fileSizeInBytes = parseInt(fileSizeInBytes, 10);
         var i = 0;
-        var byteUnits = ['B', ' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
-        while (fileSizeInBytes > 1024){
-            fileSizeInBytes = fileSizeInBytes / 1024;
+        var byteUnits = [' B', ' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+        while (fileSizeInBytes > 1000){
+            fileSizeInBytes = fileSizeInBytes / 1000;
             i++;
         };
 
         return Math.max(fileSizeInBytes, 0).toFixed(1) + byteUnits[i];
+    },
+
+    isValidJson: function(json) {
+        try {
+            JSON.parse(json);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }
 
