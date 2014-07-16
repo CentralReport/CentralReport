@@ -14,29 +14,26 @@
 
 {% block body %}
 <div id="wrapper">
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">CentralReport Host</a>
-            </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li>
-                    <a href="#">
-                        <i class="fa fa-sign-out fa-fw"></i>
-                    </a>
-                </li>
-            </ul>
-            <!-- /.navbar-top-links -->
-    </div>
 
-    <div class="navbar-left navbar-static-side" role="navigation" ng-controller="LeftMenuCtrl">
-        <div class="sidebar-collapse collapse">
-            <cr-left-menu></cr-left-menu>
+    <div ng-controller="LeftMenuCtrl">
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">CentralReport Host</a>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                </ul>
+        </div>
+
+        <div class="navbar-left navbar-static-side" role="navigation">
+            <div class="sidebar-collapse collapse" collapse="isCollapsed">
+                <cr-left-menu></cr-left-menu>
+            </div>
         </div>
     </div>
 

@@ -9,7 +9,6 @@ CentralReport.angularApp.filter('readableUptime', function() {
 
         seconds = parseInt(seconds);
         if (isNaN(seconds)) {
-            console.log('return -');
             return '-';
         }
 

@@ -7,9 +7,16 @@
     </div>
 </div>
 
+<div class="row" ng-if="error">
+    <div class="alert alert-danger">
+        <strong>Error refreshing data...</strong>
+        Next try in few seconds
+    </div>
+</div>
+
 <div class="row row-panel">
     <div class="col-sm-4">
-        <div class="panel" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.cpu.state]">
+        <div class="panel panel-info" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger'}[checks.cpu.state]">
             <div class="panel-heading">
                 <h3 class="panel-title">CPU</h3>
             </div>
@@ -35,7 +42,7 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="panel" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.memory.state]">
+        <div class="panel panel-info" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger'}[checks.memory.state]">
             <div class="panel-heading">
                 <h3 class="panel-title">Memory</h3>
             </div>
@@ -65,7 +72,7 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="panel" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.swap.state]">
+        <div class="panel panel-info" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger'}[checks.swap.state]">
             <div class="panel-heading">
                 <h3 class="panel-title">Swap</h3>
             </div>
@@ -98,7 +105,7 @@
 </div>
 <div class="row row-panel">
     <div class="col-sm-4">
-        <div class="panel"  ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger', '':'panel-info'}[checks.load.state]">
+        <div class="panel panel-info" ng-class="{'ok':'panel-info', 'warning':'panel-warning', 'alert':'panel-danger'}[checks.load.state]">
             <div class="panel-heading">
                 <h3 class="panel-title">Load average</h3>
             </div>

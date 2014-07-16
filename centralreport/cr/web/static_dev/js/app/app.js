@@ -1,5 +1,5 @@
 
-CentralReport.angularApp = angular.module('crApp', ['ngRoute']);
+CentralReport.angularApp = angular.module('crApp', ['ngRoute', 'ui.bootstrap']);
 
 CentralReport.angularApp.config(
     [
@@ -10,8 +10,12 @@ CentralReport.angularApp.config(
                     templateUrl: '/static/partials/dashboard.html',
                     controller: 'DashboardCtrl'
                 })
-                .when('/settings', {
-                    templateUrl: '/static/partials/settings.html'
+                .when('/host', {
+                    templateUrl: '/static/partials/host.html'
+                })
+                .when('/error', {
+                    controller: 'ErrorCtrl',
+                    templateUrl: '/static/partials/error.html'
                 })
                 .otherwise({
                     redirectTo: '/dashboard'
@@ -20,8 +24,17 @@ CentralReport.angularApp.config(
     ]
 );
 
-CentralReport.angularApp.run(function ($rootScope, $http) {
-    $http.get('/api/host').success(function(data) {
-        $rootScope.hostData = data;
-    });
+CentralReport.angularApp.run(function ($rootScope, $http, $location) {
+    $http.get('/api/host')
+        .success(function(data) {
+            $rootScope.hostData = data;
+        })
+        .error(function(data, status, headers, config) {
+            $rootScope.hostData = undefined;
+
+            $rootScope.error = {
+                'title': 'Oops!',
+                'description': 'Cannot get host data. Next try in few seconds...'
+            }
+        });
 });

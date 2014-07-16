@@ -31,6 +31,8 @@ module.exports = function(grunt) {
             js: [
                 '<%= cr.dirs.vendor %>/angular/angular.js',
                 '<%= cr.dirs.vendor %>/angular-route/angular-route.js',
+                '<%= cr.dirs.vendor %>/angular-bootstrap/ui-bootstrap.js',
+                '<%= cr.dirs.vendor %>/angular-bootstrap/ui-bootstrap-tpls.js',
                 '<%= cr.dirs.webDev %>/js/centralreport.js',
                 '<%= cr.dirs.webDev %>/js/app/app.js',
                 '<%= cr.dirs.webDev %>/js/app/controllers.js',

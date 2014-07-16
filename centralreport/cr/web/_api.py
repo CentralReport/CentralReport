@@ -79,7 +79,15 @@ def api_host():
         'cpu_model': cr.host.get_current_host().cpu_model,
         'kernel_name': cr.host.get_current_host().kernel_name,
         'kernel_version': cr.host.get_current_host().kernel_version,
-        'uuid': cr.host.get_current_host().uuid
+        'uuid': cr.host.get_current_host().uuid,
+        'centralreport': {
+            'version': Config.CR_VERSION,
+            'version_name': Config.CR_VERSION_NAME,
+            'pid': Config.CR_PID_FILE,
+            'agent_name': Config.CR_AGENT_NAME,
+            'config_file': Config.CR_CONFIG_FULL_PATH,
+            'is_debug': Config.CR_CONFIG_ENABLE_DEBUG_MODE
+        }
     }
 
     return flask.Response(response=json.dumps(vars),
@@ -125,7 +133,7 @@ def _get_memory_info():
     }
 
     if vars['percent'] >= int(Config.get_config_value('Alerts', 'memory_alert')):
-        vars['sate'] = STATE_ALERT
+        vars['state'] = STATE_ALERT
     elif vars['percent'] >= int(Config.get_config_value('Alerts', 'memory_warning')):
         vars['state'] = STATE_WARNING
     else:
