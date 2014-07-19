@@ -20,4 +20,5 @@ def register_libraries():
 
     for binary in os.listdir(_binaries_dir):
         if binary.endswith(('.zip', '.egg', '.whl')):
+            print(os.path.join(_binaries_dir, binary))
             sys.path.insert(0, os.path.join(_binaries_dir, binary))

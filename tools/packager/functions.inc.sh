@@ -109,6 +109,12 @@ function create_installer(){
 
     cd "${CR_PROJECT_ROOT}"
 
+    build
+    if [ "$?" -ne "0" ]; then
+        logError "Error building project!"
+        return 1
+    fi
+
     read_whitelist "./tools/packager/installer_whitelist.txt" "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}"
     if [ "$?" -ne "0" ]; then
         logError "Error processing the whitelist!"
@@ -178,6 +184,31 @@ function create_uninstaller(){
         cd "${CR_PROJECT_ROOT}"
 
         return 3
+    fi
+
+    cd "${CR_PROJECT_ROOT}"
+    return 0
+
+}
+
+#
+# Builds all dependancies for full package
+#
+# PARAMETERS: None
+# RETURN:
+#   0:  Build has been finished successfully
+#   1:  Error building project
+#
+function build(){
+
+    logConsole "Building web server assets..."
+
+    cd "${CR_PROJECT_ROOT}"/tools
+
+    chmod +x build_front.sh
+    ./build_front.sh
+    if [ "$?" -ne "0" ]; then
+        return 1
     fi
 
     cd "${CR_PROJECT_ROOT}"
