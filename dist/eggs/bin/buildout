@@ -1,0 +1,12 @@
+#!/usr/bin/python
+
+import sys
+sys.path[0:0] = [
+  '/Volumes/Macintosh HD/Users/che/Dev/Python/CentralReport/dist/buildout/eggs/setuptools-5.4.1-py2.7.egg',
+  '/Volumes/Macintosh HD/Users/che/Dev/Python/CentralReport/dist/buildout/eggs/zc.buildout-2.2.1-py2.7.egg',
+  ]
+
+import zc.buildout.buildout
+
+if __name__ == '__main__':
+    sys.exit(zc.buildout.buildout.main())

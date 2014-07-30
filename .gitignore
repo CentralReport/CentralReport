@@ -6,6 +6,10 @@
 ###################
 *.pyc
 
+# Dependencies #
+################
+centralreport/libs/
+
 # Logs and databases #
 ######################
 *.log
