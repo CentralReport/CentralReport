@@ -1,6 +1,12 @@
 CentralReport News
 ===================
 
+### Version Alpha 0.5.1 (July 30th, 2014)
+
+- **Fix [#102](https://github.com/CentralReport/CentralReport/pull/102)**: Fixed for..in loop in the Linux collector
+
+***
+
 ### Version Alpha 0.5.0 (March 4th, 2014)
 
 - **Improvement [#77](https://github.com/CentralReport/CentralReport/pull/77)**: Added support for unit testing and behaviors tests
