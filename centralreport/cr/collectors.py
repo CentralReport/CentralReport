@@ -337,7 +337,7 @@ class DebianCollector(_Collector):
                     disk_name = disks_by_uuid[disk_id]
                     disk_uuid = disk_id
                 else:
-                    for key, value in disks_by_uuid:
+                    for key, value in disks_by_uuid.iteritems():
                         if value == disk_id:
                             disk_name = value
                             disk_uuid = key
