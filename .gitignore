@@ -9,8 +9,8 @@
 # Dependencies #
 ################
 .installed.cfg
-bin/buildout
 centralreport/libs/
+utils/libs/eggs/bin
 
 # Logs and databases #
 ######################
