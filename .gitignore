@@ -8,6 +8,8 @@
 
 # Dependencies #
 ################
+.installed.cfg
+bin/buildout
 centralreport/libs/
 
 # Logs and databases #
@@ -27,3 +29,5 @@ cr_test*
 bower_components/
 node_modules/
 centralreport/cr/web/static/
+
+
