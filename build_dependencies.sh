@@ -7,7 +7,10 @@
 # https://github.com/CentralReport
 # ------------------------------------------------------------
 
-source ../bash/log.inc.sh
+source bash/log.inc.sh
+
+PATH_EGGS=centralreport/libs/
+PATH_WEB_STATIC=centralreport/cr/static/
 
 #
 # Main logic
@@ -18,14 +21,19 @@ source ../bash/log.inc.sh
 #   1: One or more error happend
 #
 function main(){
+
     is_error=false
 
-    if [ ${PWD##*/} != "dist" ]; then
-        echo "ERROR - You must be in the 'dist' directory to execute this script."
+    printBox blue "-- CentralReport - Dependencies builder --"
+
+    if [ ${PWD##*/} != "CentralReport" ]; then
+        echo "ERROR - You must be in the root directory of the project to execute this script."
         return 1
     fi
 
-    if [ "${ARG_WRONG}" == true ]; then
+    get_arguments $*
+
+    if [ ${ARG_WRONG} == true ]; then
         printBox red "ERROR! Unknown argument| \
                       Use: build.sh| \
                       -a Build all dependencies (needs NodeJS)| \
@@ -35,13 +43,19 @@ function main(){
     fi
 
     if [ "${ARG_EGGS}" == true ]; then
+
+        printBox blue "Building Python libraries..."
+
         build_eggs
         if [ "$?" -ne 0 ]; then
             is_error=true
         fi
     fi
 
-    if [ "${ARG_WEB}" == true ]; then
+    if [ "${is_error}" == false ] && [ "${ARG_WEB}" == true ]; then
+
+        printBox blue "Building front assets..."
+
         build_web
         if [ "$?" -ne 0 ]; then
             is_error=true
@@ -53,6 +67,7 @@ function main(){
         return 1
     fi
 
+    printBox green "All dependencies built successfully!"
     return 0
 }
 
@@ -69,8 +84,7 @@ function get_arguments() {
     ARG_WEB=false
     ARG_WRONG=false
 
-    # http://wiki.bash-hackers.org/howto/getopts_tutorial
-    while getopts ":ks" opt; do
+    while getopts ":apw" opt; do
         case $opt in
             a) ARG_ALL=true ;;
             p) ARG_EGGS=true ;;
@@ -97,8 +111,17 @@ function get_arguments() {
 #
 function build_eggs(){
 
-    cd eggs/
+    if [ -d ${PATH_EGGS} ]; then
+        printLightBox yellow "Deleting old eggs..."
+        rm -Rf ${PATH_EGGS}
+    fi
 
+    printLightBox yellow "Creating new egg directory..."
+    mkdir ${PATH_EGGS}
+
+    cd utils/libs/eggs/
+
+    printLightBox yellow "Initializing Buildout..."
     python bootstrap.py
     if [ "$?" -ne "0" ]; then
         logError "Error initializing Buildout!"
@@ -107,6 +130,7 @@ function build_eggs(){
         return 1
     fi
 
+    printLightBox yellow "Starting Buildout to retrieve eggs..."
     python bin/buildout
     if [ "$?" -ne "0" ]; then
         logError "Error building eggs using Buildout!"
@@ -115,7 +139,9 @@ function build_eggs(){
         return 2
     fi
 
-    cd ../
+    cd ../../../
+
+    printBox green "Python eggs built successfully!"
     return 0
 }
 
@@ -130,8 +156,14 @@ function build_eggs(){
 #
 function build_web(){
 
-    cd web/
+    if [ -d ${PATH_WEB_STATIC} ]; then
+        printLightBox yellow "Deleting old static directory..."
+        rm -Rf ${PATH_WEB_STATIC}
+    fi
 
+    cd utils/libs/web/
+
+    printLightBox yellow "Getting NodeJS dependancies..."
     npm install
     if [ "$?" -ne "0" ]; then
         logError "Error loading npm modules!"
@@ -140,6 +172,7 @@ function build_web(){
         return 1
     fi
 
+    printLightBox yellow "Building assets with Grunt..."
     grunt prod
     if [ "$?" -ne "0" ]; then
         logError "Error building front assets using grunt!"
@@ -148,10 +181,11 @@ function build_web(){
         return 2
     fi
 
-    cd ../
+    cd ../../../
+
+    printBox green "Web assets built successfully!"
     return 0
 }
 
-get_arguments $*
-main
+main $*
 exit "$?"

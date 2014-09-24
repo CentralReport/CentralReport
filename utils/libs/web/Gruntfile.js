@@ -23,7 +23,7 @@ module.exports = function(grunt) {
             dirs: {
                 cwd: './',
                 crDesign: '<%= cr.dirs.cwd %>node_modules/CentralReport_design/dist',
-                web: '<%= cr.dirs.cwd %>centralreport/cr/web',
+                web: '../../../centralreport/cr/web',
                 webDev: '<%= cr.dirs.web %>/static_dev',
                 webDist: '<%= cr.dirs.web %>/static',
                 vendor: '<%= cr.dirs.cwd %>bower_components'
@@ -65,7 +65,8 @@ module.exports = function(grunt) {
             },
             production: {
                 options: {
-                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                    mangle: false
                 },
                 files: {
                     '<%= cr.dirs.webDist %>/js/centralreport.js' : ['<%= cr.js %>']

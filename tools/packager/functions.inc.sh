@@ -201,17 +201,14 @@ function create_uninstaller(){
 #
 function build(){
 
-    logConsole "Building web server assets..."
+    logConsole "Building Python eggs and web assets..."
 
-    cd "${CR_PROJECT_ROOT}"/tools
-
-    chmod +x build_front.sh
-    ./build_front.sh
+    chmod +x build_dependencies.sh
+    ./build_dependencies.sh -a
     if [ "$?" -ne "0" ]; then
         return 1
     fi
 
-    cd "${CR_PROJECT_ROOT}"
     return 0
 
 }

@@ -19,21 +19,21 @@ CR_PACKAGE_UNINSTALLER_FOLDER=CentralReportUninstaller/
 CR_PACKAGE_UNINSTALLER_NAME=cr_uninstaller.tar.gz
 
 # Online installer script. Will be copied in the "CR_PACKAGES_ROOT" folder
-CR_INSTALLER_SCRIPT="tools/online_installer.sh"
+CR_INSTALLER_SCRIPT="utils/online/online_installer.sh"
 CR_INSTALLER_SCRIPT_NAME="installer"
 
 # Online uninstaller script. Will be copied in the "CR_PACKAGES_ROOT" folder
-CR_UNINSTALLER_SCRIPT="tools/online_uninstaller.sh"
+CR_UNINSTALLER_SCRIPT="utils/online/online_uninstaller.sh"
 CR_UNINSTALLER_SCRIPT_NAME="uninstaller"
 
-if [ ${PWD##*/} != "packager" ]; then
-    echo "ERROR - You must be in the 'packager' directory to execute this script."
+if [ ${PWD##*/} != "CentralReport" ]; then
+    echo "ERROR - You must be in the project root directory to execute this script."
     exit 1
 fi
 
-source functions.inc.sh
-source ../../bash/log.inc.sh
-source ../../bash/utils.inc.sh
+source tools/packager/functions.inc.sh
+source bash/log.inc.sh
+source bash/utils.inc.sh
 
 clear
 printBox blue "--------------------------- CentralReport packager ----------------------------| \
@@ -45,7 +45,6 @@ if [ $(uname -s) != "Darwin" ]; then
     exit 1
 fi
 
-cd ../../
 CR_PROJECT_ROOT=$(pwd)
 
 logConsole "Please use your administrator password to generate the package"
