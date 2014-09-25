@@ -12,6 +12,11 @@ python:
 
 # Test definitions
 
+before_install:
+  - "sudo apt-get update"
+  - "sudo apt-get install nodejs npm"
+before_script:
+  - "sudo ./build_dependencies.sh -a"
 script:
   - "sudo ./tests/run_tests.sh -p -s"
 after_failure:
