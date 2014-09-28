@@ -173,7 +173,7 @@ function build_web(){
     fi
 
     printLightBox yellow "Building assets with Grunt..."
-    grunt prod
+    ./node_modules/.bin/grunt prod
     if [ "$?" -ne "0" ]; then
         logError "Error building front assets using grunt!"
         cd ../
