@@ -304,6 +304,48 @@ class DebianCollector(_Collector):
             Gets active disks (with disk size for the moment).
         """
 
+        if os.path.isdir('/dev/disk/by-uuid/'):
+            return self._get_disks_by_uuid()
+        else:
+            return self._get_disks_without_uuid()
+
+    def _get_disks_without_uuid(self):
+        """
+            Gets all disks by querying "df" command (does not handles Disks UUID)
+            Use only this method when the /dev/disk/by-uuid/ folder is not available (like in OpenVZ virtual machine)
+        """
+
+        df_dict = system.execute_command('df -kP')
+        df_split = df_dict.splitlines()
+
+        list_disks = checks.Disks()
+
+        for i in range(1, len(df_split)):
+            if df_split[i].startswith('/dev/'):
+                line_split = df_split[i].split()
+
+                disk_dict = line_split[0].split('/')
+                disk_name = disk_dict[-1]
+
+                check_disk = checks.Disk()
+                check_disk.name = text.clean(disk_name)
+                check_disk.display_name = text.clean(disk_name.replace('/dev/', ''))
+                check_disk.uuid = disk_name
+
+                # Linux count with '1K block' unit
+                check_disk.size = int(line_split[1]) * 1024
+                check_disk.used = int(line_split[2]) * 1024
+                check_disk.free = int(line_split[3]) * 1024
+
+                list_disks.disks.append(check_disk)
+
+        return list_disks
+
+    def _get_disks_by_uuid(self):
+        """
+            Gets all active disks by UUID
+        """
+
         # Getting all disks by UUID
         disks_by_uuid = {}
         list_disks_uuid = os.listdir('/dev/disk/by-uuid/')
