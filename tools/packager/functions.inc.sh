@@ -69,14 +69,14 @@ function read_blacklist(){
             find "${2}" -name "${line}" -exec sudo rm -rf {} \;
         elif [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
             if [ -d ${line} ]; then
-                sudo rm -R ${line} "${2}${line}"
+                sudo rm -R "${2}${line}"
                 if [ "$?" -ne "0" ]; then
                     logError "Error removing ${2}${line}!"
                     return 1
                 fi
 
             elif [ -f ${line} ]; then
-                sudo rm ${line} "${2}${line}"
+                sudo rm "${2}${line}"
                 if [ "$?" -ne "0" ]; then
                     logError "Error removing ${2}${line}!"
                     return 1

@@ -10,4 +10,6 @@
 
 *.pyc
 *.DS_Store
-centralreport/cr/web/static_dev/*
+#centralreport/cr/web/static_dev/*
+utils/libs/*
+utils/online/*
