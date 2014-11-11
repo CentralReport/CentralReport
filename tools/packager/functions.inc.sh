@@ -69,14 +69,14 @@ function read_blacklist(){
             find "${2}" -name "${line}" -exec sudo rm -rf {} \;
         elif [[ ${line} != "#"* ]] && [[ ${line} != ";"* ]] ; then
             if [ -d ${line} ]; then
-                sudo rm -R ${line} "${2}${line}"
+                sudo rm -R "${2}${line}"
                 if [ "$?" -ne "0" ]; then
                     logError "Error removing ${2}${line}!"
                     return 1
                 fi
 
             elif [ -f ${line} ]; then
-                sudo rm ${line} "${2}${line}"
+                sudo rm "${2}${line}"
                 if [ "$?" -ne "0" ]; then
                     logError "Error removing ${2}${line}!"
                     return 1
@@ -108,6 +108,12 @@ function create_installer(){
     logConsole "Preparing the installer package..."
 
     cd "${CR_PROJECT_ROOT}"
+
+    build
+    if [ "$?" -ne "0" ]; then
+        logError "Error building project!"
+        return 1
+    fi
 
     read_whitelist "./tools/packager/installer_whitelist.txt" "${CR_PACKAGES_ROOT}${CR_PACKAGE_INSTALLER_FOLDER}"
     if [ "$?" -ne "0" ]; then
@@ -181,6 +187,28 @@ function create_uninstaller(){
     fi
 
     cd "${CR_PROJECT_ROOT}"
+    return 0
+
+}
+
+#
+# Builds all dependancies for full package
+#
+# PARAMETERS: None
+# RETURN:
+#   0:  Build has been finished successfully
+#   1:  Error building project
+#
+function build(){
+
+    logConsole "Building Python eggs and web assets..."
+
+    chmod +x build_dependencies.sh
+    ./build_dependencies.sh -a
+    if [ "$?" -ne "0" ]; then
+        return 1
+    fi
+
     return 0
 
 }

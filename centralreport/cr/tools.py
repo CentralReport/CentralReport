@@ -62,7 +62,7 @@ class Config:
             'port': '8080'
         },
         'Checks': {
-            'interval': '60'
+            'interval': '5'
         },
         'Alerts': {
             'cpu_warning': '75',
@@ -72,7 +72,9 @@ class Config:
             'swap_warning': '1',
             'swap_alert': '75',
             'load_warning': '75',
-            'load_alert': '90'
+            'load_alert': '90',
+            'disk_warning': '75',
+            'disk_alert': '90'
         },
         'Debug': {
             'log_level': 'INFO'

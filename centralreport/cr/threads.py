@@ -66,7 +66,7 @@ class Checks(threading.Thread):
                 try:
                     self.perform_check()
                 except Exception as e:
-                    log.log_error('Error performing a new check: %s' % e.message)
+                    log.log_error('Error performing a new check: %s' % e)
 
                 log.log_debug('Next checks in %s seconds...' % self.tickPerformCheck)
                 self.tickCount = 0
