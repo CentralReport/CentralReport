@@ -25,8 +25,8 @@ class Config:
     CR_AGENT_NAME = "CentralReport Python Agent"
 
     CR_VERSION_MAJOR = 0
-    CR_VERSION_MINOR = 5
-    CR_VERSION_REVISION = 1
+    CR_VERSION_MINOR = 6
+    CR_VERSION_REVISION = 0
     CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
 
