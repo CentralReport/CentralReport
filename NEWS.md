@@ -1,16 +1,22 @@
 CentralReport News
 ===================
 
-### Version Alpha 0.6 (Not released yet)
+### Version Alpha 0.6 (November 11th, 2014)
+
+- **Improvement [#101](https://github.com/CentralReport/CentralReport/pull/101)**: Improved library dependencies
+    * External libraries are now retrieved and built with Buildout
+    * Web assets are now built with NodeJS and Grunt (and shipped already generated into the installer)
 
 - **Improvement [#101](https://github.com/CentralReport/CentralReport/pull/101)**: Refactored web server!
-    * External libraries are now retrieved and built with Buildout
     * CherryPy has been replaced by Flask
     * The web package has been moved onto the cr.web
     * New version of the API
-    * Web assets are now built with NodeJS and Grunt (and shipped already generated into the installer)
     * Frontend part is now using AngularJS
     * Frontend part has a new design (based on [CentralReport design](https://github.com/CentralReport/cr-design/)
+
+- **Improvement [#103](https://github.com/CentralReport/CentralReport/pull/103)**: Improved README.md
+    * Updated texts with the current project status
+    * Added screenshots for the new web server design
 
 ***
 
