@@ -12,6 +12,14 @@ python:
 
 # Test definitions
 
+before_install:
+  - "sudo apt-get update"
+  - "sudo apt-get install build-essential"
+  - "curl -sL https://deb.nodesource.com/setup | sudo bash -"
+  - "sudo apt-get install nodejs"
+before_script:
+  - 'echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config' # https://github.com/travis-ci/travis-ci/issues/1588
+  - "sudo ./build_dependencies.sh -a"
 script:
   - "sudo ./tests/run_tests.sh -p -s"
 after_failure:

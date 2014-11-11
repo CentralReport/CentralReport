@@ -25,8 +25,8 @@ class Config:
     CR_AGENT_NAME = "CentralReport Python Agent"
 
     CR_VERSION_MAJOR = 0
-    CR_VERSION_MINOR = 5
-    CR_VERSION_REVISION = 1
+    CR_VERSION_MINOR = 6
+    CR_VERSION_REVISION = 0
     CR_VERSION = '%s.%s.%s' % (CR_VERSION_MAJOR, CR_VERSION_MINOR, CR_VERSION_REVISION)
     CR_VERSION_NAME = 'Alpha Version'
 
@@ -62,7 +62,7 @@ class Config:
             'port': '8080'
         },
         'Checks': {
-            'interval': '60'
+            'interval': '5'
         },
         'Alerts': {
             'cpu_warning': '75',
@@ -72,7 +72,9 @@ class Config:
             'swap_warning': '1',
             'swap_alert': '75',
             'load_warning': '75',
-            'load_alert': '90'
+            'load_alert': '90',
+            'disk_warning': '75',
+            'disk_alert': '90'
         },
         'Debug': {
             'log_level': 'INFO'

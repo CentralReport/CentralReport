@@ -10,3 +10,5 @@
 
 *.pyc
 *.DS_Store
+utils/libs/*
+utils/online/*
